@@ -1,0 +1,36 @@
+{
+  "id": "TASK-06",
+  "phase": 3,
+  "title": "Go 2PC Escrow State Machine: PayPal Orders v2 AUTHORIZE, CAPTURE & VOID",
+  "category": "escrow-go",
+  "priority": 6,
+  "passes": false,
+  "human_gate": null,
+  "skills": [
+    "/gsd-execute-phase 3",
+    "/gsd-validate-phase 3",
+    "/gsd-secure-phase 3",
+    "/ralph-loop"
+  ],
+  "graph_nodes": [
+    "node:go:internal:escrow:machine",
+    "node:go:internal:paypal:orders",
+    "node:api:07",
+    "node:api:09",
+    "node:api:10"
+  ],
+  "files": [
+    "services/orchestrator-go/internal/escrow/machine.go",
+    "services/orchestrator-go/internal/paypal/service.go"
+  ],
+  "description": "Implement the deterministic Two-Phase Commit (2PC) Escrow State Machine in Go binding KYA mandates to PayPal Sandbox Orders v2 AUTHORIZE, Authorizations CAPTURE, and Authorizations VOID.",
+  "steps": [
+    "Implement state transitions: INITIATED -> MANDATE_VERIFIED -> CHANNEL3_BENCHMARKED -> PAYPAL_AUTHORIZED -> SLA_SCHEDULED -> TRACKING_VERIFIED -> PAYPAL_CAPTURED | PAYPAL_VOIDED | DISPUTE_FILED",
+    "Wire API-07 (/authorize), API-09 (/capture), and API-10 (/void) with Redis PayPal-Request-Id idempotency locks",
+    "Write concurrency-safe unit tests with go test -race"
+  ],
+  "pass": [
+    "go test -race ./internal/escrow/... passes 100% of state transition tests",
+    "Duplicate capture/void requests with the same PayPal-Request-Id return idempotent cached results"
+  ]
+}

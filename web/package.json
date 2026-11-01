@@ -1,0 +1,33 @@
+{
+  "name": "pactpay-console-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "next": "^15.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "ag-grid-community": "^33.1.0",
+    "ag-grid-enterprise": "^33.1.0",
+    "ag-grid-react": "^33.1.0",
+    "ag-charts-react": "^11.1.0",
+    "@paypal/react-paypal-js": "^8.7.0",
+    "@paypal/paypal-server-sdk": "^1.1.0",
+    "@paypal/agent-toolkit": "^0.1.0",
+    "lucide-react": "^0.475.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "vitest": "^3.0.0",
+    "@playwright/test": "^1.50.0"
+  }
+}

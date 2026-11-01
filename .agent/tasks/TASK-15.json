@@ -1,0 +1,30 @@
+{
+  "id": "TASK-15",
+  "phase": 8,
+  "title": "Render Native Polyglot Blueprint (render.yaml) Deployment & Webhook Verification",
+  "category": "deployment-render",
+  "priority": 15,
+  "passes": false,
+  "human_gate": "GATE #6: Follow docs/09-integrations-and-guides/06-RENDER_BLUEPRINT_DEPLOYMENT_GUIDE.md to deploy render.yaml on Render.com.",
+  "skills": [
+    "/gsd-graphify build",
+    "/gsd-ship",
+    "/ralph-loop"
+  ],
+  "graph_nodes": [
+    "node:root:render_yaml",
+    "node:guide:render"
+  ],
+  "files": [
+    "render.yaml",
+    "scripts/verify-deployment.sh"
+  ],
+  "description": "Validate render.yaml native polyglot Blueprint (runtime: rust, runtime: go, runtime: node, Render Postgres 16, Render Valkey) and deployment verification script.",
+  "steps": [
+    "Validate render.yaml service definitions, healthCheckPath: /healthz, and internal service discovery env vars",
+    "Run scripts/verify-deployment.sh against local/cloud endpoints"
+  ],
+  "pass": [
+    "render.yaml defines all 5 resources cleanly for 1-click Render Blueprint launch"
+  ]
+}

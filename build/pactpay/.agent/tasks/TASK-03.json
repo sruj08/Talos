@@ -1,0 +1,36 @@
+{
+  "id": "TASK-03",
+  "phase": 2,
+  "title": "Rust Ed25519 KYA Mandate Signer/Verifier & RFC 9421 Signature Engine",
+  "category": "security-rust",
+  "priority": 3,
+  "passes": false,
+  "human_gate": null,
+  "skills": [
+    "/gsd-spec-phase 2",
+    "/gsd-plan-phase 2",
+    "/ralph-loop"
+  ],
+  "graph_nodes": [
+    "node:rust:cargo",
+    "node:rust:main",
+    "node:rust:mandate",
+    "node:rust:webhook_verify"
+  ],
+  "files": [
+    "services/firewall-rs/Cargo.toml",
+    "services/firewall-rs/src/mandate.rs",
+    "services/firewall-rs/src/webhook_verify.rs"
+  ],
+  "description": "Implement Ed25519 cryptographic mandate signing & verification (API-01, API-02), RFC 9421 Web Bot Auth signature verification, and PayPal Webhook CRC32 + signature verifier (API-04) in Rust.",
+  "steps": [
+    "Implement KyaMandate struct and Ed25519 sign/verify functions using ed25519-dalek and sha2",
+    "Enforce budget ceiling (max_amount_cents), category allowlist, max_spread_bps, and expiry_utc",
+    "Implement PayPal webhook CRC32 checksum verification using crc32fast",
+    "Write unit tests for valid mandates, tampered amounts, and expired mandates"
+  ],
+  "pass": [
+    "cargo test mandate passes in services/firewall-rs",
+    "Mandate verification completes in < 1ms"
+  ]
+}

@@ -1,0 +1,106 @@
+name: "PactPay Render Blueprint Deploy & Newman Smoke Test"
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target Render Environment"
+        required: true
+        default: "production"
+        type: choice
+        options:
+          - production
+          - staging
+
+jobs:
+  # ============================================================================
+  # Step 1: Validate render.yaml Blueprint Schema (F-14)
+  # ============================================================================
+  validate-render-blueprint:
+    name: "Validate render.yaml Multi-Service Blueprint (F-14)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Validate render.yaml Syntax & 5-Resource Topology
+        run: |
+          if [ ! -f "render.yaml" ]; then
+            echo "::error::render.yaml missing at repository root!"
+            exit 1
+          fi
+          python3 -c '
+          import yaml, sys
+          with open("render.yaml", "r") as f:
+              bp = yaml.safe_load(f)
+          services = [s["name"] for s in bp.get("services", [])]
+          required = ["pactpay-firewall-rs", "pactpay-orchestrator-go", "pactpay-console-web"]
+          for req in required:
+              if req not in services:
+                  print(f"Missing required Render service: {req}")
+                  sys.exit(1)
+          print("render.yaml validated successfully:", services)
+          '
+
+  # ============================================================================
+  # Step 2: Trigger Render Deploy Hooks & Run Postman/Newman Smoke Tests (F-13)
+  # ============================================================================
+  deploy-and-smoke-test:
+    name: "Trigger Render Deploy & Run Newman Contract Suite (F-13)"
+    needs: validate-render-blueprint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Trigger Render Deploy Hooks (Rust + Go + Web)
+        env:
+          DEPLOY_HOOK_RUST: ${{ secrets.RENDER_DEPLOY_HOOK_RUST }}
+          DEPLOY_HOOK_GO: ${{ secrets.RENDER_DEPLOY_HOOK_GO }}
+          DEPLOY_HOOK_WEB: ${{ secrets.RENDER_DEPLOY_HOOK_WEB }}
+        run: |
+          for hook_name in DEPLOY_HOOK_RUST DEPLOY_HOOK_GO DEPLOY_HOOK_WEB; do
+            hook_url="${!hook_name}"
+            if [ -n "$hook_url" ]; then
+              echo "Triggering Render deploy for $hook_name..."
+              curl -fsSL -X POST "$hook_url"
+            else
+              echo "Notice: $hook_name secret not configured; relying on Render native Git auto-deploy."
+            fi
+          done
+
+      - name: Install Newman CLI for Postman Contract Testing (F-13)
+        run: npm install -g newman
+
+      - name: Validate Postman Collection Schema (API-01..API-16)
+        run: |
+          if [ -f "postman/PactPay-Sandbox-MCP.postman_collection.json" ]; then
+            python3 -m json.tool postman/PactPay-Sandbox-MCP.postman_collection.json > /dev/null
+            echo "Postman Collection JSON verified."
+          fi
+
+      - name: Run Live Newman Smoke Suite (When Live Endpoint Configured)
+        env:
+          PACTPAY_LIVE_URL: ${{ vars.PACTPAY_LIVE_URL }}
+        run: |
+          if [ -n "$PACTPAY_LIVE_URL" ] && [ -f "postman/PactPay-Sandbox-MCP.postman_collection.json" ]; then
+            echo "Polling $PACTPAY_LIVE_URL/healthz before running Newman..."
+            for i in {1..18}; do
+              if curl -fsSL "$PACTPAY_LIVE_URL/healthz" >/dev/null 2>&1; then
+                echo "Service healthy! Running Newman contract tests..."
+                newman run postman/PactPay-Sandbox-MCP.postman_collection.json \
+                  --env-var "base_url=$PACTPAY_LIVE_URL" \
+                  --timeout-request 10000
+                exit 0
+              fi
+              sleep 5
+            done
+            echo "::error::Health check timed out after 90s!"
+            exit 1
+          else
+            echo "PACTPAY_LIVE_URL not set; skipping remote Newman execution in CI."
+          fi

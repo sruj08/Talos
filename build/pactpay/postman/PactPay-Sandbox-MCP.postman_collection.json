@@ -1,0 +1,88 @@
+{
+  "info": {
+    "name": "PactPay (AegisPay) \u2014 PayPal Sandbox & Zero-Trust MCP Collection",
+    "_postman_id": "aegispay-pactpay-paypal-hackathon-2026",
+    "description": "1-Click Judge Verification Collection covering Rust Firewall (API-01..API-04), Go Orchestrator & APIMatic PayPal Sandbox (API-05..API-15), and Next.js MCP Bridge (API-16).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Rust Firewall \u2014 Sign Ed25519 KYA Mandate (API-01)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{RUST_FIREWALL_URL}}/v1/mandates/sign"
+      }
+    },
+    {
+      "name": "2. Rust Firewall \u2014 Sanitize Poisoned Merchant DOM (API-03)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{RUST_FIREWALL_URL}}/v1/firewall/sanitize-dom"
+      }
+    },
+    {
+      "name": "3. Go Orchestrator \u2014 Channel3 Fair-Market Price Benchmark (API-06)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{GO_ORCHESTRATOR_URL}}/api/v1/channel3/benchmark"
+      }
+    },
+    {
+      "name": "4. Go Orchestrator \u2014 Protected PayPal Sandbox Orders v2 AUTHORIZE (API-05 / API-07)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{GO_ORCHESTRATOR_URL}}/api/v1/checkout/evaluate"
+      }
+    },
+    {
+      "name": "5. Go Orchestrator \u2014 Attach Carrier Tracking & Auto-CAPTURE (API-08 / API-09)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{GO_ORCHESTRATOR_URL}}/api/v1/escrow/demo-escrow-01/tracking"
+      }
+    },
+    {
+      "name": "6. Go Orchestrator \u2014 Bryntum SLA Breach -> Instant PayPal Sandbox VOID (API-10)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{GO_ORCHESTRATOR_URL}}/api/v1/escrow/demo-escrow-02/void"
+      }
+    }
+  ]
+}

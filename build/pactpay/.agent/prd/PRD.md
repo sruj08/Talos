@@ -1,0 +1,1 @@
+See full Product Requirements Document at [`docs/01-product/PRD.md`](../../docs/01-product/PRD.md) and Single Source of Truth at [`docs/00-overview/PROJECT_BRIEF.md`](../../docs/00-overview/PROJECT_BRIEF.md).

@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "paypal-sandbox-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@paypal/agent-toolkit",
+        "--all"
+      ],
+      "env": {
+        "PAYPAL_ACCESS_TOKEN": "${PAYPAL_ACCESS_TOKEN}",
+        "PAYPAL_ENVIRONMENT": "SANDBOX"
+      }
+    },
+    "pactpay-firewall-rs": {
+      "command": "cargo",
+      "args": [
+        "run",
+        "--manifest-path",
+        "services/firewall-rs/Cargo.toml",
+        "--",
+        "--mcp-stdio"
+      ],
+      "env": {
+        "RUST_LOG": "info"
+      }
+    },
+    "bryntum-docs-mcp": {
+      "url": "https://mcp.bryntum.com/mcp"
+    }
+  }
+}

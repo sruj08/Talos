@@ -1,0 +1,38 @@
+{
+  "id": "TASK-05",
+  "phase": 3,
+  "title": "APIMatic Go SDK Codegen (sdk/paypal-go-apimatic) & PayPal Sandbox OAuth2 Client",
+  "category": "paypal-apimatic",
+  "priority": 5,
+  "passes": false,
+  "human_gate": "GATE #1: Follow docs/09-integrations-and-guides/01-PAYPAL_SANDBOX_STEP_BY_STEP.md and 02-APIMATIC_INTEGRATION_GUIDE.md to set PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, and PAYPAL_WEBHOOK_ID via the credentials skill.",
+  "skills": [
+    "credentials",
+    "/gsd-discuss-phase 3",
+    "/gsd-plan-phase 3",
+    "/ralph-loop"
+  ],
+  "graph_nodes": [
+    "node:sdk:paypal_go_apimatic",
+    "node:go:internal:paypal:client",
+    "node:guide:paypal",
+    "node:guide:apimatic"
+  ],
+  "files": [
+    "sdk/paypal-go-apimatic/go.mod",
+    "sdk/paypal-go-apimatic/client.go",
+    "sdk/paypal-go-apimatic/orders_v2.go",
+    "sdk/paypal-go-apimatic/payments_v2.go",
+    "sdk/paypal-go-apimatic/tracking_v1.go",
+    "sdk/paypal-go-apimatic/disputes_v1.go"
+  ],
+  "description": "Implement/verify the strongly-typed APIMatic-generated Golang SDK for PayPal Sandbox (Orders v2, Authorizations v2, Shipment Tracking v1, Customer Disputes v1) with OAuth2 token caching and deterministic Sandbox fallback.",
+  "steps": [
+    "Verify PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET using the safe credentials protocol (or enable deterministic Sandbox replay fallback when running offline)",
+    "Verify sdk/paypal-go-apimatic strongly-typed models and endpoints for CreateOrder (intent: AUTHORIZE), AuthorizeOrder, CaptureAuthorization, VoidAuthorization, CreateTrackingBatch, and ProvideDisputeEvidence"
+  ],
+  "pass": [
+    "go test ./... inside sdk/paypal-go-apimatic passes",
+    "OAuth2 token acquisition and PayPal-Request-Id header injection work cleanly"
+  ]
+}

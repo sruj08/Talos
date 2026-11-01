@@ -1,0 +1,33 @@
+{
+  "id": "TASK-07",
+  "phase": 4,
+  "title": "Go errgroup Channel3 Fair-Price Oracle (API-06) & KERNEL Cloud Browser Inspector (F-11)",
+  "category": "sponsors-go",
+  "priority": 7,
+  "passes": false,
+  "human_gate": "GATE #2: Follow docs/09-integrations-and-guides/05-CHANNEL3_INTEGRATION_GUIDE.md and 09-KERNEL_ASTROPODS_ZAPIER_GUIDE.md to add CHANNEL3_API_KEY and KERNEL_API_KEY via the credentials skill.",
+  "skills": [
+    "credentials",
+    "/gsd-plan-phase 4",
+    "/ralph-loop"
+  ],
+  "graph_nodes": [
+    "node:go:internal:channel3:oracle",
+    "node:go:internal:kernel:browser",
+    "node:guide:channel3"
+  ],
+  "files": [
+    "services/orchestrator-go/internal/channel3/oracle.go",
+    "services/orchestrator-go/internal/kernel/browser.go"
+  ],
+  "description": "Build the Channel3 Fair-Market Price & SKU Authenticity Oracle and KERNEL disposable cloud browser DOM fetcher in Go.",
+  "steps": [
+    "Implement Channel3 SKU search & fair-market median price computation (spread_bps = ((listed - median) * 10000) / median)",
+    "Block merchant listings where spread_bps > mandate.max_spread_bps (e.g., > 1500 bps / 15%) and return the lowest verified Channel3 merchant URL for automatic checkout rerouting",
+    "Implement KERNEL cloud browser session fetcher (with local Poisoned Storefront DOM fallback)"
+  ],
+  "pass": [
+    "go test -race ./internal/channel3/... ./internal/kernel/... passes",
+    "A $480 Shure SM7B listing against a $249 Channel3 median computes +9277 bps spread, triggers price-gouging block, and returns the $249 verified merchant"
+  ]
+}
