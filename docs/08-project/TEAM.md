@@ -1,12 +1,12 @@
-# Team Structure, RACI Matrix & Governance — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Engineering & Delivery Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# Team Structure, RACI Matrix & Governance — TALOS
+> Project: TALOS · Owner: Principal Engineering & Delivery Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [HACKATHON_PLAN](../00-overview/HACKATHON_PLAN.md) · [BACKLOG](BACKLOG.md) · [PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK](PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md)
 
 ---
 
 ## 1. Core Team Roles & Ownership Boundaries
 
-PactPay is structured around **four specialized, zero-overlap engineering and product pods** that mirror our polyglot system architecture (`Rust 1.85` + `Go 1.24` + `Next.js 15 / TypeScript` + `DevSecOps / Demo`):
+TALOS is structured around **four specialized, zero-overlap engineering and product pods** that mirror our polyglot system architecture (`Rust 1.85` + `Go 1.24` + `Next.js 15 / TypeScript` + `DevSecOps / Demo`):
 
 | Role ID | Role Title | Primary Architecture & Codebase Scope | Key Sponsor & Jury Alignment |
 | :--- | :--- | :--- | :--- |

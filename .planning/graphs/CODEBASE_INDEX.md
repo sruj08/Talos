@@ -1,4 +1,4 @@
-# O(1) Codebase & Symbol Index — PactPay (AegisPay)
+# O(1) Codebase & Symbol Index — TALOS
 
 > **Purpose for AI Agents**: Read this file FIRST whenever a prompt mentions a feature, struct, React component, SQL table, API endpoint, or sponsor integration. Jump directly to the exact file path below in `O(1)` without scanning directories.
 

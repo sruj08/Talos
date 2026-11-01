@@ -1,4 +1,4 @@
-name: "PactPay Render Blueprint Deploy & Newman Smoke Test"
+name: "TALOS Render Blueprint Deploy & Newman Smoke Test"
 
 on:
   push:
@@ -37,7 +37,7 @@ jobs:
           with open("render.yaml", "r") as f:
               bp = yaml.safe_load(f)
           services = [s["name"] for s in bp.get("services", [])]
-          required = ["pactpay-firewall-rs", "pactpay-orchestrator-go", "pactpay-console-web"]
+          required = ["talos-firewall-rs", "talos-orchestrator-go", "talos-console-web"]
           for req in required:
               if req not in services:
                   print(f"Missing required Render service: {req}")
@@ -78,22 +78,22 @@ jobs:
 
       - name: Validate Postman Collection Schema (API-01..API-16)
         run: |
-          if [ -f "postman/PactPay-Sandbox-MCP.postman_collection.json" ]; then
-            python3 -m json.tool postman/PactPay-Sandbox-MCP.postman_collection.json > /dev/null
+          if [ -f "postman/Talos-Sandbox-MCP.postman_collection.json" ]; then
+            python3 -m json.tool postman/Talos-Sandbox-MCP.postman_collection.json > /dev/null
             echo "Postman Collection JSON verified."
           fi
 
       - name: Run Live Newman Smoke Suite (When Live Endpoint Configured)
         env:
-          PACTPAY_LIVE_URL: ${{ vars.PACTPAY_LIVE_URL }}
+          TALOS_LIVE_URL: ${{ vars.TALOS_LIVE_URL }}
         run: |
-          if [ -n "$PACTPAY_LIVE_URL" ] && [ -f "postman/PactPay-Sandbox-MCP.postman_collection.json" ]; then
-            echo "Polling $PACTPAY_LIVE_URL/healthz before running Newman..."
+          if [ -n "$TALOS_LIVE_URL" ] && [ -f "postman/Talos-Sandbox-MCP.postman_collection.json" ]; then
+            echo "Polling $TALOS_LIVE_URL/healthz before running Newman..."
             for i in {1..18}; do
-              if curl -fsSL "$PACTPAY_LIVE_URL/healthz" >/dev/null 2>&1; then
+              if curl -fsSL "$TALOS_LIVE_URL/healthz" >/dev/null 2>&1; then
                 echo "Service healthy! Running Newman contract tests..."
-                newman run postman/PactPay-Sandbox-MCP.postman_collection.json \
-                  --env-var "base_url=$PACTPAY_LIVE_URL" \
+                newman run postman/Talos-Sandbox-MCP.postman_collection.json \
+                  --env-var "base_url=$TALOS_LIVE_URL" \
                   --timeout-request 10000
                 exit 0
               fi
@@ -102,5 +102,5 @@ jobs:
             echo "::error::Health check timed out after 90s!"
             exit 1
           else
-            echo "PACTPAY_LIVE_URL not set; skipping remote Newman execution in CI."
+            echo "TALOS_LIVE_URL not set; skipping remote Newman execution in CI."
           fi

@@ -1,5 +1,5 @@
-# Git Workflow & Release Strategy — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Engineering Operations · Status: Approved v1.0 · Last updated: 2026-11-01
+# Git Workflow & Release Strategy — TALOS
+> Project: TALOS · Owner: Engineering Operations · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [CODING_STANDARDS](CODING_STANDARDS.md) · [CICD](../05-ops/CICD.md)
 
 ---
@@ -73,5 +73,5 @@ Before any branch merges into `main`:
 - [ ] **Rust Gate**: `cargo fmt --check && cargo clippy -- -D warnings && cargo test` passes in `services/firewall-rs`.
 - [ ] **Golang Gate**: `golangci-lint run && go test -race ./...` passes in `services/orchestrator-go`.
 - [ ] **Frontend Gate**: `pnpm typecheck && pnpm lint && pnpm test:run` passes in `web/`.
-- [ ] **OpenAPI & Postman Sync**: Any change to `API-01`..`API-16` updates `api/openapi.yaml` and `postman/PactPay-Sandbox-MCP.postman_collection.json`.
+- [ ] **OpenAPI & Postman Sync**: Any change to `API-01`..`API-16` updates `api/openapi.yaml` and `postman/Talos-Sandbox-MCP.postman_collection.json`.
 - [ ] **Zero Secrets Audit**: `git diff` contains zero hardcoded API keys or `.env` files.

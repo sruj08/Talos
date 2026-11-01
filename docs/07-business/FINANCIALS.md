@@ -1,5 +1,5 @@
-# Financial Projections, Unit Economics & Funding Strategy — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Chief Financial Officer & Capital Allocation Council (Warren Buffett + Charlie Munger Bench) · Status: Approved v1.0 · Last updated: 2026-11-01
+# Financial Projections, Unit Economics & Funding Strategy — TALOS
+> Project: TALOS · Owner: Chief Financial Officer & Capital Allocation Council (Warren Buffett + Charlie Munger Bench) · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [BUSINESS_MODEL](BUSINESS_MODEL.md) · [COST](../05-ops/COST.md) · [GTM](GTM.md)
 
 ---
@@ -8,9 +8,9 @@
 
 *(Exchange rate used throughout: `1 USD ($) = ₹84.00 INR`)*
 
-1. **84.6% Blended Gross Margin**: Because PactPay executes `100%` of its inline DOM prompt-injection sanitization (`F-02`, `M-01`) locally in Rust on standard Render CPU instances (`$0.00` token cost, see `COST.md`), COGS is just **`15.4%` of revenue**—matching top-decile enterprise cybersecurity SaaS rather than low-margin LLM wrappers.
+1. **84.6% Blended Gross Margin**: Because TALOS executes `100%` of its inline DOM prompt-injection sanitization (`F-02`, `M-01`) locally in Rust on standard Render CPU instances (`$0.00` token cost, see `COST.md`), COGS is just **`15.4%` of revenue**—matching top-decile enterprise cybersecurity SaaS rather than low-margin LLM wrappers.
 2. **Exceptional Capital Efficiency (`LTV : CAC = 11.4×`, Payback `= 2.6 Months`)**: Developer-led open-source MCP adoption (`P-02` → `P-01`) and **Channel3** merchant referral loops keep blended B2B Customer Acquisition Cost (CAC) at **`$680` (`₹57,120`)** against a 36-month Customer Lifetime Value (LTV) of **`$7,752` (`₹6,51,168`)**.
-3. **Zero Balance-Sheet Credit or Custody Risk**: All escrow funds remain inside **PayPal's `Orders v2 AUTHORIZE` ledger** (`F-05`). PactPay carries `$0` in loan loss reserves or regulatory capital lockups.
+3. **Zero Balance-Sheet Credit or Custody Risk**: All escrow funds remain inside **PayPal's `Orders v2 AUTHORIZE` ledger** (`F-05`). TALOS carries `$0` in loan loss reserves or regulatory capital lockups.
 
 ---
 
@@ -63,11 +63,11 @@
    - Zero-burn runway: `$1,000` in Render credits covers `100%` of cloud infrastructure for the first 10.6 months (`COST.md`).
 2. **India & Global Non-Dilutive Innovation Grants**:
    - **Startup India Seed Fund Scheme (SISFS)**: Up to **`₹20 Lakhs` (`~$24,000`)** non-dilutive grant for prototype/proof-of-concept validation and **`₹50 Lakhs` (`~$60,000`)** convertible debenture for market commercialization.
-   - **MeitY Startup Hub (MSH) / IndiaAI Mission Safe & Trusted AI Grant**: Targeted funding for indigenous cybersecurity & AI guardrails (`pactpay-firewall-rs` local ONNX prompt-injection engine).
+   - **MeitY Startup Hub (MSH) / IndiaAI Mission Safe & Trusted AI Grant**: Targeted funding for indigenous cybersecurity & AI guardrails (`talos-firewall-rs` local ONNX prompt-injection engine).
    - **Cloud & AI Startup Credits**: Elastic Startup Program, Anthropic/OpenAI Startup Credits, and Render Startup Partner credits.
 
 ### 4.2 Institutional Seed Round (Month 6 Target: `$1.5M` / `₹12.6 Cr` — Optional Acceleration)
-Because PactPay is **Default Alive (`+$18.2k` EBITDA in Year 1)** on bootstrap/grant capital, we raise institutional venture capital strictly from position of strength once we cross `$25k MRR` (`₹21L MRR`):
+Because TALOS is **Default Alive (`+$18.2k` EBITDA in Year 1)** on bootstrap/grant capital, we raise institutional venture capital strictly from position of strength once we cross `$25k MRR` (`₹21L MRR`):
 - **Target Investors**: PayPal Ventures, Y Combinator, Peak XV Surge, Nexus Venture Partners, Lightspeed India.
 - **Use of Proceeds (`$1.5M` / `₹12.6 Cr`)**:
   - `50%` (`$750k`): Core Rust Cryptographic Kernel & Multimodal OCR Prompt-Injection R&D + Go Multi-Rail Escrow Connectors.

@@ -1,10 +1,10 @@
-# 04 — Bryntum Scheduler Pro, Gantt & Bryntum MCP Guide — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Sponsor: **Bryntum (`3× $1,000` Cash — `$3,000` Pool)** · Judge: **Mats Bryntse** (Founder & CEO, Bryntum) · Status: Approved v1.0 · Last updated: 2026-11-01
+# 04 — Bryntum Scheduler Pro, Gantt & Bryntum MCP Guide — TALOS
+> Project: TALOS · Sponsor: **Bryntum (`3× $1,000` Cash — `$3,000` Pool)** · Judge: **Mats Bryntse** (Founder & CEO, Bryntum) · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [00-TRACKS_AND_SUBMISSION_STRATEGY](00-TRACKS_AND_SUBMISSION_STRATEGY.md) · [01-PAYPAL_SANDBOX_STEP_BY_STEP](01-PAYPAL_SANDBOX_STEP_BY_STEP.md) · [03-AG_GRID_AND_AG_STUDIO_GUIDE](03-AG_GRID_AND_AG_STUDIO_GUIDE.md)
 
 ---
 
-## 1. Strategic Overview: How PactPay Wins the `$1,000` Bryntum Prize
+## 1. Strategic Overview: How TALOS Wins the `$1,000` Bryntum Prize
 
 **Judge**: **Mats Bryntse** (Founder & CEO, Bryntum).
 
@@ -15,8 +15,8 @@ On the official Devpost page, Bryntum gave a remarkably specific prompt for what
 > - *A scheduler that dynamically reacts or reroutes upon receiving payments*
 > *Bonus: Use the new **Bryntum AI skills / MCP Server (`https://mcp.bryntum.com/mcp`)**!"*
 
-**How PactPay Delivers the Exact Prompt (Two-Way Payment-Reactive Timeline)**:
-In `web/src/components/BryntumSlaBoard.tsx`, PactPay renders a live **Bryntum Scheduler Pro & Gantt Temporal Escrow Board** where **every PayPal Sandbox `Orders v2 AUTHORIZE` hold is a time-bound contract bar** with strict dependency chains:
+**How TALOS Delivers the Exact Prompt (Two-Way Payment-Reactive Timeline)**:
+In `web/src/components/BryntumSlaBoard.tsx`, TALOS renders a live **Bryntum Scheduler Pro & Gantt Temporal Escrow Board** where **every PayPal Sandbox `Orders v2 AUTHORIZE` hold is a time-bound contract bar** with strict dependency chains:
 1. **Task 1 — `KYA Mandate & PayPal AUTHORIZE Hold Locked`**: Shows the **29-day PayPal Authorization validity window** and the critical **3-day (72h) PayPal Honor Period** indicator.
 2. **Task 2 — `Merchant Carrier Shipping SLA Window (48h)`**: Linked via a finish-to-start dependency (`Task 1 → Task 2`). Tracks real-time carrier status via `@paypal/agent-toolkit` (`create_tracking` / `get_tracking`).
 3. **Task 3 — `Downstream Project / Studio Deployment Milestone`**: Linked via dependency (`Task 2 → Task 3`).

@@ -1,32 +1,32 @@
-# 08 — Postman MCP Client & 1-Click Judge Collection Guide — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Jury Alignment: **Postman** · Judge: **Pooja Mistry** (Developer Advocate, Postman) · Status: Approved v1.0 · Last updated: 2026-11-01
+# 08 — Postman MCP Client & 1-Click Judge Collection Guide — TALOS
+> Project: TALOS · Jury Alignment: **Postman** · Judge: **Pooja Mistry** (Developer Advocate, Postman) · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [00-TRACKS_AND_SUBMISSION_STRATEGY](00-TRACKS_AND_SUBMISSION_STRATEGY.md) · [01-PAYPAL_SANDBOX_STEP_BY_STEP](01-PAYPAL_SANDBOX_STEP_BY_STEP.md) · [API_SPEC](../03-engineering/API_SPEC.md)
 
 ---
 
-## 1. Strategic Overview: Why PactPay Ships a 1-Click Postman MCP & REST Harness
+## 1. Strategic Overview: Why TALOS Ships a 1-Click Postman MCP & REST Harness
 
 **Judge #12**: **Pooja Mistry** (Developer Advocate at **Postman**, specializing in AI Agent API testing, Model Context Protocol [MCP] inspection in Postman, and API-first developer experience).
 
 Just like Carly Richmond at Elastic, **Pooja Mistry sits on the 13-judge panel scoring every project across all five 20% criteria**.
-To make Pooja Mistry (and every technical judge on the panel) fall in love with PactPay in the first 30 seconds of inspecting our GitHub repository:
+To make Pooja Mistry (and every technical judge on the panel) fall in love with TALOS in the first 30 seconds of inspecting our GitHub repository:
 1. We place a prominent **"Run in Postman"** badge at the top of `README.md`.
 2. We ship two version-controlled files in `/postman/`:
-   - `postman/PactPay-Sandbox-MCP.postman_collection.json` (Complete Postman Collection v2.1 with automated `pm.test()` assertion scripts for every Rust Firewall endpoint, Go Orchestrator endpoint, and live PayPal Sandbox lifecycle step).
-   - `postman/PactPay-Sandbox.postman_environment.json` (Pre-configured environment variables chaining `mandate_id` → `escrow_id` → `paypal_order_id` → `paypal_authorization_id` → `paypal_capture_id` automatically across requests!).
-3. We include a step-by-step configuration for **Postman's built-in MCP Client** so Pooja Mistry can connect Postman directly to our **Rust Zero-Trust MCP Server (`pactpay-firewall-rs`)** over `stdio` or `HTTP/SSE` and invoke `pactpay_issue_mandate`, `pactpay_sanitize_dom`, and `pactpay_execute_protected_checkout` interactively!
+   - `postman/Talos-Sandbox-MCP.postman_collection.json` (Complete Postman Collection v2.1 with automated `pm.test()` assertion scripts for every Rust Firewall endpoint, Go Orchestrator endpoint, and live PayPal Sandbox lifecycle step).
+   - `postman/Talos-Sandbox.postman_environment.json` (Pre-configured environment variables chaining `mandate_id` → `escrow_id` → `paypal_order_id` → `paypal_authorization_id` → `paypal_capture_id` automatically across requests!).
+3. We include a step-by-step configuration for **Postman's built-in MCP Client** so Pooja Mistry can connect Postman directly to our **Rust Zero-Trust MCP Server (`talos-firewall-rs`)** over `stdio` or `HTTP/SSE` and invoke `talos_issue_mandate`, `talos_sanitize_dom`, and `talos_execute_protected_checkout` interactively!
 
 ---
 
 ## 2. Step-by-Step Human Actions in Postman (Phase `P7`)
 
-### Step 2.1 — Import the PactPay Collection & Environment into Postman
+### Step 2.1 — Import the TALOS Collection & Environment into Postman
 1. Open the **Postman Desktop App** or **[https://go.postman.co/](https://go.postman.co/)**.
 2. Click **Import** in the top-left corner of your workspace.
 3. Drag and drop both files from `g:\PAYPAL\postman\`:
-   - `g:\PAYPAL\postman\PactPay-Sandbox-MCP.postman_collection.json`
-   - `g:\PAYPAL\postman\PactPay-Sandbox.postman_environment.json`
-4. In the top-right **Environment selector dropdown**, select **`PactPay — PayPal Sandbox & Local/Render Environment`**.
+   - `g:\PAYPAL\postman\Talos-Sandbox-MCP.postman_collection.json`
+   - `g:\PAYPAL\postman\Talos-Sandbox.postman_environment.json`
+4. In the top-right **Environment selector dropdown**, select **`TALOS — PayPal Sandbox & Local/Render Environment`**.
 5. Click the **Environment Quick Look (eye icon)** in the top-right and verify/paste your `PAYPAL_CLIENT_ID` and `PAYPAL_CLIENT_SECRET` into the `Current Value` column (never commit secrets into `Initial Value`; our committed environment file keeps `Initial Value` clean with safe placeholders).
 
 ### Step 2.2 — Test Our Rust MCP Server Using Postman's Native MCP Client
@@ -34,23 +34,23 @@ Postman v11+ includes a first-class **MCP Request Client** specifically highligh
 1. In Postman, click **New → MCP Request**.
 2. Choose **Transport Type**:
    - **Option A (`HTTP/SSE` — Works with both Local & Render Cloud!)**:
-     - Enter URL: `http://localhost:8081/mcp/sse` (or `https://pactpay-firewall-rs.onrender.com/mcp/sse`).
+     - Enter URL: `http://localhost:8081/mcp/sse` (or `https://talos-firewall-rs.onrender.com/mcp/sse`).
    - **Option B (`STDIO` — Local Rust Binary)**:
-     - Enter Command: `g:/PAYPAL/services/firewall-rs/target/release/pactpay-firewall-rs --mcp-stdio`
-3. Click **Connect**. Postman will automatically discover and list PactPay's 4 registered MCP tools:
-   - `pactpay_issue_mandate`
-   - `pactpay_verify_mandate`
-   - `pactpay_sanitize_dom`
-   - `pactpay_execute_protected_checkout`
-4. Select `pactpay_sanitize_dom`, paste the sample poisoned merchant HTML payload, click **Run Tool**, and watch the `<3ms` sanitized output and `DeBERTa-v3` risk score appear in Postman!
+     - Enter Command: `g:/PAYPAL/services/firewall-rs/target/release/talos-firewall-rs --mcp-stdio`
+3. Click **Connect**. Postman will automatically discover and list TALOS's 4 registered MCP tools:
+   - `talos_issue_mandate`
+   - `talos_verify_mandate`
+   - `talos_sanitize_dom`
+   - `talos_execute_protected_checkout`
+4. Select `talos_sanitize_dom`, paste the sample poisoned merchant HTML payload, click **Run Tool**, and watch the `<3ms` sanitized output and `DeBERTa-v3` risk score appear in Postman!
 
 ### Step 2.3 — (Optional) Generate a Public Workspace Link for `README.md`
 1. In Postman, click **Workspace Settings** → Change visibility to **Public** (ensuring no secret keys are in `Initial Value`).
-2. Click the three dots (`...`) next to **`PactPay — Zero-Trust Agentic Commerce & PayPal Sandbox Escrow`** collection → **Share** → **Via Run in Postman** → Copy the Markdown snippet into `README.md`.
+2. Click the three dots (`...`) next to **`TALOS — Zero-Trust Agentic Commerce & PayPal Sandbox Escrow`** collection → **Share** → **Via Run in Postman** → Copy the Markdown snippet into `README.md`.
 
 ---
 
-## 3. Complete Folder & Request Sequence Inside `PactPay-Sandbox-MCP.postman_collection.json`
+## 3. Complete Folder & Request Sequence Inside `Talos-Sandbox-MCP.postman_collection.json`
 
 Our Postman Collection is organized into **4 sequential folders** with built-in `pm.test()` assertions and `pm.environment.set()` variable chaining so a judge can click **"Run Collection"** in the Postman Collection Runner and watch **12 automated API tests turn green in 4 seconds**:
 
@@ -75,7 +75,7 @@ Our Postman Collection is organized into **4 sequential folders** with built-in 
 
 Any judge or developer can also run our entire Postman suite headlessly from the terminal in 1 command:
 ```bash
-npx newman run postman/PactPay-Sandbox-MCP.postman_collection.json \
-  -e postman/PactPay-Sandbox.postman_environment.json \
+npx newman run postman/Talos-Sandbox-MCP.postman_collection.json \
+  -e postman/Talos-Sandbox.postman_environment.json \
   --reporters cli
 ```

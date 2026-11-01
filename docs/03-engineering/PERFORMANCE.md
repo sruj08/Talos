@@ -1,5 +1,5 @@
-# Performance Engineering, SLOs & Benchmarks — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Systems Performance Team · Status: Approved v1.0 · Last updated: 2026-11-01
+# Performance Engineering, SLOs & Benchmarks — TALOS
+> Project: TALOS · Owner: Systems Performance Team · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [ARCHITECTURE](ARCHITECTURE.md) · [BACKEND](BACKEND.md) · [FRONTEND](FRONTEND.md)
 
 ---
@@ -21,7 +21,7 @@
 
 ## 2. Why Rust + Go Achieves 14× Lower Tail Latency Than Python/Node
 
-| Benchmark Scenario (500 RPS, 64KB Merchant DOM) | PactPay (`Rust 1.85 + Go 1.24`) | Monolithic Python (`FastAPI + BS4`) | Monolithic Node.js (`Express + Cheerio`) |
+| Benchmark Scenario (500 RPS, 64KB Merchant DOM) | TALOS (`Rust 1.85 + Go 1.24`) | Monolithic Python (`FastAPI + BS4`) | Monolithic Node.js (`Express + Cheerio`) |
 | :--- | :--- | :--- | :--- |
 | **DOM Sanitization + KYA Verify p50** | **`1.85 ms`** | `38.4 ms` | `14.2 ms` |
 | **DOM Sanitization + KYA Verify p99** | **`3.85 ms`** | `142.0 ms` (GIL contention) | `68.5 ms` (V8 GC pause) |

@@ -1,4 +1,4 @@
-// Package escrow implements PactPay's deterministic Two-Phase Commit (2PC) Escrow State Machine.
+// Package escrow implements TALOS's deterministic Two-Phase Commit (2PC) Escrow State Machine.
 package escrow
 
 import "errors"

@@ -1,5 +1,5 @@
-# Local Environment Setup & Developer Guide — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Developer Experience (DX) Team · Status: Approved v1.0 · Last updated: 2026-11-01
+# Local Environment Setup & Developer Guide — TALOS
+> Project: TALOS · Owner: Developer Experience (DX) Team · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [TECH_STACK](TECH_STACK.md) · [SANDBOX_AND_API_KEYS_SETUP](../09-integrations-and-guides/SANDBOX_AND_API_KEYS_SETUP.md)
 
 ---
@@ -22,8 +22,8 @@ Designed so any hackathon judge can boot the entire 5-container stack (`firewall
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/pactpay/pactpay.git
-cd pactpay
+git clone https://github.com/talos/talos.git
+cd talos
 
 # 2. Copy the pre-configured Sandbox environment template
 cp .env.example .env
@@ -33,7 +33,7 @@ docker compose up --build
 ```
 
 Once running, open:
-- **PactPay Command Center UI (`AG Studio` + `Bryntum Scheduler Pro` + `PayPal JS SDK v6`)**: `http://localhost:3000`
+- **TALOS Command Center UI (`AG Studio` + `Bryntum Scheduler Pro` + `PayPal JS SDK v6`)**: `http://localhost:3000`
 - **Go Escrow Orchestrator API & Health**: `http://localhost:8080/healthz`
 - **Rust Zero-Trust Firewall & MCP Kernel**: `http://localhost:8081/healthz`
 
@@ -50,9 +50,9 @@ docker compose up -d postgres valkey
 
 ### Step 2: Run Database Migrations & Demo Seed Data
 ```bash
-psql "postgres://pactpay:pactpay_dev_secret@localhost:5432/pactpay?sslmode=disable" \
-  -f services/orchestrator-go/migrations/000001_init_pactpay_schema.up.sql
-psql "postgres://pactpay:pactpay_dev_secret@localhost:5432/pactpay?sslmode=disable" \
+psql "postgres://talos:talos_dev_secret@localhost:5432/talos?sslmode=disable" \
+  -f services/orchestrator-go/migrations/000001_init_talos_schema.up.sql
+psql "postgres://talos:talos_dev_secret@localhost:5432/talos?sslmode=disable" \
   -f scripts/seed_demo_data.sql
 ```
 

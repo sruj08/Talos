@@ -1,5 +1,5 @@
 # ADR-0001: Polyglot Rust + Go + TypeScript Architecture
-> Project: PactPay (AegisPay) · Owner: Principal Architecture Council · Status: Accepted · Last updated: 2026-11-01
+> Project: TALOS · Owner: Principal Architecture Council · Status: Accepted · Last updated: 2026-11-01
 > Related: [ARCHITECTURE](../ARCHITECTURE.md) · [TECH_STACK](../TECH_STACK.md) · [PROJECT_BRIEF](../../00-overview/PROJECT_BRIEF.md)
 
 ---
@@ -8,7 +8,7 @@
 **Accepted** (2026-11-01)
 
 ## Context and Problem Statement
-PactPay sits inline between autonomous AI shopping/procurement agents and live money in **PayPal Sandbox**. It must simultaneously satisfy three distinct engineering workloads:
+TALOS sits inline between autonomous AI shopping/procurement agents and live money in **PayPal Sandbox**. It must simultaneously satisfy three distinct engineering workloads:
 1. **Wire-speed inline security & cryptography (`F-01`, `F-02`, `F-03`)**: Streaming HTML sanitization, Unicode normalization (`R-02`), `Ed25519` + RFC 9421 signature verification, and local `DeBERTa-v3` ONNX inference (`M-01`) in `<4ms` p99 without garbage-collection pauses.
 2. **High-concurrency I/O orchestration (`F-04`, `F-05`, `F-06`, `F-10`)**: Parallel fan-out across external APIs (**Channel3**, **KERNEL**, **PayPal Sandbox**), ACID PostgreSQL state transitions (`E-06`), Redis idempotency locks (`E-10`), and WebSocket event broadcasting (`API-15`).
 3. **Interactive 60fps financial visualization (`F-07`, `F-08`, `F-09`)**: Hosting **AG Grid Enterprise / AG Studio**, **Bryntum Scheduler Pro**, and **PayPal JS SDK v6** in the browser.

@@ -1,5 +1,5 @@
-# Coding Standards & Quality Gates — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Engineering Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# Coding Standards & Quality Gates — TALOS
+> Project: TALOS · Owner: Principal Engineering Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [FRONTEND](FRONTEND.md) · [BACKEND](BACKEND.md) · [GIT_WORKFLOW](GIT_WORKFLOW.md)
 
 ---
@@ -60,7 +60,7 @@ All three services output structured JSON logs with unified correlation keys:
 {
   "timestamp": "2026-11-01T15:10:00.142Z",
   "level": "INFO",
-  "service": "pactpay-orchestrator-go",
+  "service": "talos-orchestrator-go",
   "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736",
   "span_id": "00f067aa0ba902b7",
   "escrow_id": "e5555555-6666-7777-8888-999999999999",

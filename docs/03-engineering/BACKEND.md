@@ -1,12 +1,12 @@
-# Backend Engineering Architecture — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Systems & Escrow Engineering · Status: Approved v1.0 · Last updated: 2026-11-01
+# Backend Engineering Architecture — TALOS
+> Project: TALOS · Owner: Systems & Escrow Engineering · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [ARCHITECTURE](ARCHITECTURE.md) · [DATA_MODEL](DATA_MODEL.md) · [API_SPEC](API_SPEC.md) · [ADR-0001](adr/ADR-0001-polyglot-rust-go-typescript-architecture.md)
 
 ---
 
 ## 1. Dual-Engine Backend Topology
 
-PactPay's backend is split along a clean cryptographic and concurrency boundary:
+TALOS's backend is split along a clean cryptographic and concurrency boundary:
 1. **`services/firewall-rs` (Rust 1.85.0)**: Stateless, zero-GC inline security kernel and official `rmcp` MCP Server (`F-01`, `F-02`, `F-03`, `API-01`..`API-04`).
 2. **`services/orchestrator-go` (Go 1.24.0)**: Stateful, high-concurrency Two-Phase Commit (2PC) Escrow Referee, **APIMatic Go PayPal SDK** host, **Channel3** price oracle, and WebSocket hub (`F-04`, `F-05`, `F-06`, `F-10`, `API-05`..`API-15`).
 
@@ -20,7 +20,7 @@ services/firewall-rs/
 ├── Cargo.toml
 └── src/
     ├── main.rs            # Axum HTTP (:8081) + rmcp stdio/SSE transport startup
-    ├── mcp_tools.rs       # #[tool] definitions for pactpay_issue_mandate, pactpay_sanitize_dom
+    ├── mcp_tools.rs       # #[tool] definitions for talos_issue_mandate, talos_sanitize_dom
     ├── mandate.rs         # F-01: Ed25519 mandate signing/verification + RFC 9421 HTTP signatures
     ├── normalizer.rs      # R-02: NFKC normalization, U+E0000 tag stripping, Base64 attribute decode
     ├── sanitizer.rs       # F-02: lol_html streaming DOM rewriter + aho-corasick 140-pattern matcher

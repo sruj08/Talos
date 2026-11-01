@@ -1,5 +1,5 @@
-module github.com/pactpay/services/orchestrator-go
+module github.com/talos/services/orchestrator-go
 
 go 1.24
 
-replace github.com/pactpay/sdk/paypal-go-apimatic => ../../sdk/paypal-go-apimatic
+replace github.com/talos/sdk/paypal-go-apimatic => ../../sdk/paypal-go-apimatic

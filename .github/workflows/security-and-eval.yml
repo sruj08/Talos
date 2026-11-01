@@ -1,4 +1,4 @@
-name: "PactPay Security Scan & AI Red-Team Evaluation"
+name: "TALOS Security Scan & AI Red-Team Evaluation"
 
 on:
   push:
@@ -61,7 +61,7 @@ jobs:
           exit-code: "1"
 
   # ============================================================================
-  # Job 2: PactPay Adversarial DOM Prompt-Injection Red-Team Eval (F-02, M-01)
+  # Job 2: TALOS Adversarial DOM Prompt-Injection Red-Team Eval (F-02, M-01)
   # ============================================================================
   prompt-injection-redteam-eval:
     name: "Red-Team DOM Sanitizer & KYA Mandate Benchmark (M-01, R-02)"
@@ -85,7 +85,7 @@ jobs:
         working-directory: services/firewall-rs
         run: |
           if [ -f "Cargo.toml" ]; then
-            echo "Running PactPay Adversarial DOM Sanitizer & Unicode Tag-Block Evals (R-02)..."
+            echo "Running TALOS Adversarial DOM Sanitizer & Unicode Tag-Block Evals (R-02)..."
             cargo test --release --test '*' -- --nocapture
           else
             echo "Validating synthetic red-team corpus definitions..."

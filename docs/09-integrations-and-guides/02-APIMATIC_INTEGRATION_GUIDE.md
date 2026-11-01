@@ -1,5 +1,5 @@
-# 02 — APIMatic Context Plugin & Golang SDK Codegen Guide — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Sponsor: **APIMatic (`3× $1,000` Cash + 6-Month Business Subscription)** · Judge: **Ameer Hassan** (Co-Founder, APIMatic) · Status: Approved v1.0 · Last updated: 2026-11-01
+# 02 — APIMatic Context Plugin & Golang SDK Codegen Guide — TALOS
+> Project: TALOS · Sponsor: **APIMatic (`3× $1,000` Cash + 6-Month Business Subscription)** · Judge: **Ameer Hassan** (Co-Founder, APIMatic) · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [00-TRACKS_AND_SUBMISSION_STRATEGY](00-TRACKS_AND_SUBMISSION_STRATEGY.md) · [01-PAYPAL_SANDBOX_STEP_BY_STEP](01-PAYPAL_SANDBOX_STEP_BY_STEP.md) · [ARCHITECTURE](../03-engineering/ARCHITECTURE.md)
 
 ---
@@ -8,7 +8,7 @@
 
 **Judge**: **Ameer Hassan** (Co-Founder, APIMatic — led the Oct 7, 2026 official hackathon webinar: *"Power Your PayPal Hackathon Project with APIMatic Context Plugins"*).
 
-Most hackathon teams only `npm install @paypal/paypal-server-sdk` and claim they used APIMatic. **PactPay goes three layers deeper** to solve a real engineering gap that will immediately stand out to Ameer Hassan:
+Most hackathon teams only `npm install @paypal/paypal-server-sdk` and claim they used APIMatic. **TALOS goes three layers deeper** to solve a real engineering gap that will immediately stand out to Ameer Hassan:
 1. **The Golang SDK Gap**: PayPal's official APIMatic-powered Server SDKs ([https://www.paypal.com/us/webapps/mpp/apimatic](https://www.paypal.com/us/webapps/mpp/apimatic)) ship out-of-the-box for **TypeScript/Node.js, Python, Java, C# (.NET), PHP, and Ruby**—**but NOT Golang (`Go`)**.
 2. **Our Masterstroke (`sdk/paypal-go-apimatic/`)**: Because our high-concurrency 2PC Escrow Orchestrator (`services/orchestrator-go`) is written in **Go 1.24**, we use **APIMatic Studio & CLI (`apimatic-cli`)** to validate PayPal's official OpenAPI 3.0 specifications (`checkout_orders_v2.json`, `payments_payment_v2.json`, `shipping_shipment_tracking_v1.json`, `customer_disputes_v1.json`) and generate a strongly-typed, idiomatic **Golang PayPal SDK (`sdk/paypal-go-apimatic`)** with built-in OAuth 2.0 token caching, exponential backoff retries, and `PayPal-Request-Id` idempotency header injection!
 3. **APIMatic Context Plugin in the Agent & IDE Loop**: We wire the **APIMatic Context Plugin (MCP)** into both our IDE development workflow and our runtime `/api/mcp/paypal-bridge` agent reasoning loop so the LLM never hallucinates deprecated PayPal v1 fields when constructing `Orders v2 AUTHORIZE` payloads.
@@ -74,8 +74,8 @@ In `g:\PAYPAL\.mcp.json`, we register the APIMatic Context Plugin MCP server alo
 }
 ```
 
-### Step 3.2 — How PactPay Uses the APIMatic Context Plugin at Runtime (`API-16`)
-When a user or autonomous procurement agent asks PactPay to structure a complex multi-item order or dispute evidence bundle:
+### Step 3.2 — How TALOS Uses the APIMatic Context Plugin at Runtime (`API-16`)
+When a user or autonomous procurement agent asks TALOS to structure a complex multi-item order or dispute evidence bundle:
 1. `web/src/app/api/mcp/paypal-bridge/route.ts` queries the **APIMatic Context Snapshot** (`sdk/paypal-go-apimatic/apimatic-context-manifest.json`) to inject the exact, canonical schema constraints for:
    - `OrdersCreateInput` (`intent: "AUTHORIZE"`, `purchase_units[].amount`, `PayPal-Request-Id`)
    - `AuthorizationsCaptureInput` (`final_capture: true`, `invoice_id`)
@@ -129,15 +129,15 @@ You can either use the pre-generated, production-ready `sdk/paypal-go-apimatic/`
 In `services/orchestrator-go/go.mod`, we mount the local APIMatic-generated SDK via a `replace` directive so Go compiles with zero external friction:
 
 ```go
-module github.com/pactpay/pactpay/services/orchestrator-go
+module github.com/talos/talos/services/orchestrator-go
 
 go 1.24.0
 
 require (
-	github.com/pactpay/pactpay/sdk/paypal-go-apimatic v1.1.0
+	github.com/talos/talos/sdk/paypal-go-apimatic v1.1.0
 )
 
-replace github.com/pactpay/pactpay/sdk/paypal-go-apimatic => ../../sdk/paypal-go-apimatic
+replace github.com/talos/talos/sdk/paypal-go-apimatic => ../../sdk/paypal-go-apimatic
 ```
 
 And inside `services/orchestrator-go/internal/paypal/escrow_gateway.go`:

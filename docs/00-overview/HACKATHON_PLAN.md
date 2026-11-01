@@ -1,5 +1,5 @@
-# Hackathon Execution Plan — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Hackathon Execution Lead · Status: Approved v1.0 · Last updated: 2026-11-01
+# Hackathon Execution Plan — TALOS
+> Project: TALOS · Owner: Hackathon Execution Lead · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](PROJECT_BRIEF.md) · [PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK](../08-project/PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md) · [PITCH](PITCH.md) · [00-TRACKS_AND_SUBMISSION_STRATEGY](../09-integrations-and-guides/00-TRACKS_AND_SUBMISSION_STRATEGY.md)
 
 ---
@@ -24,7 +24,7 @@
 | **H11 – H16** | **Phase 4: `TASK-07` & `TASK-08`** | Go Backend Lead + **User Gate #2** | **User Gate #2 (Channel3 + KERNEL keys)**; Go `errgroup` parallel fan-out to Channel3 price oracle + KERNEL browser + Shipment Tracking v1 + Disputes v1 + WebSocket hub. | `credentials`, `/gsd-plan-phase 4`, `/gsd-execute-phase 4`, `/gsd-add-tests 4` | `go test -race ./...` passes; `+92%` price gouge blocked & rerouted via Channel3. |
 | **H16 – H22** | **Phase 5: `TASK-09` & `TASK-10`** | Frontend UI Lead + **User Gate #3** | Next.js 15 Dark-Mode Command Center, KYA Mandate Studio, `AgStudioBlotter.tsx` (AG Grid Enterprise `applyTransactionAsync`, Master-Detail DOM diff, **AG Studio** AI copilot). | `/gsd-ui-phase 5`, `ui-ux-pro-max`, `shadcn`, `vercel-react-best-practices`, `frontend-testing` | AG Grid streams WebSocket updates at 60fps; Master-Detail drawer renders DOM diff & AG Charts. |
 | **H22 – H28** | **Phase 6: `TASK-11` & `TASK-12`** | Frontend UI Lead + **User Gate #4** | **User Gate #4 (Bryntum Trial/MCP)**; `BryntumSlaBoard.tsx` 2-way SLA timeline bound to PayPal `VOID`; `PayPalStepUpModal.tsx` (PayPal JS SDK v6); `PoisonedStoreSim.tsx` 1-click red-team simulator; `@paypal/agent-toolkit` bridge. | `/gsd-plan-phase 6`, `component-refactoring`, `web-design-guidelines`, `/gsd-ui-review 6` | Expiring/dragging SLA bar in Bryntum fires live PayPal Sandbox `VOID`. |
-| **H28 – H32** | **Phase 7: `TASK-13` & `TASK-14`** | QA & Observability Lead + **User Gate #5** | **User Gate #5 (Elastic + Postman)**; Rust & Go OpenTelemetry export to Elastic Cloud; `postman/PactPay-Sandbox-MCP.postman_collection.json`; Playwright E2E test suite & screenshots. | `credentials`, `/gsd-eval-review 7`, `e2e-tester`, `agent-browser`, `/gsd-audit-fix` | Playwright E2E passes all 3 demo acts; Newman contract tests pass. |
+| **H28 – H32** | **Phase 7: `TASK-13` & `TASK-14`** | QA & Observability Lead + **User Gate #5** | **User Gate #5 (Elastic + Postman)**; Rust & Go OpenTelemetry export to Elastic Cloud; `postman/Talos-Sandbox-MCP.postman_collection.json`; Playwright E2E test suite & screenshots. | `credentials`, `/gsd-eval-review 7`, `e2e-tester`, `agent-browser`, `/gsd-audit-fix` | Playwright E2E passes all 3 demo acts; Newman contract tests pass. |
 | **H32 – H36** | **Phase 8: `TASK-15` & `TASK-16`** | Full Team + **User Gates #6 & #7** | **User Gate #6 (`render.yaml` Blueprint deploy)**; **User Gate #7 (`2:45` YouTube Demo Video + Devpost Submission)** across all 14 eligible prize categories. | `/gsd-graphify build`, `/gsd-ship`, `/gsd-verify-work 8`, `/gsd-audit-milestone` | Live Render URL healthy; YouTube video public; Devpost submitted. |
 
 ---

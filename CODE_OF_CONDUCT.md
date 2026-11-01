@@ -4,4 +4,4 @@
 We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, color, religion, or sexual identity and orientation.
 
 ## Enforcement
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainers at `conduct@pactpay.dev`.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainers at `conduct@talos.dev`.

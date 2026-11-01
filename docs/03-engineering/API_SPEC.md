@@ -1,12 +1,12 @@
-# API & MCP Tool Specification — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: API & Protocol Engineering · Status: Approved v1.0 · Last updated: 2026-11-01
+# API & MCP Tool Specification — TALOS
+> Project: TALOS · Owner: API & Protocol Engineering · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [ARCHITECTURE](ARCHITECTURE.md) · [DATA_MODEL](DATA_MODEL.md) · [openapi.yaml](../../api/openapi.yaml) · [ADR-0003](adr/ADR-0003-apimatic-context-plugin-and-golang-sdk-codegen.md)
 
 ---
 
 ## 1. Protocol Conventions & Cryptographic Headers
 
-PactPay exposes a unified dual-protocol surface: **RESTful HTTP/JSON (`API-01`..`API-14`, `API-16`)**, **Real-Time WebSocket (`API-15`)**, and **Model Context Protocol (MCP JSON-RPC 2.0)** over `stdio` and `HTTP/SSE` (`F-03`).
+TALOS exposes a unified dual-protocol surface: **RESTful HTTP/JSON (`API-01`..`API-14`, `API-16`)**, **Real-Time WebSocket (`API-15`)**, and **Model Context Protocol (MCP JSON-RPC 2.0)** over `stdio` and `HTTP/SSE` (`F-03`).
 
 ### 1.1 Base URLs
 - **Local Development**:
@@ -14,8 +14,8 @@ PactPay exposes a unified dual-protocol surface: **RESTful HTTP/JSON (`API-01`..
   - `firewall-rs`: `http://localhost:8081`
   - `web` (Next.js 15): `http://localhost:3000`
 - **Render Production Blueprint (`F-14`)**:
-  - `https://pactpay-orchestrator-go.onrender.com`
-  - `https://pactpay-console-web.onrender.com`
+  - `https://talos-orchestrator-go.onrender.com`
+  - `https://talos-console-web.onrender.com`
 
 ### 1.2 Mandatory Security, Idempotency & Traceability Headers
 
@@ -30,7 +30,7 @@ PactPay exposes a unified dual-protocol surface: **RESTful HTTP/JSON (`API-01`..
 ```json
 {
   "error": {
-    "code": "PACTPAY_DOM_PROMPT_INJECTION_BLOCKED",
+    "code": "TALOS_DOM_PROMPT_INJECTION_BLOCKED",
     "message": "Merchant checkout DOM contained hidden indirect prompt injection and exceeded Channel3 fair-market spread.",
     "http_status": 422,
     "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736",
@@ -48,13 +48,13 @@ PactPay exposes a unified dual-protocol surface: **RESTful HTTP/JSON (`API-01`..
 
 | Error Code | HTTP Status | Trigger Condition |
 | :--- | :--- | :--- |
-| `PACTPAY_INVALID_KYA_SIGNATURE` | `401 Unauthorized` | `Ed25519` mandate signature or RFC 9421 HTTP signature failed cryptographic verification (`F-01`). |
-| `PACTPAY_MANDATE_EXPIRED_OR_REVOKED` | `403 Forbidden` | `KyaMandate.expires_at < NOW()` or `is_revoked == true` (`E-03`). |
-| `PACTPAY_STEP_UP_CO_SIGN_REQUIRED` | `202 Accepted` | Order exceeds autonomous mandate cap; paused awaiting PayPal JS SDK v6 approval (`F-09`). |
-| `PACTPAY_DOM_PROMPT_INJECTION_BLOCKED` | `422 Unprocessable Entity` | `firewall-rs` (`lol_html` + `DeBERTa-v3` `M-01`) detected hidden instruction override (`F-02`). |
-| `PACTPAY_CHANNEL3_PRICE_GOUGING` | `422 Unprocessable Entity` | Merchant ask exceeds Channel3 fair-market median by `> max_spread_bps` (`F-04`). |
-| `PACTPAY_IDEMPOTENCY_CONFLICT` | `409 Conflict` | Concurrent in-flight request with identical `PayPal-Request-Id` (`E-10`, `R-03`). |
-| `PACTPAY_INVALID_STATE_TRANSITION` | `409 Conflict` | Attempted `CAPTURE` on an already `PAYPAL_VOIDED` or `PAYPAL_CAPTURED` escrow (`E-06`). |
+| `TALOS_INVALID_KYA_SIGNATURE` | `401 Unauthorized` | `Ed25519` mandate signature or RFC 9421 HTTP signature failed cryptographic verification (`F-01`). |
+| `TALOS_MANDATE_EXPIRED_OR_REVOKED` | `403 Forbidden` | `KyaMandate.expires_at < NOW()` or `is_revoked == true` (`E-03`). |
+| `TALOS_STEP_UP_CO_SIGN_REQUIRED` | `202 Accepted` | Order exceeds autonomous mandate cap; paused awaiting PayPal JS SDK v6 approval (`F-09`). |
+| `TALOS_DOM_PROMPT_INJECTION_BLOCKED` | `422 Unprocessable Entity` | `firewall-rs` (`lol_html` + `DeBERTa-v3` `M-01`) detected hidden instruction override (`F-02`). |
+| `TALOS_CHANNEL3_PRICE_GOUGING` | `422 Unprocessable Entity` | Merchant ask exceeds Channel3 fair-market median by `> max_spread_bps` (`F-04`). |
+| `TALOS_IDEMPOTENCY_CONFLICT` | `409 Conflict` | Concurrent in-flight request with identical `PayPal-Request-Id` (`E-10`, `R-03`). |
+| `TALOS_INVALID_STATE_TRANSITION` | `409 Conflict` | Attempted `CAPTURE` on an already `PAYPAL_VOIDED` or `PAYPAL_CAPTURED` escrow (`E-06`). |
 
 ---
 
@@ -62,7 +62,7 @@ PactPay exposes a unified dual-protocol surface: **RESTful HTTP/JSON (`API-01`..
 
 ### `API-01` — Sign & Register KYA Spending Mandate (`firewall-rs`)
 - **Method & Path**: `POST /v1/mandates/sign`
-- **MCP Tool Name**: `pactpay_issue_mandate`
+- **MCP Tool Name**: `talos_issue_mandate`
 - **Rate Limit**: `60 req/min` per Principal (`E-01`)
 - **Request JSON**:
 ```json
@@ -98,7 +98,7 @@ PactPay exposes a unified dual-protocol surface: **RESTful HTTP/JSON (`API-01`..
 
 ### `API-02` — Verify KYA Mandate & RFC 9421 Signature (`firewall-rs`)
 - **Method & Path**: `POST /v1/mandates/verify`
-- **MCP Tool Name**: `pactpay_verify_mandate`
+- **MCP Tool Name**: `talos_verify_mandate`
 - **Target Latency**: `<1.0 ms` p99
 - **Request JSON**:
 ```json
@@ -123,7 +123,7 @@ PactPay exposes a unified dual-protocol surface: **RESTful HTTP/JSON (`API-01`..
 
 ### `API-03` — Sanitize Merchant DOM for Prompt Injections (`firewall-rs`)
 - **Method & Path**: `POST /v1/firewall/sanitize-dom`
-- **MCP Tool Name**: `pactpay_sanitize_dom`
+- **MCP Tool Name**: `talos_sanitize_dom`
 - **Target Latency**: `<4.0 ms` p99 (`lol_html` + `DeBERTa-v3` ONNX `M-01`)
 - **Request JSON**:
 ```json
@@ -189,7 +189,7 @@ PactPay exposes a unified dual-protocol surface: **RESTful HTTP/JSON (`API-01`..
 
 ### `API-05` — Evaluate & Execute Protected Agentic Checkout (`orchestrator-go`)
 - **Method & Path**: `POST /api/v1/checkout/evaluate`
-- **MCP Tool Name**: `pactpay_execute_protected_checkout`
+- **MCP Tool Name**: `talos_execute_protected_checkout`
 - **Purpose**: Runs parallel `errgroup` fan-out across Rust KYA verification (`API-02`), KERNEL + Rust DOM sanitization (`API-03`), and Channel3 fair-market price discovery (`API-06`). If clean, automatically places a PayPal Sandbox `Orders v2 AUTHORIZE` hold (`API-07`) and creates a Bryntum SLA task (`E-07`).
 - **Request JSON**:
 ```json
@@ -200,7 +200,7 @@ PactPay exposes a unified dual-protocol surface: **RESTful HTTP/JSON (`API-01`..
   "category": "Studio Audio Equipment",
   "merchant_name": "Verified Studio Pro Audio",
   "merchant_url": "https://verified-audio.trychannel3.com/sku/shure-sm7b",
-  "merchant_paypal_email": "merchant-pactpay@business.example.com",
+  "merchant_paypal_email": "merchant-talos@business.example.com",
   "amount_cents": 24900,
   "currency": "USD"
 }
@@ -271,11 +271,11 @@ PactPay exposes a unified dual-protocol surface: **RESTful HTTP/JSON (`API-01`..
 - **Request JSON**:
 ```json
 {
-  "payer_sandbox_email": "buyer-pactpay@personal.example.com",
-  "payee_sandbox_email": "merchant-pactpay@business.example.com",
+  "payer_sandbox_email": "buyer-talos@personal.example.com",
+  "payee_sandbox_email": "merchant-talos@business.example.com",
   "amount_cents": 24900,
   "currency": "USD",
-  "description": "PactPay Protected Escrow — Shure SM7B (Mandate c3333333)"
+  "description": "TALOS Protected Escrow — Shure SM7B (Mandate c3333333)"
 }
 ```
 - **Response JSON (`201 Created`)**:
@@ -374,7 +374,7 @@ PactPay exposes a unified dual-protocol surface: **RESTful HTTP/JSON (`API-01`..
 {
   "paypal_dispute_id": "PP-D-994812",
   "dispute_reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
-  "kernel_screenshot_url": "https://storage.pactpay.io/forensics/kernel-dom-snap-e5555.png"
+  "kernel_screenshot_url": "https://storage.talos.io/forensics/kernel-dom-snap-e5555.png"
 }
 ```
 - **Response JSON (`201 Created`)**:

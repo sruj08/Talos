@@ -1,11 +1,11 @@
 {
   "version": "2.0.0",
   "generator": "gsd-graphify",
-  "generated_at": "2026-11-01T15:18:02.627575+00:00",
+  "generated_at": "2026-11-01T15:50:35.989754+00:00",
   "workspace": "g:/PAYPAL",
-  "project": "PactPay (AegisPay)",
+  "project": "TALOS",
   "stats": {
-    "total_nodes": 183,
+    "total_nodes": 188,
     "total_edges": 31,
     "total_communities": 8
   },
@@ -100,7 +100,7 @@
       "path": ".env.example",
       "type": "doc",
       "community": "C-07",
-      "bytes": 3117
+      "bytes": 3092
     },
     {
       "id": ".mcp.json",
@@ -108,7 +108,7 @@
       "path": ".mcp.json",
       "type": "config",
       "community": "C-07",
-      "bytes": 656
+      "bytes": 654
     },
     {
       "id": "AGENTS.md",
@@ -116,7 +116,7 @@
       "path": "AGENTS.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 844
+      "bytes": 842
     },
     {
       "id": "CHANGELOG.md",
@@ -124,7 +124,7 @@
       "path": "CHANGELOG.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 826
+      "bytes": 813
     },
     {
       "id": "CLAUDE.md",
@@ -132,7 +132,7 @@
       "path": "CLAUDE.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 3879
+      "bytes": 3862
     },
     {
       "id": "CODE_OF_CONDUCT.md",
@@ -140,7 +140,7 @@
       "path": "CODE_OF_CONDUCT.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 626
+      "bytes": 624
     },
     {
       "id": "CONTRIBUTING.md",
@@ -148,7 +148,7 @@
       "path": "CONTRIBUTING.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 1027
+      "bytes": 1001
     },
     {
       "id": "LICENSE",
@@ -156,7 +156,23 @@
       "path": "LICENSE",
       "type": "doc",
       "community": "C-07",
-      "bytes": 1109
+      "bytes": 1096
+    },
+    {
+      "id": "MAP.md",
+      "label": "MAP.md",
+      "path": "MAP.md",
+      "type": "doc",
+      "community": "C-07",
+      "bytes": 21521
+    },
+    {
+      "id": "README.md",
+      "label": "README.md",
+      "path": "README.md",
+      "type": "doc",
+      "community": "C-07",
+      "bytes": 8236
     },
     {
       "id": "SECURITY.md",
@@ -164,7 +180,7 @@
       "path": "SECURITY.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 719
+      "bytes": 691
     },
     {
       "id": "biblehackathon.md",
@@ -172,7 +188,7 @@
       "path": "biblehackathon.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 61960
+      "bytes": 61924
     },
     {
       "id": "biblehackathon.pdf",
@@ -188,7 +204,7 @@
       "path": "docker-compose.yml",
       "type": "config",
       "community": "C-08",
-      "bytes": 768
+      "bytes": 754
     },
     {
       "id": "ideas.md",
@@ -196,7 +212,7 @@
       "path": "ideas.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 165766
+      "bytes": 165706
     },
     {
       "id": "ideas.pdf",
@@ -212,7 +228,7 @@
       "path": "render.yaml",
       "type": "config",
       "community": "C-08",
-      "bytes": 3435
+      "bytes": 3396
     },
     {
       "id": "state.md",
@@ -220,7 +236,7 @@
       "path": "state.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 15825
+      "bytes": 15941
     },
     {
       "id": ".agent/PROMPT.md",
@@ -228,7 +244,7 @@
       "path": ".agent/PROMPT.md",
       "type": "config",
       "community": "C-06",
-      "bytes": 1651
+      "bytes": 1625
     },
     {
       "id": ".agent/STEERING.md",
@@ -244,7 +260,7 @@
       "path": ".agent/tasks.json",
       "type": "config",
       "community": "C-06",
-      "bytes": 25658
+      "bytes": 25625
     },
     {
       "id": ".agent/logs/LOG.md",
@@ -252,7 +268,7 @@
       "path": ".agent/logs/LOG.md",
       "type": "config",
       "community": "C-06",
-      "bytes": 170
+      "bytes": 166
     },
     {
       "id": ".agent/prd/PRD.md",
@@ -268,7 +284,7 @@
       "path": ".agent/prd/SUMMARY.md",
       "type": "config",
       "community": "C-06",
-      "bytes": 1017
+      "bytes": 1002
     },
     {
       "id": ".agent/tasks/TASK-01.json",
@@ -300,7 +316,7 @@
       "path": ".agent/tasks/TASK-04.json",
       "type": "config",
       "community": "C-06",
-      "bytes": 1480
+      "bytes": 1474
     },
     {
       "id": ".agent/tasks/TASK-05.json",
@@ -372,7 +388,7 @@
       "path": ".agent/tasks/TASK-13.json",
       "type": "config",
       "community": "C-06",
-      "bytes": 1633
+      "bytes": 1621
     },
     {
       "id": ".agent/tasks/TASK-14.json",
@@ -380,7 +396,7 @@
       "path": ".agent/tasks/TASK-14.json",
       "type": "config",
       "community": "C-06",
-      "bytes": 1089
+      "bytes": 1087
     },
     {
       "id": ".agent/tasks/TASK-15.json",
@@ -404,7 +420,7 @@
       "path": ".github/workflows/ci-rust-go-web.yml",
       "type": "config",
       "community": "C-08",
-      "bytes": 6600
+      "bytes": 6795
     },
     {
       "id": ".github/workflows/deploy-render.yml",
@@ -412,7 +428,7 @@
       "path": ".github/workflows/deploy-render.yml",
       "type": "config",
       "community": "C-08",
-      "bytes": 4159
+      "bytes": 4235
     },
     {
       "id": ".github/workflows/security-and-eval.yml",
@@ -420,7 +436,7 @@
       "path": ".github/workflows/security-and-eval.yml",
       "type": "config",
       "community": "C-08",
-      "bytes": 4457
+      "bytes": 4559
     },
     {
       "id": ".planning/PROJECT.md",
@@ -428,7 +444,7 @@
       "path": ".planning/PROJECT.md",
       "type": "config",
       "community": "C-06",
-      "bytes": 1188
+      "bytes": 1175
     },
     {
       "id": ".planning/ROADMAP.md",
@@ -436,7 +452,7 @@
       "path": ".planning/ROADMAP.md",
       "type": "config",
       "community": "C-06",
-      "bytes": 1151
+      "bytes": 1138
     },
     {
       "id": ".planning/STATE.md",
@@ -444,7 +460,7 @@
       "path": ".planning/STATE.md",
       "type": "config",
       "community": "C-06",
-      "bytes": 449
+      "bytes": 436
     },
     {
       "id": ".planning/config.json",
@@ -452,7 +468,31 @@
       "path": ".planning/config.json",
       "type": "config",
       "community": "C-06",
-      "bytes": 327
+      "bytes": 325
+    },
+    {
+      "id": ".planning/graphs/CODEBASE_INDEX.md",
+      "label": "CODEBASE_INDEX.md",
+      "path": ".planning/graphs/CODEBASE_INDEX.md",
+      "type": "config",
+      "community": "C-06",
+      "bytes": 8958
+    },
+    {
+      "id": ".planning/graphs/GRAPH_REPORT.md",
+      "label": "GRAPH_REPORT.md",
+      "path": ".planning/graphs/GRAPH_REPORT.md",
+      "type": "config",
+      "community": "C-06",
+      "bytes": 4235
+    },
+    {
+      "id": ".planning/graphs/graph.json",
+      "label": "graph.json",
+      "path": ".planning/graphs/graph.json",
+      "type": "config",
+      "community": "C-06",
+      "bytes": 50534
     },
     {
       "id": "api/openapi.yaml",
@@ -460,7 +500,7 @@
       "path": "api/openapi.yaml",
       "type": "config",
       "community": "C-04",
-      "bytes": 25886
+      "bytes": 26590
     },
     {
       "id": "docs/00-overview/HACKATHON_PLAN.md",
@@ -468,7 +508,7 @@
       "path": "docs/00-overview/HACKATHON_PLAN.md",
       "type": "doc",
       "community": "C-06",
-      "bytes": 8698
+      "bytes": 8670
     },
     {
       "id": "docs/00-overview/PITCH.md",
@@ -476,7 +516,7 @@
       "path": "docs/00-overview/PITCH.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 35697
+      "bytes": 35784
     },
     {
       "id": "docs/00-overview/PROJECT_BRIEF.md",
@@ -484,7 +524,7 @@
       "path": "docs/00-overview/PROJECT_BRIEF.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 27897
+      "bytes": 28000
     },
     {
       "id": "docs/00-overview/VISION.md",
@@ -492,7 +532,7 @@
       "path": "docs/00-overview/VISION.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 15369
+      "bytes": 15419
     },
     {
       "id": "docs/01-product/COMPETITIVE_ANALYSIS.md",
@@ -500,7 +540,7 @@
       "path": "docs/01-product/COMPETITIVE_ANALYSIS.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 9457
+      "bytes": 9471
     },
     {
       "id": "docs/01-product/FEATURES.md",
@@ -508,7 +548,7 @@
       "path": "docs/01-product/FEATURES.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 10657
+      "bytes": 10677
     },
     {
       "id": "docs/01-product/METRICS.md",
@@ -516,7 +556,7 @@
       "path": "docs/01-product/METRICS.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 11222
+      "bytes": 11267
     },
     {
       "id": "docs/01-product/PERSONAS.md",
@@ -524,7 +564,7 @@
       "path": "docs/01-product/PERSONAS.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 15847
+      "bytes": 15950
     },
     {
       "id": "docs/01-product/PRD.md",
@@ -532,7 +572,7 @@
       "path": "docs/01-product/PRD.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 26859
+      "bytes": 27070
     },
     {
       "id": "docs/01-product/ROADMAP.md",
@@ -540,7 +580,7 @@
       "path": "docs/01-product/ROADMAP.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 9585
+      "bytes": 9629
     },
     {
       "id": "docs/01-product/USER_JOURNEYS.md",
@@ -548,7 +588,7 @@
       "path": "docs/01-product/USER_JOURNEYS.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 10935
+      "bytes": 11027
     },
     {
       "id": "docs/01-product/USER_STORIES.md",
@@ -556,7 +596,7 @@
       "path": "docs/01-product/USER_STORIES.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 21610
+      "bytes": 21835
     },
     {
       "id": "docs/02-design/ACCESSIBILITY.md",
@@ -564,7 +604,7 @@
       "path": "docs/02-design/ACCESSIBILITY.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 9519
+      "bytes": 9568
     },
     {
       "id": "docs/02-design/DESIGN_SYSTEM.md",
@@ -572,7 +612,7 @@
       "path": "docs/02-design/DESIGN_SYSTEM.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 12232
+      "bytes": 12313
     },
     {
       "id": "docs/02-design/LOCALIZATION.md",
@@ -580,7 +620,7 @@
       "path": "docs/02-design/LOCALIZATION.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 8951
+      "bytes": 9008
     },
     {
       "id": "docs/02-design/UI_SPEC.md",
@@ -588,7 +628,7 @@
       "path": "docs/02-design/UI_SPEC.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 15728
+      "bytes": 15874
     },
     {
       "id": "docs/03-engineering/API_SPEC.md",
@@ -596,7 +636,7 @@
       "path": "docs/03-engineering/API_SPEC.md",
       "type": "doc",
       "community": "C-04",
-      "bytes": 19032
+      "bytes": 19485
     },
     {
       "id": "docs/03-engineering/ARCHITECTURE.md",
@@ -604,7 +644,7 @@
       "path": "docs/03-engineering/ARCHITECTURE.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 18797
+      "bytes": 19014
     },
     {
       "id": "docs/03-engineering/BACKEND.md",
@@ -612,7 +652,7 @@
       "path": "docs/03-engineering/BACKEND.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 9219
+      "bytes": 9427
     },
     {
       "id": "docs/03-engineering/CODING_STANDARDS.md",
@@ -620,7 +660,7 @@
       "path": "docs/03-engineering/CODING_STANDARDS.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 4147
+      "bytes": 4191
     },
     {
       "id": "docs/03-engineering/DATA_MODEL.md",
@@ -628,7 +668,7 @@
       "path": "docs/03-engineering/DATA_MODEL.md",
       "type": "doc",
       "community": "C-04",
-      "bytes": 20224
+      "bytes": 20589
     },
     {
       "id": "docs/03-engineering/ENVIRONMENT_SETUP.md",
@@ -636,7 +676,7 @@
       "path": "docs/03-engineering/ENVIRONMENT_SETUP.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 5456
+      "bytes": 5513
     },
     {
       "id": "docs/03-engineering/FRONTEND.md",
@@ -644,7 +684,7 @@
       "path": "docs/03-engineering/FRONTEND.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 12454
+      "bytes": 12708
     },
     {
       "id": "docs/03-engineering/GIT_WORKFLOW.md",
@@ -652,7 +692,7 @@
       "path": "docs/03-engineering/GIT_WORKFLOW.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 3982
+      "bytes": 4031
     },
     {
       "id": "docs/03-engineering/INTEGRATIONS.md",
@@ -660,7 +700,7 @@
       "path": "docs/03-engineering/INTEGRATIONS.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 10189
+      "bytes": 10273
     },
     {
       "id": "docs/03-engineering/PERFORMANCE.md",
@@ -668,7 +708,7 @@
       "path": "docs/03-engineering/PERFORMANCE.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 4726
+      "bytes": 4784
     },
     {
       "id": "docs/03-engineering/TECH_STACK.md",
@@ -676,7 +716,7 @@
       "path": "docs/03-engineering/TECH_STACK.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 13182
+      "bytes": 13215
     },
     {
       "id": "docs/03-engineering/TESTING.md",
@@ -684,7 +724,7 @@
       "path": "docs/03-engineering/TESTING.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 7608
+      "bytes": 7722
     },
     {
       "id": "docs/03-engineering/adr/ADR-0000-template.md",
@@ -692,7 +732,7 @@
       "path": "docs/03-engineering/adr/ADR-0000-template.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 1584
+      "bytes": 1606
     },
     {
       "id": "docs/03-engineering/adr/ADR-0001-polyglot-rust-go-typescript-architecture.md",
@@ -700,7 +740,7 @@
       "path": "docs/03-engineering/adr/ADR-0001-polyglot-rust-go-typescript-architecture.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 3372
+      "bytes": 3396
     },
     {
       "id": "docs/03-engineering/adr/ADR-0002-paypal-orders-v2-authorize-reversible-escrow.md",
@@ -708,7 +748,7 @@
       "path": "docs/03-engineering/adr/ADR-0002-paypal-orders-v2-authorize-reversible-escrow.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 3080
+      "bytes": 3098
     },
     {
       "id": "docs/03-engineering/adr/ADR-0003-apimatic-context-plugin-and-golang-sdk-codegen.md",
@@ -716,7 +756,7 @@
       "path": "docs/03-engineering/adr/ADR-0003-apimatic-context-plugin-and-golang-sdk-codegen.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 2929
+      "bytes": 2956
     },
     {
       "id": "docs/03-engineering/adr/ADR-0004-rust-lol-html-and-deberta-onnx-prompt-firewall.md",
@@ -724,7 +764,7 @@
       "path": "docs/03-engineering/adr/ADR-0004-rust-lol-html-and-deberta-onnx-prompt-firewall.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 2509
+      "bytes": 2531
     },
     {
       "id": "docs/03-engineering/adr/ADR-0005-ag-grid-studio-and-bryntum-scheduler-command-center.md",
@@ -732,7 +772,7 @@
       "path": "docs/03-engineering/adr/ADR-0005-ag-grid-studio-and-bryntum-scheduler-command-center.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 2631
+      "bytes": 2649
     },
     {
       "id": "docs/03-engineering/adr/ADR-0006-render-native-polyglot-blueprint-deployment.md",
@@ -740,7 +780,7 @@
       "path": "docs/03-engineering/adr/ADR-0006-render-native-polyglot-blueprint-deployment.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 2340
+      "bytes": 2344
     },
     {
       "id": "docs/04-ai/AI_EVALS.md",
@@ -748,7 +788,7 @@
       "path": "docs/04-ai/AI_EVALS.md",
       "type": "doc",
       "community": "C-01",
-      "bytes": 6499
+      "bytes": 6531
     },
     {
       "id": "docs/04-ai/DATA_PIPELINE.md",
@@ -756,7 +796,7 @@
       "path": "docs/04-ai/DATA_PIPELINE.md",
       "type": "doc",
       "community": "C-01",
-      "bytes": 6010
+      "bytes": 6074
     },
     {
       "id": "docs/04-ai/MODELS.md",
@@ -764,7 +804,7 @@
       "path": "docs/04-ai/MODELS.md",
       "type": "doc",
       "community": "C-01",
-      "bytes": 6712
+      "bytes": 6737
     },
     {
       "id": "docs/04-ai/PROMPTS.md",
@@ -772,7 +812,7 @@
       "path": "docs/04-ai/PROMPTS.md",
       "type": "doc",
       "community": "C-01",
-      "bytes": 8427
+      "bytes": 8531
     },
     {
       "id": "docs/04-ai/RESPONSIBLE_AI.md",
@@ -780,7 +820,7 @@
       "path": "docs/04-ai/RESPONSIBLE_AI.md",
       "type": "doc",
       "community": "C-01",
-      "bytes": 7051
+      "bytes": 7074
     },
     {
       "id": "docs/05-ops/CICD.md",
@@ -788,7 +828,7 @@
       "path": "docs/05-ops/CICD.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 9851
+      "bytes": 9927
     },
     {
       "id": "docs/05-ops/COST.md",
@@ -796,7 +836,7 @@
       "path": "docs/05-ops/COST.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 7717
+      "bytes": 7739
     },
     {
       "id": "docs/05-ops/DEPLOYMENT.md",
@@ -804,7 +844,7 @@
       "path": "docs/05-ops/DEPLOYMENT.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 8094
+      "bytes": 8139
     },
     {
       "id": "docs/05-ops/INFRASTRUCTURE.md",
@@ -812,7 +852,7 @@
       "path": "docs/05-ops/INFRASTRUCTURE.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 10514
+      "bytes": 10604
     },
     {
       "id": "docs/05-ops/OBSERVABILITY.md",
@@ -820,7 +860,7 @@
       "path": "docs/05-ops/OBSERVABILITY.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 9556
+      "bytes": 9624
     },
     {
       "id": "docs/05-ops/RUNBOOK.md",
@@ -828,7 +868,7 @@
       "path": "docs/05-ops/RUNBOOK.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 10287
+      "bytes": 10353
     },
     {
       "id": "docs/05-ops/SLA.md",
@@ -836,7 +876,7 @@
       "path": "docs/05-ops/SLA.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 6363
+      "bytes": 6371
     },
     {
       "id": "docs/06-security-compliance/COMPLIANCE.md",
@@ -844,7 +884,7 @@
       "path": "docs/06-security-compliance/COMPLIANCE.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 9951
+      "bytes": 9955
     },
     {
       "id": "docs/06-security-compliance/PRIVACY.md",
@@ -852,7 +892,7 @@
       "path": "docs/06-security-compliance/PRIVACY.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 9807
+      "bytes": 9833
     },
     {
       "id": "docs/06-security-compliance/REGULATORY_SANDBOX.md",
@@ -860,7 +900,7 @@
       "path": "docs/06-security-compliance/REGULATORY_SANDBOX.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 6624
+      "bytes": 6649
     },
     {
       "id": "docs/06-security-compliance/RISK_REGISTER.md",
@@ -868,7 +908,7 @@
       "path": "docs/06-security-compliance/RISK_REGISTER.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 8258
+      "bytes": 8276
     },
     {
       "id": "docs/06-security-compliance/SECURITY_ARCHITECTURE.md",
@@ -876,7 +916,7 @@
       "path": "docs/06-security-compliance/SECURITY_ARCHITECTURE.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 10732
+      "bytes": 10794
     },
     {
       "id": "docs/06-security-compliance/THREAT_MODEL.md",
@@ -884,7 +924,7 @@
       "path": "docs/06-security-compliance/THREAT_MODEL.md",
       "type": "doc",
       "community": "C-08",
-      "bytes": 10077
+      "bytes": 10135
     },
     {
       "id": "docs/07-business/BUSINESS_MODEL.md",
@@ -900,7 +940,7 @@
       "path": "docs/07-business/FINANCIALS.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 7857
+      "bytes": 7898
     },
     {
       "id": "docs/07-business/FINANCIAL_GOVERNANCE.md",
@@ -908,7 +948,7 @@
       "path": "docs/07-business/FINANCIAL_GOVERNANCE.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 3716
+      "bytes": 3708
     },
     {
       "id": "docs/07-business/GTM.md",
@@ -916,7 +956,7 @@
       "path": "docs/07-business/GTM.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 7720
+      "bytes": 7738
     },
     {
       "id": "docs/07-business/IMPACT.md",
@@ -924,7 +964,7 @@
       "path": "docs/07-business/IMPACT.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 7835
+      "bytes": 7842
     },
     {
       "id": "docs/07-business/MARKET_RESEARCH.md",
@@ -932,7 +972,7 @@
       "path": "docs/07-business/MARKET_RESEARCH.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 3679
+      "bytes": 3675
     },
     {
       "id": "docs/08-project/BACKLOG.md",
@@ -940,7 +980,7 @@
       "path": "docs/08-project/BACKLOG.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 17018
+      "bytes": 17064
     },
     {
       "id": "docs/08-project/GLOSSARY.md",
@@ -948,7 +988,7 @@
       "path": "docs/08-project/GLOSSARY.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 12123
+      "bytes": 12111
     },
     {
       "id": "docs/08-project/PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md",
@@ -956,7 +996,7 @@
       "path": "docs/08-project/PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md",
       "type": "doc",
       "community": "C-06",
-      "bytes": 39714
+      "bytes": 39669
     },
     {
       "id": "docs/08-project/TEAM.md",
@@ -964,7 +1004,7 @@
       "path": "docs/08-project/TEAM.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 5644
+      "bytes": 5673
     },
     {
       "id": "docs/09-integrations-and-guides/00-TRACKS_AND_SUBMISSION_STRATEGY.md",
@@ -972,7 +1012,7 @@
       "path": "docs/09-integrations-and-guides/00-TRACKS_AND_SUBMISSION_STRATEGY.md",
       "type": "doc",
       "community": "C-05",
-      "bytes": 16504
+      "bytes": 16538
     },
     {
       "id": "docs/09-integrations-and-guides/01-PAYPAL_SANDBOX_STEP_BY_STEP.md",
@@ -980,7 +1020,7 @@
       "path": "docs/09-integrations-and-guides/01-PAYPAL_SANDBOX_STEP_BY_STEP.md",
       "type": "doc",
       "community": "C-05",
-      "bytes": 16240
+      "bytes": 16415
     },
     {
       "id": "docs/09-integrations-and-guides/02-APIMATIC_INTEGRATION_GUIDE.md",
@@ -988,7 +1028,7 @@
       "path": "docs/09-integrations-and-guides/02-APIMATIC_INTEGRATION_GUIDE.md",
       "type": "doc",
       "community": "C-05",
-      "bytes": 11526
+      "bytes": 11664
     },
     {
       "id": "docs/09-integrations-and-guides/03-AG_GRID_AND_AG_STUDIO_GUIDE.md",
@@ -996,7 +1036,7 @@
       "path": "docs/09-integrations-and-guides/03-AG_GRID_AND_AG_STUDIO_GUIDE.md",
       "type": "doc",
       "community": "C-05",
-      "bytes": 10497
+      "bytes": 10619
     },
     {
       "id": "docs/09-integrations-and-guides/04-BRYNTUM_SCHEDULER_AND_GANTT_GUIDE.md",
@@ -1004,7 +1044,7 @@
       "path": "docs/09-integrations-and-guides/04-BRYNTUM_SCHEDULER_AND_GANTT_GUIDE.md",
       "type": "doc",
       "community": "C-05",
-      "bytes": 9552
+      "bytes": 9656
     },
     {
       "id": "docs/09-integrations-and-guides/05-CHANNEL3_INTEGRATION_GUIDE.md",
@@ -1012,7 +1052,7 @@
       "path": "docs/09-integrations-and-guides/05-CHANNEL3_INTEGRATION_GUIDE.md",
       "type": "doc",
       "community": "C-05",
-      "bytes": 8268
+      "bytes": 8346
     },
     {
       "id": "docs/09-integrations-and-guides/06-RENDER_BLUEPRINT_DEPLOYMENT_GUIDE.md",
@@ -1020,7 +1060,7 @@
       "path": "docs/09-integrations-and-guides/06-RENDER_BLUEPRINT_DEPLOYMENT_GUIDE.md",
       "type": "doc",
       "community": "C-05",
-      "bytes": 9200
+      "bytes": 9282
     },
     {
       "id": "docs/09-integrations-and-guides/07-ELASTIC_OTEL_AND_VECTOR_GUIDE.md",
@@ -1028,7 +1068,7 @@
       "path": "docs/09-integrations-and-guides/07-ELASTIC_OTEL_AND_VECTOR_GUIDE.md",
       "type": "doc",
       "community": "C-05",
-      "bytes": 7549
+      "bytes": 7562
     },
     {
       "id": "docs/09-integrations-and-guides/08-POSTMAN_MCP_AND_COLLECTION_GUIDE.md",
@@ -1036,7 +1076,7 @@
       "path": "docs/09-integrations-and-guides/08-POSTMAN_MCP_AND_COLLECTION_GUIDE.md",
       "type": "doc",
       "community": "C-05",
-      "bytes": 8132
+      "bytes": 8139
     },
     {
       "id": "docs/09-integrations-and-guides/09-KERNEL_ASTROPODS_ZAPIER_GUIDE.md",
@@ -1044,23 +1084,23 @@
       "path": "docs/09-integrations-and-guides/09-KERNEL_ASTROPODS_ZAPIER_GUIDE.md",
       "type": "doc",
       "community": "C-05",
-      "bytes": 9050
+      "bytes": 9138
     },
     {
-      "id": "postman/PactPay-Sandbox-MCP.postman_collection.json",
-      "label": "PactPay-Sandbox-MCP.postman_collection.json",
-      "path": "postman/PactPay-Sandbox-MCP.postman_collection.json",
+      "id": "postman/Talos-Sandbox-MCP.postman_collection.json",
+      "label": "Talos-Sandbox-MCP.postman_collection.json",
+      "path": "postman/Talos-Sandbox-MCP.postman_collection.json",
       "type": "config",
       "community": "C-02",
-      "bytes": 2682
+      "bytes": 2664
     },
     {
-      "id": "postman/PactPay-Sandbox.postman_environment.json",
-      "label": "PactPay-Sandbox.postman_environment.json",
-      "path": "postman/PactPay-Sandbox.postman_environment.json",
+      "id": "postman/Talos-Sandbox.postman_environment.json",
+      "label": "Talos-Sandbox.postman_environment.json",
+      "path": "postman/Talos-Sandbox.postman_environment.json",
       "type": "config",
       "community": "C-02",
-      "bytes": 430
+      "bytes": 428
     },
     {
       "id": "research/01-facts.md",
@@ -1084,7 +1124,7 @@
       "path": "research/B-sponsors.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 8196
+      "bytes": 8272
     },
     {
       "id": "research/C-judges.md",
@@ -1092,7 +1132,7 @@
       "path": "research/C-judges.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 15139
+      "bytes": 15259
     },
     {
       "id": "research/D-problem-decoding.md",
@@ -1108,7 +1148,7 @@
       "path": "research/D-why-now.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 3542
+      "bytes": 3567
     },
     {
       "id": "research/E-competition.md",
@@ -1124,7 +1164,7 @@
       "path": "research/F-connect-the-dots.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 10859
+      "bytes": 10927
     },
     {
       "id": "research/00-source/devpost-overview-and-rules.md",
@@ -1140,7 +1180,7 @@
       "path": "research/domains/ai-agents-agentic-commerce.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 9371
+      "bytes": 9417
     },
     {
       "id": "research/domains/business-solutions.md",
@@ -1180,7 +1220,7 @@
       "path": "scripts/verify-deployment.sh",
       "type": "code",
       "community": "C-07",
-      "bytes": 248
+      "bytes": 244
     },
     {
       "id": "sdk/paypal-go-apimatic/client.go",
@@ -1204,7 +1244,7 @@
       "path": "sdk/paypal-go-apimatic/go.mod",
       "type": "code",
       "community": "C-02",
-      "bytes": 61
+      "bytes": 59
     },
     {
       "id": "sdk/paypal-go-apimatic/orders_v2.go",
@@ -1212,7 +1252,7 @@
       "path": "sdk/paypal-go-apimatic/orders_v2.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 731
+      "bytes": 729
     },
     {
       "id": "sdk/paypal-go-apimatic/payments_v2.go",
@@ -1236,7 +1276,7 @@
       "path": "services/firewall-rs/Cargo.toml",
       "type": "code",
       "community": "C-01",
-      "bytes": 797
+      "bytes": 793
     },
     {
       "id": "services/firewall-rs/src/main.rs",
@@ -1244,7 +1284,7 @@
       "path": "services/firewall-rs/src/main.rs",
       "type": "code",
       "community": "C-01",
-      "bytes": 1608
+      "bytes": 1602
     },
     {
       "id": "services/firewall-rs/src/mandate.rs",
@@ -1260,7 +1300,7 @@
       "path": "services/firewall-rs/src/mcp_server.rs",
       "type": "code",
       "community": "C-01",
-      "bytes": 1346
+      "bytes": 1334
     },
     {
       "id": "services/firewall-rs/src/sanitizer.rs",
@@ -1284,7 +1324,7 @@
       "path": "services/orchestrator-go/go.mod",
       "type": "code",
       "community": "C-02",
-      "bytes": 148
+      "bytes": 144
     },
     {
       "id": "services/orchestrator-go/cmd/server/main.go",
@@ -1292,7 +1332,7 @@
       "path": "services/orchestrator-go/cmd/server/main.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 703
+      "bytes": 697
     },
     {
       "id": "services/orchestrator-go/internal/channel3/oracle.go",
@@ -1308,7 +1348,7 @@
       "path": "services/orchestrator-go/internal/escrow/machine.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 1381
+      "bytes": 1379
     },
     {
       "id": "services/orchestrator-go/internal/kernel/browser.go",
@@ -1356,7 +1396,7 @@
       "path": "services/orchestrator-go/migrations/0001_init_schema.up.sql",
       "type": "code",
       "community": "C-02",
-      "bytes": 4583
+      "bytes": 4570
     },
     {
       "id": "tests/redteam/prompt_injection_suite.json",
@@ -1364,7 +1404,7 @@
       "path": "tests/redteam/prompt_injection_suite.json",
       "type": "code",
       "community": "C-01",
-      "bytes": 640
+      "bytes": 638
     },
     {
       "id": "war-room/ai-agents-agentic-commerce-ideas.md",
@@ -1372,7 +1412,7 @@
       "path": "war-room/ai-agents-agentic-commerce-ideas.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 34457
+      "bytes": 34429
     },
     {
       "id": "war-room/ai-agents-agentic-commerce.md",
@@ -1380,7 +1420,7 @@
       "path": "war-room/ai-agents-agentic-commerce.md",
       "type": "doc",
       "community": "C-07",
-      "bytes": 15123
+      "bytes": 15165
     },
     {
       "id": "war-room/business-solutions-ideas.md",
@@ -1431,14 +1471,6 @@
       "bytes": 7915
     },
     {
-      "id": "war-room/pactpay-architecture-and-refinement.md",
-      "label": "pactpay-architecture-and-refinement.md",
-      "path": "war-room/pactpay-architecture-and-refinement.md",
-      "type": "doc",
-      "community": "C-07",
-      "bytes": 28073
-    },
-    {
       "id": "war-room/roster-additions.md",
       "label": "roster-additions.md",
       "path": "war-room/roster-additions.md",
@@ -1463,20 +1495,28 @@
       "bytes": 10261
     },
     {
+      "id": "war-room/talos-architecture-and-refinement.md",
+      "label": "talos-architecture-and-refinement.md",
+      "path": "war-room/talos-architecture-and-refinement.md",
+      "type": "doc",
+      "community": "C-07",
+      "bytes": 28189
+    },
+    {
       "id": "web/package.json",
       "label": "package.json",
       "path": "web/package.json",
       "type": "code",
       "community": "C-03",
-      "bytes": 858
+      "bytes": 856
     },
     {
-      "id": "web/e2e/pactpay-3act-demo.spec.ts",
-      "label": "pactpay-3act-demo.spec.ts",
-      "path": "web/e2e/pactpay-3act-demo.spec.ts",
+      "id": "web/e2e/talos-3act-demo.spec.ts",
+      "label": "talos-3act-demo.spec.ts",
+      "path": "web/e2e/talos-3act-demo.spec.ts",
       "type": "code",
       "community": "C-03",
-      "bytes": 430
+      "bytes": 428
     },
     {
       "id": "web/src/app/layout.tsx",
@@ -1484,7 +1524,7 @@
       "path": "web/src/app/layout.tsx",
       "type": "code",
       "community": "C-03",
-      "bytes": 533
+      "bytes": 520
     },
     {
       "id": "web/src/app/page.tsx",
@@ -1492,7 +1532,7 @@
       "path": "web/src/app/page.tsx",
       "type": "code",
       "community": "C-03",
-      "bytes": 1163
+      "bytes": 1148
     },
     {
       "id": "web/src/app/api/mcp/paypal-bridge/route.ts",

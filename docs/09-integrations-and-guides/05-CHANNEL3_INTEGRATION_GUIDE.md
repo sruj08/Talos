@@ -1,23 +1,23 @@
-# 05 — Channel3 Fair-Market Price Oracle & MCP Guide — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Sponsor: **Channel3 (`$1,500` Cash — Best Use of Channel3)** · Judge: **Ignacio Valdez Bicard** (Founding Engineer, Channel3) · Status: Approved v1.0 · Last updated: 2026-11-01
+# 05 — Channel3 Fair-Market Price Oracle & MCP Guide — TALOS
+> Project: TALOS · Sponsor: **Channel3 (`$1,500` Cash — Best Use of Channel3)** · Judge: **Ignacio Valdez Bicard** (Founding Engineer, Channel3) · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [00-TRACKS_AND_SUBMISSION_STRATEGY](00-TRACKS_AND_SUBMISSION_STRATEGY.md) · [01-PAYPAL_SANDBOX_STEP_BY_STEP](01-PAYPAL_SANDBOX_STEP_BY_STEP.md) · [ARCHITECTURE](../03-engineering/ARCHITECTURE.md)
 
 ---
 
-## 1. Strategic Overview: How PactPay Wins the `$1,500` Channel3 Prize
+## 1. Strategic Overview: How TALOS Wins the `$1,500` Channel3 Prize
 
 **Judge**: **Ignacio Valdez Bicard** (Founding Engineer, Channel3 — `https://trychannel3.com/`).
 
 Almost every competing team in the hackathon will use **Channel3** as a passive product search box (*"search for shoes and show a list"*).
-**PactPay elevates Channel3 into an active, cryptographic-grade Financial Security Oracle (`F-04`)**:
+**TALOS elevates Channel3 into an active, cryptographic-grade Financial Security Oracle (`F-04`)**:
 1. **Autonomous Agent Product Discovery**: When a human principal (`P-01 Arjun Mehta` or `P-02 Maya Lin`) gives the agent a procurement mandate (e.g., *"Source a Shure SM7B Dynamic Studio Microphone under `$300`"*), the agent queries **Channel3's 100M+ clean product catalog** (`POST /v1/products/search` / Channel3 MCP) with zero scraping required.
 2. **The Anti-Gouging & Price-Tampering Oracle (`spread_bps` Guard)**:
-   - Before PactPay's Go Orchestrator (`services/orchestrator-go`) permits any **PayPal Sandbox `Orders v2 AUTHORIZE`** hold on an external merchant URL, it spawns a parallel goroutine (`internal/channel3/oracle.go`) that queries Channel3 for all verified merchants carrying that exact SKU/GTIN/MPN.
+   - Before TALOS's Go Orchestrator (`services/orchestrator-go`) permits any **PayPal Sandbox `Orders v2 AUTHORIZE`** hold on an external merchant URL, it spawns a parallel goroutine (`internal/channel3/oracle.go`) that queries Channel3 for all verified merchants carrying that exact SKU/GTIN/MPN.
    - It computes the **Fair-Market Median Price (`median_price_cents`)** and the attempted checkout's **Market Spread in Basis Points (`spread_bps`)**:
      $$\text{spread\_bps} = \left\lfloor \frac{\text{merchant\_price\_cents} - \text{channel3\_median\_cents}}{\text{channel3\_median\_cents}} \times 10,000 \right\rfloor$$
-   - If the attempted checkout exceeds the user's KYA mandate spread threshold (default: `+1,500 bps` = `+15.00%` over Channel3 market median—such as our demo's `$480.00` poisoned storefront vs. Channel3's `$249.00` median, a **`+9,277 bps` (`+92.77%`) markup**), PactPay **blocks the gouged checkout in real time** and **automatically reroutes the PayPal `AUTHORIZE` hold to the lowest-priced verified Channel3 merchant (`$249.00`)**!
+   - If the attempted checkout exceeds the user's KYA mandate spread threshold (default: `+1,500 bps` = `+15.00%` over Channel3 market median—such as our demo's `$480.00` poisoned storefront vs. Channel3's `$249.00` median, a **`+9,277 bps` (`+92.77%`) markup**), TALOS **blocks the gouged checkout in real time** and **automatically reroutes the PayPal `AUTHORIZE` hold to the lowest-priced verified Channel3 merchant (`$249.00`)**!
 3. **Post-Capture Dispute Evidence Snapshot (`F-10`)**:
-   - Every Channel3 product lookup (`title`, `brand`, `gtin`, `specs`, `image_url`, `verified_merchant_domain`, `median_price_cents`) is persisted in PostgreSQL (`E-05 channel3_benchmarks`). If a merchant ships a counterfeit item and a dispute arises, PactPay attaches the signed **Channel3 Canonical Product Specification Snapshot** directly to PayPal Sandbox's `/v1/customer/disputes/{id}/provide-evidence` endpoint!
+   - Every Channel3 product lookup (`title`, `brand`, `gtin`, `specs`, `image_url`, `verified_merchant_domain`, `median_price_cents`) is persisted in PostgreSQL (`E-05 channel3_benchmarks`). If a merchant ships a counterfeit item and a dispute arises, TALOS attaches the signed **Channel3 Canonical Product Specification Snapshot** directly to PayPal Sandbox's `/v1/customer/disputes/{id}/provide-evidence` endpoint!
 
 ---
 
@@ -27,7 +27,7 @@ Almost every competing team in the hackathon will use **Channel3** as a passive 
 1. Open your browser and navigate to **[https://trychannel3.com/](https://trychannel3.com/)**.
 2. Click **Get Started / Sign Up** in the top-right corner and sign in with your GitHub or Google account.
 3. Claim the **PayPal AI Hackathon `$100` Free Credits** promo code (listed in the Devpost Resources tab / participant welcome email) under **Billing / Credits** in the Channel3 dashboard.
-4. Click **API Keys** in the left navigation bar → Click **Create New API Key** (`PactPay-Oracle-Key`).
+4. Click **API Keys** in the left navigation bar → Click **Create New API Key** (`TALOS-Oracle-Key`).
 5. Copy the generated key string (starts with `ch3_...` or `sk_...`). This is your `CHANNEL3_API_KEY`.
 
 ### Step 2.2 — Save `CHANNEL3_API_KEY` Using the Safe Credentials Protocol
@@ -115,4 +115,4 @@ type BenchmarkResult struct {
 
 - [ ] **1. Live Price Spread Pill in AG Grid Blotter**: Every row in `AgStudioBlotter.tsx` has a dedicated **`Channel3 Spread`** column showing basis points (e.g., `+9,277 bps (BLOCKED - GOUGING)` in crimson vs. `-160 bps (OPTIMAL - VERIFIED)` in emerald).
 - [ ] **2. AG Charts Price Distribution Inside Master-Detail Drawer**: Expanding any row shows an **AG Charts** bar chart comparing `Attempted Merchant Price` vs. `Channel3 100M+ Catalog Median` vs. `Channel3 Lowest Verified Offer`.
-- [ ] **3. Automatic Reroute in Act 2 of Demo Video**: When the `$480` poisoned merchant is blocked in Act 1, PactPay automatically reroutes the purchase to the `$249` verified merchant discovered via Channel3 and locks the `$249` **PayPal Sandbox `Orders v2 AUTHORIZE`** hold!
+- [ ] **3. Automatic Reroute in Act 2 of Demo Video**: When the `$480` poisoned merchant is blocked in Act 1, TALOS automatically reroutes the purchase to the `$249` verified merchant discovered via Channel3 and locks the `$249` **PayPal Sandbox `Orders v2 AUTHORIZE`** hold!

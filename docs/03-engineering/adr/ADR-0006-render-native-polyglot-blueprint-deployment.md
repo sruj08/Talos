@@ -1,5 +1,5 @@
 # ADR-0006: Render Native Polyglot Blueprint (`render.yaml`) Deployment
-> Project: PactPay (AegisPay) · Owner: Cloud Infrastructure & DevOps · Status: Accepted · Last updated: 2026-11-01
+> Project: TALOS · Owner: Cloud Infrastructure & DevOps · Status: Accepted · Last updated: 2026-11-01
 > Related: [ARCHITECTURE](../ARCHITECTURE.md) · [INFRASTRUCTURE](../../05-ops/INFRASTRUCTURE.md) · [DEPLOYMENT](../../05-ops/DEPLOYMENT.md)
 
 ---
@@ -24,11 +24,11 @@ Deploying a polyglot architecture (`Rust 1.85` + `Go 1.24` + `Next.js 15` + `Pos
 Chosen option: **Option 1 (Render Native Polyglot Blueprint `render.yaml`)**.
 
 ### Technical Blueprint Structure
-- `pactpay-firewall-rs`: `type: pserv` (Private Service), `runtime: rust`, reachable only over Render's private internal network (`pactpay-firewall-rs:8081`).
-- `pactpay-orchestrator-go`: `type: web`, `runtime: go`, connected via `fromService` environment bindings to `pactpay-firewall-rs`, `pactpay-postgres`, and `pactpay-valkey`.
-- `pactpay-console-web`: `type: web`, `runtime: node`, serving the Next.js 15 Command Center.
-- `pactpay-postgres`: Render Managed PostgreSQL 16 (`plan: basic-256mb` / starter).
-- `pactpay-valkey`: Render Managed Key-Value (`plan: starter`).
+- `talos-firewall-rs`: `type: pserv` (Private Service), `runtime: rust`, reachable only over Render's private internal network (`talos-firewall-rs:8081`).
+- `talos-orchestrator-go`: `type: web`, `runtime: go`, connected via `fromService` environment bindings to `talos-firewall-rs`, `talos-postgres`, and `talos-valkey`.
+- `talos-console-web`: `type: web`, `runtime: node`, serving the Next.js 15 Command Center.
+- `talos-postgres`: Render Managed PostgreSQL 16 (`plan: basic-256mb` / starter).
+- `talos-valkey`: Render Managed Key-Value (`plan: starter`).
 
 ### Positive Consequences
 - Sub-millisecond private networking between `orchestrator-go` and `firewall-rs`.

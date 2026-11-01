@@ -1,9 +1,9 @@
-# Financial Governance, Fraud Controls & Treasury Audit — PactPay
+# Financial Governance, Fraud Controls & Treasury Audit — TALOS
 
 ## 1. Non-Custodial Regulatory Posture
-PactPay is architected from Day 1 as a **Zero-Custody Technical Orchestrator & Security Control Plane**:
-- **PactPay Never Touches or Holds Fiat Funds**: All buyer funds are held exclusively inside regulated **PayPal Inc.** accounts (`Orders v2` 29-day authorization hold) or settled directly from Buyer PayPal -> Merchant PayPal upon `CAPTURE`.
-- Because PactPay never takes possession of funds, it avoids standalone Money Transmitter License (MTL) custody liabilities in the US and operates cleanly alongside **RBI Payment Aggregator – Cross Border (PA-CB)** licensed settlement flows in India.
+TALOS is architected from Day 1 as a **Zero-Custody Technical Orchestrator & Security Control Plane**:
+- **TALOS Never Touches or Holds Fiat Funds**: All buyer funds are held exclusively inside regulated **PayPal Inc.** accounts (`Orders v2` 29-day authorization hold) or settled directly from Buyer PayPal -> Merchant PayPal upon `CAPTURE`.
+- Because TALOS never takes possession of funds, it avoids standalone Money Transmitter License (MTL) custody liabilities in the US and operates cleanly alongside **RBI Payment Aggregator – Cross Border (PA-CB)** licensed settlement flows in India.
 
 ---
 

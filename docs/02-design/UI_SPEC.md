@@ -1,12 +1,12 @@
-# UI Specification & Screen Wireframes — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Design & Frontend Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# UI Specification & Screen Wireframes — TALOS
+> Project: TALOS · Owner: Principal Design & Frontend Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [DESIGN_SYSTEM](DESIGN_SYSTEM.md) · [ACCESSIBILITY](ACCESSIBILITY.md) · [LOCALIZATION](LOCALIZATION.md) · [METRICS](../01-product/METRICS.md)
 
 ---
 
 ## 1. Navigation & Screen Architecture Overview
 
-PactPay's frontend (`web/` in Next.js 15 App Router) is architected as a **Unified Single-Viewport Financial Command Center** with five tightly synchronized views/drawers so judges and enterprise operators never lose context during the 3-minute live demo:
+TALOS's frontend (`web/` in Next.js 15 App Router) is architected as a **Unified Single-Viewport Financial Command Center** with five tightly synchronized views/drawers so judges and enterprise operators never lose context during the 3-minute live demo:
 1. **View 1**: **Unified Command Center Header, KPI Ribbon & AG Grid / AG Studio Live Escrow Blotter (`F-08`)**
 2. **View 2**: **AG Grid Master-Detail Forensic Inspector Drawer (`F-02`, `F-04`, `F-08`, `F-12`)**
 3. **View 3**: **Bryntum Scheduler Pro & Gantt Two-Way Payment SLA Board (`F-06`, `F-07`)**
@@ -40,7 +40,7 @@ Provides real-time streaming visibility (`applyTransactionAsync`) into every aut
 ### 2.2 ASCII Wireframe
 ```text
 +----------------------------------------------------------------------------------------------------------------------+
-| [SHIELD] PACTPAY (AEGISPAY)   [● RUST KYA: 0.42ms] [● GO 2PC: ONLINE] [● PAYPAL SANDBOX: LIVE]  [USD $/INR ₹] [EN/HI]|
+| [SHIELD] TALOS   [● RUST KYA: 0.42ms] [● GO 2PC: ONLINE] [● PAYPAL SANDBOX: LIVE]  [USD $/INR ₹] [EN/HI]|
 +----------------------------------------------------------------------------------------------------------------------+
 | +--------------------------+ +--------------------------+ +--------------------------+ +---------------------------+ |
 | | PROTECTED AGENTIC GMV    | | FRAUD & GOUGING SAVED    | | INLINE FIREWALL LATENCY  | | ACTIVE BRYNTUM SLA HOLDS  | |

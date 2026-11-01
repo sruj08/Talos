@@ -1,18 +1,18 @@
-# Observability, Telemetry & Audit Logging — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal SRE & Observability Council (Targeting Judge #11: Carly Richmond, Elastic) · Status: Approved v1.0 · Last updated: 2026-11-01
+# Observability, Telemetry & Audit Logging — TALOS
+> Project: TALOS · Owner: Principal SRE & Observability Council (Targeting Judge #11: Carly Richmond, Elastic) · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [INFRASTRUCTURE](INFRASTRUCTURE.md) · [RUNBOOK](RUNBOOK.md) · [PRIVACY](../06-security-compliance/PRIVACY.md) · [MODELS](../04-ai/MODELS.md)
 
 ---
 
 ## 1. Observability Architecture & Elastic Cloud Integration (`F-12`)
 
-PactPay treats observability not as an afterthought, but as a **first-class compliance and security feature (`F-12`)** tailored for **Priya Nair (`P-04`, Enterprise FinOps & Compliance Auditor)** and **Judge #11 (Carly Richmond, Principal Developer Advocate at Elastic)**.
+TALOS treats observability not as an afterthought, but as a **first-class compliance and security feature (`F-12`)** tailored for **Priya Nair (`P-04`, Enterprise FinOps & Compliance Auditor)** and **Judge #11 (Carly Richmond, Principal Developer Advocate at Elastic)**.
 
 Every autonomous purchase evaluation (`API-05`) propagates a W3C `traceparent` header across **Next.js 15 (`web/`) → Golang Orchestrator (`services/orchestrator-go`) → Rust Firewall (`services/firewall-rs`) → External APIs (`PayPal Sandbox`, `Channel3`, `KERNEL`)**, exporting unified **OpenTelemetry (OTel)** traces, structured PII-redacted JSON logs, and vector-embedded prompt-injection threat logs (`M-04`, `E-04`) to **Elastic Cloud (`Elasticsearch 8.17` + `Elastic APM`)**.
 
 ```mermaid
 flowchart LR
-    subgraph AppTier["PactPay Polyglot Runtime"]
+    subgraph AppTier["TALOS Polyglot Runtime"]
         NextJS["web/ (Next.js 15)\n@vercel/otel"]
         GoSvc["orchestrator-go (Go 1.24)\ngo.opentelemetry.io/otel\nlog/slog (PII Redacted)"]
         RustSvc["firewall-rs (Rust 1.85)\ntracing + tracing-opentelemetry\nlol_html + ONNX M-01 Telemetry"]
@@ -20,8 +20,8 @@ flowchart LR
 
     subgraph ElasticStack["Elastic Cloud (Elasticsearch 8.17 + Kibana / APM)"]
         OTelIngest["Elastic APM OTLP/gRPC Endpoint"]
-        ESLogs[("Data Stream: logs-pactpay.audit-*\n180-Day CERT-In Retention")]
-        ESVectors[("Vector Index: pactpay-threat-vectors\nELSER / 1536-d Embeddings (M-04)")]
+        ESLogs[("Data Stream: logs-talos.audit-*\n180-Day CERT-In Retention")]
+        ESVectors[("Vector Index: talos-threat-vectors\nELSER / 1536-d Embeddings (M-04)")]
         KibanaDash["Kibana + AG Studio Telemetry Feed\nLatency, Fraud Saved ($), Token Cost"]
     end
 
@@ -45,7 +45,7 @@ Every log line across Rust and Go emits:
 {
   "timestamp": "2026-11-01T15:04:12.418Z",
   "level": "WARN",
-  "service.name": "pactpay-firewall-rs",
+  "service.name": "talos-firewall-rs",
   "service.version": "1.0.0",
   "trace.id": "4bf92f3577b34da6a3ce929d0e0e4736",
   "span.id": "00f067aa0ba902b7",
@@ -76,7 +76,7 @@ When an AI agent invokes `POST /api/v1/checkout/evaluate` (`API-05`), a single r
 
 | Span Name | Service | Target p50 | Target p95 | Key Span Attributes |
 | :--- | :--- | :--- | :--- | :--- |
-| `POST /api/v1/checkout/evaluate` | `orchestrator-go` | `185 ms` | `420 ms` | `pactpay.mandate_id`, `pactpay.decision` (`AUTHORIZED`, `REROUTED`, `BLOCKED`) |
+| `POST /api/v1/checkout/evaluate` | `orchestrator-go` | `185 ms` | `420 ms` | `talos.mandate_id`, `talos.decision` (`AUTHORIZED`, `REROUTED`, `BLOCKED`) |
 | `firewall.verify_kya_mandate` | `firewall-rs` | `0.3 ms` | `0.8 ms` | `kya.ed25519_valid`, `kya.rfc9421_valid`, `kya.max_amount_cents` |
 | `firewall.sanitize_merchant_dom` | `firewall-rs` | `1.9 ms` | `3.4 ms` | `dom.bytes_in`, `dom.injections_found`, `onnx.m01_score` |
 | `channel3.fetch_sku_benchmark` | `orchestrator-go` | `85 ms` | `145 ms` | `channel3.sku`, `channel3.median_cents`, `channel3.spread_bps` |
@@ -90,14 +90,14 @@ When an AI agent invokes `POST /api/v1/checkout/evaluate` (`API-05`), a single r
 Exposed on `/metrics` (internal VPC port) and scraped by Elastic OTel Collector:
 
 1. **Security & Firewall Metrics (`services/firewall-rs`)**:
-   - `pactpay_firewall_dom_scan_duration_microseconds` (Histogram: buckets `250, 500, 1000, 2000, 4000, 8000`)
-   - `pactpay_firewall_prompt_injections_blocked_total` (Counter labels: `attack_type` = `display_none | opacity_zero | unicode_tag | base64_attr | comment_override`)
-   - `pactpay_kya_mandate_verifications_total` (Counter labels: `result` = `valid | expired | signature_invalid | budget_exceeded`)
+   - `talos_firewall_dom_scan_duration_microseconds` (Histogram: buckets `250, 500, 1000, 2000, 4000, 8000`)
+   - `talos_firewall_prompt_injections_blocked_total` (Counter labels: `attack_type` = `display_none | opacity_zero | unicode_tag | base64_attr | comment_override`)
+   - `talos_kya_mandate_verifications_total` (Counter labels: `result` = `valid | expired | signature_invalid | budget_exceeded`)
 2. **Escrow & Financial Metrics (`services/orchestrator-go`)**:
-   - `pactpay_escrow_transitions_total` (Counter labels: `from_state`, `to_state` in `AUTHORIZED | CAPTURED | VOIDED | DISPUTED`)
-   - `pactpay_channel3_overpayment_saved_cents_total` (Counter: cumulative buyer dollars saved by blocking price-gouging `>1500 bps`)
-   - `pactpay_paypal_sandbox_request_duration_ms` (Histogram labels: `endpoint` = `orders_create | auth_capture | auth_void | trackers_batch | disputes_evidence`, `status_code`)
-   - `pactpay_idempotency_duplicate_blocks_total` (Counter: duplicate `PayPal-Request-Id` retries prevented by `E-10` Redis locks, mitigating `R-03`)
+   - `talos_escrow_transitions_total` (Counter labels: `from_state`, `to_state` in `AUTHORIZED | CAPTURED | VOIDED | DISPUTED`)
+   - `talos_channel3_overpayment_saved_cents_total` (Counter: cumulative buyer dollars saved by blocking price-gouging `>1500 bps`)
+   - `talos_paypal_sandbox_request_duration_ms` (Histogram labels: `endpoint` = `orders_create | auth_capture | auth_void | trackers_batch | disputes_evidence`, `status_code`)
+   - `talos_idempotency_duplicate_blocks_total` (Counter: duplicate `PayPal-Request-Id` retries prevented by `E-10` Redis locks, mitigating `R-03`)
 
 ---
 
@@ -116,10 +116,10 @@ Exposed on `/metrics` (internal VPC port) and scraped by Elastic OTel Collector:
 
 | Alert ID | Condition / Expression | Severity | Window | Automated / Human Action |
 | :--- | :--- | :--- | :--- | :--- |
-| **`ALT-01`** | `p95(pactpay_firewall_dom_scan_duration_microseconds) > 4000` (`4.0ms`) | **SEV-2 (High)** | `3 min` | Auto-switch `FF_RUST_ONNX_CLASSIFIER=false` to engage `<0.5ms` `lol_html` deterministic fast-path (`R-04`). |
-| **`ALT-02`** | `rate(pactpay_paypal_sandbox_5xx_total[2m]) > 0.10` (`>10%` error rate) | **SEV-1 (Critical)** | `2 min` | Auto-enable `FF_PAYPAL_SANDBOX_REPLAY_FALLBACK=true` (`R-01`) and notify on-call channel. |
-| **`ALT-03`** | `pactpay_idempotency_lock_errors_total > 0` (Valkey/Redis unreachable) | **SEV-1 (Critical)** | `1 min` | Fail-safe fallback to PostgreSQL `SELECT ... FOR UPDATE` unique constraint on `paypal_request_id` (`R-03`). |
-| **`ALT-04`** | `rate(pactpay_kya_mandate_verifications_total{result="signature_invalid"}[5m]) > 20` | **SEV-2 (Security)** | `5 min` | Suspend offending `agent_id` (`E-02` status -> `QUARANTINED`) and trigger CERT-In incident triage workflow. |
+| **`ALT-01`** | `p95(talos_firewall_dom_scan_duration_microseconds) > 4000` (`4.0ms`) | **SEV-2 (High)** | `3 min` | Auto-switch `FF_RUST_ONNX_CLASSIFIER=false` to engage `<0.5ms` `lol_html` deterministic fast-path (`R-04`). |
+| **`ALT-02`** | `rate(talos_paypal_sandbox_5xx_total[2m]) > 0.10` (`>10%` error rate) | **SEV-1 (Critical)** | `2 min` | Auto-enable `FF_PAYPAL_SANDBOX_REPLAY_FALLBACK=true` (`R-01`) and notify on-call channel. |
+| **`ALT-03`** | `talos_idempotency_lock_errors_total > 0` (Valkey/Redis unreachable) | **SEV-1 (Critical)** | `1 min` | Fail-safe fallback to PostgreSQL `SELECT ... FOR UPDATE` unique constraint on `paypal_request_id` (`R-03`). |
+| **`ALT-04`** | `rate(talos_kya_mandate_verifications_total{result="signature_invalid"}[5m]) > 20` | **SEV-2 (Security)** | `5 min` | Suspend offending `agent_id` (`E-02` status -> `QUARANTINED`) and trigger CERT-In incident triage workflow. |
 
 ---
 

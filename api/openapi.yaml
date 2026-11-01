@@ -1,14 +1,14 @@
 openapi: 3.1.0
 info:
-  title: PactPay (AegisPay) — Zero-Trust Agentic Commerce Firewall & Reversible PayPal Escrow API
+  title: TALOS — Zero-Trust Agentic Commerce Firewall & Reversible PayPal Escrow API
   version: 1.0.0
   summary: Polyglot Rust (`firewall-rs`), Go (`orchestrator-go`), and Next.js 15 (`web`) API & MCP surface.
   description: |
-    Complete OpenAPI 3.1.0 specification for **PactPay (AegisPay)** covering `API-01` through `API-16` and entities `E-01` through `E-10`.
-    Validated with **APIMatic CLI v3.8** and exported to `postman/PactPay-Sandbox-MCP.postman_collection.json`.
+    Complete OpenAPI 3.1.0 specification for **TALOS** covering `API-01` through `API-16` and entities `E-01` through `E-10`.
+    Validated with **APIMatic CLI v3.8** and exported to `postman/Talos-Sandbox-MCP.postman_collection.json`.
   contact:
-    name: PactPay Principal Architecture Team
-    url: https://github.com/pactpay/pactpay
+    name: TALOS Principal Architecture Team
+    url: https://github.com/talos/talos
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -20,7 +20,7 @@ servers:
     description: Local Rust Security & MCP Kernel (`firewall-rs`)
   - url: http://localhost:3000
     description: Local Next.js 15 Command Center & MCP Bridge (`web`)
-  - url: https://pactpay-orchestrator-go.onrender.com
+  - url: https://talos-orchestrator-go.onrender.com
     description: Render Cloud Production Blueprint (`F-14`)
 
 tags:
@@ -39,7 +39,7 @@ paths:
   /v1/mandates/sign:
     post:
       operationId: signKyaMandate
-      summary: "API-01: Sign and register an Ed25519 KYA Spending Mandate (MCP: pactpay_issue_mandate)"
+      summary: "API-01: Sign and register an Ed25519 KYA Spending Mandate (MCP: talos_issue_mandate)"
       tags: [Rust Firewall & KYA Mandates]
       requestBody:
         required: true
@@ -58,7 +58,7 @@ paths:
   /v1/mandates/verify:
     post:
       operationId: verifyKyaMandate
-      summary: "API-02: Verify Ed25519 mandate signature, budget cap, and expiry in <1ms (MCP: pactpay_verify_mandate)"
+      summary: "API-02: Verify Ed25519 mandate signature, budget cap, and expiry in <1ms (MCP: talos_verify_mandate)"
       tags: [Rust Firewall & KYA Mandates]
       requestBody:
         required: true
@@ -77,7 +77,7 @@ paths:
   /v1/firewall/sanitize-dom:
     post:
       operationId: sanitizeMerchantDom
-      summary: "API-03: Streaming lol_html + DeBERTa-v3 ONNX prompt-injection sanitizer (MCP: pactpay_sanitize_dom)"
+      summary: "API-03: Streaming lol_html + DeBERTa-v3 ONNX prompt-injection sanitizer (MCP: talos_sanitize_dom)"
       tags: [Rust Firewall & KYA Mandates]
       requestBody:
         required: true

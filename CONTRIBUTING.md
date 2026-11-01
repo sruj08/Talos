@@ -1,5 +1,5 @@
-# Contributing to PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Status: Approved v1.0 · Last updated: 2026-11-01
+# Contributing to TALOS
+> Project: TALOS · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [CLAUDE.md](CLAUDE.md) · [GIT_WORKFLOW](docs/03-engineering/GIT_WORKFLOW.md) · [CODING_STANDARDS](docs/03-engineering/CODING_STANDARDS.md)
 
 ## 1. Development Workflow

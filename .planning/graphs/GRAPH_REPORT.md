@@ -1,4 +1,4 @@
-# GSD-Graphify Knowledge Graph Report — PactPay (AegisPay)
+# GSD-Graphify Knowledge Graph Report — TALOS
 
 - **Generated At**: `2026-11-01T15:18:02.627575+00:00`
 - **Total Indexed Nodes**: `183` files & canonical artifacts

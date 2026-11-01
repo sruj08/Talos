@@ -1,5 +1,5 @@
-# AI Data Pipeline, DOM Ingestion & Threat RAG — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Data & AI Infrastructure Team · Status: Approved v1.0 · Last updated: 2026-11-01
+# AI Data Pipeline, DOM Ingestion & Threat RAG — TALOS
+> Project: TALOS · Owner: Data & AI Infrastructure Team · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [ARCHITECTURE](../03-engineering/ARCHITECTURE.md) · [MODELS](MODELS.md) · [DATA_MODEL](../03-engineering/DATA_MODEL.md)
 
 ---
@@ -40,7 +40,7 @@ flowchart LR
 
 ## 2. Data Sources, Licensing & Refresh Cadence
 
-| Data Source | Purpose in PactPay | Access Mechanism | License / Terms | Refresh / Caching Cadence |
+| Data Source | Purpose in TALOS | Access Mechanism | License / Terms | Refresh / Caching Cadence |
 | :--- | :--- | :--- | :--- | :--- |
 | **Channel3 Product Graph (`trychannel3.com`)** | 100M+ verified e-commerce SKUs, GTINs, merchant URLs, and real-time market price distributions (`F-04`). | REST API (`POST /v1/products/search`) + Channel3 MCP. | Commercial API (Hackathon Sponsor Access). | Live query on cache miss; cached in Redis (`ch3:cache:{sku}`) for `15 minutes` and logged in `channel3_benchmarks` (`E-05`). |
 | **Merchant Checkout DOMs (`KERNEL`)** | Live rendered HTML/CSS of external merchant product & checkout pages (`F-11`). | Disposable headless browser session via `onkernel.com` API. | Ephemeral transient inspection (`robots.txt` & RFC 9421 Web Bot Auth compliant). | Per-checkout evaluation (`0s` retention of raw PII; `180-day` retention of SHA-256 hash & sanitized excerpt in `E-04`). |
@@ -68,9 +68,9 @@ Before any merchant DOM text reaches `M-01` (`DeBERTa-v3`), `M-02` (`Claude 3.7 
 
 ## 4. Elastic Cloud Vector Threat Index & Semantic RAG (`F-12`, `M-04`)
 
-To empower **FinOps & Security Auditors (`P-04`)** and align with **Elastic (`Judge #11: Carly Richmond`)**, PactPay indexes every intercepted prompt-injection payload into **Elasticsearch 8.17**:
+To empower **FinOps & Security Auditors (`P-04`)** and align with **Elastic (`Judge #11: Carly Richmond`)**, TALOS indexes every intercepted prompt-injection payload into **Elasticsearch 8.17**:
 
-### 4.1 Elasticsearch Index Mapping (`pactpay-threat-vectors-v1`)
+### 4.1 Elasticsearch Index Mapping (`talos-threat-vectors-v1`)
 ```json
 {
   "mappings": {

@@ -1,12 +1,12 @@
 # Phase-Wise Micro-Chunk Execution Plan & `/gsd` + `/ralph-loop` Skill Playbook
-> Project: PactPay (AegisPay) · Owner: Principal Execution Lead · Status: Approved v1.0 · Last updated: 2026-11-01
+> Project: TALOS · Owner: Principal Execution Lead · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [HACKATHON_PLAN](../00-overview/HACKATHON_PLAN.md) · [MAP.md](../../MAP.md) · [GRAPH_REPORT.md](../../.planning/graphs/GRAPH_REPORT.md)
 
 ---
 
 ## 1. How to Use This Playbook (Zero-Friction Agentic Execution)
 
-This document breaks the entire **PactPay (`Rust 1.85 + Golang 1.24 + Next.js 15`)** build into **8 Phases** and **16 Small, Self-Contained Micro-Chunks (`TASK-01` through `TASK-16`)**.
+This document breaks the entire **TALOS (`Rust 1.85 + Golang 1.24 + Next.js 15`)** build into **8 Phases** and **16 Small, Self-Contained Micro-Chunks (`TASK-01` through `TASK-16`)**.
 
 Every micro-chunk specifies:
 1. **Exact Skills to Run Before & During the Chunk**:
@@ -142,7 +142,7 @@ Before starting any phase, review this table to know **when** and **how** to inv
 ---
 
 #### 🔹 Micro-Chunk 2.2 (`TASK-04`): Rust `lol_html` + `DeBERTa-v3` ONNX Prompt-Injection Sanitizer & Official `rmcp` MCP Server
-- **Objective**: Build `services/firewall-rs/src/sanitizer.rs` (streaming `lol_html` stripper removing `display:none`, `opacity:0`, `visibility:hidden`, zero-width Unicode `U+200B..U+200F`, HTML comments `<!-- ... -->`, and running `ort` quantized `DeBERTa-v3` ONNX / `aho-corasick` threat scoring) + `services/firewall-rs/src/mcp_server.rs` (official `rmcp` MCP server exposing `pactpay_issue_mandate`, `pactpay_verify_mandate`, and `pactpay_sanitize_dom`).
+- **Objective**: Build `services/firewall-rs/src/sanitizer.rs` (streaming `lol_html` stripper removing `display:none`, `opacity:0`, `visibility:hidden`, zero-width Unicode `U+200B..U+200F`, HTML comments `<!-- ... -->`, and running `ort` quantized `DeBERTa-v3` ONNX / `aho-corasick` threat scoring) + `services/firewall-rs/src/mcp_server.rs` (official `rmcp` MCP server exposing `talos_issue_mandate`, `talos_verify_mandate`, and `talos_sanitize_dom`).
 - **Graphify Target Nodes**: `node:rust:sanitizer`, `node:rust:mcp_server`, `node:ai:model:m01`.
 - **Human Action Required**: **None**.
 - **Skills to Invoke Before & During Chunk 2.2**:
@@ -172,7 +172,7 @@ Before starting any phase, review this table to know **when** and **how** to inv
 > Before executing `TASK-05` against live PayPal Sandbox endpoints, complete the following steps (detailed click-by-click in [`docs/09-integrations-and-guides/01-PAYPAL_SANDBOX_STEP_BY_STEP.md`](../09-integrations-and-guides/01-PAYPAL_SANDBOX_STEP_BY_STEP.md) and [`02-APIMATIC_INTEGRATION_GUIDE.md`](../09-integrations-and-guides/02-APIMATIC_INTEGRATION_GUIDE.md)):
 > 1. **PayPal Developer Dashboard (`https://developer.paypal.com/dashboard/`)**:
 >    - Log in and ensure the top-left toggle is set to **Sandbox**.
->    - Go to **Apps & Credentials** → Click **Create App** → Name it `PactPay-Agentic-Escrow` → Select **Merchant** → Click **Create App**.
+>    - Go to **Apps & Credentials** → Click **Create App** → Name it `TALOS-Agentic-Escrow` → Select **Merchant** → Click **Create App**.
 >    - Copy your Sandbox **Client ID** (`PAYPAL_CLIENT_ID`) and **Secret Key 1** (`PAYPAL_CLIENT_SECRET`).
 >    - Scroll down to **Sandbox Webhooks** → Click **Add Webhook** → Enter your tunnel/Render URL `https://<your-domain>/api/v1/webhooks/paypal` → Check `Checkout order approved`, `Payment authorization created`, `Payment authorization voided`, `Payment capture completed`, `Customer dispute created` → Save and copy the **Webhook ID** (`PAYPAL_WEBHOOK_ID`).
 > 2. **APIMatic Portal (`https://www.apimatic.io/`)**:
@@ -184,7 +184,7 @@ Before starting any phase, review this table to know **when** and **how** to inv
 >    printf "Enter PAYPAL_WEBHOOK_ID (typing hidden): " && read -s val && echo && echo "PAYPAL_WEBHOOK_ID=$val" >> ".env" && echo "Saved."
 >    ```
 > 4. **Agent Verification Command (Zero Secret Leak)**:
->    - The agent will verify presence via `grep -sq "^PAYPAL_CLIENT_ID=" .env && grep -sq "^PAYPAL_CLIENT_SECRET=" .env` per the `credentials` skill before calling `https://api-m.sandbox.paypal.com/v1/oauth2/token`. (Note: If offline or before keys are entered, PactPay automatically runs in **Deterministic Sandbox Replay Mode** so development is never blocked!)
+>    - The agent will verify presence via `grep -sq "^PAYPAL_CLIENT_ID=" .env && grep -sq "^PAYPAL_CLIENT_SECRET=" .env` per the `credentials` skill before calling `https://api-m.sandbox.paypal.com/v1/oauth2/token`. (Note: If offline or before keys are entered, TALOS automatically runs in **Deterministic Sandbox Replay Mode** so development is never blocked!)
 
 - **Skills to Invoke Before & During Chunk 3.1**:
   1. **Verify Credentials Safely (`credentials` skill)**:
@@ -389,7 +389,7 @@ Before starting any phase, review this table to know **when** and **how** to inv
 >      printf "Enter ELASTIC_API_KEY (typing hidden): " && read -s val && echo && echo "ELASTIC_API_KEY=$val" >> ".env" && echo "Saved."
 >      ```
 > 2. **Postman (`https://www.postman.com/`)**:
->    - Import `postman/PactPay-Sandbox-MCP.postman_collection.json` and `postman/PactPay-Sandbox.postman_environment.json` into a public Postman Workspace so judges can click **"Run in Postman"** from `README.md`.
+>    - Import `postman/Talos-Sandbox-MCP.postman_collection.json` and `postman/Talos-Sandbox.postman_environment.json` into a public Postman Workspace so judges can click **"Run in Postman"** from `README.md`.
 
 - **Skills to Invoke Before & During Chunk 7.1**:
   ```text
@@ -399,12 +399,12 @@ Before starting any phase, review this table to know **when** and **how** to inv
   ```
 - **Baseline & Verification Gate (`pass` criteria)**:
   - Distributed OTel trace (`traceparent` header) propagates from Next.js -> Go Orchestrator -> Rust Firewall -> PayPal Sandbox and exports spans cleanly.
-  - `postman/PactPay-Sandbox-MCP.postman_collection.json` passes JSON schema validation and contains requests for all 16 endpoints (`API-01`..`API-16`).
+  - `postman/Talos-Sandbox-MCP.postman_collection.json` passes JSON schema validation and contains requests for all 16 endpoints (`API-01`..`API-16`).
 
 ---
 
 #### 🔹 Micro-Chunk 7.2 (`TASK-14`): Full Playwright E2E Test Suite, Red-Team Evaluation Harness & Code Review
-- **Objective**: Write and run Playwright E2E tests (`web/e2e/pactpay-3act-demo.spec.ts`) verifying Act 1, Act 2, and Act 3 in a real headless browser, capture verification screenshots into `.agent/screenshots/`, and run a full cross-stack audit.
+- **Objective**: Write and run Playwright E2E tests (`web/e2e/talos-3act-demo.spec.ts`) verifying Act 1, Act 2, and Act 3 in a real headless browser, capture verification screenshots into `.agent/screenshots/`, and run a full cross-stack audit.
 - **Graphify Target Nodes**: `node:web:e2e:spec`, `node:tests:redteam`.
 - **Human Action Required**: **None**.
 - **Skills to Invoke Before & During Chunk 7.2**:
@@ -429,9 +429,9 @@ Before starting any phase, review this table to know **when** and **how** to inv
 > ### 🛑 HUMAN ACTION REQUIRED — USER INPUT GATE #6 (Render Blueprint Cloud Deployment)
 > To target **Judge Shifra Williams (Render)** and the **`$2,250` Render Prize Pool** (`$1,000` 1st / `$750` 2nd / `$500` 3rd), follow [`docs/09-integrations-and-guides/06-RENDER_BLUEPRINT_DEPLOYMENT_GUIDE.md`](../09-integrations-and-guides/06-RENDER_BLUEPRINT_DEPLOYMENT_GUIDE.md):
 > 1. Push your repository to a **Public GitHub Repository** (ensure the **MIT License** badge appears in the top-right GitHub **About** section!).
-> 2. Log into `https://dashboard.render.com/` → Click **New +** → **Blueprint** → Connect your `pactpay` GitHub repository.
+> 2. Log into `https://dashboard.render.com/` → Click **New +** → **Blueprint** → Connect your `talos` GitHub repository.
 > 3. Render automatically reads `render.yaml` and prompts you for the `sync: false` secret environment variables (`PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_WEBHOOK_ID`, `CHANNEL3_API_KEY`, `ELASTIC_API_KEY`).
-> 4. Click **Apply** to deploy all 5 services (`pactpay-firewall-rs`, `pactpay-orchestrator-go`, `pactpay-console-web`, `pactpay-postgres`, `pactpay-valkey`).
+> 4. Click **Apply** to deploy all 5 services (`talos-firewall-rs`, `talos-orchestrator-go`, `talos-console-web`, `talos-postgres`, `talos-valkey`).
 
 - **Skills to Invoke Before & During Chunk 8.1**:
   ```text

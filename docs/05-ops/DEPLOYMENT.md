@@ -1,12 +1,12 @@
-# Deployment & Release Playbook — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Release & Platform Engineering Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# Deployment & Release Playbook — TALOS
+> Project: TALOS · Owner: Principal Release & Platform Engineering Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [INFRASTRUCTURE](INFRASTRUCTURE.md) · [CICD](CICD.md) · [RUNBOOK](RUNBOOK.md) · [ENVIRONMENT_SETUP](../03-engineering/ENVIRONMENT_SETUP.md)
 
 ---
 
 ## 1. Deployment Modes Overview
 
-PactPay supports **three deterministic deployment modes** so hackathon judges, developers, and enterprise operators can launch the entire polyglot stack (`Rust 1.85` + `Go 1.24` + `Next.js 15` + `PostgreSQL 16` + `Valkey/Redis`) in under 120 seconds:
+TALOS supports **three deterministic deployment modes** so hackathon judges, developers, and enterprise operators can launch the entire polyglot stack (`Rust 1.85` + `Go 1.24` + `Next.js 15` + `PostgreSQL 16` + `Valkey/Redis`) in under 120 seconds:
 
 | Mode | Command / Mechanism | Target Audience | External API Dependencies | Cold Start Time |
 | :--- | :--- | :--- | :--- | :--- |
@@ -21,13 +21,13 @@ PactPay supports **three deterministic deployment modes** so hackathon judges, d
 ### 2.1 Prerequisites
 - **Docker Engine** `v26.0+` and **Docker Compose** `v2.24+` (`4 GB RAM` allocated).
 - **Git** `v2.40+`.
-- *(Optional)* PayPal Developer Sandbox credentials (`PAYPAL_SANDBOX_CLIENT_ID`, `PAYPAL_SANDBOX_CLIENT_SECRET`). If omitted, PactPay automatically boots in **Deterministic Recorded Sandbox Replay Mode (`R-01`)** using real captured PayPal Sandbox `Orders v2 AUTHORIZE / CAPTURE / VOID` payloads so judges never hit a credential wall.
+- *(Optional)* PayPal Developer Sandbox credentials (`PAYPAL_SANDBOX_CLIENT_ID`, `PAYPAL_SANDBOX_CLIENT_SECRET`). If omitted, TALOS automatically boots in **Deterministic Recorded Sandbox Replay Mode (`R-01`)** using real captured PayPal Sandbox `Orders v2 AUTHORIZE / CAPTURE / VOID` payloads so judges never hit a credential wall.
 
 ### 2.2 Launch Sequence (3 Commands)
 ```bash
 # 1. Clone the repository and copy the pre-configured sandbox environment template
-git clone https://github.com/pactpay/pactpay.git
-cd pactpay
+git clone https://github.com/talos/talos.git
+cd talos
 cp .env.example .env
 
 # 2. Build and start all 5 containers (Rust Firewall, Go Orchestrator, Next.js UI, Postgres 16, Valkey)
@@ -42,11 +42,11 @@ curl -fsSL http://localhost:3000/api/healthz && echo " -> Next.js Command Center
 ### 2.3 Service Port Map (Local Docker Compose)
 | Container Name | Service / Role | Host Port | Health Endpoint |
 | :--- | :--- | :--- | :--- |
-| `pactpay-console-web` | Next.js 15 UI (`AG Studio` + `Bryntum` + `PayPal JS SDK v6`) | `http://localhost:3000` | `GET /api/healthz` |
-| `pactpay-orchestrator-go` | Golang 1.24 Escrow State Machine & WebSocket Hub | `http://localhost:8080` | `GET /healthz` |
-| `pactpay-firewall-rs` | Rust 1.85 Zero-Trust KYA & `lol_html` MCP Server (`rmcp`) | `http://localhost:8081` | `GET /healthz` |
-| `pactpay-postgres` | PostgreSQL 16 (`E-01`..`E-09` ledgers) | `localhost:5432` | `pg_isready -U pactpay` |
-| `pactpay-valkey` | Valkey / Redis 7.2 (`E-10` idempotency locks) | `localhost:6379` | `valkey-cli ping` |
+| `talos-console-web` | Next.js 15 UI (`AG Studio` + `Bryntum` + `PayPal JS SDK v6`) | `http://localhost:3000` | `GET /api/healthz` |
+| `talos-orchestrator-go` | Golang 1.24 Escrow State Machine & WebSocket Hub | `http://localhost:8080` | `GET /healthz` |
+| `talos-firewall-rs` | Rust 1.85 Zero-Trust KYA & `lol_html` MCP Server (`rmcp`) | `http://localhost:8081` | `GET /healthz` |
+| `talos-postgres` | PostgreSQL 16 (`E-01`..`E-09` ledgers) | `localhost:5432` | `pg_isready -U talos` |
+| `talos-valkey` | Valkey / Redis 7.2 (`E-10` idempotency locks) | `localhost:6379` | `valkey-cli ping` |
 
 ---
 
@@ -54,8 +54,8 @@ curl -fsSL http://localhost:3000/api/healthz && echo " -> Next.js Command Center
 
 1. **Connect Repository to Render Blueprint**:
    - Log into the [Render Dashboard](https://dashboard.render.com/blueprints) and click **New Blueprint Instance**.
-   - Select the `pactpay` GitHub repository containing `/render.yaml`.
-2. **Populate the `pactpay-shared-secrets` Environment Group**:
+   - Select the `talos` GitHub repository containing `/render.yaml`.
+2. **Populate the `talos-shared-secrets` Environment Group**:
    - Render prompts for the `sync: false` variables declared in `render.yaml`:
      - `PAYPAL_SANDBOX_CLIENT_ID` & `PAYPAL_SANDBOX_CLIENT_SECRET` (from [developer.paypal.com](https://developer.paypal.com/dashboard/applications/sandbox))
      - `PAYPAL_WEBHOOK_ID` (configured for `CHECKOUT.ORDER.APPROVED` and `PAYMENT.AUTHORIZATION.*`)
@@ -63,7 +63,7 @@ curl -fsSL http://localhost:3000/api/healthz && echo " -> Next.js Command Center
      - `KERNEL_API_KEY` (from `onkernel.com`)
      - `ELASTIC_APM_SERVER_URL` & `ELASTIC_APM_SECRET_TOKEN` (from Elastic Cloud)
 3. **Provision & Verify**:
-   - Click **Apply**. Render provisions `pactpay-postgres` and `pactpay-valkey` first, compiles `pactpay-firewall-rs` (`runtime: rust`) and `pactpay-orchestrator-go` (`runtime: go`), and builds `pactpay-console-web` (`runtime: node`).
+   - Click **Apply**. Render provisions `talos-postgres` and `talos-valkey` first, compiles `talos-firewall-rs` (`runtime: rust`) and `talos-orchestrator-go` (`runtime: go`), and builds `talos-console-web` (`runtime: node`).
    - Once `/healthz` returns `200 OK` across all services, `.github/workflows/deploy-render.yml` runs the **Postman Newman Smoke Suite (`F-13`)** to verify `API-01` through `API-16`.
 
 ---
@@ -71,7 +71,7 @@ curl -fsSL http://localhost:3000/api/healthz && echo " -> Next.js Command Center
 ## 4. Database Migration & Seed Data Strategy (`E-01`..`E-09`)
 
 1. **Automated Startup Migrations (`golang-migrate` / Embedded SQL)**:
-   - On startup, `pactpay-orchestrator-go` acquires a PostgreSQL advisory lock (`SELECT pg_advisory_lock(9421001)`) so concurrent container replicas never race during schema migration.
+   - On startup, `talos-orchestrator-go` acquires a PostgreSQL advisory lock (`SELECT pg_advisory_lock(9421001)`) so concurrent container replicas never race during schema migration.
    - Executes idempotent `UP` migrations in `services/orchestrator-go/migrations/0001_init_schema.up.sql` creating tables for `principal_users` (`E-01`), `agent_identities` (`E-02`), `kya_mandates` (`E-03`), `firewall_scan_logs` (`E-04`), `channel3_benchmarks` (`E-05`), `escrow_transactions` (`E-06`), `sla_timeline_tasks` (`E-07`), `dispute_evidence_bundles` (`E-08`), and `webhook_event_ledger` (`E-09`).
 2. **Deterministic Judge Demo Seed (`0002_seed_demo_state.up.sql`)**:
    - Automatically seeds the 4 target personas (`P-01` Arjun Mehta, `P-02` Maya Lin, `P-03` Vikram Rao, `P-04` Priya Nair), 3 active `Ed25519` mandates, 12 historical escrow transactions for **AG Studio** pivoting, and 6 chained **Bryntum Scheduler Pro** tasks so the dashboard looks rich and populated at second zero.
@@ -80,7 +80,7 @@ curl -fsSL http://localhost:3000/api/healthz && echo " -> Next.js Command Center
 
 ## 5. Runtime Feature Flags & Resilience Switches
 
-All feature flags can be toggled via environment variables or the `X-PactPay-Flags` header without redeploying containers:
+All feature flags can be toggled via environment variables or the `X-TALOS-Flags` header without redeploying containers:
 
 | Feature Flag Env Var | Default (`MVP`) | Default (`v1 Prod`) | Purpose & Risk Mitigated |
 | :--- | :--- | :--- | :--- |
@@ -98,7 +98,7 @@ Every service exposes a structured JSON `/healthz` endpoint polled by Render eve
 
 ```json
 {
-  "service": "pactpay-orchestrator-go",
+  "service": "talos-orchestrator-go",
   "version": "1.0.0",
   "status": "healthy",
   "checks": {

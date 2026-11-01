@@ -1,12 +1,12 @@
-# AI Evaluation & Red-Team Benchmark Suite — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: AI Safety & Verification Team · Status: Approved v1.0 · Last updated: 2026-11-01
+# AI Evaluation & Red-Team Benchmark Suite — TALOS
+> Project: TALOS · Owner: AI Safety & Verification Team · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [MODELS](MODELS.md) · [PROMPTS](PROMPTS.md) · [TESTING](../03-engineering/TESTING.md)
 
 ---
 
 ## 1. Evaluation Datasets & Methodology
 
-PactPay maintains three reproducible evaluation benchmarks in `evals/datasets/` executed automatically on every pull request:
+TALOS maintains three reproducible evaluation benchmarks in `evals/datasets/` executed automatically on every pull request:
 
 | Dataset ID | Dataset Name & Composition | Size | Ground-Truth Labeling | Target Component |
 | :--- | :--- | :--- | :--- | :--- |
@@ -16,11 +16,11 @@ PactPay maintains three reproducible evaluation benchmarks in `evals/datasets/` 
 
 ---
 
-## 2. Benchmark Results: Baseline vs. PactPay
+## 2. Benchmark Results: Baseline vs. TALOS
 
 ### 2.1 Task 1: Indirect DOM Prompt-Injection Interception (`EVAL-DS-01`, $N = 250$)
 
-| Metric | Unprotected MCP Agent (`@paypal/agent-toolkit` Direct) | Regex-Only Filter Baseline | **PactPay (`lol_html` + `DeBERTa-v3` ONNX `M-01`)** | Release Gate Threshold |
+| Metric | Unprotected MCP Agent (`@paypal/agent-toolkit` Direct) | Regex-Only Filter Baseline | **TALOS (`lol_html` + `DeBERTa-v3` ONNX `M-01`)** | Release Gate Threshold |
 | :--- | :--- | :--- | :--- | :--- |
 | **Attack Block Recall (True Positive Rate)** | `11.3%` (88.7% hijacked!) | `74.0%` (Fails on Base64 / Unicode tags) | **`99.33%` (`149 / 150` blocked)** | `>= 98.0%` |
 | **Precision** | `N/A` | `86.8%` | **`99.33%`** | `>= 98.0%` |
@@ -33,7 +33,7 @@ PactPay maintains three reproducible evaluation benchmarks in `evals/datasets/` 
 
 ### 2.2 Task 2: APIMatic Context Plugin PayPal Payload Validity (`EVAL-DS-03`, $N = 80$)
 
-| Metric | Vanilla LLM without APIMatic Context | **PactPay LLM + APIMatic Context Plugin (`F-05`)** | Improvement |
+| Metric | Vanilla LLM without APIMatic Context | **TALOS LLM + APIMatic Context Plugin (`F-05`)** | Improvement |
 | :--- | :--- | :--- | :--- |
 | **1st-Attempt OpenAPI 3.0 Schema Validity** | `76.2%` (`19/80` failed due to hallucinated v1 fields) | **`100.0%` (`80/80` valid)** | **`+23.8%`** |
 | **Correct `intent: "AUTHORIZE"` Enforcement** | `61.0%` (Defaulted to unsafe `"CAPTURE"`) | **`100.0%` (`80/80`)** | **`+39.0%`** |

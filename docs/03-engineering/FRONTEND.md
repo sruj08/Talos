@@ -1,12 +1,12 @@
-# Frontend Engineering Architecture — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Frontend & Visualization Team · Status: Approved v1.0 · Last updated: 2026-11-01
+# Frontend Engineering Architecture — TALOS
+> Project: TALOS · Owner: Frontend & Visualization Team · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [ARCHITECTURE](ARCHITECTURE.md) · [UI_SPEC](../02-design/UI_SPEC.md) · [ADR-0005](adr/ADR-0005-ag-grid-studio-and-bryntum-scheduler-command-center.md)
 
 ---
 
 ## 1. Frontend Architecture Overview (`web/`)
 
-The PactPay Command Center is built on **Next.js 15.2 (App Router)**, **React 19.0**, **TypeScript 5.7**, and **Tailwind CSS v4**, engineered strictly following `vercel-react-best-practices` (Server Component shell, dynamic client boundaries for heavy canvas libraries, zero waterfall data fetching, and <250 lines per component file for Ralph Loop modularity).
+The TALOS Command Center is built on **Next.js 15.2 (App Router)**, **React 19.0**, **TypeScript 5.7**, and **Tailwind CSS v4**, engineered strictly following `vercel-react-best-practices` (Server Component shell, dynamic client boundaries for heavy canvas libraries, zero waterfall data fetching, and <250 lines per component file for Ralph Loop modularity).
 
 ### 1.1 Directory Structure (`web/`)
 ```text
@@ -271,7 +271,7 @@ export function PayPalStepUpModal({ escrowId, amountUsd, skuSummary, onStepUpCom
 
 ## 3. Real-Time State Synchronization (`useEscrowWebSocket.ts` — `API-15`)
 
-- Connects to `ws://localhost:8080/ws/events` (or `wss://pactpay-orchestrator-go.onrender.com/ws/events`).
+- Connects to `ws://localhost:8080/ws/events` (or `wss://talos-orchestrator-go.onrender.com/ws/events`).
 - On receiving an `ESCROW_STATE_TRANSITION` frame:
   1. Calls `gridApi.applyTransactionAsync({ update: [frame.ag_grid_row_delta] })` — triggers a 60fps emerald/crimson cell flash in **AG Grid** without re-rendering the React component tree.
   2. Mutates the corresponding task record in **Bryntum Scheduler Pro's** `EventStore` (`schedulerInstance.eventStore.getById(frame.bryntum_task_delta.id).set(...)`).

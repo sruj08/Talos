@@ -1,4 +1,4 @@
-name: "PactPay Polyglot CI (Rust + Go + Web)"
+name: "TALOS Polyglot CI (Rust + Go + Web)"
 
 on:
   push:
@@ -38,7 +38,7 @@ jobs:
             echo "::error::LICENSE must contain valid MIT License header!"
             exit 1
           }
-          for path in "README.md" "render.yaml" "postman/PactPay-Sandbox-MCP.postman_collection.json"; do
+          for path in "README.md" "render.yaml" "postman/Talos-Sandbox-MCP.postman_collection.json"; do
             if [ ! -f "$path" ]; then
               echo "::warning::Expected artifact $path not yet created in current branch."
             fi
@@ -86,8 +86,8 @@ jobs:
 
       - name: Run Rust Unit & Cryptographic Mandate Tests (Ed25519 + lol_html + CRC32)
         env:
-          PACTPAY_ENV: "test"
-          PACTPAY_ONNX_FAST_FALLBACK: "true"
+          TALOS_ENV: "test"
+          TALOS_ONNX_FAST_FALLBACK: "true"
         run: |
           if [ -f "Cargo.toml" ]; then
             cargo test --all-targets -- --nocapture

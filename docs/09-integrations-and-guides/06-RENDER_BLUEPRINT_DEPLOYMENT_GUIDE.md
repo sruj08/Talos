@@ -1,20 +1,20 @@
-# 06 — Render Native Polyglot Blueprint (`render.yaml`) Deployment Guide — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Sponsor: **Render (`$1,000` 1st / `$750` 2nd / `$500` 3rd Credits — 3 Winners)** · Judge: **Shifra Williams** (Founding Developer Relations Engineer, Render) · Status: Approved v1.0 · Last updated: 2026-11-01
+# 06 — Render Native Polyglot Blueprint (`render.yaml`) Deployment Guide — TALOS
+> Project: TALOS · Sponsor: **Render (`$1,000` 1st / `$750` 2nd / `$500` 3rd Credits — 3 Winners)** · Judge: **Shifra Williams** (Founding Developer Relations Engineer, Render) · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [00-TRACKS_AND_SUBMISSION_STRATEGY](00-TRACKS_AND_SUBMISSION_STRATEGY.md) · [CICD_AND_INFRA](../04-ops/CICD_AND_INFRA.md) · [RUNBOOK](../04-ops/RUNBOOK.md)
 
 ---
 
-## 1. Strategic Overview: Why PactPay Wins `Best Use of Render`
+## 1. Strategic Overview: Why TALOS Wins `Best Use of Render`
 
 **Judge**: **Shifra Williams** (Founding Developer Relations Engineer, Render — `https://render.com/`).
 
 Most teams deploy a single static frontend or a single Node container to Render manually through the UI without Infrastructure-as-Code.
-**PactPay showcases Render's true multi-language cloud power via a single, 1-click declarative `render.yaml` Blueprint** at the root of our repository that provisions **5 coordinated native resources** over Render's private internal network:
-1. **`pactpay-firewall-rs` (`runtime: rust`, Private Service / Web Service)**: Runs our sub-2ms Rust 1.85 Zero-Trust KYA Mandate & `lol_html` DOM Prompt-Injection Firewall + `rmcp` MCP server.
-2. **`pactpay-orchestrator-go` (`runtime: go`, Web Service)**: Runs our Go 1.24 Two-Phase Commit (2PC) Escrow State Machine, APIMatic Go PayPal Sandbox Gateway, Channel3 Oracle, and WebSocket hub.
-3. **`pactpay-console-web` (`runtime: node`, Web Service)**: Runs our Next.js 15 Command Center hosting **AG Grid Enterprise / AG Studio**, **Bryntum Scheduler Pro**, and **PayPal JS SDK v6**.
-4. **`pactpay-postgres` (Render Managed PostgreSQL 16)**: Stores our 9 relational tables (`principal_users`, `agent_identities`, `kya_mandates`, `firewall_scan_logs`, `channel3_benchmarks`, `escrow_transactions`, `sla_timeline_tasks`, `dispute_evidence_bundles`, `webhook_event_ledger`).
-5. **`pactpay-valkey` (Render Managed Key-Value / Valkey 8)**: Enforces distributed 24-hour `PayPal-Request-Id` idempotency locks (`E-10`) and backs real-time WebSocket pub/sub.
+**TALOS showcases Render's true multi-language cloud power via a single, 1-click declarative `render.yaml` Blueprint** at the root of our repository that provisions **5 coordinated native resources** over Render's private internal network:
+1. **`talos-firewall-rs` (`runtime: rust`, Private Service / Web Service)**: Runs our sub-2ms Rust 1.85 Zero-Trust KYA Mandate & `lol_html` DOM Prompt-Injection Firewall + `rmcp` MCP server.
+2. **`talos-orchestrator-go` (`runtime: go`, Web Service)**: Runs our Go 1.24 Two-Phase Commit (2PC) Escrow State Machine, APIMatic Go PayPal Sandbox Gateway, Channel3 Oracle, and WebSocket hub.
+3. **`talos-console-web` (`runtime: node`, Web Service)**: Runs our Next.js 15 Command Center hosting **AG Grid Enterprise / AG Studio**, **Bryntum Scheduler Pro**, and **PayPal JS SDK v6**.
+4. **`talos-postgres` (Render Managed PostgreSQL 16)**: Stores our 9 relational tables (`principal_users`, `agent_identities`, `kya_mandates`, `firewall_scan_logs`, `channel3_benchmarks`, `escrow_transactions`, `sla_timeline_tasks`, `dispute_evidence_bundles`, `webhook_event_ledger`).
+5. **`talos-valkey` (Render Managed Key-Value / Valkey 8)**: Enforces distributed 24-hour `PayPal-Request-Id` idempotency locks (`E-10`) and backs real-time WebSocket pub/sub.
 
 ---
 
@@ -26,12 +26,12 @@ Most teams deploy a single static frontend or a single Node container to Render 
 3. In the Render Dashboard (`https://dashboard.render.com/`), go to **Billing** in the left sidebar → Scroll to **Promo Code / Credits** → Enter the **PayPal AI Hackathon Render Promo Code** (from the Devpost participant resources tab) to unlock free cloud compute credits for the hackathon.
 
 ### Step 2.2 — Deploy All 5 Services in 1 Click via Render Blueprints
-1. Ensure your `pactpay` repository (containing `/render.yaml` at the root) is pushed to GitHub.
+1. Ensure your `talos` repository (containing `/render.yaml` at the root) is pushed to GitHub.
 2. In the Render Dashboard (`https://dashboard.render.com/`), click **Blueprints** in the left sidebar.
 3. Click the blue **New Blueprint Instance** button.
-4. Select your **`pactpay`** GitHub repository from the list and click **Connect**.
-5. Render will automatically parse `/render.yaml` and display a preview of all 5 resources (`pactpay-firewall-rs`, `pactpay-orchestrator-go`, `pactpay-console-web`, `pactpay-postgres`, `pactpay-valkey`).
-6. Enter the **Blueprint Name**: `pactpay-production-sandbox`.
+4. Select your **`talos`** GitHub repository from the list and click **Connect**.
+5. Render will automatically parse `/render.yaml` and display a preview of all 5 resources (`talos-firewall-rs`, `talos-orchestrator-go`, `talos-console-web`, `talos-postgres`, `talos-valkey`).
+6. Enter the **Blueprint Name**: `talos-production-sandbox`.
 7. Render will prompt you for the secret environment variables marked with `sync: false` in `render.yaml`. Paste the values from your local `.env` file into the Render secure input boxes:
    - `PAYPAL_CLIENT_ID` *(from Guide `01`)*
    - `PAYPAL_CLIENT_SECRET` *(from Guide `01`)*
@@ -50,23 +50,23 @@ Most teams deploy a single static frontend or a single Node container to Render 
 Below is the exact `render.yaml` file placed at the root of `g:\PAYPAL\render.yaml` (validated against Render's official Blueprint Specification):
 
 ```yaml
-# render.yaml — PactPay (AegisPay) 1-Click Native Polyglot Cloud Blueprint
+# render.yaml — TALOS 1-Click Native Polyglot Cloud Blueprint
 # Provisions Rust 1.85 + Go 1.24 + Next.js 15 + PostgreSQL 16 + Valkey 8 on Render
 
 services:
   # 1. RUST ZERO-TRUST KYA & DOM PROMPT-INJECTION FIREWALL KERNEL
   - type: web
-    name: pactpay-firewall-rs
+    name: talos-firewall-rs
     runtime: rust
     rootDir: services/firewall-rs
     plan: starter
     region: oregon
     buildCommand: cargo build --release
-    startCommand: ./target/release/pactpay-firewall-rs
+    startCommand: ./target/release/talos-firewall-rs
     healthCheckPath: /healthz
     envVars:
       - key: RUST_LOG
-        value: info,pactpay_firewall_rs=debug
+        value: info,talos_firewall_rs=debug
       - key: PORT
         value: "8081"
       - key: MANDATE_SIGNING_SEED_HEX
@@ -78,7 +78,7 @@ services:
 
   # 2. GOLANG 2PC ESCROW STATE MACHINE & MULTI-SPONSOR ORCHESTRATOR
   - type: web
-    name: pactpay-orchestrator-go
+    name: talos-orchestrator-go
     runtime: go
     rootDir: services/orchestrator-go
     plan: starter
@@ -91,17 +91,17 @@ services:
         value: "8080"
       - key: DATABASE_URL
         fromDatabase:
-          name: pactpay-postgres
+          name: talos-postgres
           property: connectionString
       - key: REDIS_URL
         fromService:
           type: keyvalue
-          name: pactpay-valkey
+          name: talos-valkey
           property: connectionString
       - key: FIREWALL_RS_INTERNAL_URL
         fromService:
           type: web
-          name: pactpay-firewall-rs
+          name: talos-firewall-rs
           envVarKey: RENDER_EXTERNAL_URL
       - key: PAYPAL_ENV
         value: sandbox
@@ -124,7 +124,7 @@ services:
 
   # 3. NEXT.JS 15 COMMAND CENTER (AG STUDIO + BRYNTUM SCHEDULER PRO + PAYPAL JS SDK v6)
   - type: web
-    name: pactpay-console-web
+    name: talos-console-web
     runtime: node
     rootDir: web
     plan: starter
@@ -138,7 +138,7 @@ services:
       - key: NEXT_PUBLIC_ORCHESTRATOR_URL
         fromService:
           type: web
-          name: pactpay-orchestrator-go
+          name: talos-orchestrator-go
           envVarKey: RENDER_EXTERNAL_URL
       - key: NEXT_PUBLIC_PAYPAL_CLIENT_ID
         sync: false
@@ -151,16 +151,16 @@ services:
 
   # 4. RENDER MANAGED KEY-VALUE (VALKEY / REDIS) FOR PAYPAL-REQUEST-ID IDEMPOTENCY LOCKS
   - type: keyvalue
-    name: pactpay-valkey
+    name: talos-valkey
     plan: starter
     region: oregon
     ipAllowList: []
 
 databases:
   # 5. RENDER MANAGED POSTGRESQL 16 FOR IMMUTABLE 2PC ESCROW & AUDIT LEDGERS
-  - name: pactpay-postgres
-    databaseName: pactpay
-    user: pactpay_admin
+  - name: talos-postgres
+    databaseName: talos
+    user: talos_admin
     plan: starter
     region: oregon
     postgresMajorVersion: "16"
@@ -173,12 +173,12 @@ databases:
 Once all 5 services turn green (`Live`) in the Render Dashboard:
 1. Verify each service's health check endpoint in your browser or terminal:
    ```bash
-   curl -s https://pactpay-firewall-rs.onrender.com/healthz
-   curl -s https://pactpay-orchestrator-go.onrender.com/healthz
-   curl -s https://pactpay-console-web.onrender.com/api/healthz
+   curl -s https://talos-firewall-rs.onrender.com/healthz
+   curl -s https://talos-orchestrator-go.onrender.com/healthz
+   curl -s https://talos-console-web.onrender.com/api/healthz
    ```
-2. Copy your live Go Orchestrator URL (`https://pactpay-orchestrator-go.onrender.com`) and paste `https://pactpay-orchestrator-go.onrender.com/api/v1/webhooks/paypal` into your **PayPal Developer Dashboard → Apps & Credentials → Sandbox Webhooks** (Step 2.4 of Guide `01`).
-3. Copy your live Next.js Command Center URL (`https://pactpay-console-web.onrender.com`) and place it at the very top of `README.md` and in the **Devpost "Try It Out" URL** field!
+2. Copy your live Go Orchestrator URL (`https://talos-orchestrator-go.onrender.com`) and paste `https://talos-orchestrator-go.onrender.com/api/v1/webhooks/paypal` into your **PayPal Developer Dashboard → Apps & Credentials → Sandbox Webhooks** (Step 2.4 of Guide `01`).
+3. Copy your live Next.js Command Center URL (`https://talos-console-web.onrender.com`) and place it at the very top of `README.md` and in the **Devpost "Try It Out" URL** field!
 
 ---
 

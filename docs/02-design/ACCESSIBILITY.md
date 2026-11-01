@@ -1,18 +1,18 @@
-# Accessibility & Inclusive Design Specification — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Design & Frontend Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# Accessibility & Inclusive Design Specification — TALOS
+> Project: TALOS · Owner: Principal Design & Frontend Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [DESIGN_SYSTEM](DESIGN_SYSTEM.md) · [UI_SPEC](UI_SPEC.md) · [LOCALIZATION](LOCALIZATION.md) · [COMPLIANCE](../06-security-compliance/COMPLIANCE.md)
 
 ---
 
 ## 1. Accessibility Commitment & Regulatory Alignment
 
-> **Judge Alignment (`Jo Franchetti` — Lead Developer Advocate, PayPal & W3C/Accessibility Champion)**: Financial control planes and data-dense grids often fail basic keyboard and screen-reader usability. PactPay is engineered from Day 1 to meet **W3C WCAG 2.2 Level AA** (with Level AAA contrast ratios on all critical financial/security badges), **US Section 508**, **European Accessibility Act (EAA 2025/2026)**, and **India's Rights of Persons with Disabilities (RPwD) Act, 2016 + GIGW 3.0 / IS 17802** standards.
+> **Judge Alignment (`Jo Franchetti` — Lead Developer Advocate, PayPal & W3C/Accessibility Champion)**: Financial control planes and data-dense grids often fail basic keyboard and screen-reader usability. TALOS is engineered from Day 1 to meet **W3C WCAG 2.2 Level AA** (with Level AAA contrast ratios on all critical financial/security badges), **US Section 508**, **European Accessibility Act (EAA 2025/2026)**, and **India's Rights of Persons with Disabilities (RPwD) Act, 2016 + GIGW 3.0 / IS 17802** standards.
 
 ---
 
 ## 2. WCAG 2.2 Level AA Compliance Checklist
 
-| WCAG 2.2 Criterion | Level | Requirement Summary | How PactPay Implements & Verifies It |
+| WCAG 2.2 Criterion | Level | Requirement Summary | How TALOS Implements & Verifies It |
 | :--- | :--- | :--- | :--- |
 | **1.1.1 Non-Text Content** | A | All icons, charts, and visual diffs must have text alternatives. | Every status icon (`ShieldCheck`, `OctagonX`, `RotateCcw`) has `aria-hidden="true"` paired with visible text labels; **AG Charts** (`F-08`) renders an accessible `<table class="sr-only">` summary of Channel3 price spreads. |
 | **1.3.1 Info & Relationships** | A | Semantic HTML & ARIA grid/treegrid roles. | **AG Grid Enterprise (`v33.1.0`)** uses native WAI-ARIA `role="treegrid"`, `aria-rowcount`, `aria-colcount`, and `aria-expanded` on Master-Detail forensic rows. |
@@ -52,7 +52,7 @@ flowchart LR
 
 ## 4. Color-Blindness & Visual Impairment Safeguards
 
-Approximately `8%` of male operators and auditors experience red-green color vision deficiency (Deuteranopia / Protanopia). PactPay guarantees zero ambiguity between **Emerald (`CAPTURED`)** and **Crimson (`BLOCKED`)** states:
+Approximately `8%` of male operators and auditors experience red-green color vision deficiency (Deuteranopia / Protanopia). TALOS guarantees zero ambiguity between **Emerald (`CAPTURED`)** and **Crimson (`BLOCKED`)** states:
 1. **Distinct Luminance & Hue Polarity**:
    - `CAPTURED / SAFE` uses Cyan-shifted Emerald (`oklch(0.78 0.17 160)` — `#34D399`) with a solid pill border.
    - `BLOCKED / THREAT` uses Orange-shifted Crimson (`oklch(0.74 0.19 25)` — `#F87171`) with a double/dashed alert border and diagonal hatching on blocked **Bryntum** task bars.
@@ -70,10 +70,10 @@ Approximately `8%` of male operators and auditors experience red-green color vis
 
 ## 5. Cognitive Accessibility, Plain-Language Summaries & Voice-First Patterns
 
-Not every user of PactPay is a systems cryptographer (`P-01` and `P-03` are business/operations leaders, and `P-04` is a financial auditor).
+Not every user of TALOS is a systems cryptographer (`P-01` and `P-03` are business/operations leaders, and `P-04` is a financial auditor).
 1. **Plain-Language "Why Was This Blocked / Rerouted?" Banner**:
-   - Above the technical `Ed25519` hex signature and raw HTML diff in the Master-Detail drawer, PactPay renders a 1-sentence human summary in plain English or Hindi (`LOCALIZATION.md`):
-     > **Plain Summary**: *"PactPay blocked this store because it hid a secret command trying to charge $480 (your limit is $300) and overpriced a $249 microphone by 92%. We automatically moved your order to a verified $249 seller."*
+   - Above the technical `Ed25519` hex signature and raw HTML diff in the Master-Detail drawer, TALOS renders a 1-sentence human summary in plain English or Hindi (`LOCALIZATION.md`):
+     > **Plain Summary**: *"TALOS blocked this store because it hid a secret command trying to charge $480 (your limit is $300) and overpriced a $249 microphone by 92%. We automatically moved your order to a verified $249 seller."*
 2. **Voice-First / Natural-Language Grid Operation (`AG Studio` `M-03`)**:
    - Users with motor impairments or low spreadsheet proficiency do not need to drag complex column headers to group or filter **AG Grid**. They can use browser speech-to-text (Web Speech API microphone button inside the **AG Studio** prompt bar) or type simple conversational commands (*"Show me voided orders"*).
 

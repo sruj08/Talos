@@ -1,4 +1,4 @@
-# PactPay (AegisPay) — GSD Project Context
+# TALOS — GSD Project Context
 > Single Source of Truth: [`docs/00-overview/PROJECT_BRIEF.md`](../docs/00-overview/PROJECT_BRIEF.md)
 > Codebase Knowledge Graph: [`.planning/graphs/GRAPH_REPORT.md`](graphs/GRAPH_REPORT.md) & [`MAP.md`](../MAP.md)
 

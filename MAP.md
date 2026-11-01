@@ -19,11 +19,11 @@
 | **Integrating Channel3 Merchant Reputation & SKU Price-Cap Oracle in Golang** | [`docs/09-integrations-and-guides/05-CHANNEL3_INTEGRATION_GUIDE.md`](file:///g:/PAYPAL/docs/09-integrations-and-guides/05-CHANNEL3_INTEGRATION_GUIDE.md) | [`services/orchestrator-go/internal/channel3/oracle.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/channel3/oracle.go) |
 | **Deploying the 5-service polyglot stack (`rust` + `go` + `node` + PG16 + Redis) to Render via `render.yaml`** | [`docs/09-integrations-and-guides/06-RENDER_BLUEPRINT_DEPLOYMENT_GUIDE.md`](file:///g:/PAYPAL/docs/09-integrations-and-guides/06-RENDER_BLUEPRINT_DEPLOYMENT_GUIDE.md) | [`render.yaml`](file:///g:/PAYPAL/render.yaml) |
 | **Configuring Elastic Cloud OpenTelemetry traces & `elser_model_2` vector threat store** | [`docs/09-integrations-and-guides/07-ELASTIC_OTEL_AND_VECTOR_GUIDE.md`](file:///g:/PAYPAL/docs/09-integrations-and-guides/07-ELASTIC_OTEL_AND_VECTOR_GUIDE.md) | [`services/orchestrator-go/internal/telemetry/elastic_otel.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/telemetry/elastic_otel.go) |
-| **Running Postman MCP generator & Newman contract tests in CI** | [`docs/09-integrations-and-guides/08-POSTMAN_MCP_AND_COLLECTION_GUIDE.md`](file:///g:/PAYPAL/docs/09-integrations-and-guides/08-POSTMAN_MCP_AND_COLLECTION_GUIDE.md) | [`postman/PactPay-Sandbox-MCP.postman_collection.json`](file:///g:/PAYPAL/postman/PactPay-Sandbox-MCP.postman_collection.json) |
+| **Running Postman MCP generator & Newman contract tests in CI** | [`docs/09-integrations-and-guides/08-POSTMAN_MCP_AND_COLLECTION_GUIDE.md`](file:///g:/PAYPAL/docs/09-integrations-and-guides/08-POSTMAN_MCP_AND_COLLECTION_GUIDE.md) | [`postman/Talos-Sandbox-MCP.postman_collection.json`](file:///g:/PAYPAL/postman/Talos-Sandbox-MCP.postman_collection.json) |
 | **Connecting KERNEL headless browser sessions, Astropods adapters, or Zapier CFO Slack/Email webhooks** | [`docs/09-integrations-and-guides/09-KERNEL_ASTROPODS_ZAPIER_GUIDE.md`](file:///g:/PAYPAL/docs/09-integrations-and-guides/09-KERNEL_ASTROPODS_ZAPIER_GUIDE.md) | [`services/orchestrator-go/internal/kernel/browser.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/kernel/browser.go) |
 | **Implementing or debugging the Rust Ed25519 KYA Mandate & `lol_html` + `DeBERTa-v3` ONNX DOM Firewall** | [`services/firewall-rs/src/mandate.rs`](file:///g:/PAYPAL/services/firewall-rs/src/mandate.rs) | [`services/firewall-rs/src/sanitizer.rs`](file:///g:/PAYPAL/services/firewall-rs/src/sanitizer.rs) |
 | **Implementing or debugging the Go 2PC Escrow State Machine & PostgreSQL hash-chained audit ledger** | [`services/orchestrator-go/internal/escrow/machine.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/escrow/machine.go) | [`services/orchestrator-go/migrations/0001_init_schema.up.sql`](file:///g:/PAYPAL/services/orchestrator-go/migrations/0001_init_schema.up.sql) |
-| **Delivering the `<2:45` 3-Act Demo Video or answering Judge Q&A** | [`docs/00-overview/PITCH.md`](file:///g:/PAYPAL/docs/00-overview/PITCH.md) | [`web/e2e/pactpay-3act-demo.spec.ts`](file:///g:/PAYPAL/web/e2e/pactpay-3act-demo.spec.ts) |
+| **Delivering the `<2:45` 3-Act Demo Video or answering Judge Q&A** | [`docs/00-overview/PITCH.md`](file:///g:/PAYPAL/docs/00-overview/PITCH.md) | [`web/e2e/talos-3act-demo.spec.ts`](file:///g:/PAYPAL/web/e2e/talos-3act-demo.spec.ts) |
 
 ---
 
@@ -33,7 +33,7 @@
 1. [`README.md`](file:///g:/PAYPAL/README.md) — 60-second executive overview, architecture diagram, and 90-second quickstart.
 2. [`docs/00-overview/PITCH.md`](file:///g:/PAYPAL/docs/00-overview/PITCH.md) — The 3-Act Live Demo Script (`Act 1: Prompt Injection Blocked in 3.8ms`, `Act 2: Verified 2PC PayPal Escrow AUTHORIZE -> TRACKING -> CAPTURE`, `Act 3: Bryntum SLA Breach Drag -> Live PayPal VOID`).
 3. [`docs/03-engineering/ARCHITECTURE.md`](file:///g:/PAYPAL/docs/03-engineering/ARCHITECTURE.md) — Polyglot Rust 1.85 + Go 1.24 + Next.js 15 C4 & sequence diagrams.
-4. [`docs/09-integrations-and-guides/00-TRACKS_AND_SUBMISSION_STRATEGY.md`](file:///g:/PAYPAL/docs/09-integrations-and-guides/00-TRACKS_AND_SUBMISSION_STRATEGY.md) — How PactPay satisfies every overall and sponsor award rubric.
+4. [`docs/09-integrations-and-guides/00-TRACKS_AND_SUBMISSION_STRATEGY.md`](file:///g:/PAYPAL/docs/09-integrations-and-guides/00-TRACKS_AND_SUBMISSION_STRATEGY.md) — How TALOS satisfies every overall and sponsor award rubric.
 
 ### B. Autonomous Coding Agent (`/gsd-*` & `/ralph-loop`) — Execution Path
 1. [`CLAUDE.md`](file:///g:/PAYPAL/CLAUDE.md) & [`.planning/graphs/CODEBASE_INDEX.md`](file:///g:/PAYPAL/.planning/graphs/CODEBASE_INDEX.md) — Architectural invariants and symbol-to-file index.
@@ -97,7 +97,7 @@ flowchart TD
 - [`render.yaml`](file:///g:/PAYPAL/render.yaml) — Native Render Blueprint deploying `firewall-rs`, `orchestrator-go`, `web`, PostgreSQL 16, and Redis.
 - [`docker-compose.yml`](file:///g:/PAYPAL/docker-compose.yml) — Local 1-command stack (`postgres`, `redis`, `firewall-rs`, `orchestrator-go`, `web`).
 - [`.env.example`](file:///g:/PAYPAL/.env.example) — Documented template for all PayPal Sandbox and Sponsor credentials.
-- [`.mcp.json`](file:///g:/PAYPAL/.mcp.json) — MCP configuration wiring `pactpay-rust-firewall`, `paypal-official-mcp`, and `apimatic-context-plugin`.
+- [`.mcp.json`](file:///g:/PAYPAL/.mcp.json) — MCP configuration wiring `talos-rust-firewall`, `paypal-official-mcp`, and `apimatic-context-plugin`.
 - [`CONTRIBUTING.md`](file:///g:/PAYPAL/CONTRIBUTING.md), [`SECURITY.md`](file:///g:/PAYPAL/SECURITY.md), [`CODE_OF_CONDUCT.md`](file:///g:/PAYPAL/CODE_OF_CONDUCT.md), [`CHANGELOG.md`](file:///g:/PAYPAL/CHANGELOG.md).
 
 ### Group 0 — `docs/00-overview/` (4 Files)

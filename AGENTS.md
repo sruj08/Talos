@@ -1,4 +1,4 @@
-# AGENTS.md — Universal Agent Execution Standards for PactPay
+# AGENTS.md — Universal Agent Execution Standards for TALOS
 
 > **Primary Instructions**: Read [`CLAUDE.md`](CLAUDE.md), [`MAP.md`](MAP.md), and [`docs/08-project/PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md`](docs/08-project/PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md) before modifying any file.
 

@@ -26,7 +26,7 @@
   "steps": [
     "Build streaming DOM sanitizer stripping display:none, opacity:0, visibility:hidden, HTML comments, and zero-width Unicode tags",
     "Score text fragments against adversarial prompt-injection patterns and ONNX classifier interface (M-01)",
-    "Expose MCP tools pactpay_issue_mandate, pactpay_verify_mandate, and pactpay_sanitize_dom plus Axum REST endpoints /v1/mandates/sign, /v1/mandates/verify, /v1/firewall/sanitize-dom, /healthz"
+    "Expose MCP tools talos_issue_mandate, talos_verify_mandate, and talos_sanitize_dom plus Axum REST endpoints /v1/mandates/sign, /v1/mandates/verify, /v1/firewall/sanitize-dom, /healthz"
   ],
   "pass": [
     "cargo test passes all prompt-injection sanitization tests in services/firewall-rs",

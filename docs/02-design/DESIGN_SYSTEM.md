@@ -1,12 +1,12 @@
-# Design System & Visual Language — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Design & Frontend Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# Design System & Visual Language — TALOS
+> Project: TALOS · Owner: Principal Design & Frontend Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [UI_SPEC](UI_SPEC.md) · [ACCESSIBILITY](ACCESSIBILITY.md) · [LOCALIZATION](LOCALIZATION.md) · [FRONTEND](../03-engineering/FRONTEND.md)
 
 ---
 
 ## 1. Design Philosophy: Institutional Precision Meets Apple Restraint (Jony Ive Principles)
 
-> **Tie-Breaker #2 (`Design — 20%`) Mandate**: In the PayPal AI Hackathon, 7 of the 13 judges evaluate visual polish, accessibility, and interactive depth across **AG Grid / AG Studio (`Sylwia Vargas`)**, **Bryntum Scheduler Pro (`Mats Bryntse`)**, and **PayPal JS SDK v6 (`Jo Franchetti`)**. PactPay avoids generic "AI SaaS purple gradients" and instead implements **Obsidian Institutional Glassmorphism**—inspired by Bloomberg Terminal, Stripe Radar, Palantir Foundry, and Apple macOS Sequoia dark materials.
+> **Tie-Breaker #2 (`Design — 20%`) Mandate**: In the PayPal AI Hackathon, 7 of the 13 judges evaluate visual polish, accessibility, and interactive depth across **AG Grid / AG Studio (`Sylwia Vargas`)**, **Bryntum Scheduler Pro (`Mats Bryntse`)**, and **PayPal JS SDK v6 (`Jo Franchetti`)**. TALOS avoids generic "AI SaaS purple gradients" and instead implements **Obsidian Institutional Glassmorphism**—inspired by Bloomberg Terminal, Stripe Radar, Palantir Foundry, and Apple macOS Sequoia dark materials.
 
 ### Five Core Design Principles
 1. **Semantic Density Without Clutter**: Financial operators (`P-01`) and auditors (`P-04`) need to see mandate signatures, DOM firewall latency, Channel3 basis-point spreads, and PayPal Sandbox IDs in a single viewport without scrolling across 6 pages.
@@ -35,7 +35,7 @@ Configured in `web/src/app/globals.css` using **Tailwind CSS v4** (`@theme`) and
 
 ### 2.2 Semantic Financial & Security State Tokens
 
-| State / Meaning | Token Prefix | Badge Fill (Dark) | Text / Icon Accent (Dark) | Contrast Ratio | Where Used in PactPay |
+| State / Meaning | Token Prefix | Badge Fill (Dark) | Text / Icon Accent (Dark) | Contrast Ratio | Where Used in TALOS |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **PayPal Brand / Escrow Authorized** | `--state-paypal` | `rgba(0, 112, 243, 0.16)` | `oklch(0.72 0.16 250)` (`#38BDF8`) | `8.2:1` (AAA) | `PAYPAL_AUTHORIZED` badge (`E-06`), active 29-day hold bars in Bryntum (`F-07`). |
 | **Captured / Verified Safe** | `--state-emerald` | `rgba(16, 185, 129, 0.16)` | `oklch(0.78 0.17 160)` (`#34D399`) | `9.1:1` (AAA) | `PAYPAL_CAPTURED` (`API-09`), valid `Ed25519` KYA signature (`F-01`), Channel3 fair price. |

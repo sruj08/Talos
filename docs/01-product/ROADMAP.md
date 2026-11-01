@@ -1,5 +1,5 @@
-# Product Roadmap & Partnership Horizon — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Architecture & Product Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# Product Roadmap & Partnership Horizon — TALOS
+> Project: TALOS · Owner: Principal Architecture & Product Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [VISION](../00-overview/VISION.md) · [PRD](PRD.md) · [FEATURES](FEATURES.md) · [GTM](../07-business/GTM.md)
 
 ---
@@ -51,7 +51,7 @@ flowchart LR
 
 | Milestone Window | Engineering Deliverables | Target Pilots & Design Partners | Measurable KPIs |
 | :--- | :--- | :--- | :--- |
-| **Day 30 (Dec 2026)**: *Open-Source Developer Launch & Passkey Signing* | - Publish `pactpay-firewall` to `crates.io`, `npm` (`@pactpay/mcp-proxy`), and Docker Hub.<br/>- Upgrade `F-01` (`Ed25519`) to support hardware-backed **WebAuthn / Apple TouchID / Android Passkeys**.<br/>- Ship GitHub Actions Newman contract gate using `F-13` Postman collection. | **500 Indie AI Developers (`P-02`)** building with Claude Desktop, Cursor, and `@paypal/agent-toolkit`. | - `1,500+` GitHub Stars<br/>- `500` active MCP proxy installs<br/>- `< 2.0ms` p99 Rust firewall latency |
+| **Day 30 (Dec 2026)**: *Open-Source Developer Launch & Passkey Signing* | - Publish `talos-firewall` to `crates.io`, `npm` (`@talos/mcp-proxy`), and Docker Hub.<br/>- Upgrade `F-01` (`Ed25519`) to support hardware-backed **WebAuthn / Apple TouchID / Android Passkeys**.<br/>- Ship GitHub Actions Newman contract gate using `F-13` Postman collection. | **500 Indie AI Developers (`P-02`)** building with Claude Desktop, Cursor, and `@paypal/agent-toolkit`. | - `1,500+` GitHub Stars<br/>- `500` active MCP proxy installs<br/>- `< 2.0ms` p99 Rust firewall latency |
 | **Day 60 (Jan 2027)**: *Production PayPal ACS & Live Carrier Webhooks* | - Transition `F-05` & `F-06` from PayPal Sandbox to live **PayPal Agentic Commerce Services (ACS)** production credentials.<br/>- Add direct webhook ingestion for **FedEx, UPS, DHL, and Delhivery (India)** alongside PayPal Shipment Tracking v1.<br/>- Release Slack & Microsoft Teams interactive step-up approval cards wrapping `F-09`. | **10 Mid-Market SaaS Procurement Teams (`P-01`)** (Bengaluru & SF corridor) + **25 Verified Channel3 Merchants (`P-03`)**. | - `$1.5M` (`₹12.6 Cr`) Protected Agentic GMV<br/>- `0.00%` unauthorized agent spend loss<br/>- `>= 14%` avg procurement savings via Channel3 |
 | **Day 90 (Feb 2027)**: *PayPal World (NPCI UPI) & India Exporter Compliance* | - Integrate **PayPal World + NPCI UPI Delegated Circle** rails for domestic and cross-border Indian (`₹ INR`) settlements.<br/>- Automate **RBI PA-CB** purpose code tagging (`P0802` / `P0103`) and instant **eFIRA** certificate attachment inside **AG Studio (`F-08`)** for Indian MSME exporters (`P-03`, `R-06`). | **50 Indian B2B Electronics & IT Hardware Exporters (`P-03`)** selling to US/EU corporate AI agents. | - `$6.0M` (`₹50.4 Cr`) cumulative PA-GMV<br/>- `< 0.05%` post-capture chargeback rate<br/>- SOC 2 Type I audit readiness |
 
@@ -61,7 +61,7 @@ flowchart LR
 1. **Multimodal Visual Prompt-Injection Firewall (`F-02 v1`)**:
    - Extend `services/firewall-rs` with an INT8 quantized vision-language OCR sanitizer to detect adversarial text hidden inside merchant product JPEG/WebP images (steganographic/typographic attacks).
 2. **Federated Elastic Threat Intelligence Network (`F-12 v1`)**:
-   - Real-time zero-day prompt-injection signature sharing across all PactPay nodes via **Elastic Cloud (`M-04`)**—when a poisoned storefront attacks Customer A's agent, Customer B's agent blocks that merchant domain globally within `200ms`.
+   - Real-time zero-day prompt-injection signature sharing across all TALOS nodes via **Elastic Cloud (`M-04`)**—when a poisoned storefront attacks Customer A's agent, Customer B's agent blocks that merchant domain globally within `200ms`.
 3. **Enterprise Scale AG Studio & Bryntum Critical-Path Engine (`F-07 v1`, `F-08 v1`)**:
    - Upgrade **AG Grid Enterprise** to the Server-Side Row Model (`SSRM`) supporting `10M+` historical audit rows for Big-4 FinOps auditors (`P-04`).
    - Upgrade **Bryntum Scheduler Pro & Gantt** to orchestrate 100+ chained multi-supplier bills of materials (BOM), automatically re-planning critical paths and splitting PayPal multi-party authorizations when a sub-tier supplier slips.
@@ -74,7 +74,7 @@ flowchart LR
 2. **ERP & Procurement Suite Connectors**:
    - Turnkey plugins for **SAP Ariba, Coupa, Oracle NetSuite, and Zoho Books (India)** so every PayPal `AUTHORIZE -> CAPTURE / VOID` lifecycle event reconciles automatically into the general ledger.
 3. **Year-1 Commercial Milestone**:
-   - **$120M (`₹1,008 Crore`) in Annual Protected Agentic GMV** across **250 B2B enterprises** and **15,000 developer accounts**, establishing PactPay as the de facto security and escrow standard for PayPal Agentic Commerce.
+   - **$120M (`₹1,008 Crore`) in Annual Protected Agentic GMV** across **250 B2B enterprises** and **15,000 developer accounts**, establishing TALOS as the de facto security and escrow standard for PayPal Agentic Commerce.
 
 ---
 
@@ -82,9 +82,9 @@ flowchart LR
 
 | Partner Organization | Strategic Co-Sell & Technical Integration | Mutual Value Created |
 | :--- | :--- | :--- |
-| **PayPal (`Agentic Commerce Services & PayPal World`)** | Position PactPay as the official open-source & enterprise **KYA Security + Reversible Escrow Reference Architecture** for `@paypal/agent-toolkit` and `mcp.paypal.com`. | Eliminates CFO fear of `intent: "CAPTURE"`, driving high-ticket B2B procurement volume onto PayPal `Orders v2`, `Tracking v1`, and `JS SDK v6`. |
-| **AG Grid (`AG Grid Enterprise & AG Studio`)** | Showcase PactPay as the flagship fintech reference app for **AG Studio** ("AI-assisted FinOps blotter & Master-Detail forensics"). | Converts enterprise FinOps teams (`P-04`) into multi-seat **AG Grid Enterprise + AG Studio** licensees. |
-| **Bryntum (`Scheduler Pro & Gantt`)** | Co-market PactPay's **Two-Way Payment-Bound Timeline** pattern where project management bars directly control financial escrow holds. | Expands Bryntum from pure project scheduling into transactional FinOps and supply-chain escrow governance. |
+| **PayPal (`Agentic Commerce Services & PayPal World`)** | Position TALOS as the official open-source & enterprise **KYA Security + Reversible Escrow Reference Architecture** for `@paypal/agent-toolkit` and `mcp.paypal.com`. | Eliminates CFO fear of `intent: "CAPTURE"`, driving high-ticket B2B procurement volume onto PayPal `Orders v2`, `Tracking v1`, and `JS SDK v6`. |
+| **AG Grid (`AG Grid Enterprise & AG Studio`)** | Showcase TALOS as the flagship fintech reference app for **AG Studio** ("AI-assisted FinOps blotter & Master-Detail forensics"). | Converts enterprise FinOps teams (`P-04`) into multi-seat **AG Grid Enterprise + AG Studio** licensees. |
+| **Bryntum (`Scheduler Pro & Gantt`)** | Co-market TALOS's **Two-Way Payment-Bound Timeline** pattern where project management bars directly control financial escrow holds. | Expands Bryntum from pure project scheduling into transactional FinOps and supply-chain escrow governance. |
 | **APIMatic (`SDK & Context Plugin Platform`)** | Publish `sdk/paypal-go-apimatic` and the **APIMatic PayPal Context Plugin** workflow as a blueprint for zero-hallucination polyglot agent SDKs. | Demonstrates how APIMatic bridges language gaps (Golang) and complex endpoints (`/provide-evidence`) for AI agents. |
-| **Channel3 (`trychannel3.com`)** | Embed Channel3 as the mandatory **Fair-Market Price Oracle** on every PactPay B2B checkout evaluation (`F-04`). | Drives high-converting, pre-authorized PayPal checkout volume directly to verified Channel3 merchants (`P-03`) + shared affiliate/oracle revenue. |
-| **Render (`render.com`) & Elastic (`elastic.co`)** | Distribute PactPay's 1-click **`render.yaml` Blueprint** (`F-14`) pre-wired with **Elastic Cloud OpenTelemetry APM (`F-12`)**. | Every enterprise deploying a private PactPay instance provisions managed Rust, Go, Node, Postgres, and Valkey services on Render + Elastic APM. |
+| **Channel3 (`trychannel3.com`)** | Embed Channel3 as the mandatory **Fair-Market Price Oracle** on every TALOS B2B checkout evaluation (`F-04`). | Drives high-converting, pre-authorized PayPal checkout volume directly to verified Channel3 merchants (`P-03`) + shared affiliate/oracle revenue. |
+| **Render (`render.com`) & Elastic (`elastic.co`)** | Distribute TALOS's 1-click **`render.yaml` Blueprint** (`F-14`) pre-wired with **Elastic Cloud OpenTelemetry APM (`F-12`)**. | Every enterprise deploying a private TALOS instance provisions managed Rust, Go, Node, Postgres, and Valkey services on Render + Elastic APM. |

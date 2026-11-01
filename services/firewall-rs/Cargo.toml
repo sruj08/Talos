@@ -1,8 +1,8 @@
 [package]
-name = "pactpay-firewall-rs"
+name = "talos-firewall-rs"
 version = "0.1.0"
 edition = "2021"
-description = "PactPay Zero-Trust KYA Mandate & DOM Prompt-Injection Firewall Kernel (rmcp + lol_html + ed25519-dalek)"
+description = "TALOS Zero-Trust KYA Mandate & DOM Prompt-Injection Firewall Kernel (rmcp + lol_html + ed25519-dalek)"
 license = "MIT"
 
 [dependencies]

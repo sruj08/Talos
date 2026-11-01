@@ -1,6 +1,6 @@
-# Ralph Loop Iteration Contract — PactPay (AegisPay)
+# Ralph Loop Iteration Contract — TALOS
 
-You are executing one atomic micro-chunk of **PactPay (AegisPay)** inside a spec-driven Ralph Loop.
+You are executing one atomic micro-chunk of **TALOS** inside a spec-driven Ralph Loop.
 
 ## Mandatory 10-Step Execution Protocol
 1. **Check Steering First**: Read `.agent/STEERING.md`. Resolve any critical directives first.

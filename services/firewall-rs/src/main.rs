@@ -1,4 +1,4 @@
-//! PactPay Zero-Trust KYA & DOM Prompt-Injection Firewall Kernel (`services/firewall-rs`)
+//! TALOS Zero-Trust KYA & DOM Prompt-Injection Firewall Kernel (`services/firewall-rs`)
 //! Exposes REST endpoints (`API-01`..`API-04`) and MCP JSON-RPC tools (`F-03`).
 
 pub mod mandate;
@@ -16,7 +16,7 @@ use tower_http::cors::CorsLayer;
 
 async fn healthz() -> Json<Value> {
     Json(json!({
-        "service": "pactpay-firewall-rs",
+        "service": "talos-firewall-rs",
         "status": "ok",
         "engine": "ed25519-dalek + lol_html + deberta-v3-onnx",
         "version": "0.1.0"
@@ -41,7 +41,7 @@ async fn main() {
         .and_then(|p| p.parse().ok())
         .unwrap_or(8081);
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
-    tracing::info!("pactpay-firewall-rs listening on {}", addr);
+    tracing::info!("talos-firewall-rs listening on {}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     axum::serve(listener, app).await.unwrap();

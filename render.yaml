@@ -1,17 +1,17 @@
 # ==============================================================================
-# PACTPAY (AEGISPAY) — RENDER NATIVE POLYGLOT BLUEPRINT (render.yaml)
+# TALOS — RENDER NATIVE POLYGLOT BLUEPRINT (render.yaml)
 # Targets: Best Use of Render ($1,000 / $750 / $500 Credits) — Judge Shifra Williams
 # Deploys Rust 1.85 + Golang 1.24 + Next.js 15 + PostgreSQL 16 + Valkey in 1 click!
 # ==============================================================================
 services:
   # 1. Rust Zero-Trust KYA & Prompt-Injection Firewall Kernel (runtime: rust)
   - type: web
-    name: pactpay-firewall-rs
+    name: talos-firewall-rs
     runtime: rust
     rootDir: services/firewall-rs
     plan: starter
     buildCommand: cargo build --release
-    startCommand: ./target/release/pactpay-firewall-rs
+    startCommand: ./target/release/talos-firewall-rs
     healthCheckPath: /healthz
     envVars:
       - key: RUST_LOG
@@ -25,7 +25,7 @@ services:
 
   # 2. Golang 2PC Escrow State Machine & APIMatic PayPal Sandbox Gateway (runtime: go)
   - type: web
-    name: pactpay-orchestrator-go
+    name: talos-orchestrator-go
     runtime: go
     rootDir: services/orchestrator-go
     plan: starter
@@ -37,17 +37,17 @@ services:
         value: "8080"
       - key: DATABASE_URL
         fromDatabase:
-          name: pactpay-postgres
+          name: talos-postgres
           property: connectionString
       - key: REDIS_URL
         fromService:
           type: keyvalue
-          name: pactpay-valkey
+          name: talos-valkey
           property: connectionString
       - key: RUST_FIREWALL_URL
         fromService:
           type: web
-          name: pactpay-firewall-rs
+          name: talos-firewall-rs
           envVarKey: RENDER_EXTERNAL_URL
       - key: PAYPAL_ENVIRONMENT
         value: sandbox
@@ -67,12 +67,12 @@ services:
         sync: false
       - key: ELASTIC_API_KEY
         sync: false
-      - key: PACTPAY_SANDBOX_FALLBACK_ENABLED
+      - key: TALOS_SANDBOX_FALLBACK_ENABLED
         value: "true"
 
   # 3. Next.js 15 Command Center UI: AG Studio + Bryntum Scheduler Pro + PayPal JS SDK v6 (runtime: node)
   - type: web
-    name: pactpay-console-web
+    name: talos-console-web
     runtime: node
     rootDir: web
     plan: starter
@@ -84,7 +84,7 @@ services:
       - key: NEXT_PUBLIC_ORCHESTRATOR_URL
         fromService:
           type: web
-          name: pactpay-orchestrator-go
+          name: talos-orchestrator-go
           envVarKey: RENDER_EXTERNAL_URL
       - key: NEXT_PUBLIC_PAYPAL_CLIENT_ID
         sync: false
@@ -93,14 +93,14 @@ services:
 
   # 4. Managed Valkey / Redis for PayPal-Request-Id Idempotency Locks & WebSocket Pub/Sub
   - type: keyvalue
-    name: pactpay-valkey
+    name: talos-valkey
     plan: starter
     ipAllowList: []
 
 databases:
   # 5. Managed PostgreSQL 16 for Immutable 2PC Escrow & KYA Mandate Ledger
-  - name: pactpay-postgres
-    databaseName: pactpay
-    user: pactpay
+  - name: talos-postgres
+    databaseName: talos
+    user: talos
     plan: starter
     postgresMajorVersion: "16"

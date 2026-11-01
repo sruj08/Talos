@@ -1,5 +1,5 @@
-# Operational Runbook & Incident Response — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal SRE & Security Operations Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# Operational Runbook & Incident Response — TALOS
+> Project: TALOS · Owner: Principal SRE & Security Operations Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [OBSERVABILITY](OBSERVABILITY.md) · [DEPLOYMENT](DEPLOYMENT.md) · [COMPLIANCE](../06-security-compliance/COMPLIANCE.md) · [RISK_REGISTER](../06-security-compliance/RISK_REGISTER.md)
 
 ---
@@ -45,12 +45,12 @@
 ### Playbook 4: Redis / Valkey Lock Contention or Connection Drop (`E-10`)
 - **Symptoms**: Alert `ALT-03` fires; `go-redis` connection pool times out.
 - **Automated Mitigation**: `orchestrator-go` automatically falls back to PostgreSQL unique constraint locking (`INSERT INTO webhook_event_ledger (transmission_id, ...) ON CONFLICT DO NOTHING` and row-level `SELECT ... FOR UPDATE` on `escrow_transactions`).
-- **Manual Recovery**: Restart or scale `pactpay-valkey` in Render Dashboard; flush stale non-lock cache keys if memory saturation occurred (`maxmemoryPolicy: noeviction`).
+- **Manual Recovery**: Restart or scale `talos-valkey` in Render Dashboard; flush stale non-lock cache keys if memory saturation occurred (`maxmemoryPolicy: noeviction`).
 
 ### Playbook 5: False-Positive DOM Prompt-Injection Block on Benign Merchant (`F-02`, `M-01`)
 - **Symptoms**: Legitimate merchant checkout page is flagged with `injection_detected = true` in `firewall_scan_logs` (`E-04`).
 - **Diagnosis**: Expand the **AG Grid Master-Detail Forensic Drawer (`F-08`)** on the blocked row to inspect `stripped_payloads_json` and `onnx.m01_score`.
-- **Remediation**: If a benign CSS class (e.g., an accessibility `.sr-only` span containing non-imperative text) triggered a borderline score (`0.70–0.78`), add the verified merchant domain to the signed mandate's `trusted_domain_allowlist` or adjust `PACTPAY_ONNX_THRESHOLD=0.82`.
+- **Remediation**: If a benign CSS class (e.g., an accessibility `.sr-only` span containing non-imperative text) triggered a borderline score (`0.70–0.78`), add the verified merchant domain to the signed mandate's `trusted_domain_allowlist` or adjust `TALOS_ONNX_THRESHOLD=0.82`.
 
 ### Playbook 6: Unicode Tag-Block (`U+E0000`) or Base64 Smuggled Prompt Injection (`R-02`)
 - **Symptoms**: Red-team attacker attempts invisible ASCII smuggling or `data-*` base64 injection.
@@ -67,7 +67,7 @@
 ### Playbook 9: PayPal Webhook Signature Verification Failure (`API-04`, `API-14`)
 - **Symptoms**: Incoming `POST /api/v1/webhooks/paypal` rejected with `401 Unauthorized` by `firewall-rs`.
 - **Diagnosis**: Check `webhook_event_ledger` (`E-09`) for `crc32_verified` vs. `rsa_sig_verified`. Almost always caused by a mismatched `PAYPAL_WEBHOOK_ID` environment variable after re-creating a Sandbox webhook listener.
-- **Fix**: Update `PAYPAL_WEBHOOK_ID` in Render's `pactpay-shared-secrets` group to match the active PayPal Developer Dashboard Webhook ID.
+- **Fix**: Update `PAYPAL_WEBHOOK_ID` in Render's `talos-shared-secrets` group to match the active PayPal Developer Dashboard Webhook ID.
 
 ### Playbook 10: WebSocket Stream Disconnect (`API-15`) in AG Grid / Bryntum UI
 - **Symptoms**: Live row flashes pause in `AgStudioBlotter.tsx` or `BryntumSlaBoard.tsx`.
@@ -86,7 +86,7 @@ Under the **CERT-In Directions of 28 April 2022**, any confirmed SEV-1 security 
 ### 3.2 DPDP Act 2023 & DPDP Rules 2025 Personal Data Breach Notification
 In the event of any unauthorized disclosure of personal data in `PrincipalUser` (`E-01`):
 1. **Immediate Notification to the Data Protection Board of India (DPBI)**: Submit preliminary breach intimation without undue delay, followed by a detailed root-cause and remediation filing within **72 hours**.
-2. **Data Principal Notice**: Dispatch a clear, plain-language notice (in English and the user's preferred Eighth Schedule language under DPDP §5/§8) detailing the nature of the breach, potential impact, mitigation steps taken by PactPay, and contact details of PactPay's Data Protection Officer (`dpo@pactpay.io`).
+2. **Data Principal Notice**: Dispatch a clear, plain-language notice (in English and the user's preferred Eighth Schedule language under DPDP §5/§8) detailing the nature of the breach, potential impact, mitigation steps taken by TALOS, and contact details of TALOS's Data Protection Officer (`dpo@talos.io`).
 
 ---
 
@@ -94,10 +94,10 @@ In the event of any unauthorized disclosure of personal data in `PrincipalUser` 
 
 ```bash
 # 1. Trigger on-demand logical backup of Render PostgreSQL 16 (E-01..E-09)
-pg_dump --format=custom --no-acl --no-owner "$DATABASE_URL" > pactpay_backup_$(date +%Y%m%d_%H%M).dump
+pg_dump --format=custom --no-acl --no-owner "$DATABASE_URL" > talos_backup_$(date +%Y%m%d_%H%M).dump
 
 # 2. Restore and verify ledger integrity in a clean recovery database
-pg_restore --clean --if-exists --no-acl --no-owner -d "$RECOVERY_DATABASE_URL" pactpay_backup_latest.dump
+pg_restore --clean --if-exists --no-acl --no-owner -d "$RECOVERY_DATABASE_URL" talos_backup_latest.dump
 psql "$RECOVERY_DATABASE_URL" -c "SELECT state, COUNT(*) FROM escrow_transactions GROUP BY state;"
 ```
 
@@ -105,7 +105,7 @@ psql "$RECOVERY_DATABASE_URL" -c "SELECT state, COUNT(*) FROM escrow_transaction
 
 ## 5. Hackathon Demo-Day Emergency Checklist (15 Minutes Before Recording / Judging)
 
-- [ ] **Check 1**: Hit `GET /healthz` on both `pactpay-orchestrator-go` and `pactpay-firewall-rs`—verify `"status": "healthy"`.
+- [ ] **Check 1**: Hit `GET /healthz` on both `talos-orchestrator-go` and `talos-firewall-rs`—verify `"status": "healthy"`.
 - [ ] **Check 2**: Verify `FF_PAYPAL_SANDBOX_REPLAY_FALLBACK=true` is armed so even a sudden PayPal Sandbox hiccup during the 3-minute video take or judge click-through results in `0` errors (`R-01`).
 - [ ] **Check 3**: Click **"Reset Demo State"** in the Command Center header (re-seeds clean `P-01`..`P-04` mandates and resets Order #1 and Order #2 to initial states in `<150ms`).
 - [ ] **Check 4**: Run the 1-click **Postman Collection (`F-13`)** once to warm all Render CPU caches and TLS connection pools.

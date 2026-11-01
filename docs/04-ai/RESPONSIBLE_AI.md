@@ -1,12 +1,12 @@
-# Responsible AI, Governance & Human-in-the-Loop Safety — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: AI Governance, Risk & Compliance Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# Responsible AI, Governance & Human-in-the-Loop Safety — TALOS
+> Project: TALOS · Owner: AI Governance, Risk & Compliance Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [MODELS](MODELS.md) · [AI_EVALS](AI_EVALS.md) · [COMPLIANCE](../06-security-compliance/COMPLIANCE.md)
 
 ---
 
 ## 1. Graded Autonomy Framework (`L1`..`L4`) & Human-in-the-Loop Step-Up (`F-09`)
 
-PactPay rejects binary "full autonomy vs. manual checkout" in favor of a cryptographically enforced **4-Level Graded Autonomy Matrix**:
+TALOS rejects binary "full autonomy vs. manual checkout" in favor of a cryptographically enforced **4-Level Graded Autonomy Matrix**:
 
 | Autonomy Level | Order Value & Risk Condition | Allowed Agent Action | Human Principal Involvement | PayPal Sandbox Mechanism |
 | :--- | :--- | :--- | :--- | :--- |
@@ -19,7 +19,7 @@ PactPay rejects binary "full autonomy vs. manual checkout" in favor of a cryptog
 
 ## 2. Explainability & Forensic Transparency (`P-04` FinOps Auditor View)
 
-Every AI and security decision in PactPay is **100% inspectable and deterministic**:
+Every AI and security decision in TALOS is **100% inspectable and deterministic**:
 1. **No Black-Box Blocks**: When `firewall-rs` blocks a checkout (`BLOCKED_FIREWALL`), expanding the row in **AG Grid's Master-Detail drawer** (`ForensicDetailDrawer.tsx`) displays:
    - The exact CSS selector or HTML comment rule (`rule_id: "CSS_HIDDEN_INSTRUCTION_OVERRIDE"`) that triggered.
    - The verbatim stripped attack string highlighted in red alongside the `raw_dom_hash` (`SHA-256`).
@@ -31,7 +31,7 @@ Every AI and security decision in PactPay is **100% inspectable and deterministi
 
 ## 3. Fairness, Anti-Bias & Small-Merchant Protection
 
-| Potential Bias / Fairness Risk | Concrete Mitigation Engineered into PactPay |
+| Potential Bias / Fairness Risk | Concrete Mitigation Engineered into TALOS |
 | :--- | :--- |
 | **False-Positive Penalization of Legitimate Discounts or Regional Merchants** | **Channel3 Oracle (`F-04`)** only blocks **upward price gouging** (`ask > median + max_spread_bps`). Independent or Indian cross-border SME merchants offering lower prices (`spread_bps <= 0`) are **prioritized**, provided their storefront DOM is free of prompt injections and they supply valid carrier tracking (`F-06`). |
 | **Accessibility HTML (`aria-label`, `sr-only`) Mistaken for Hidden Prompt Injection** | `sanitizer.rs` (`F-02`) does **not** blindly fail on every `aria-label` or `.sr-only` element; it extracts their text and runs `aho-corasick` + `DeBERTa-v3` (`M-01`) semantic classification so standard WCAG 2.2 screen-reader labels pass with `0.0%` false-positive penalty. |
@@ -52,7 +52,7 @@ Every AI and security decision in PactPay is **100% inspectable and deterministi
 
 ## 5. Regulatory Alignment: MeitY AI Advisories, RBI & EU AI Act Classification
 
-| Framework | Classification of PactPay | How PactPay Complies |
+| Framework | Classification of TALOS | How TALOS Complies |
 | :--- | :--- | :--- |
 | **India MeitY AI Advisories (2024–2026) & IndiaAI Safety Guidelines** | **Defensive Financial Cybersecurity & Guardrail Infrastructure** | Prevents unverified/hallucinated financial actions; maintains immutable audit trails (`E-04`, `E-06`, `E-09`) and mandatory human step-up (`F-09`). |
 | **DPDP Act 2023 (India) & CERT-In Directions** | **Data Processor (Zero-PII-Retention Security Proxy)** | Scrubs PII before indexing (`DATA_PIPELINE.md`); retains security scan logs (`E-04`) for 180 days per CERT-In mandate (`R-06`). |

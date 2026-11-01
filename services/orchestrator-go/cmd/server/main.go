@@ -1,4 +1,4 @@
-// PactPay Golang 2PC Escrow Orchestrator (`services/orchestrator-go/cmd/server/main.go`)
+// TALOS Golang 2PC Escrow Orchestrator (`services/orchestrator-go/cmd/server/main.go`)
 package main
 
 import (
@@ -13,7 +13,7 @@ func main() {
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(map[string]string{
-			"service": "pactpay-orchestrator-go",
+			"service": "talos-orchestrator-go",
 			"status":  "ok",
 			"sdk":     "paypal-go-apimatic",
 		})
@@ -23,6 +23,6 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	log.Printf("pactpay-orchestrator-go listening on :%s", port)
+	log.Printf("talos-orchestrator-go listening on :%s", port)
 	log.Fatal(http.ListenAndServe(":"+port, mux))
 }

@@ -12,7 +12,7 @@
         "PAYPAL_ENVIRONMENT": "SANDBOX"
       }
     },
-    "pactpay-firewall-rs": {
+    "talos-firewall-rs": {
       "command": "cargo",
       "args": [
         "run",

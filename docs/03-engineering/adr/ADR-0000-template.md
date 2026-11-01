@@ -1,5 +1,5 @@
 # ADR-0000: Markdown Architectural Decision Record (MADR) Template
-> Project: PactPay (AegisPay) · Owner: Principal Architecture Council · Status: Approved Template v1.0 · Last updated: 2026-11-01
+> Project: TALOS · Owner: Principal Architecture Council · Status: Approved Template v1.0 · Last updated: 2026-11-01
 > Related: [ARCHITECTURE](../ARCHITECTURE.md) · [PROJECT_BRIEF](../../00-overview/PROJECT_BRIEF.md)
 
 ---
@@ -31,7 +31,7 @@ Chosen option: **Option 1**, because [first-principles justification].
 - Measurable engineering, security, or UX benefit.
 
 ### Negative Consequences & Mitigations
-- Known trade-off and the concrete mitigation engineered into PactPay.
+- Known trade-off and the concrete mitigation engineered into TALOS.
 
 ## Verification & Compliance Check
 How this decision is automatically verified in CI (`cargo test`, `go test -race`, `vitest`, `newman`).

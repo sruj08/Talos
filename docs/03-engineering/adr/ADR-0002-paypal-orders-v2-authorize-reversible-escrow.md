@@ -1,5 +1,5 @@
 # ADR-0002: PayPal Orders v2 `AUTHORIZE` as a Reversible Two-Phase Commit (2PC) Escrow Referee
-> Project: PactPay (AegisPay) · Owner: Payments & Escrow Engineering · Status: Accepted · Last updated: 2026-11-01
+> Project: TALOS · Owner: Payments & Escrow Engineering · Status: Accepted · Last updated: 2026-11-01
 > Related: [ARCHITECTURE](../ARCHITECTURE.md) · [API_SPEC](../API_SPEC.md) · [PROJECT_BRIEF](../../00-overview/PROJECT_BRIEF.md)
 
 ---
@@ -12,7 +12,7 @@ Default AI agent payment toolkits (`@paypal/agent-toolkit` `create_order` with `
 
 ## Decision Drivers
 - **Zero False-Capture Guarantee**: No funds should ever be settled to a merchant until cryptographic mandate checks, fair-price checks, and physical/digital delivery SLA checks succeed.
-- **Zero-Custody Regulatory Compliance (`R-06`)**: PactPay must never take custody of buyer funds in its own bank account; all funds must remain inside PayPal's regulated ledger.
+- **Zero-Custody Regulatory Compliance (`R-06`)**: TALOS must never take custody of buyer funds in its own bank account; all funds must remain inside PayPal's regulated ledger.
 - **Instant Rollback on SLA Breach (`F-06`, `F-07`)**: If a shipment misses its deadline on **Bryntum Scheduler Pro**, the buyer's funds must be unlocked in 0 seconds with zero refund fees.
 
 ## Considered Options

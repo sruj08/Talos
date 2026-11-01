@@ -1,12 +1,12 @@
-# Localization, Multi-Currency & Indic i18n Specification — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Design & Frontend Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# Localization, Multi-Currency & Indic i18n Specification — TALOS
+> Project: TALOS · Owner: Principal Design & Frontend Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [DESIGN_SYSTEM](DESIGN_SYSTEM.md) · [UI_SPEC](UI_SPEC.md) · [ACCESSIBILITY](ACCESSIBILITY.md) · [INTEGRATIONS](../03-engineering/INTEGRATIONS.md)
 
 ---
 
 ## 1. Localization Strategy & Priority Locales
 
-Because PactPay operates across the **US/Global PayPal Sandbox ecosystem** (`USD $`, `EUR €`, `GBP £`) and the **India Cross-Border B2B & MSME Corridor (`INR ₹` via PayPal World)** (`P-01` Arjun in Bengaluru/SF, `P-03` Vikram in Mumbai, `P-04` Priya in Chennai), localization is a first-class architectural primitive across `web/`, `orchestrator-go`, and `firewall-rs`.
+Because TALOS operates across the **US/Global PayPal Sandbox ecosystem** (`USD $`, `EUR €`, `GBP £`) and the **India Cross-Border B2B & MSME Corridor (`INR ₹` via PayPal World)** (`P-01` Arjun in Bengaluru/SF, `P-03` Vikram in Mumbai, `P-04` Priya in Chennai), localization is a first-class architectural primitive across `web/`, `orchestrator-go`, and `firewall-rs`.
 
 | Tier | Locale Code | Language & Script | Primary Target Personas | Currency & Number System | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -28,7 +28,7 @@ flowchart LR
 ```
 
 ### 2.1 Zero-Reload Locale & Currency Switching in `web/`
-In the top-right header of the PactPay Command Center (`UI_SPEC.md`), users and judges can toggle:
+In the top-right header of the TALOS Command Center (`UI_SPEC.md`), users and judges can toggle:
 1. **Display Currency Mode**:
    - `USD ($)` Primary with `INR (₹)` subtitle (Default for US Devpost judging).
    - `INR (₹)` Primary with Indian `en-IN` Lakh/Crore formatting (`₹20,916` for `$249.00` at deterministic reference rate `1 USD = ₹84.00 INR`) and `USD ($)` subtitle (for PayPal Sandbox settlement).
@@ -55,7 +55,7 @@ In the top-right header of the PactPay Command Center (`UI_SPEC.md`), users and 
 
 ### 4.1 Devanagari & Indic Script Rendering Safeguards
 - **Font Stack**: `'Inter'`, `'Noto Sans'`, `'Noto Sans Devanagari'` loaded with `display: swap`.
-- **Line-Height & Vertical Metrics**: Devanagari matras (vowel signs above and below the headline/shirorekha, such as `ि`, `ी`, `ु`, `ू`, `ै`, `ौ`) get clipped if CSS `line-height` is too tight (`<1.2`). PactPay enforces `line-height: 1.5` (`leading-normal`) on all localized text badges and table cells when `locale === 'hi-IN'` so zero glyphs are clipped inside **AG Grid** or **Bryntum**.
+- **Line-Height & Vertical Metrics**: Devanagari matras (vowel signs above and below the headline/shirorekha, such as `ि`, `ी`, `ु`, `ू`, `ै`, `ौ`) get clipped if CSS `line-height` is too tight (`<1.2`). TALOS enforces `line-height: 1.5` (`leading-normal`) on all localized text badges and table cells when `locale === 'hi-IN'` so zero glyphs are clipped inside **AG Grid** or **Bryntum**.
 - **Numerals**: Even when the UI language is switched to Hindi (`hi-IN`), cryptographic hashes, `ORDER-ID` strings, and tabular financial amounts retain **standard Western Arabic numerals (`0-9`)** in `JetBrains Mono` per institutional Indian banking/RBI conventions.
 
 ### 4.2 Side-by-Side Translation Glossary (`en.json` <-> `hi.json`)

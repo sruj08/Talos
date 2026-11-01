@@ -1,5 +1,5 @@
 # ADR-0005: Dual-Pane Financial Command Center with AG Grid / AG Studio & Bryntum Scheduler Pro
-> Project: PactPay (AegisPay) · Owner: Frontend Architecture Team · Status: Accepted · Last updated: 2026-11-01
+> Project: TALOS · Owner: Frontend Architecture Team · Status: Accepted · Last updated: 2026-11-01
 > Related: [FRONTEND](../FRONTEND.md) · [UI_SPEC](../../02-design/UI_SPEC.md) · [PROJECT_BRIEF](../../00-overview/PROJECT_BRIEF.md)
 
 ---

@@ -1,5 +1,5 @@
 //! `F-03`: Official Rust MCP Server (`rmcp` JSON-RPC 2.0 Handler)
-//! Exposes `pactpay_issue_mandate`, `pactpay_verify_mandate`, and `pactpay_sanitize_dom`.
+//! Exposes `talos_issue_mandate`, `talos_verify_mandate`, and `talos_sanitize_dom`.
 
 use axum::Json;
 use serde::{Deserialize, Serialize};
@@ -24,9 +24,9 @@ pub async fn handle_mcp_rpc(Json(req): Json<McpJsonRpcRequest>) -> Json<McpJsonR
     let result = match req.method.as_str() {
         "tools/list" => json!({
             "tools": [
-                { "name": "pactpay_issue_mandate", "description": "Sign an Ed25519 KYA Spending Mandate (E-03)" },
-                { "name": "pactpay_verify_mandate", "description": "Verify KYA Mandate & RFC 9421 headers in <1ms" },
-                { "name": "pactpay_sanitize_dom", "description": "Strip indirect DOM prompt injections via lol_html + DeBERTa-v3 ONNX" }
+                { "name": "talos_issue_mandate", "description": "Sign an Ed25519 KYA Spending Mandate (E-03)" },
+                { "name": "talos_verify_mandate", "description": "Verify KYA Mandate & RFC 9421 headers in <1ms" },
+                { "name": "talos_sanitize_dom", "description": "Strip indirect DOM prompt injections via lol_html + DeBERTa-v3 ONNX" }
             ]
         }),
         _ => json!({ "status": "ok", "method": req.method }),

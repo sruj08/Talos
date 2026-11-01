@@ -1,15 +1,15 @@
-# Testing Strategy & Verification Suite — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Quality & Security Verification Team · Status: Approved v1.0 · Last updated: 2026-11-01
+# Testing Strategy & Verification Suite — TALOS
+> Project: TALOS · Owner: Quality & Security Verification Team · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [API_SPEC](API_SPEC.md) · [AI_EVALS](../04-ai/AI_EVALS.md) · [CICD](../05-ops/CICD.md)
 
 ---
 
-## 1. The PactPay Test Pyramid
+## 1. The TALOS Test Pyramid
 
 ```mermaid
 flowchart TB
     L4["Layer 4: Playwright E2E & Live PayPal Sandbox Lifecycle Tests (12 Scenarios)<br/>Act 1 Injection Block -> Act 2 Orders v2 AUTHORIZE/CAPTURE -> Act 3 Bryntum VOID -> Act 4 Step-Up"]
-    L3["Layer 3: Postman / Newman API & MCP Contract Tests (API-01..API-16)<br/>postman/PactPay-Sandbox-MCP.postman_collection.json (48 Assertions)"]
+    L3["Layer 3: Postman / Newman API & MCP Contract Tests (API-01..API-16)<br/>postman/Talos-Sandbox-MCP.postman_collection.json (48 Assertions)"]
     L2["Layer 2: Integration & Concurrency Race Tests (Go -race + Testcontainers Postgres/Redis)<br/>IdempotencyLock (E-10) double-capture prevention (R-03) + 2PC FSM transitions"]
     L1["Layer 1: Fast Unit & Adversarial Security Tests (<3s execution)<br/>Rust cargo test (Ed25519, lol_html, Unicode R-02) · Go table tests · Vitest + RTL UI"]
 
@@ -106,12 +106,12 @@ func TestConcurrentCapturePreventedByStateGuard(t *testing.T) {
 }
 ```
 
-### 2.3 Playwright E2E Verification (`web/e2e/pactpay-4act-journey.spec.ts`)
+### 2.3 Playwright E2E Verification (`web/e2e/talos-4act-journey.spec.ts`)
 
 ```typescript
 import { test, expect } from "@playwright/test";
 
-test("Executes 4-Act PactPay Agentic Commerce Protection Flow", async ({ page }) => {
+test("Executes 4-Act TALOS Agentic Commerce Protection Flow", async ({ page }) => {
   await page.goto("http://localhost:3000");
 
   // Act 1: Trigger Poisoned Merchant Attack via Simulator
@@ -137,7 +137,7 @@ test("Executes 4-Act PactPay Agentic Commerce Protection Flow", async ({ page })
 
 ## 3. Synthetic Test Data Policy (Zero Real PII / Zero Real Cards)
 
-- All test fixtures in `tests/fixtures/` use synthetic personas (`P-01` Arjun Mehta `buyer-pactpay@personal.example.com`, `P-03` Vikram Rao `merchant-pactpay@business.example.com`) and deterministic `Ed25519` test keypairs.
+- All test fixtures in `tests/fixtures/` use synthetic personas (`P-01` Arjun Mehta `buyer-talos@personal.example.com`, `P-03` Vikram Rao `merchant-talos@business.example.com`) and deterministic `Ed25519` test keypairs.
 - Zero real credit card numbers, bank account numbers, or Aadhaar/PAN identifiers exist anywhere in the repository (`R-06`).
 
 ---
@@ -145,7 +145,7 @@ test("Executes 4-Act PactPay Agentic Commerce Protection Flow", async ({ page })
 ## 4. Manual 90-Second Judge Verification Script
 
 1. **One-Click Postman Run (`Judge #12: Pooja Mistry`)**:
-   - Import `postman/PactPay-Sandbox-MCP.postman_collection.json` or click **"Run in Postman"** in `README.md`.
+   - Import `postman/Talos-Sandbox-MCP.postman_collection.json` or click **"Run in Postman"** in `README.md`.
    - Click **"Run Collection"** → Watch all 8 sequential requests (`Sign Mandate → Block Poisoned DOM → Channel3 Price Check → PayPal Sandbox Orders v2 AUTHORIZE → Attach Carrier Tracking → PayPal Authorizations CAPTURE → SLA Breach VOID → Dispute Evidence Upload`) pass `48/48` green assertions in `<6 seconds`.
 2. **Interactive Command Center UI Run**:
    - Open `http://localhost:3000` (or the live Render URL).

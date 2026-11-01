@@ -1,5 +1,5 @@
-# 09 — KERNEL Cloud Browser, Astropods & Zapier Ecosystem Guide — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Sponsor Ecosystem Bonus: **KERNEL (`onkernel.com`), Astropods & Zapier** · Status: Approved v1.0 · Last updated: 2026-11-01
+# 09 — KERNEL Cloud Browser, Astropods & Zapier Ecosystem Guide — TALOS
+> Project: TALOS · Sponsor Ecosystem Bonus: **KERNEL (`onkernel.com`), Astropods & Zapier** · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [00-TRACKS_AND_SUBMISSION_STRATEGY](00-TRACKS_AND_SUBMISSION_STRATEGY.md) · [01-PAYPAL_SANDBOX_STEP_BY_STEP](01-PAYPAL_SANDBOX_STEP_BY_STEP.md) · [ARCHITECTURE](../03-engineering/ARCHITECTURE.md)
 
 ---
@@ -11,14 +11,14 @@ In addition to the core cash prize sponsors (**PayPal**, **AG Grid**, **APIMatic
 2. **Astropods**: Cloud-native ephemeral developer workspaces & containerized agent pods.
 3. **Zapier**: Automated webhook workflow orchestration across 7,000+ enterprise apps (Slack, PagerDuty, Jira, Gmail, QuickBooks).
 
-Here is how PactPay integrates all three cleanly—with **zero mandatory blocker if you don't have an account**, and **step-by-step instructions if you want to connect live keys**.
+Here is how TALOS integrates all three cleanly—with **zero mandatory blocker if you don't have an account**, and **step-by-step instructions if you want to connect live keys**.
 
 ---
 
 ## 2. KERNEL (`https://onkernel.com/`) — Disposable Cloud Browser Sandbox (`F-11`)
 
-### 2.1 — Why KERNEL Fits PactPay's Architecture Perfectly
-When an autonomous shopping agent inspects an untrusted third-party merchant checkout page, opening that URL on the user's local machine exposes local cookies and session state. Instead, PactPay's Go Orchestrator (`services/orchestrator-go/internal/kernel/browser.go`) spins up an isolated **KERNEL Cloud Browser microVM session**, extracts the raw rendered DOM HTML and a visual evidence screenshot, and pipes the HTML directly into our **Rust `lol_html` + `DeBERTa-v3` Prompt-Injection Sanitizer (`services/firewall-rs`)**!
+### 2.1 — Why KERNEL Fits TALOS's Architecture Perfectly
+When an autonomous shopping agent inspects an untrusted third-party merchant checkout page, opening that URL on the user's local machine exposes local cookies and session state. Instead, TALOS's Go Orchestrator (`services/orchestrator-go/internal/kernel/browser.go`) spins up an isolated **KERNEL Cloud Browser microVM session**, extracts the raw rendered DOM HTML and a visual evidence screenshot, and pipes the HTML directly into our **Rust `lol_html` + `DeBERTa-v3` Prompt-Injection Sanitizer (`services/firewall-rs`)**!
 
 ### 2.2 — Step-by-Step Human Actions on `onkernel.com` (Optional — Phase `P3`)
 1. Open your browser and navigate to **[https://onkernel.com/](https://onkernel.com/)**.
@@ -42,7 +42,7 @@ $kk = Read-Host "Enter KERNEL_API_KEY (typing hidden)" -AsSecureString; $kkPlain
 ```
 
 ### 2.3 — Built-In Interactive Fallback: `PoisonedStoreSim.tsx`
-So that judges can trigger adversarial attacks in 1 click without waiting for external merchant pages, PactPay also embeds an interactive **"KERNEL Browser Sandbox & Poisoned Storefront Simulator" (`web/src/components/PoisonedStoreSim.tsx`)** directly inside the Next.js Command Center. Judges can toggle between:
+So that judges can trigger adversarial attacks in 1 click without waiting for external merchant pages, TALOS also embeds an interactive **"KERNEL Browser Sandbox & Poisoned Storefront Simulator" (`web/src/components/PoisonedStoreSim.tsx`)** directly inside the Next.js Command Center. Judges can toggle between:
 - **Preset A — Poisoned Merchant Attack (`ShadowGear Audio - $480.00 + Hidden CSS Prompt Injection`)**
 - **Preset B — Verified Fair-Market Merchant (`AudioPro Verified via Channel3 - $249.00 Clean DOM`)**
 - **Preset C — High-Value Over-Mandate Request (`NVIDIA L40S Node - $450.00 -> Triggers PayPal JS SDK v6 Step-Up Co-Sign`)**
@@ -53,14 +53,14 @@ So that judges can trigger adversarial attacks in 1 click without waiting for ex
 ## 3. Astropods — Ephemeral Dev Container & Workspace Configuration
 
 To support judges and developers using **Astropods** (or GitHub Codespaces / DevContainers) to spin up the entire polyglot `Rust 1.85 + Go 1.24 + Node 22 + PostgreSQL 16 + Redis` environment in the cloud with zero local setup:
-- PactPay includes `.devcontainer/devcontainer.json` and `.astropods.yaml` at the root of the repository.
-- Opening the repository in Astropods automatically builds `pactpay-firewall-rs`, `pactpay-orchestrator-go`, and `web/`, seeds the PostgreSQL escrow ledger, and forwards ports `3000` (Next.js Command Center), `8080` (Go Orchestrator), and `8081` (Rust Firewall & MCP Server).
+- TALOS includes `.devcontainer/devcontainer.json` and `.astropods.yaml` at the root of the repository.
+- Opening the repository in Astropods automatically builds `talos-firewall-rs`, `talos-orchestrator-go`, and `web/`, seeds the PostgreSQL escrow ledger, and forwards ports `3000` (Next.js Command Center), `8080` (Go Orchestrator), and `8081` (Rust Firewall & MCP Server).
 
 ---
 
 ## 4. Zapier — Automated FinOps & Fraud Alert Webhook Sink
 
-When PactPay's Rust Firewall blocks a DOM prompt-injection attack (`verdict: "BLOCKED"`) or when our Go Orchestrator automatically voids an expired SLA hold (`state: "PAYPAL_VOIDED"`), enterprise FinOps teams (`P-04 Priya Nair`) want an instant alert in Slack, Microsoft Teams, Jira, or PagerDuty.
+When TALOS's Rust Firewall blocks a DOM prompt-injection attack (`verdict: "BLOCKED"`) or when our Go Orchestrator automatically voids an expired SLA hold (`state: "PAYPAL_VOIDED"`), enterprise FinOps teams (`P-04 Priya Nair`) want an instant alert in Slack, Microsoft Teams, Jira, or PagerDuty.
 
 ### Step-by-Step Human Setup for Zapier Webhook Integration (Optional — 2 Minutes)
 1. Log into **[https://zapier.com/](https://zapier.com/)** → Click **Create Zap**.
@@ -70,7 +70,7 @@ When PactPay's Rust Firewall blocks a DOM prompt-injection attack (`verdict: "BL
    printf "Enter ZAPIER_WEBHOOK_URL (typing hidden): " && read -s val && echo && echo "ZAPIER_WEBHOOK_URL=$val" >> ".env" && echo "Saved ZAPIER_WEBHOOK_URL."
    ```
 4. For the **Action**, connect **Slack (`Send Channel Message`)** or **Email by Zapier** to post real-time alerts containing:
-   - `event_type`: `PACTPAY_DOM_INJECTION_BLOCKED` | `PACTPAY_PAYPAL_AUTHORIZATION_VOIDED`
+   - `event_type`: `TALOS_DOM_INJECTION_BLOCKED` | `TALOS_PAYPAL_AUTHORIZATION_VOIDED`
    - `paypal_order_id` & `paypal_auth_id`
    - `channel3_spread_bps` & `savings_usd`
    - `stripped_injection_snippet`
@@ -132,7 +132,7 @@ ZAPIER_WEBHOOK_URL=
 # ============================================================================
 # 8. LOCAL DOCKER & INTERNAL SERVICE WIRING (Pre-configured)
 # ============================================================================
-DATABASE_URL=postgres://pactpay_admin:pactpay_local_secret@localhost:5432/pactpay?sslmode=disable
+DATABASE_URL=postgres://talos_admin:talos_local_secret@localhost:5432/talos?sslmode=disable
 REDIS_URL=redis://localhost:6379/0
 FIREWALL_RS_INTERNAL_URL=http://localhost:8081
 NEXT_PUBLIC_ORCHESTRATOR_URL=http://localhost:8080

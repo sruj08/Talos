@@ -1,5 +1,5 @@
 # ADR-0003: APIMatic Context Plugin & Custom Golang PayPal SDK Code Generation
-> Project: PactPay (AegisPay) · Owner: SDK & AI Tooling Team · Status: Accepted · Last updated: 2026-11-01
+> Project: TALOS · Owner: SDK & AI Tooling Team · Status: Accepted · Last updated: 2026-11-01
 > Related: [TECH_STACK](../TECH_STACK.md) · [INTEGRATIONS](../INTEGRATIONS.md) · [ADR-0001](ADR-0001-polyglot-rust-go-typescript-architecture.md)
 
 ---

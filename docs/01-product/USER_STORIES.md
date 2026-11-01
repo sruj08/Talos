@@ -1,5 +1,5 @@
-# User Stories & Acceptance Criteria (`US-01` .. `US-16`) — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Architecture & Product Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# User Stories & Acceptance Criteria (`US-01` .. `US-16`) — TALOS
+> Project: TALOS · Owner: Principal Architecture & Product Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [PRD](PRD.md) · [PERSONAS](PERSONAS.md) · [USER_JOURNEYS](USER_JOURNEYS.md) · [FEATURES](FEATURES.md) · [BACKLOG](../08-project/BACKLOG.md)
 
 ---
@@ -83,7 +83,7 @@ flowchart TB
 
 #### `US-04` — Local INT8 `DeBERTa-v3` ONNX & Unicode Tag Smuggling Classification
 - **Mapped Feature**: `F-02` · **Persona**: `P-04` (Priya Nair) · **Priority**: `Must (P0)` · **Estimate**: `M (4h)` · **API / Entity**: `API-03`, `E-04`, `M-01`, `R-02`
-- **Story**: *As a FinOps Risk Auditor (`P-04`), I want PactPay to normalize NFKC Unicode (`U+E0000` tag blocks), decode inline base64 attributes, and score DOM text with an in-memory INT8 `DeBERTa-v3` ONNX classifier (`M-01`), so that obfuscated prompt injections are caught with a forensic risk score.*
+- **Story**: *As a FinOps Risk Auditor (`P-04`), I want TALOS to normalize NFKC Unicode (`U+E0000` tag blocks), decode inline base64 attributes, and score DOM text with an in-memory INT8 `DeBERTa-v3` ONNX classifier (`M-01`), so that obfuscated prompt injections are caught with a forensic risk score.*
 - **Gherkin Acceptance Criteria**:
   ```gherkin
   Scenario: Detecting obfuscated prompt injection with DeBERTa-v3 ONNX
@@ -95,12 +95,12 @@ flowchart TB
 
 #### `US-05` — Official Rust Zero-Trust MCP Server (`rmcp`) Exposure
 - **Mapped Feature**: `F-03` · **Persona**: `P-02` (Maya Lin) · **Priority**: `Must (P0)` · **Estimate**: `M (4h)` · **API / Entity**: `API-01`..`API-04`
-- **Story**: *As an AI Agent Developer (`P-02`), I want to connect Claude Desktop, Cursor, or my Go agent to `pactpay-firewall-rs` via the standard Model Context Protocol (`rmcp` over `stdio` and `HTTP/SSE`), so that I can secure any agent in 60 seconds.*
+- **Story**: *As an AI Agent Developer (`P-02`), I want to connect Claude Desktop, Cursor, or my Go agent to `talos-firewall-rs` via the standard Model Context Protocol (`rmcp` over `stdio` and `HTTP/SSE`), so that I can secure any agent in 60 seconds.*
 - **Gherkin Acceptance Criteria**:
   ```gherkin
-  Scenario: Invoking PactPay tools over MCP protocol
-    Given pactpay-firewall-rs is running with the rmcp server enabled
-    When an MCP client invokes tools/call for "pactpay_sanitize_dom" or "pactpay_issue_mandate"
+  Scenario: Invoking TALOS tools over MCP protocol
+    Given talos-firewall-rs is running with the rmcp server enabled
+    When an MCP client invokes tools/call for "talos_sanitize_dom" or "talos_issue_mandate"
     Then the server validates the JSON-RPC 2.0 arguments against strict schemas and returns structured MCP tool content
   ```
 
@@ -122,7 +122,7 @@ flowchart TB
 
 #### `US-07` — Automatic Price-Gouging Block & Verified Channel3 Merchant Reroute
 - **Mapped Feature**: `F-04` · **Persona**: `P-01` (Arjun Mehta), `P-03` (Vikram Rao) · **Priority**: `Must (P0)` · **Estimate**: `M (3h)` · **API / Entity**: `API-05`, `API-06`, `E-05`
-- **Story**: *As a B2B Buyer (`P-01`), I want PactPay to automatically block any merchant listing priced above my mandate's `max_spread_bps` (`+10%` / `1,000 bps`) and reroute the checkout to the lowest-priced verified **Channel3** merchant (`P-03`), so that my company never overpays.*
+- **Story**: *As a B2B Buyer (`P-01`), I want TALOS to automatically block any merchant listing priced above my mandate's `max_spread_bps` (`+10%` / `1,000 bps`) and reroute the checkout to the lowest-priced verified **Channel3** merchant (`P-03`), so that my company never overpays.*
 - **Gherkin Acceptance Criteria**:
   ```gherkin
   Scenario: Blocking $480 scalper and rerouting to $249 verified Channel3 supplier
@@ -147,7 +147,7 @@ flowchart TB
 
 #### `US-09` — PayPal Shipment Tracking v1 Verification & Automatic `CAPTURE`
 - **Mapped Feature**: `F-06` · **Persona**: `P-03` (Vikram Rao) · **Priority**: `Must (P0)` · **Estimate**: `M (4h)` · **API / Entity**: `API-08`, `API-09`, `E-06`, `E-07`
-- **Story**: *As a Verified Merchant (`P-03`), I want PactPay to monitor my carrier tracking number via **PayPal Shipment Tracking v1** (`create_tracking` / `/v1/shipping/trackers-batch`) and automatically execute `POST /v2/payments/authorizations/{id}/capture` the moment delivery is confirmed within the SLA, so that I get paid immediately upon fulfillment.*
+- **Story**: *As a Verified Merchant (`P-03`), I want TALOS to monitor my carrier tracking number via **PayPal Shipment Tracking v1** (`create_tracking` / `/v1/shipping/trackers-batch`) and automatically execute `POST /v2/payments/authorizations/{id}/capture` the moment delivery is confirmed within the SLA, so that I get paid immediately upon fulfillment.*
 - **Gherkin Acceptance Criteria**:
   ```gherkin
   Scenario: Auto-Capturing PayPal Authorization upon on-time carrier delivery
@@ -159,7 +159,7 @@ flowchart TB
 
 #### `US-10` — Automatic `VOID` Rollback on Delivery SLA Breach or Price Tampering
 - **Mapped Feature**: `F-06` · **Persona**: `P-01` (Arjun Mehta) · **Priority**: `Must (P0)` · **Estimate**: `M (4h)` · **API / Entity**: `API-10`, `E-06`, `E-07`
-- **Story**: *As a B2B Buyer (`P-01`), I want PactPay to automatically call `POST /v2/payments/authorizations/{id}/void` in PayPal Sandbox if the merchant fails to deliver before the SLA deadline or attempts post-authorization tampering, so that 100% of my locked funds are released in zero seconds.*
+- **Story**: *As a B2B Buyer (`P-01`), I want TALOS to automatically call `POST /v2/payments/authorizations/{id}/void` in PayPal Sandbox if the merchant fails to deliver before the SLA deadline or attempts post-authorization tampering, so that 100% of my locked funds are released in zero seconds.*
 - **Gherkin Acceptance Criteria**:
   ```gherkin
   Scenario: Executing instant PayPal Authorization Void on SLA breach
@@ -216,7 +216,7 @@ flowchart TB
 
 #### `US-14` — Autonomous PayPal Customer Disputes Evidence Packager
 - **Mapped Feature**: `F-10` · **Persona**: `P-03` (Vikram Rao), `P-04` (Priya Nair) · **Priority**: `Should (P1)` · **Estimate**: `M (4h)` · **API / Entity**: `API-11`, `E-08`, `M-02`
-- **Story**: *As a Verified Merchant (`P-03`) or FinOps Auditor (`P-04`), I want PactPay to automatically bundle the `Ed25519` KYA mandate, **Channel3** SKU snapshot, **PayPal Shipment Tracking** receipt, and **KERNEL** screenshot and submit them to PayPal's `/v1/customer/disputes/{id}/provide-evidence` endpoint (`API-11`), so that post-capture disputes are resolved with cryptographic proof.*
+- **Story**: *As a Verified Merchant (`P-03`) or FinOps Auditor (`P-04`), I want TALOS to automatically bundle the `Ed25519` KYA mandate, **Channel3** SKU snapshot, **PayPal Shipment Tracking** receipt, and **KERNEL** screenshot and submit them to PayPal's `/v1/customer/disputes/{id}/provide-evidence` endpoint (`API-11`), so that post-capture disputes are resolved with cryptographic proof.*
 - **Gherkin Acceptance Criteria**:
   ```gherkin
   Scenario: Auto-packaging and submitting dispute representment evidence
@@ -245,7 +245,7 @@ flowchart TB
   ```gherkin
   Scenario: Running Postman contract suite against live Render Blueprint deployment
     Given render.yaml provisions firewall-rs, orchestrator-go, console-web, postgres, and valkey
-    When a judge runs postman/PactPay-Sandbox-MCP.postman_collection.json
+    When a judge runs postman/Talos-Sandbox-MCP.postman_collection.json
     Then 100% of assertions across all 16 endpoints pass with zero manual secret configuration required
   ```
 

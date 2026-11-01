@@ -1,4 +1,4 @@
--- PactPay (AegisPay) PostgreSQL 16 Schema (Entities E-01 through E-09)
+-- TALOS PostgreSQL 16 Schema (Entities E-01 through E-09)
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS principal_users (

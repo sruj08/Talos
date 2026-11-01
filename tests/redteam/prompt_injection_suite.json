@@ -1,5 +1,5 @@
 {
-  "suite": "PactPay Adversarial DOM Prompt-Injection Benchmark (CVE-2026-22708 Class)",
+  "suite": "TALOS Adversarial DOM Prompt-Injection Benchmark (CVE-2026-22708 Class)",
   "cases": [
     {
       "id": "RT-01",

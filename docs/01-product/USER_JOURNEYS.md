@@ -1,12 +1,12 @@
-# User Journeys & Experience Flows — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Architecture & Product Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# User Journeys & Experience Flows — TALOS
+> Project: TALOS · Owner: Principal Architecture & Product Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [PRD](PRD.md) · [PERSONAS](PERSONAS.md) · [USER_STORIES](USER_STORIES.md) · [UI_SPEC](../02-design/UI_SPEC.md)
 
 ---
 
 ## 1. Current-State vs. Future-State Comparison (Macro View)
 
-### 1.1 Current State (Without PactPay — Binary Trust & Irreversible Loss)
+### 1.1 Current State (Without TALOS — Binary Trust & Irreversible Loss)
 ```mermaid
 flowchart LR
     U["Human Principal (P-01 / P-02)<br/>Gives Agent PayPal API Keys"] --> A["AI Agent Browses Web<br/>Hits Poisoned Merchant Page"]
@@ -18,7 +18,7 @@ flowchart LR
     style LOSS fill:#450a0a,stroke:#f87171,color:#fff
 ```
 
-### 1.2 Future State (With PactPay — Zero-Trust KYA Firewall & Reversible 2PC Escrow)
+### 1.2 Future State (With TALOS — Zero-Trust KYA Firewall & Reversible 2PC Escrow)
 ```mermaid
 flowchart LR
     U["Human Principal (P-01)<br/>Signs Ed25519 Mandate ($300 Cap, 48h SLA)"] --> FW["Rust Firewall (F-01..F-03)<br/>Strips DOM Injection in 3.1ms"]
@@ -81,10 +81,10 @@ sequenceDiagram
     participant UI as Next.js PayPalStepUpModal (F-09)
     participant PP as PayPal Sandbox (Orders v2)
 
-    Maya->>Agent: Adds pactpay-firewall-rs to mcp_config.json
-    Agent->>Rust: MCP tools/call: pactpay_issue_mandate ($200 cap)
+    Maya->>Agent: Adds talos-firewall-rs to mcp_config.json
+    Agent->>Rust: MCP tools/call: talos_issue_mandate ($200 cap)
     Rust-->>Agent: Signed KyaMandate (E-03, ed25519_sig)
-    Agent->>Rust: MCP tools/call: pactpay_sanitize_dom (raw HTML)
+    Agent->>Rust: MCP tools/call: talos_sanitize_dom (raw HTML)
     Rust-->>Agent: Sanitized HTML + FirewallScanLog (3.1ms)
     Agent->>Go: POST /api/v1/checkout/evaluate ($350 FPGA Board > $200 cap)
     Go-->>UI: WebSocket Event: STEP_UP_REQUIRED (Escrow E-06)
@@ -104,8 +104,8 @@ flowchart TD
     A["1. Agentic Buyer Rerouted via Channel3 (F-04)<br/>to Vikram's Verified $249.00 Listing"] --> B["2. Vikram Receives Instant PayPal Sandbox<br/>Orders v2 AUTHORIZE Notification ($249 Locked)"]
     B --> C["3. Warehouse Ships Order Within 48h SLA<br/>Attaches Tracking via PayPal Tracking v1 (API-08)"]
     C --> D{"Carrier Delivery Status"}
-    D -->|DELIVERED Within SLA| E["4A. PactPay Go Engine Automatically Calls<br/>authorizationsCapture (API-09) -> Instant Settlement!"]
-    D -->|Buyer Files False Post-Capture Dispute| F["4B. PactPay Dispute Evidence Packager (F-10)<br/>Submits Ed25519 Mandate + Channel3 Spec + KERNEL Proof<br/>to /v1/customer/disputes/{id}/provide-evidence (API-11)"]
+    D -->|DELIVERED Within SLA| E["4A. TALOS Go Engine Automatically Calls<br/>authorizationsCapture (API-09) -> Instant Settlement!"]
+    D -->|Buyer Files False Post-Capture Dispute| F["4B. TALOS Dispute Evidence Packager (F-10)<br/>Submits Ed25519 Mandate + Channel3 Spec + KERNEL Proof<br/>to /v1/customer/disputes/{id}/provide-evidence (API-11)"]
 ```
 
 ---
@@ -124,7 +124,7 @@ flowchart TD
 
 ## 6. Comprehensive Edge Cases & Exception Handling Catalog
 
-| Edge Case ID | Scenario Description | How PactPay Handles It Deterministically | User Experience in Command Center |
+| Edge Case ID | Scenario Description | How TALOS Handles It Deterministically | User Experience in Command Center |
 | :--- | :--- | :--- | :--- |
 | **`EC-01`** | **Obfuscated Prompt Injection via Unicode Tag Characters (`U+E0000`) or Base64 (`R-02`)** | `firewall-rs` runs NFKC normalization, strips `U+E0000..U+E007F` invisible tags, decodes inline base64 strings `>24 chars`, and evaluates with `DeBERTa-v3` ONNX (`M-01`). | Row flashes crimson `BLOCKED_UNICODE_SMUGGLING`; decoded payload shown in Master-Detail diff. |
 | **`EC-02`** | **Dynamic Checkout Price Bait-and-Switch (Cart Total Mutates at Final Step)** | Go re-verifies the final checkout amount against both `KyaMandate.max_amount_cents` (`E-03`) and `Channel3Benchmark.median_price_cents` (`E-05`) right before calling `API-07`. | Blocks `AUTHORIZE` call, logs `PRICE_MUTATION_DETECTED`, and reroutes to backup Channel3 supplier. |

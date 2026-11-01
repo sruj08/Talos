@@ -1,5 +1,5 @@
 {
-  "project": "PactPay (AegisPay)",
+  "project": "TALOS",
   "version": "1.0.0",
   "tasks": [
     {
@@ -137,7 +137,7 @@
       "steps": [
         "Build streaming DOM sanitizer stripping display:none, opacity:0, visibility:hidden, HTML comments, and zero-width Unicode tags",
         "Score text fragments against adversarial prompt-injection patterns and ONNX classifier interface (M-01)",
-        "Expose MCP tools pactpay_issue_mandate, pactpay_verify_mandate, and pactpay_sanitize_dom plus Axum REST endpoints /v1/mandates/sign, /v1/mandates/verify, /v1/firewall/sanitize-dom, /healthz"
+        "Expose MCP tools talos_issue_mandate, talos_verify_mandate, and talos_sanitize_dom plus Axum REST endpoints /v1/mandates/sign, /v1/mandates/verify, /v1/firewall/sanitize-dom, /healthz"
       ],
       "pass": [
         "cargo test passes all prompt-injection sanitization tests in services/firewall-rs",
@@ -453,14 +453,14 @@
         "node:guide:postman"
       ],
       "files": [
-        "postman/PactPay-Sandbox-MCP.postman_collection.json",
-        "postman/PactPay-Sandbox.postman_environment.json",
+        "postman/Talos-Sandbox-MCP.postman_collection.json",
+        "postman/Talos-Sandbox.postman_environment.json",
         "services/orchestrator-go/internal/telemetry/elastic_otel.go"
       ],
       "description": "Configure OpenTelemetry trace export + Elasticsearch threat vector indexing for Judge Carly Richmond (Elastic) and complete the runnable Postman collection for Judge Pooja Mistry (Postman).",
       "steps": [
-        "Verify OpenTelemetry span attributes (pactpay.mandate.id, pactpay.firewall.risk_score, pactpay.channel3.spread_bps, paypal.order_id, paypal.auth_id) in Rust and Go",
-        "Verify postman/PactPay-Sandbox-MCP.postman_collection.json includes pre-configured requests and test scripts for API-01..API-16 and PayPal Sandbox OAuth/Orders/Authorizations/Tracking/Disputes"
+        "Verify OpenTelemetry span attributes (talos.mandate.id, talos.firewall.risk_score, talos.channel3.spread_bps, paypal.order_id, paypal.auth_id) in Rust and Go",
+        "Verify postman/Talos-Sandbox-MCP.postman_collection.json includes pre-configured requests and test scripts for API-01..API-16 and PayPal Sandbox OAuth/Orders/Authorizations/Tracking/Disputes"
       ],
       "pass": [
         "Postman collection and environment JSON files are valid and cover all 16 APIs",
@@ -488,7 +488,7 @@
         "node:tests:redteam"
       ],
       "files": [
-        "web/e2e/pactpay-3act-demo.spec.ts",
+        "web/e2e/talos-3act-demo.spec.ts",
         "tests/redteam/prompt_injection_suite.json"
       ],
       "description": "Verify unit, integration, red-team prompt-injection, and Playwright E2E tests across Rust, Go, and Next.js.",

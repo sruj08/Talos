@@ -1,18 +1,18 @@
-# AI Models Catalog & Model Cards — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: AI & Security Research Team · Status: Approved v1.0 · Last updated: 2026-11-01
+# AI Models Catalog & Model Cards — TALOS
+> Project: TALOS · Owner: AI & Security Research Team · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [PROMPTS](PROMPTS.md) · [AI_EVALS](AI_EVALS.md) · [ADR-0004](../03-engineering/adr/ADR-0004-rust-lol-html-and-deberta-onnx-prompt-firewall.md)
 
 ---
 
 ## 1. AI Model Architecture Philosophy (Andrej Karpathy First Principles)
 
-PactPay never uses a massive, slow cloud LLM where a fast, deterministic local classifier belongs, and never uses a naive regex where semantic reasoning is required. Every model (`M-01`..`M-04`) has a **deterministic zero-key fallback** so judges can run and verify the full platform even without external LLM API keys (`R-04`).
+TALOS never uses a massive, slow cloud LLM where a fast, deterministic local classifier belongs, and never uses a naive regex where semantic reasoning is required. Every model (`M-01`..`M-04`) has a **deterministic zero-key fallback** so judges can run and verify the full platform even without external LLM API keys (`R-04`).
 
 ---
 
 ## 2. Master Models Matrix (`M-01`..`M-04`)
 
-| Model ID | Model Name & Provider | Runtime Location | Primary Task in PactPay | Context Limit | Latency (p50 / p95) | Cost per 1,000 Calls (`$` / `₹`) | Deterministic Fallback |
+| Model ID | Model Name & Provider | Runtime Location | Primary Task in TALOS | Context Limit | Latency (p50 / p95) | Cost per 1,000 Calls (`$` / `₹`) | Deterministic Fallback |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **`M-01`** | **ProtectAI `deberta-v3-base-prompt-injection-v2` (INT8 Quantized ONNX)** | Local in-memory inside `services/firewall-rs` via `ort` (ONNX Runtime) | Classifies merchant DOM text fragments & stripped nodes for indirect prompt injection (`F-02`, `API-03`). | `512` tokens per chunk (sliding window) | **`1.8 ms / 3.4 ms`** | **`$0.00` (₹0.00)** — 100% Local CPU | `lol_html` + `aho-corasick` 140-pattern regex/CSS rule engine (`0.38 ms`). |
 | **`M-02`** | **Claude 3.7 Sonnet (`claude-3-7-sonnet-20250219`) / GPT-4o (`gpt-4o-2024-11-20`)** | Cloud API via `orchestrator-go` & Next.js `/api/mcp/paypal-bridge` (`API-16`) + **APIMatic Context Plugin** | Autonomous procurement reasoning, SKU spec comparison against **Channel3**, and **Dispute Evidence Bundle** (`F-10`) synthesis. | `200k` / `128k` tokens | **`780 ms / 1,150 ms`** | **`$4.50` (₹378.00)** | `gemini-2.5-flash` (`$0.15` / ₹12.60) or built-in deterministic procurement router. |
@@ -41,7 +41,7 @@ PactPay never uses a massive, slow cloud LLM where a fast, deterministic local c
 ### 3.2 Model Card: `M-02` — Autonomous Procurement & Dispute Reasoning Agent (`Claude 3.7 Sonnet` / `GPT-4o`)
 - **Provider**: Anthropic / OpenAI (augmented with **APIMatic PayPal Context Plugin**).
 - **Why Chosen**:
-  - Best-in-class tool-calling reliability on multi-step MCP workflows (`pactpay_issue_mandate` → `pactpay_sanitize_dom` → `channel3_benchmark` → `pactpay_execute_protected_checkout`).
+  - Best-in-class tool-calling reliability on multi-step MCP workflows (`talos_issue_mandate` → `talos_sanitize_dom` → `channel3_benchmark` → `talos_execute_protected_checkout`).
   - When paired with the **APIMatic Context Plugin**, schema compliance on PayPal `Orders v2` (`intent: "AUTHORIZE"`), `Shipment Tracking v1`, and `Customer Disputes v1` reaches **`100.0%`** in our evaluation suite (`AI_EVALS.md`).
 - **Inputs & Outputs**:
   - **Input**: Sanitized merchant DOM (`E-04.sanitized_dom`), active `KyaMandate` (`E-03`), and `Channel3Benchmark` (`E-05`).
@@ -60,4 +60,4 @@ PactPay never uses a massive, slow cloud LLM where a fast, deterministic local c
 ---
 
 ### 3.4 Model Card: `M-04` — Elastic ELSER v2 / Threat Vector Embedder
-- **Role**: Indexes every stripped DOM injection payload (`E-04.stripped_payloads_json`) into **Elastic Cloud** (`F-12`) so when a new merchant storefront uses a semantically similar jailbreak phrasing, PactPay surfaces prior matching incidents across the network in `<85ms`.
+- **Role**: Indexes every stripped DOM injection payload (`E-04.stripped_payloads_json`) into **Elastic Cloud** (`F-12`) so when a new merchant storefront uses a semantically similar jailbreak phrasing, TALOS surfaces prior matching incidents across the network in `<85ms`.

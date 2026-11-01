@@ -1,14 +1,14 @@
-# Data Model & Persistence Schema — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Data & Ledger Engineering · Status: Approved v1.0 · Last updated: 2026-11-01
+# Data Model & Persistence Schema — TALOS
+> Project: TALOS · Owner: Data & Ledger Engineering · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [ARCHITECTURE](ARCHITECTURE.md) · [API_SPEC](API_SPEC.md) · [PRIVACY](../06-security-compliance/PRIVACY.md)
 
 ---
 
 ## 1. Data Architecture Overview
 
-PactPay persists state across three specialized storage engines:
-1. **PostgreSQL 16 (`pactpay-postgres`)**: Primary ACID system of record for Entities **`E-01` through `E-09`**. All state transitions on `escrow_transactions` (`E-06`) execute inside `READ COMMITTED` / `SELECT ... FOR UPDATE` transactions to prevent double-capture race conditions (`R-03`).
-2. **Redis / Valkey 7.2 (`pactpay-valkey`)**: Hosts Entity **`E-10` (`IdempotencyLock`)** using atomic `SET idemp:{request_id} {hash} NX EX 86400` operations, plus transient WebSocket pub/sub channels (`ws:events:escrow`).
+TALOS persists state across three specialized storage engines:
+1. **PostgreSQL 16 (`talos-postgres`)**: Primary ACID system of record for Entities **`E-01` through `E-09`**. All state transitions on `escrow_transactions` (`E-06`) execute inside `READ COMMITTED` / `SELECT ... FOR UPDATE` transactions to prevent double-capture race conditions (`R-03`).
+2. **Redis / Valkey 7.2 (`talos-valkey`)**: Hosts Entity **`E-10` (`IdempotencyLock`)** using atomic `SET idemp:{request_id} {hash} NX EX 86400` operations, plus transient WebSocket pub/sub channels (`ws:events:escrow`).
 3. **Elastic Cloud (`Elasticsearch 8.17`)**: Dual-writes Entity **`E-04` (`FirewallScanLog`)** with 1536-dimensional / sparse `elser_model_2` embeddings (`M-04`) for semantic prompt-injection threat hunting (`F-12`).
 
 ---
@@ -135,7 +135,7 @@ erDiagram
 
 ---
 
-## 3. Complete PostgreSQL 16 DDL Schema (`migrations/000001_init_pactpay_schema.up.sql`)
+## 3. Complete PostgreSQL 16 DDL Schema (`migrations/000001_init_talos_schema.up.sql`)
 
 ```sql
 -- Enable cryptographic & UUID extensions
@@ -390,7 +390,7 @@ CREATE INDEX idx_webhook_event_ledger_resource ON webhook_event_ledger(resource_
 ## 6. Database Migration & Seeding Strategy
 
 1. **Migration Tooling**:
-   - **Go Orchestrator**: Uses `golang-migrate/migrate/v4` reading SQL files from `services/orchestrator-go/migrations/` (`000001_init_pactpay_schema.up.sql` and `.down.sql`).
+   - **Go Orchestrator**: Uses `golang-migrate/migrate/v4` reading SQL files from `services/orchestrator-go/migrations/` (`000001_init_talos_schema.up.sql` and `.down.sql`).
    - **Rust Firewall**: Uses `sqlx-cli` compile-time checked queries (`sqlx::query!`) verified against `services/firewall-rs/.sqlx/` offline metadata so `cargo build --release` works without a live database during Docker multi-stage builds (`R-04`).
 2. **Deterministic Demo Seeding (`scripts/seed_demo_data.sql`)**:
    - Automatically executed on `docker compose up` and Render initialization.

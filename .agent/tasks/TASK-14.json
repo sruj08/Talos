@@ -19,7 +19,7 @@
     "node:tests:redteam"
   ],
   "files": [
-    "web/e2e/pactpay-3act-demo.spec.ts",
+    "web/e2e/talos-3act-demo.spec.ts",
     "tests/redteam/prompt_injection_suite.json"
   ],
   "description": "Verify unit, integration, red-team prompt-injection, and Playwright E2E tests across Rust, Go, and Next.js.",

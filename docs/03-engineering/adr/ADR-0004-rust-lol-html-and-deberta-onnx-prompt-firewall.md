@@ -1,5 +1,5 @@
 # ADR-0004: Rust `lol_html` Streaming Rewriter & Quantized `DeBERTa-v3` ONNX Prompt-Injection Firewall
-> Project: PactPay (AegisPay) · Owner: Security Kernel Team · Status: Accepted · Last updated: 2026-11-01
+> Project: TALOS · Owner: Security Kernel Team · Status: Accepted · Last updated: 2026-11-01
 > Related: [ARCHITECTURE](../ARCHITECTURE.md) · [MODELS](../../04-ai/MODELS.md) · [PROJECT_BRIEF](../../00-overview/PROJECT_BRIEF.md)
 
 ---

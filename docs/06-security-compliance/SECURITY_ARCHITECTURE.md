@@ -1,5 +1,5 @@
-# Zero-Trust Security Architecture — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Chief Information Security Officer (Bruce Schneier + Max Levchin Bench) · Status: Approved v1.0 · Last updated: 2026-11-01
+# Zero-Trust Security Architecture — TALOS
+> Project: TALOS · Owner: Chief Information Security Officer (Bruce Schneier + Max Levchin Bench) · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [THREAT_MODEL](THREAT_MODEL.md) · [PRIVACY](PRIVACY.md) · [COMPLIANCE](COMPLIANCE.md) · [ARCHITECTURE](../03-engineering/ARCHITECTURE.md)
 
 ---
@@ -8,10 +8,10 @@
 
 Traditional agent toolkits (`@paypal/agent-toolkit`, Stripe Agent Toolkit) inject live OAuth bearer tokens or API secrets directly into the AI agent's execution environment. If an untrusted web page injects a hidden instruction (`CVE-2026-22708`), the LLM calls `create_order` or `pay_invoice` with full authority.
 
-**PactPay enforces strict architectural privilege separation**:
-1. **Air-Gapped Credential Custody**: AI agents (`E-02`) hold **zero** PayPal API credentials. They hold only an unprivileged MCP client token and must submit every checkout candidate to `pactpay-firewall-rs` (`F-03`, `API-02`, `API-03`).
+**TALOS enforces strict architectural privilege separation**:
+1. **Air-Gapped Credential Custody**: AI agents (`E-02`) hold **zero** PayPal API credentials. They hold only an unprivileged MCP client token and must submit every checkout candidate to `talos-firewall-rs` (`F-03`, `API-02`, `API-03`).
 2. **Deterministic Rust Verification Before Money Movement**: `services/firewall-rs` (`Rust 1.85`) verifies the human principal's cryptographic `Ed25519` spending mandate (`F-01`) and sanitizes the merchant DOM via `lol_html` + `DeBERTa-v3` ONNX (`F-02`, `M-01`) in `<4ms` before `services/orchestrator-go` (`Go 1.24`) ever invokes the PayPal Sandbox `Orders v2 AUTHORIZE` endpoint (`F-05`).
-3. **Reversible Two-Phase Commit (2PC) Escrow**: Even after passing every security and fair-price gate, PactPay places an `intent: "AUTHORIZE"` hold (`API-07`)—never an immediate `CAPTURE`—until carrier delivery SLA verification (`F-06`) succeeds.
+3. **Reversible Two-Phase Commit (2PC) Escrow**: Even after passing every security and fair-price gate, TALOS places an `intent: "AUTHORIZE"` hold (`API-07`)—never an immediate `CAPTURE`—until carrier delivery SLA verification (`F-06`) succeeds.
 
 ---
 
@@ -22,8 +22,8 @@ sequenceDiagram
     autonumber
     participant Human as Principal User (P-01 / P-02)
     participant Agent as AI Agent (E-02)
-    participant Rust as pactpay-firewall-rs (Rust 1.85)
-    participant Go as pactpay-orchestrator-go (Go 1.24)
+    participant Rust as talos-firewall-rs (Rust 1.85)
+    participant Go as talos-orchestrator-go (Go 1.24)
     participant PayPal as PayPal Sandbox (api-m.sandbox.paypal.com)
 
     Human->>Rust: Sign KyaMandate (E-03) with Ed25519 Private Key (API-01)
@@ -46,7 +46,7 @@ Implemented in `services/firewall-rs/src/mandate.rs` using `ed25519-dalek v2.1` 
 ### 2.2 RFC 9421 HTTP Message Signatures (Web Bot Auth)
 Every tool call or HTTP request from a registered `AgentIdentity` (`E-02`) includes RFC 9421 headers:
 ```http
-Signature-Input: sig1=("@method" "@target-uri" "content-digest" "x-pactpay-mandate-id");created=1762008000;keyid="agt_key_01JBM";alg="ed25519"
+Signature-Input: sig1=("@method" "@target-uri" "content-digest" "x-talos-mandate-id");created=1762008000;keyid="agt_key_01JBM";alg="ed25519"
 Signature: sig1=:Base64EncodedEd25519Signature:
 Content-Digest: sha-256=:Base64EncodedSHA256BodyHash:
 ```
@@ -65,7 +65,7 @@ Instead of trusting unverified JSON posted to `/api/v1/webhooks/paypal` (`API-14
 | Security Layer | Standard / Implementation | Scope |
 | :--- | :--- | :--- |
 | **Human Authentication (`E-01`)** | OAuth 2.0 / OIDC + WebAuthn Passkey / PayPal JS SDK v6 (`F-09`) step-up co-sign for orders `>$300` | Next.js Command Center (`web/`) & Go Orchestrator |
-| **Agent Authentication (`E-02`)** | RFC 9421 `Ed25519` HTTP Message Signatures + Scoped MCP Session Token | `pactpay-firewall-rs` (`rmcp`) & `API-05` |
+| **Agent Authentication (`E-02`)** | RFC 9421 `Ed25519` HTTP Message Signatures + Scoped MCP Session Token | `talos-firewall-rs` (`rmcp`) & `API-05` |
 | **Authorization Model (ABAC)** | Attribute-Based Access Control evaluated per mandate (`E-03`): checks `amount_cents`, `category`, `spread_bps`, `sla_hours`, and `expires_at` | `services/firewall-rs` (`API-02`) |
 | **Encryption in Transit** | TLS 1.3 (`TLS_AES_256_GCM_SHA384`) at Render Edge; isolated Render Private VPC Mesh between Go and Rust | All external and internal network hops |
 | **Encryption at Rest** | AES-256-GCM volume encryption on Render PostgreSQL 16 (`E-01`..`E-09`), Valkey (`E-10`), and Elastic Cloud (`F-12`) | All stateful databases and log indices |
@@ -75,7 +75,7 @@ Instead of trusting unverified JSON posted to `/api/v1/webhooks/paypal` (`API-14
 
 ## 4. OWASP Top 10 (2021/2025) Mitigation Matrix
 
-| OWASP Web Risk | PactPay Architectural Mitigation |
+| OWASP Web Risk | TALOS Architectural Mitigation |
 | :--- | :--- |
 | **A01: Broken Access Control** | Default-deny ABAC in `firewall-rs`; every escrow action verifies `principal_id` ownership and `Ed25519` signature (`API-02`). |
 | **A02: Cryptographic Failures** | Zero custom crypto; strict use of `ed25519-dalek`, `ring`, TLS 1.3, and AES-256-GCM at rest. |
@@ -92,7 +92,7 @@ Instead of trusting unverified JSON posted to `/api/v1/webhooks/paypal` (`API-14
 
 ## 5. OWASP Top 10 for LLM & Agentic Applications (2025) Mitigation Matrix
 
-| OWASP LLM 2025 ID | Agentic Vulnerability | How PactPay Eliminates It |
+| OWASP LLM 2025 ID | Agentic Vulnerability | How TALOS Eliminates It |
 | :--- | :--- | :--- |
 | **LLM01:2025 Prompt Injection** | Indirect CSS/HTML prompt injection (`CVE-2026-22708`) in merchant DOMs (`<span style="display:none">`). | **Rust `lol_html` + `DeBERTa-v3` INT8 ONNX (`F-02`, `M-01`)** strips hidden styles, HTML comments, Unicode tag blocks (`U+E0000`, `R-02`), and base64 attributes in `<4ms` before the LLM sees the page. |
 | **LLM02:2025 Sensitive Information Disclosure** | LLM leaking PayPal API keys or buyer PII into external tool calls. | **Zero-Credential Agent Sandbox**: The LLM never has access to PayPal client secrets or buyer card data; PII is masked before entering LLM context. |

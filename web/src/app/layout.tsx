@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const metadata = {
-  title: 'PactPay (AegisPay) — Zero-Trust Agentic Commerce Firewall & PayPal Escrow Referee',
+  title: 'TALOS — Zero-Trust Agentic Commerce Firewall & PayPal Escrow Referee',
   description: 'Rust KYA Firewall + Go APIMatic Escrow Orchestrator + AG Studio + Bryntum Scheduler Pro + Channel3 + PayPal Sandbox',
 };
 

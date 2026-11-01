@@ -1,12 +1,12 @@
-# System Architecture — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Systems Architecture Team · Status: Approved v1.0 · Last updated: 2026-11-01
+# System Architecture — TALOS
+> Project: TALOS · Owner: Principal Systems Architecture Team · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [PRD](../01-product/PRD.md) · [TECH_STACK](TECH_STACK.md) · [DATA_MODEL](DATA_MODEL.md) · [API_SPEC](API_SPEC.md) · [ADR-0001](adr/ADR-0001-polyglot-rust-go-typescript-architecture.md)
 
 ---
 
 ## 1. Architectural Vision & First Principles
 
-**PactPay (AegisPay)** is engineered around a non-negotiable architectural invariant formulated by our War-Room Council:
+**TALOS** is engineered around a non-negotiable architectural invariant formulated by our War-Room Council:
 
 > *"Never grant a stochastic Large Language Model (`M-02`) direct, unmediated `CAPTURE` authority over financial rails. Separate **Cryptographic Mandate & DOM Security Verification (Rust 1.85)** from **High-Concurrency Two-Phase Commit Escrow Orchestration (Go 1.24)**, enforce independent fair-market price discovery via **Channel3**, and bind every autonomous transaction to a reversible **PayPal Orders v2 (`intent: AUTHORIZE`)** hold governed in real time by **AG Grid / AG Studio** and **Bryntum Scheduler Pro**."*
 
@@ -31,7 +31,7 @@ flowchart TB
         LLM["AI Procurement Agent<br/>(Claude 3.7 / GPT-4o / Cursor MCP)"]
     end
 
-    PactPay[["PactPay (AegisPay)<br/>Zero-Trust Agentic Commerce Firewall<br/>& Reversible PayPal Escrow Referee"]]
+    TALOS[["TALOS<br/>Zero-Trust Agentic Commerce Firewall<br/>& Reversible PayPal Escrow Referee"]]
 
     subgraph External["External APIs, Financial Rails & Sponsor Ecosystem"]
         PayPal["PayPal Sandbox APIs<br/>(Orders v2, Authorizations v2,<br/>Tracking v1, Disputes v1, JS SDK v6)"]
@@ -41,16 +41,16 @@ flowchart TB
         Elastic["Elastic Cloud<br/>(OTel APM & ELSER Vector Threat Store)"]
     end
 
-    P01 & P02 -->|"Issues Ed25519 KYA Mandates (F-01)<br/>& Co-signs Step-Up >$300 (F-09)"| PactPay
-    P03 -->|"Submits Carrier Tracking (F-06)<br/>& Receives Instant Capture"| PactPay
-    P04 -->|"Audits DOM Diffs & Spans<br/>in AG Studio & Elastic (F-08, F-12)"| PactPay
-    LLM <-->|"MCP Tools over stdio / HTTP-SSE<br/>(F-03: rmcp & Go MCP)"| PactPay
+    P01 & P02 -->|"Issues Ed25519 KYA Mandates (F-01)<br/>& Co-signs Step-Up >$300 (F-09)"| TALOS
+    P03 -->|"Submits Carrier Tracking (F-06)<br/>& Receives Instant Capture"| TALOS
+    P04 -->|"Audits DOM Diffs & Spans<br/>in AG Studio & Elastic (F-08, F-12)"| TALOS
+    LLM <-->|"MCP Tools over stdio / HTTP-SSE<br/>(F-03: rmcp & Go MCP)"| TALOS
 
-    PactPay <-->|"OAuth2 + Orders v2 AUTHORIZE,<br/>CAPTURE, VOID, Disputes (F-05, F-06, F-10)"| PayPal
-    PactPay <-->|"Fair-Market Median Price<br/>& SKU Lookup (F-04)"| Channel3
-    PactPay <-->|"Fetches Untrusted Merchant<br/>Checkout DOMs (F-11)"| Kernel
-    PactPay <-->|"Schema-Compliant Tool Context<br/>& Strongly-Typed Go SDK (F-05)"| APIMatic
-    PactPay -->|"Distributed OTel Traces &<br/>Blocked Injection Vectors (F-12)"| Elastic
+    TALOS <-->|"OAuth2 + Orders v2 AUTHORIZE,<br/>CAPTURE, VOID, Disputes (F-05, F-06, F-10)"| PayPal
+    TALOS <-->|"Fair-Market Median Price<br/>& SKU Lookup (F-04)"| Channel3
+    TALOS <-->|"Fetches Untrusted Merchant<br/>Checkout DOMs (F-11)"| Kernel
+    TALOS <-->|"Schema-Compliant Tool Context<br/>& Strongly-Typed Go SDK (F-05)"| APIMatic
+    TALOS -->|"Distributed OTel Traces &<br/>Blocked Injection Vectors (F-12)"| Elastic
 ```
 
 ---
@@ -65,11 +65,11 @@ flowchart TB
     end
 
     subgraph GoTier["Orchestration Tier (services/orchestrator-go)"]
-        OrchGo["pactpay-orchestrator-go (Go 1.24 / Chi v5)<br/>Port 8080<br/>- 2PC Escrow State Machine (F-05, F-06)<br/>- APIMatic Go PayPal SDK (/sdk/paypal-go-apimatic)<br/>- Channel3 Goroutine Oracle (F-04)<br/>- Disputes Packager (F-10)<br/>- WebSocket Broadcast Hub (API-15)"]
+        OrchGo["talos-orchestrator-go (Go 1.24 / Chi v5)<br/>Port 8080<br/>- 2PC Escrow State Machine (F-05, F-06)<br/>- APIMatic Go PayPal SDK (/sdk/paypal-go-apimatic)<br/>- Channel3 Goroutine Oracle (F-04)<br/>- Disputes Packager (F-10)<br/>- WebSocket Broadcast Hub (API-15)"]
     end
 
     subgraph RustTier["Security Kernel Tier (services/firewall-rs)"]
-        FirewallRs["pactpay-firewall-rs (Rust 1.85 / Axum 0.8)<br/>Port 8081 + MCP stdio/SSE<br/>- Official rmcp Server (F-03)<br/>- Ed25519 + RFC 9421 Verifier (F-01)<br/>- lol_html + DeBERTa-v3 ONNX Sanitizer (F-02)<br/>- PayPal Webhook CRC32 + RSA Verifier (API-04)"]
+        FirewallRs["talos-firewall-rs (Rust 1.85 / Axum 0.8)<br/>Port 8081 + MCP stdio/SSE<br/>- Official rmcp Server (F-03)<br/>- Ed25519 + RFC 9421 Verifier (F-01)<br/>- lol_html + DeBERTa-v3 ONNX Sanitizer (F-02)<br/>- PayPal Webhook CRC32 + RSA Verifier (API-04)"]
     end
 
     subgraph DataTier["Persistence & Lock Tier (Render Managed)"]
@@ -262,14 +262,14 @@ sequenceDiagram
 flowchart TB
     subgraph RenderCloud["Render Cloud Region: Oregon (us-west) / Singapore"]
         subgraph PublicServices["Public HTTPS Web Services"]
-            NextWeb["pactpay-console-web<br/>(runtime: node · Node 22)<br/>Next.js 15 Standalone"]
-            GoOrch["pactpay-orchestrator-go<br/>(runtime: go · Go 1.24)<br/>Escrow & WebSocket Gateway"]
+            NextWeb["talos-console-web<br/>(runtime: node · Node 22)<br/>Next.js 15 Standalone"]
+            GoOrch["talos-orchestrator-go<br/>(runtime: go · Go 1.24)<br/>Escrow & WebSocket Gateway"]
         end
 
         subgraph PrivateInternal["Render Private Network (10.x.x.x)"]
-            RustFw["pactpay-firewall-rs<br/>(runtime: rust · Rust 1.85)<br/>Internal Service :8081"]
-            PG16[("pactpay-postgres<br/>Render PostgreSQL 16")]
-            Valkey[("pactpay-valkey<br/>Render Managed Valkey 7.2")]
+            RustFw["talos-firewall-rs<br/>(runtime: rust · Rust 1.85)<br/>Internal Service :8081"]
+            PG16[("talos-postgres<br/>Render PostgreSQL 16")]
+            Valkey[("talos-valkey<br/>Render Managed Valkey 7.2")]
         end
     end
 
@@ -289,7 +289,7 @@ flowchart TB
 | **PayPal Sandbox 5xx / Outage (`R-01`)** | `orchestrator-go` → `api-m.sandbox.paypal.com` | 3 consecutive `5xx` or timeout `>3,500ms` trips Go `gobreaker` circuit breaker | Switches cleanly to **Deterministic Recorded Sandbox Replay Mode** using real signed Sandbox fixtures and flags UI badge `SANDBOX_REPLAY_ACTIVE`. |
 | **ONNX Runtime Cold Start / CPU Spike (`R-04`)** | `firewall-rs` (`M-01` `ort`) | Inference timeout `>8ms` on `tokio::time::timeout` | Falls back in `0.4ms` to deterministic `lol_html` + `aho-corasick` 140-pattern regex/CSS sanitizer; logs warning span to Elastic. |
 | **Channel3 API Rate Limit / Timeout** | `orchestrator-go` (`F-04`) | Timeout `>800ms` or HTTP `429` | Reads cached SKU benchmark from PostgreSQL `channel3_benchmarks` (`E-05`, 15-min TTL) or pre-seeded 500-SKU catalog. |
-| **Duplicate Webhook / Retry Storm (`R-03`)** | `orchestrator-go` (`API-07`, `API-09`, `API-10`, `API-14`) | Redis `SET NX` collision on `idemp:{PayPal-Request-Id}` or `webhook_event_ledger.transmission_id` unique constraint | Returns cached prior HTTP response (`200 OK`) with `X-PactPay-Idempotent-Replay: true` header; zero double-captures. |
+| **Duplicate Webhook / Retry Storm (`R-03`)** | `orchestrator-go` (`API-07`, `API-09`, `API-10`, `API-14`) | Redis `SET NX` collision on `idemp:{PayPal-Request-Id}` or `webhook_event_ledger.transmission_id` unique constraint | Returns cached prior HTTP response (`200 OK`) with `X-TALOS-Idempotent-Replay: true` header; zero double-captures. |
 | **WebSocket Disconnect** | `web/` (`AgStudioBlotter.tsx`, `BryntumSlaBoard.tsx`) | Missed 15s ping/pong heartbeat | Exponential backoff reconnect (`250ms → 4s`) + automatic REST state catch-up via `GET /api/v1/escrow/blotter?since={last_seq}`. |
 
 ---

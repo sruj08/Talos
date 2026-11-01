@@ -1,12 +1,12 @@
-# Product Metrics, AARRR Funnel & Analytics Taxonomy — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Architecture & Product Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# Product Metrics, AARRR Funnel & Analytics Taxonomy — TALOS
+> Project: TALOS · Owner: Principal Architecture & Product Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [VISION](../00-overview/VISION.md) · [PRD](PRD.md) · [OBSERVABILITY](../05-ops/OBSERVABILITY.md) · [IMPACT](../07-business/IMPACT.md)
 
 ---
 
 ## 1. Metric Hierarchy: North-Star Metric (NSM) & Input Tree
 
-PactPay's North-Star Metric is **Protected Agentic Gross Merchandise Value (`PA-GMV`)**—defined as the total monetary value (`USD` / `₹ INR`) of autonomous AI agent transactions that pass `Ed25519` mandate verification (`F-01`), `<4ms` DOM sanitization (`F-02`), and **Channel3** price benchmarking (`F-04`), and are ring-fenced inside **PayPal `Orders v2 AUTHORIZE`** escrow (`F-05`) with **zero unauthorized financial loss**.
+TALOS's North-Star Metric is **Protected Agentic Gross Merchandise Value (`PA-GMV`)**—defined as the total monetary value (`USD` / `₹ INR`) of autonomous AI agent transactions that pass `Ed25519` mandate verification (`F-01`), `<4ms` DOM sanitization (`F-02`), and **Channel3** price benchmarking (`F-04`), and are ring-fenced inside **PayPal `Orders v2 AUTHORIZE`** escrow (`F-05`) with **zero unauthorized financial loss**.
 
 ```mermaid
 flowchart TD
@@ -45,12 +45,12 @@ flowchart TD
 
 ## 3. AARRR Pirate Funnel for Developer (`P-02`) & Enterprise (`P-01`) Adoption
 
-| Funnel Stage | Definition in PactPay | Primary Conversion Trigger | MVP / Launch Target | Target Metric (Year 1) |
+| Funnel Stage | Definition in TALOS | Primary Conversion Trigger | MVP / Launch Target | Target Metric (Year 1) |
 | :--- | :--- | :--- | :--- | :--- |
-| **1. Acquisition** | Developer (`P-02`) or IT Head (`P-01`) discovers PactPay via PayPal AI Hackathon, GitHub (`rmcp` / `@paypal/agent-toolkit`), or **Channel3 / AG Grid** showcase. | Clicking **"Run in Postman"** (`F-13`), cloning repo, or opening live **Render** URL (`F-14`). | `100%` of 13 Hackathon Judges + `500` Devpost visitors | `45,000` annual unique developer & FinOps visitors |
+| **1. Acquisition** | Developer (`P-02`) or IT Head (`P-01`) discovers TALOS via PayPal AI Hackathon, GitHub (`rmcp` / `@paypal/agent-toolkit`), or **Channel3 / AG Grid** showcase. | Clicking **"Run in Postman"** (`F-13`), cloning repo, or opening live **Render** URL (`F-14`). | `100%` of 13 Hackathon Judges + `500` Devpost visitors | `45,000` annual unique developer & FinOps visitors |
 | **2. Activation** | User signs their first `Ed25519` `KyaMandate` (`F-01`) and runs their first protected checkout (`API-05`) that blocks a simulated injection (`F-11`) or locks a PayPal `AUTHORIZE` hold (`F-05`). | `< 60 seconds` time-to-first-mandate (`TTFM`) in Command Center UI or Postman. | **`< 45 seconds`** TTFM | `>= 62%` signup-to-first-mandate activation rate |
-| **3. Retention** | Principal keeps `pactpay-firewall-rs` wired inline in their `mcp_config.json` and monitors weekly escrow SLAs in **AG Studio (`F-08`)** & **Bryntum (`F-07`)**. | Automated weekly **Channel3** savings digest + zero false-positive checkout blocks. | `100%` uptime across judging window (Nov 12 – Dec 15, 2026) | `>= 88%` Month-3 B2B logo retention; `135%` Net Dollar Retention (NDR) |
-| **4. Referral** | Verified **Channel3** merchants (`P-03`) and FinOps auditors (`P-04`) invite buyer counterparties to settle via PactPay's zero-chargeback PayPal `AUTHORIZE` rail. | `"Protected by PactPay + PayPal Escrow"` checkout badge & dispute evidence bundle (`F-10`). | Viral loop across `P-01 <-> P-03` demo personas | Viral coefficient $K = 0.45$ via B2B buyer-supplier network effects |
+| **3. Retention** | Principal keeps `talos-firewall-rs` wired inline in their `mcp_config.json` and monitors weekly escrow SLAs in **AG Studio (`F-08`)** & **Bryntum (`F-07`)**. | Automated weekly **Channel3** savings digest + zero false-positive checkout blocks. | `100%` uptime across judging window (Nov 12 – Dec 15, 2026) | `>= 88%` Month-3 B2B logo retention; `135%` Net Dollar Retention (NDR) |
+| **4. Referral** | Verified **Channel3** merchants (`P-03`) and FinOps auditors (`P-04`) invite buyer counterparties to settle via TALOS's zero-chargeback PayPal `AUTHORIZE` rail. | `"Protected by TALOS + PayPal Escrow"` checkout badge & dispute evidence bundle (`F-10`). | Viral loop across `P-01 <-> P-03` demo personas | Viral coefficient $K = 0.45$ via B2B buyer-supplier network effects |
 | **5. Revenue** | SaaS take-rate (`25 bps` / `0.25%`) on Protected Agentic GMV + Enterprise Seat Licenses (`$499/mo` / `₹41,900/mo`) + **Channel3** affiliate/oracle revenue share (`150 bps`). | Exceeding free Sandbox/Indie tier (`$5,000/mo` protected spend). | Validated unit economics (`LTV:CAC = 7.8x` in `FINANCIALS.md`) | **`$1.85M` (`₹15.5 Crore`) ARR** by Month 12 |
 
 ---
@@ -79,7 +79,7 @@ Every user interaction in `web/` (`Next.js 15`), state transition in `orchestrat
 ## 5. Live Operational Dashboards (`AG Studio` & `Elastic Kibana`)
 
 ### 5.1 Embedded In-App FinOps Dashboard (`AgStudioBlotter.tsx` + `AG Charts`)
-Visible at the top of the PactPay Command Center (`web/`):
+Visible at the top of the TALOS Command Center (`web/`):
 1. **KPI Card 1 — Protected Agentic GMV**: Live counter (`$24,890.00 / ₹20,90,760`) broken down by `AUTHORIZED` (Blue), `CAPTURED` (Emerald), and `VOIDED` (Amber).
 2. **KPI Card 2 — Threats & Overpayments Blocked**: Total USD/INR saved from intercepted `CVE-2026-22708` prompt injections and **Channel3** price-gouging reroutes (`$4,120.00 / ₹3,46,080 Saved`).
 3. **KPI Card 3 — Inline Rust Firewall Telemetry**: Live `p50` (`0.42ms`) and `p99` (`3.40ms`) DOM sanitization + `Ed25519` verification sparkline.
@@ -87,5 +87,5 @@ Visible at the top of the PactPay Command Center (`web/`):
 
 ### 5.2 Elastic Cloud OpenTelemetry APM & Threat Radar (`F-12`)
 Configured in `docs/05-ops/OBSERVABILITY.md`:
-- **Service Map & Latency Waterfall**: Tracks `pactpay-console-web (node)` -> `pactpay-orchestrator-go (go)` -> `pactpay-firewall-rs (rust)` -> `api-m.sandbox.paypal.com`.
+- **Service Map & Latency Waterfall**: Tracks `talos-console-web (node)` -> `talos-orchestrator-go (go)` -> `talos-firewall-rs (rust)` -> `api-m.sandbox.paypal.com`.
 - **Vector Threat Cluster Panel**: ES|QL query grouping `FirewallScanLog` (`E-04`) embeddings (`M-04`) by semantic attack family (`System Override`, `CSS Display-None`, `Unicode Tag Smuggling`, `Fake Invoice Redirect`).

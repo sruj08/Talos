@@ -2,7 +2,7 @@ package paypalapimatic
 
 // CreateOrderRequest models POST /v2/checkout/orders with intent="AUTHORIZE".
 type CreateOrderRequest struct {
-	Intent          string `json:"intent"` // Always "AUTHORIZE" for PactPay 2PC Escrow
+	Intent          string `json:"intent"` // Always "AUTHORIZE" for TALOS 2PC Escrow
 	PayPalRequestID string `json:"paypal_request_id"`
 	AmountCents     int64  `json:"amount_cents"`
 	CurrencyCode    string `json:"currency_code"`

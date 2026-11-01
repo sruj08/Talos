@@ -68,7 +68,7 @@ Under **Official Rules §8**, a single project can win **at most 1 Grand Prize (
 ---
 
 ## 3. Which Sponsor Tech We Should Visibly Use
-In our **#1 Overall Pick (`AegisPay`)**, we integrate **all 8 core partner technologies** in a single cohesive loop:
+In our **#1 Overall Pick (`TALOS`)**, we integrate **all 8 core partner technologies** in a single cohesive loop:
 1. **PayPal** (`@paypal/agent-toolkit` + `mcp.paypal.com` + `@paypal/paypal-server-sdk` + JS SDK v6)
 2. **AG Grid / AG Studio** (Live Agentic Firewall & Escrow Ledger Grid — targeting the **$5,000 1st Place Sponsor Prize**)
 3. **Bryntum Scheduler Pro / Gantt** (Temporal authorization hold, shipment window & auto-void countdown timeline)

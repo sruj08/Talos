@@ -1,10 +1,10 @@
-# 03 — AG Grid Enterprise & AG Studio Integration Guide — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Sponsor: **AG Grid (`$10,000` Total Prize Pool: `$5,000` 1st / `$2,000` 2nd / `3× $1,000` 3rd)** · Judge: **Sylwia Vargas** (Senior Technical Community Manager, AG Grid) · Status: Approved v1.0 · Last updated: 2026-11-01
+# 03 — AG Grid Enterprise & AG Studio Integration Guide — TALOS
+> Project: TALOS · Sponsor: **AG Grid (`$10,000` Total Prize Pool: `$5,000` 1st / `$2,000` 2nd / `3× $1,000` 3rd)** · Judge: **Sylwia Vargas** (Senior Technical Community Manager, AG Grid) · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [00-TRACKS_AND_SUBMISSION_STRATEGY](00-TRACKS_AND_SUBMISSION_STRATEGY.md) · [04-BRYNTUM_SCHEDULER_AND_GANTT_GUIDE](04-BRYNTUM_SCHEDULER_AND_GANTT_GUIDE.md) · [FRONTEND](../03-engineering/FRONTEND.md)
 
 ---
 
-## 1. Strategic Overview: How PactPay Locks In the `$5,000` 1st Place AG Grid Prize
+## 1. Strategic Overview: How TALOS Locks In the `$5,000` 1st Place AG Grid Prize
 
 **Judge**: **Sylwia Vargas** (Senior Technical Community Manager, AG Grid — co-hosted the Oct 12, 2026 official hackathon webinar: *"Build a payments dashboard without building a dashboard"*).
 
@@ -81,7 +81,7 @@ if (process.env.NEXT_PUBLIC_AG_GRID_LICENSE_KEY) {
 }
 
 // Custom Dark-Mode Financial Glassmorphic Theme (AG Grid v33 Theming API)
-const pactPayGridTheme = themeQuartz
+const talosGridTheme = themeQuartz
   .withPart(colorSchemeDarkBlue)
   .withParams({
     backgroundColor: "#090D16",

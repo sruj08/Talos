@@ -1,16 +1,16 @@
-# Cloud Infrastructure & Render Blueprint Architecture — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Cloud & Infrastructure Architect · Status: Approved v1.0 · Last updated: 2026-11-01
+# Cloud Infrastructure & Render Blueprint Architecture — TALOS
+> Project: TALOS · Owner: Principal Cloud & Infrastructure Architect · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [CICD](CICD.md) · [DEPLOYMENT](DEPLOYMENT.md) · [COST](COST.md) · [ARCHITECTURE](../03-engineering/ARCHITECTURE.md)
 
 ---
 
 ## 1. Hosting Philosophy & Sponsor Alignment (`F-14`)
 
-PactPay's infrastructure is purpose-built around **Render's Native Polyglot Blueprint (`render.yaml`)** (`F-14`), directly targeting the **Best Use of Render (`$1,000` 1st / `$750` 2nd / `$500` 3rd — `$2,250` Sponsor Pool)** evaluated by **Shifra Williams (Founding Developer Relations Engineer, Render)**.
+TALOS's infrastructure is purpose-built around **Render's Native Polyglot Blueprint (`render.yaml`)** (`F-14`), directly targeting the **Best Use of Render (`$1,000` 1st / `$750` 2nd / `$500` 3rd — `$2,250` Sponsor Pool)** evaluated by **Shifra Williams (Founding Developer Relations Engineer, Render)**.
 
-Why Render is uniquely suited for PactPay:
-1. **Native Polyglot Runtimes (No Docker Overhead Needed in Cloud)**: Render natively compiles and runs `runtime: rust` (`pactpay-firewall-rs`), `runtime: go` (`pactpay-orchestrator-go`), and `runtime: node` (`pactpay-console-web`) alongside managed **Render PostgreSQL 16** and **Render Key-Value (Valkey/Redis)** inside a single isolated Private Network (`10.200.0.0/16`).
-2. **Sub-Millisecond Private Service Discovery**: `pactpay-orchestrator-go` communicates with `pactpay-firewall-rs` over Render's internal private mesh (`http://pactpay-firewall-rs:8081`) without traversing the public internet or incurring TLS handshake overhead, keeping p99 KYA mandate verification (`API-02`) and DOM sanitization (`API-03`) under `<2.5ms`.
+Why Render is uniquely suited for TALOS:
+1. **Native Polyglot Runtimes (No Docker Overhead Needed in Cloud)**: Render natively compiles and runs `runtime: rust` (`talos-firewall-rs`), `runtime: go` (`talos-orchestrator-go`), and `runtime: node` (`talos-console-web`) alongside managed **Render PostgreSQL 16** and **Render Key-Value (Valkey/Redis)** inside a single isolated Private Network (`10.200.0.0/16`).
+2. **Sub-Millisecond Private Service Discovery**: `talos-orchestrator-go` communicates with `talos-firewall-rs` over Render's internal private mesh (`http://talos-firewall-rs:8081`) without traversing the public internet or incurring TLS handshake overhead, keeping p99 KYA mandate verification (`API-02`) and DOM sanitization (`API-03`) under `<2.5ms`.
 3. **India & Global Data Residency**: For **MVP (Hackathon)**, services run in Render's `oregon` (`us-west`) region for lowest RTT to `api-m.sandbox.paypal.com`. For **v1 (Production)** serving Indian enterprises under **DPDP Act 2023** and **CERT-In Directions** (`R-06`), stateful stores (`PostgreSQL 16` + `Valkey`) deploy to Render's `singapore` region with read/audit replicas synced to an **AWS Mumbai (`ap-south-1`)** S3 Object Lock vault.
 
 ---
@@ -29,11 +29,11 @@ flowchart TB
     end
 
     subgraph RenderVPC["Render Private Network (Isolated VPC Mesh)"]
-        Web["pactpay-console-web\n(runtime: node | Next.js 15)\nPort 3000 · Public Service\nAG Studio + Bryntum + PayPal JS SDK v6"]
-        GoOrch["pactpay-orchestrator-go\n(runtime: go | Go 1.24)\nPort 8080 · Public API & WS Hub\nAPIMatic Go SDK + 2PC State Machine"]
-        RustFW["pactpay-firewall-rs\n(runtime: rust | Rust 1.85)\nPort 8081 · Private Service (pserv)\nrmcp + Ed25519 + lol_html + DeBERTa ONNX"]
-        Postgres[("pactpay-postgres\nRender Managed PostgreSQL 16\nEntities E-01..E-09\nEncrypted AES-256 at Rest")]
-        Valkey[("pactpay-valkey\nRender Managed Valkey / Redis 7.2\nEntity E-10 Idempotency Locks\n& WebSocket Pub/Sub")]
+        Web["talos-console-web\n(runtime: node | Next.js 15)\nPort 3000 · Public Service\nAG Studio + Bryntum + PayPal JS SDK v6"]
+        GoOrch["talos-orchestrator-go\n(runtime: go | Go 1.24)\nPort 8080 · Public API & WS Hub\nAPIMatic Go SDK + 2PC State Machine"]
+        RustFW["talos-firewall-rs\n(runtime: rust | Rust 1.85)\nPort 8081 · Private Service (pserv)\nrmcp + Ed25519 + lol_html + DeBERTa ONNX"]
+        Postgres[("talos-postgres\nRender Managed PostgreSQL 16\nEntities E-01..E-09\nEncrypted AES-256 at Rest")]
+        Valkey[("talos-valkey\nRender Managed Valkey / Redis 7.2\nEntity E-10 Idempotency Locks\n& WebSocket Pub/Sub")]
     end
 
     subgraph ExternalAPIs["External Sandbox & Sponsor Cloud APIs"]
@@ -48,7 +48,7 @@ flowchart TB
     LB --> Web
     LB --> GoOrch
     Web -->|Internal REST & Bridge API-16| GoOrch
-    GoOrch -->|Private Mesh <1ms\nhttp://pactpay-firewall-rs:8081| RustFW
+    GoOrch -->|Private Mesh <1ms\nhttp://talos-firewall-rs:8081| RustFW
     GoOrch -->|pgx/v5 Pool| Postgres
     GoOrch -->|go-redis/v9| Valkey
     RustFW -->|Audit Write E-04| Postgres
@@ -65,29 +65,29 @@ flowchart TB
 The root `render.yaml` provisions all 5 infrastructure components and 1 shared secret group in a single declarative specification:
 
 ```yaml
-# render.yaml — PactPay (AegisPay) 1-Click Polyglot Render Blueprint
+# render.yaml — TALOS 1-Click Polyglot Render Blueprint
 services:
   # 1. Rust Zero-Trust KYA & DOM Prompt-Injection Firewall (Private Service)
   - type: pserv
-    name: pactpay-firewall-rs
+    name: talos-firewall-rs
     runtime: rust
     plan: standard
     region: oregon
     rootDir: services/firewall-rs
     buildCommand: cargo build --release
-    startCommand: ./target/release/pactpay-firewall-rs
+    startCommand: ./target/release/talos-firewall-rs
     envVars:
       - key: PORT
         value: "8081"
       - key: RUST_LOG
-        value: "info,pactpay_firewall_rs=debug"
-      - key: PACTPAY_ONNX_MODEL_PATH
+        value: "info,talos_firewall_rs=debug"
+      - key: TALOS_ONNX_MODEL_PATH
         value: "./models/deberta-v3-prompt-injection-int8.onnx"
-      - fromGroup: pactpay-shared-secrets
+      - fromGroup: talos-shared-secrets
 
   # 2. Golang 2PC Escrow Orchestrator & APIMatic PayPal Gateway (Web Service)
   - type: web
-    name: pactpay-orchestrator-go
+    name: talos-orchestrator-go
     runtime: go
     plan: standard
     region: oregon
@@ -102,22 +102,22 @@ services:
       - key: FIREWALL_INTERNAL_URL
         fromService:
           type: pserv
-          name: pactpay-firewall-rs
+          name: talos-firewall-rs
           property: hostport
       - key: DATABASE_URL
         fromDatabase:
-          name: pactpay-postgres
+          name: talos-postgres
           property: connectionString
       - key: REDIS_URL
         fromService:
           type: redis
-          name: pactpay-valkey
+          name: talos-valkey
           property: connectionString
-      - fromGroup: pactpay-shared-secrets
+      - fromGroup: talos-shared-secrets
 
   # 3. Next.js 15 Financial Command Center UI (Web Service)
   - type: web
-    name: pactpay-console-web
+    name: talos-console-web
     runtime: node
     plan: standard
     region: oregon
@@ -132,13 +132,13 @@ services:
       - key: NEXT_PUBLIC_ORCHESTRATOR_URL
         fromService:
           type: web
-          name: pactpay-orchestrator-go
+          name: talos-orchestrator-go
            envVarKey: RENDER_EXTERNAL_URL
-      - fromGroup: pactpay-shared-secrets
+      - fromGroup: talos-shared-secrets
 
   # 4. Managed Valkey / Redis for Idempotency Locks (E-10) & WebSocket Pub/Sub
   - type: redis
-    name: pactpay-valkey
+    name: talos-valkey
     plan: starter
     region: oregon
     maxmemoryPolicy: noeviction
@@ -146,16 +146,16 @@ services:
 
 databases:
   # 5. Managed PostgreSQL 16 for Immutable Escrow & Mandate Ledgers (E-01..E-09)
-  - name: pactpay-postgres
-    databaseName: pactpay
-    user: pactpay_admin
+  - name: talos-postgres
+    databaseName: talos
+    user: talos_admin
     plan: basic-1gb
     region: oregon
     postgresMajorVersion: "16"
     ipAllowList: [] # Private network only
 
 envVarGroups:
-  - name: pactpay-shared-secrets
+  - name: talos-shared-secrets
     envVars:
       - key: PAYPAL_ENVIRONMENT
         value: "sandbox"
@@ -181,11 +181,11 @@ envVarGroups:
 
 | Service Name | Render Type | MVP Plan (Hackathon) | v1 Production Plan | Autoscaling Policy (v1) | Memory / CPU |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `pactpay-firewall-rs` | `pserv` (Rust) | `Starter / Standard` (`$7–$25/mo`) | `Pro` (`2–8 instances`) | Scale out at `65%` CPU or `>2,000 req/s` | `2 GB RAM / 1 vCPU` (holds `98 MB` INT8 ONNX `M-01` in RAM) |
-| `pactpay-orchestrator-go` | `web` (Go) | `Starter / Standard` (`$7–$25/mo`) | `Pro` (`2–6 instances`) | Scale out at `70%` CPU or `>500` active WS connections | `2 GB RAM / 1 vCPU` |
-| `pactpay-console-web` | `web` (Node) | `Starter / Standard` (`$7–$25/mo`) | `Standard` (`2–4 instances`) | Scale out at `75%` CPU | `2 GB RAM / 1 vCPU` |
-| `pactpay-postgres` | `database` (PG 16) | `Basic-256mb / 1gb` (`$7–$19/mo`) | `Pro-16gb` + High Availability Read Replica | Storage auto-expands at `85%` utilization | `1 GB–16 GB RAM`, Point-in-Time Recovery (PITR) |
-| `pactpay-valkey` | `redis` (Valkey 7.2) | `Free / Starter` (`$0–$10/mo`) | `Standard HA` (`1 GB` persistent AOF) | `noeviction` policy for `E-10` locks | `256 MB–1 GB RAM` |
+| `talos-firewall-rs` | `pserv` (Rust) | `Starter / Standard` (`$7–$25/mo`) | `Pro` (`2–8 instances`) | Scale out at `65%` CPU or `>2,000 req/s` | `2 GB RAM / 1 vCPU` (holds `98 MB` INT8 ONNX `M-01` in RAM) |
+| `talos-orchestrator-go` | `web` (Go) | `Starter / Standard` (`$7–$25/mo`) | `Pro` (`2–6 instances`) | Scale out at `70%` CPU or `>500` active WS connections | `2 GB RAM / 1 vCPU` |
+| `talos-console-web` | `web` (Node) | `Starter / Standard` (`$7–$25/mo`) | `Standard` (`2–4 instances`) | Scale out at `75%` CPU | `2 GB RAM / 1 vCPU` |
+| `talos-postgres` | `database` (PG 16) | `Basic-256mb / 1gb` (`$7–$19/mo`) | `Pro-16gb` + High Availability Read Replica | Storage auto-expands at `85%` utilization | `1 GB–16 GB RAM`, Point-in-Time Recovery (PITR) |
+| `talos-valkey` | `redis` (Valkey 7.2) | `Free / Starter` (`$0–$10/mo`) | `Standard HA` (`1 GB` persistent AOF) | `noeviction` policy for `E-10` locks | `256 MB–1 GB RAM` |
 
 ---
 
@@ -204,4 +204,4 @@ envVarGroups:
 
 Winning the **Best Use of Render (`$1,000` 1st Place Credits)** funds **10.6 months of full multi-service production hosting** (`$94/month` Standard stack) at zero cash burn:
 - **Zero-Cost PR Previews**: Render's `pullRequestPreviewsEnabled: true` spins up ephemeral `orchestrator-go` and `console-web` instances only while a PR is open and automatically destroys them on merge.
-- **Local ONNX Inference on Render CPU (`M-01`)**: By running quantized `DeBERTa-v3` (`INT8`) inside `pactpay-firewall-rs` on standard `$25/mo` Render CPU instances (`3.4ms` latency) instead of provisioning `$400+/mo` cloud GPUs or paying per-token OpenAI moderation APIs, PactPay achieves **94% lower AI security infrastructure cost**.
+- **Local ONNX Inference on Render CPU (`M-01`)**: By running quantized `DeBERTa-v3` (`INT8`) inside `talos-firewall-rs` on standard `$25/mo` Render CPU instances (`3.4ms` latency) instead of provisioning `$400+/mo` cloud GPUs or paying per-token OpenAI moderation APIs, TALOS achieves **94% lower AI security infrastructure cost**.

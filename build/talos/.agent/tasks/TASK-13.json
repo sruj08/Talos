@@ -1,0 +1,35 @@
+{
+  "id": "TASK-13",
+  "phase": 7,
+  "title": "Elastic Cloud OpenTelemetry APM + Vector Threat Index & Postman MCP Collection",
+  "category": "observability-postman",
+  "priority": 13,
+  "passes": false,
+  "human_gate": "GATE #5: Follow docs/09-integrations-and-guides/07-ELASTIC_OTEL_AND_VECTOR_GUIDE.md and 08-POSTMAN_MCP_AND_COLLECTION_GUIDE.md to set ELASTIC_OTLP_ENDPOINT and ELASTIC_API_KEY.",
+  "skills": [
+    "credentials",
+    "/gsd-eval-review 7",
+    "/ralph-loop"
+  ],
+  "graph_nodes": [
+    "node:rust:otel",
+    "node:go:otel",
+    "node:postman:collection",
+    "node:guide:elastic",
+    "node:guide:postman"
+  ],
+  "files": [
+    "postman/Talos-Sandbox-MCP.postman_collection.json",
+    "postman/Talos-Sandbox.postman_environment.json",
+    "services/orchestrator-go/internal/telemetry/elastic_otel.go"
+  ],
+  "description": "Configure OpenTelemetry trace export + Elasticsearch threat vector indexing for Judge Carly Richmond (Elastic) and complete the runnable Postman collection for Judge Pooja Mistry (Postman).",
+  "steps": [
+    "Verify OpenTelemetry span attributes (talos.mandate.id, talos.firewall.risk_score, talos.channel3.spread_bps, paypal.order_id, paypal.auth_id) in Rust and Go",
+    "Verify postman/Talos-Sandbox-MCP.postman_collection.json includes pre-configured requests and test scripts for API-01..API-16 and PayPal Sandbox OAuth/Orders/Authorizations/Tracking/Disputes"
+  ],
+  "pass": [
+    "Postman collection and environment JSON files are valid and cover all 16 APIs",
+    "Telemetry package passes unit tests in services/orchestrator-go"
+  ]
+}

@@ -31,7 +31,7 @@
 
 ## 4. Gap Analysis (3 Buckets)
 - **Doesn't Exist**:
-  - **AegisPay (PactPay)**: A zero-trust Agentic Commerce Firewall & A2A Escrow Referee that intercepts every MCP payment call, runs deterministic KYA + Indirect Prompt Injection inspection + **Channel3** price-gouging verification, places funds in a **PayPal `Orders v2 AUTHORIZE` hold**, schedules the delivery/expiry window on **Bryntum Scheduler Pro**, and only executes **PayPal `CAPTURE`** when **PayPal Shipment Tracking** confirms delivery (or auto-voids / files a PayPal Dispute).
+  - **TALOS**: A zero-trust Agentic Commerce Firewall & A2A Escrow Referee that intercepts every MCP payment call, runs deterministic KYA + Indirect Prompt Injection inspection + **Channel3** price-gouging verification, places funds in a **PayPal `Orders v2 AUTHORIZE` hold**, schedules the delivery/expiry window on **Bryntum Scheduler Pro**, and only executes **PayPal `CAPTURE`** when **PayPal Shipment Tracking** confirms delivery (or auto-voids / files a PayPal Dispute).
   - **BountyEscrow MCP**: An MCP tool allowing digital AI agents to hire local human verifiers via micro-bounties settled through PayPal Orders v2 + Payouts API upon geotagged proof.
 - **Exists Abroad, Not in India**:
   - **Cartographer A2A**: Multi-vendor event & office procurement agent that synchronizes critical-path vendor dependencies on **Bryntum Scheduler** with **Channel3** product sourcing and atomic **PayPal Orders v2 `AUTHORIZE`** holds (so if the venue cancels, catering and AV authorizations auto-void simultaneously), with GST/PA-CB invoice support for India.
@@ -45,7 +45,7 @@
 - **Partner Sandboxes**: Channel3 API/MCP (`trychannel3.com`), AG Grid v33 / AG Studio, Bryntum Scheduler Pro / Gantt (`mcp.bryntum.com`), Elastic OpenTelemetry & Vector Search, Postman Collections, Render Blueprints.
 
 ## 6. 15 Raw Idea Seeds Generated in Phase 2
-1. *AegisPay*: Zero-trust KYA firewall + A2A `AUTHORIZE/CAPTURE/VOID` escrow referee (`Doesn't exist`).
+1. *TALOS*: Zero-trust KYA firewall + A2A `AUTHORIZE/CAPTURE/VOID` escrow referee (`Doesn't exist`).
 2. *Cartographer A2A*: Multi-vendor synchronized atomic authorization & dependency scheduler (`Exists abroad, not in India`).
 3. *Switchboard MCP*: Autonomous PayPal Subscriptions seat harvester & retention negotiator (`Exists-but-weak`).
 4. *BountyEscrow MCP*: AI-to-human physical world verification micro-bounty protocol (`Doesn't exist`).

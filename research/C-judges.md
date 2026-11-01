@@ -106,7 +106,7 @@ The judging panel consists of **13 verified judges** listed on Devpost:
 
 ## 3. Judge Heat-Map (What Each Judge Wants to See in 180 Seconds)
 
-| Judge | Role / Org | Primary Criterion Focus | What Makes Them Score 20/20 | Our Specific Hook in `AegisPay` / `CivicTrace` / `ChargeShield` |
+| Judge | Role / Org | Primary Criterion Focus | What Makes Them Score 20/20 | Our Specific Hook in `TALOS` / `CivicTrace` / `ChargeShield` |
 |---|---|---|---|---|
 | **Jo Franchetti** | PayPal DevRel | Design (20%) & Presentation (20%) | Accessible, human-centric UX; crystal-clear agent trust states | Glassbox KYA Approval Card + PayPal JS SDK v6 + zero-jank UI |
 | **Eddie Jaoude** | PayPal DevRel | Tech Implementation (20%) | Visible `MIT` license in GitHub About, clean commits, CI, 1-command setup | Flagship OSS repo structure, `LICENSE` in About, `render.yaml`, tests |

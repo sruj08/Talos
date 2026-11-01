@@ -1,5 +1,5 @@
-# Engineering Backlog & Sprint Tickets (`PACT-001`..`PACT-032`) — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Engineering & Delivery Lead · Status: Approved v1.0 · Last updated: 2026-11-01
+# Engineering Backlog & Sprint Tickets (`PACT-001`..`PACT-032`) — TALOS
+> Project: TALOS · Owner: Principal Engineering & Delivery Lead · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [HACKATHON_PLAN](../00-overview/HACKATHON_PLAN.md) · [PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK](PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md) · [FEATURES](../01-product/FEATURES.md)
 
 ---
@@ -40,7 +40,7 @@ All 32 engineering tickets (`PACT-001` through `PACT-032`) are organized into **
 | **`PACT-008`** | Build Streaming `lol_html` + Unicode/Base64 DOM Sanitizer (`sanitizer.rs`) | `F-02`, `E-04`, `API-03`, `R-02` | `2.5h` | Rust Eng | **Desc**: Strip `display:none`, `opacity:0`, `font-size:0`, HTML comments, `U+E0000..U+E007F` Unicode tags, and base64 `data-*` overrides using `lol_html` + `aho-corasick`.<br>**AC**: Strips all 5 attack classes in `R-02` and returns structured forensic diff (`stripped_payloads_json`) in `<1.0ms`. |
 | **`PACT-009`** | Integrate Quantized `DeBERTa-v3` ONNX Classifier (`M-01`) with Fast Fallback (`R-04`) | `F-02`, `M-01`, `R-04` | `2.0h` | Rust Eng | **Desc**: Load `deberta-v3-base-prompt-injection-v2` INT8 ONNX via `ort` crate alongside `FF_RUST_ONNX_CLASSIFIER` fast fallback.<br>**AC**: p95 latency `<3.8ms`; achieves `>=99.2%` recall on the 250-sample `CVE-2026-22708` red-team suite. |
 | **`PACT-010`** | Implement PayPal Webhook `CRC32` + `RSA-SHA256` Signature Verifier (`webhook_verify.rs`) | `API-04`, `E-09` | `1.0h` | Rust Eng | **Desc**: Compute IEEE `CRC32` via `crc32fast` and verify `PAYPAL-TRANSMISSION-SIG` via `ring` RSA-SHA256.<br>**AC**: `POST /v1/firewall/verify-webhook` (`API-04`) verifies real PayPal Sandbox webhook headers in `<1.5ms`. |
-| **`PACT-011`** | Expose Official Rust MCP Server (`rmcp`) Over `stdio` and `HTTP/SSE` | `F-03`, `API-01`..`API-04` | `1.0h` | Rust Eng | **Desc**: Register `pactpay_issue_mandate`, `pactpay_verify_mandate`, `pactpay_sanitize_dom`, and `pactpay_verify_webhook` using `#[tool]` macros from `modelcontextprotocol/rust-sdk`.<br>**AC**: MCP Inspector and Postman MCP client (`F-13`) discover and invoke all 4 tools cleanly. |
+| **`PACT-011`** | Expose Official Rust MCP Server (`rmcp`) Over `stdio` and `HTTP/SSE` | `F-03`, `API-01`..`API-04` | `1.0h` | Rust Eng | **Desc**: Register `talos_issue_mandate`, `talos_verify_mandate`, `talos_sanitize_dom`, and `talos_verify_webhook` using `#[tool]` macros from `modelcontextprotocol/rust-sdk`.<br>**AC**: MCP Inspector and Postman MCP client (`F-13`) discover and invoke all 4 tools cleanly. |
 
 ### EPIC-3: APIMatic Go SDK & Golang 1.24 Escrow Orchestrator (`PACT-012`..`PACT-019`)
 
@@ -72,7 +72,7 @@ All 32 engineering tickets (`PACT-001` through `PACT-032`) are organized into **
 | Ticket ID | Title | Mapped IDs | Est. | Owner | Description & Acceptance Criteria (DoD) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **`PACT-027`** | Wire OpenTelemetry Distributed Tracing & PII-Redacted Logs to Elastic Cloud | `F-12`, `M-04`, `R-06` | `2.0h` | SRE | **Desc**: Configure `tracing-opentelemetry` in Rust and `go.opentelemetry.io/otel` in Go exporting spans and blocked DOM vector logs (`E-04`) to Elastic Cloud.<br>**AC**: W3C `traceparent` links Next.js → Go → Rust spans; zero raw PII appears in JSON logs. |
-| **`PACT-028`** | Author Complete Postman Collection v2.1 & Environment (`F-13`) | `F-13`, `API-01`..`API-16` | `1.5h` | QA Eng | **Desc**: Create `postman/PactPay-Sandbox-MCP.postman_collection.json` and `postman/PactPay-Sandbox.postman_environment.json` with automated `pm.test()` assertions for all 16 endpoints.<br>**AC**: `newman run` passes 100% of assertions against local and Render deployments. |
+| **`PACT-028`** | Author Complete Postman Collection v2.1 & Environment (`F-13`) | `F-13`, `API-01`..`API-16` | `1.5h` | QA Eng | **Desc**: Create `postman/Talos-Sandbox-MCP.postman_collection.json` and `postman/Talos-Sandbox.postman_environment.json` with automated `pm.test()` assertions for all 16 endpoints.<br>**AC**: `newman run` passes 100% of assertions against local and Render deployments. |
 | **`PACT-029`** | Add `"Run in Postman"` & `"APIMatic Validated"` Badges to Root `README.md` | `F-05`, `F-13`, `R-05` | `1.0h` | Lead | **Desc**: Polish root `README.md` with architecture diagrams, 1-click Postman button, APIMatic SDK documentation, and Render Blueprint badge.<br>**AC**: Judges can launch the Postman test suite or Render Blueprint in 1 click from `README.md`. |
 
 ### EPIC-6: End-to-End Verification, Red-Team Polish & 3-Minute Demo Video (`PACT-030`..`PACT-032`)

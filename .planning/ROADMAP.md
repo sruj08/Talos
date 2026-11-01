@@ -1,4 +1,4 @@
-# GSD Roadmap — PactPay (AegisPay)
+# GSD Roadmap — TALOS
 
 | Phase | Name | Mode | Chunks / Tasks | Status |
 | :--- | :--- | :--- | :--- | :--- |

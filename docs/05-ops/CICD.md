@@ -1,12 +1,12 @@
-# CI/CD Pipeline Architecture — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal DevSecOps & Platform Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# CI/CD Pipeline Architecture — TALOS
+> Project: TALOS · Owner: Principal DevSecOps & Platform Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [INFRASTRUCTURE](INFRASTRUCTURE.md) · [DEPLOYMENT](DEPLOYMENT.md) · [AI_EVALS](../04-ai/AI_EVALS.md) · [TESTING](../03-engineering/TESTING.md)
 
 ---
 
 ## 1. Executive Summary & Pipeline Philosophy
 
-PactPay operates a **zero-trust, polyglot Continuous Integration and Continuous Deployment (CI/CD) pipeline** engineered for three concurrent language runtimes—**Rust 1.85 (`services/firewall-rs`)**, **Golang 1.24 (`services/orchestrator-go` + `sdk/paypal-go-apimatic`)**, and **Next.js 15 / TypeScript (`web/`)**—alongside automated red-team AI prompt-injection evaluations (`M-01`, `M-02`) and declarative multi-service cloud deployments via **Render Blueprints (`F-14`)** and **Postman/Newman contract verification (`F-13`)**.
+TALOS operates a **zero-trust, polyglot Continuous Integration and Continuous Deployment (CI/CD) pipeline** engineered for three concurrent language runtimes—**Rust 1.85 (`services/firewall-rs`)**, **Golang 1.24 (`services/orchestrator-go` + `sdk/paypal-go-apimatic`)**, and **Next.js 15 / TypeScript (`web/`)**—alongside automated red-team AI prompt-injection evaluations (`M-01`, `M-02`) and declarative multi-service cloud deployments via **Render Blueprints (`F-14`)** and **Postman/Newman contract verification (`F-13`)**.
 
 ### Core Pipeline Invariants
 1. **No Unverified Code Reaches PayPal Sandbox**: Every pull request must pass deterministic Rust `clippy`/`cargo test`, Go `-race` concurrency detectors, TypeScript strict type-checking, and APIMatic SDK schema validation before merge.
@@ -32,7 +32,7 @@ flowchart TD
 
     subgraph Stage2["3. Security & AI Red-Team Gate (security-and-eval.yml)"]
         SecScan["Supply-Chain & Secret Scan\ncargo audit + govulncheck\nTrivy FS + Gitleaks"]
-        AIEval["PactPay Red-Team Harness\n250 Poisoned DOM Payloads (M-01)\nRecall >= 99.2% & p95 <= 4.0ms"]
+        AIEval["TALOS Red-Team Harness\n250 Poisoned DOM Payloads (M-01)\nRecall >= 99.2% & p95 <= 4.0ms"]
     end
 
     subgraph Stage3["4. Render Cloud Deploy & Newman Smoke (deploy-render.yml)"]
@@ -61,7 +61,7 @@ flowchart TD
 | **Stage 1C: Web Command Center CI** | `.github/workflows/ci-rust-go-web.yml` | `web/` (`F-07`, `F-08`, `F-09`, `F-11`) | Strict TypeScript (`tsc --noEmit`), AG Grid / Bryntum / PayPal JS SDK v6 component tests pass, production build succeeds. | `5 min` |
 | **Stage 2A: DevSecOps & License Gate** | `.github/workflows/security-and-eval.yml` | Entire Monorepo (`R-02`, `R-05`) | MIT `LICENSE` present (`R-05`), `0` leaked secrets in Gitleaks, `0` critical CVEs in `cargo audit`, `govulncheck`, and Trivy. | `4 min` |
 | **Stage 2B: AI Prompt-Injection Eval** | `.github/workflows/security-and-eval.yml` | `services/firewall-rs` (`M-01`, `E-04`) | Prompt-injection block rate `>= 99.2%`, false-positive rate on benign merchant HTML `<= 0.5%`, p95 scan latency `< 4.0ms`. | `5 min` |
-| **Stage 3: Render Deploy & Newman E2E** | `.github/workflows/deploy-render.yml` | Render Cloud (`F-13`, `F-14`) | All 3 compute services pass `/healthz` within `90s`; Postman collection (`PactPay-Sandbox-MCP.postman_collection.json`) passes 100% of assertions. | `8 min` |
+| **Stage 3: Render Deploy & Newman E2E** | `.github/workflows/deploy-render.yml` | Render Cloud (`F-13`, `F-14`) | All 3 compute services pass `/healthz` within `90s`; Postman collection (`Talos-Sandbox-MCP.postman_collection.json`) passes 100% of assertions. | `8 min` |
 
 ---
 
@@ -74,7 +74,7 @@ Runs concurrently across Rust 1.85, Go 1.24, and Node 22 on every push and pull 
 
 ```yaml
 # Summary of .github/workflows/ci-rust-go-web.yml
-name: "PactPay Polyglot CI (Rust + Go + Web)"
+name: "TALOS Polyglot CI (Rust + Go + Web)"
 on:
   push:
     branches: [main, develop]
@@ -91,7 +91,7 @@ jobs:
 Executes static vulnerability analysis (`cargo-audit`, `govulncheck`, `gitleaks`, `trivy`) and runs the Rust DOM sanitizer (`API-03`) against our synthetic poisoned storefront benchmark to verify `M-01` (`deberta-v3-base-prompt-injection-v2` + `lol_html` rules).
 
 ### 4.3 Render Blueprint Deployment & Newman Smoke Gate (`.github/workflows/deploy-render.yml`)
-Validates `render.yaml` (`F-14`), triggers sequential Render deploy hooks for `pactpay-firewall-rs`, `pactpay-orchestrator-go`, and `pactpay-console-web`, polls `/healthz`, and runs `newman run postman/PactPay-Sandbox-MCP.postman_collection.json` (`F-13`) against the live deployment.
+Validates `render.yaml` (`F-14`), triggers sequential Render deploy hooks for `talos-firewall-rs`, `talos-orchestrator-go`, and `talos-console-web`, polls `/healthz`, and runs `newman run postman/Talos-Sandbox-MCP.postman_collection.json` (`F-13`) against the live deployment.
 
 ---
 
@@ -111,7 +111,7 @@ Validates `render.yaml` (`F-14`), triggers sequential Render deploy hooks for `p
 1. **GitHub Actions Encrypted Secrets**:
    - `PAYPAL_SANDBOX_CLIENT_ID` & `PAYPAL_SANDBOX_CLIENT_SECRET`: Injected only during integration smoke tests; never echoed in logs.
    - `RENDER_API_KEY`, `RENDER_DEPLOY_HOOK_RUST`, `RENDER_DEPLOY_HOOK_GO`, `RENDER_DEPLOY_HOOK_WEB`: Scoped strictly to the `production` GitHub Actions environment requiring branch protection on `main`.
-   - `CHANNEL3_API_KEY`, `KERNEL_API_KEY`, `ELASTIC_APM_SECRET_TOKEN`: Stored in Render Environment Groups (`pactpay-shared-secrets`) with `sync: false` in `render.yaml`.
+   - `CHANNEL3_API_KEY`, `KERNEL_API_KEY`, `ELASTIC_APM_SECRET_TOKEN`: Stored in Render Environment Groups (`talos-shared-secrets`) with `sync: false` in `render.yaml`.
 2. **Pre-Commit & CI Secret Scanning**:
    - `gitleaks/gitleaks-action@v2` scans full commit diffs on every PR.
    - `Ed25519` signing keys (`E-02`, `E-03`) in CI use ephemeral test keypairs generated on the fly (`ed25519-dalek` CSPRNG) rather than static committed PEM files.
@@ -122,5 +122,5 @@ Validates `render.yaml` (`F-14`), triggers sequential Render deploy hooks for `p
 
 If the post-deploy Newman smoke test (`F-13`) or `/healthz` readiness probe fails in `.github/workflows/deploy-render.yml`:
 1. **Immediate Traffic Drain**: Render's zero-downtime health check (`healthCheckPath: /healthz`) prevents unhealthy container instances from receiving traffic and keeps the previous healthy deployment active.
-2. **Programmatic Rollback Trigger**: The `deploy-render.yml` failure step invokes the Render REST API (`POST https://api.render.com/v1/services/{serviceId}/rollback`) to revert `pactpay-firewall-rs`, `pactpay-orchestrator-go`, and `pactpay-console-web` to the last known good commit SHA within `<30 seconds`.
+2. **Programmatic Rollback Trigger**: The `deploy-render.yml` failure step invokes the Render REST API (`POST https://api.render.com/v1/services/{serviceId}/rollback`) to revert `talos-firewall-rs`, `talos-orchestrator-go`, and `talos-console-web` to the last known good commit SHA within `<30 seconds`.
 3. **Database Migration Safety**: All PostgreSQL migrations (`E-01`..`E-09`) follow an **expand-and-contract (backward-compatible)** pattern so rolling back application containers never breaks against the active schema.

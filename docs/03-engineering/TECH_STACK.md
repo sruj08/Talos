@@ -1,12 +1,12 @@
-# Technology Stack — PactPay (AegisPay)
-> Project: PactPay (AegisPay) · Owner: Principal Engineering Council · Status: Approved v1.0 · Last updated: 2026-11-01
+# Technology Stack — TALOS
+> Project: TALOS · Owner: Principal Engineering Council · Status: Approved v1.0 · Last updated: 2026-11-01
 > Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [ARCHITECTURE](ARCHITECTURE.md) · [INTEGRATIONS](INTEGRATIONS.md) · [ADR-0001](adr/ADR-0001-polyglot-rust-go-typescript-architecture.md)
 
 ---
 
 ## 1. First-Principles Polyglot Justification (Andrej Karpathy + Max Levchin + Patrick Collison)
 
-Many hackathon projects choose languages by convenience. **PactPay** assigns each system layer to the exact runtime whose physical execution characteristics match the domain constraint:
+Many hackathon projects choose languages by convenience. **TALOS** assigns each system layer to the exact runtime whose physical execution characteristics match the domain constraint:
 
 1. **Why Rust 1.85 (`services/firewall-rs`) for the Inline Security & MCP Kernel (`F-01`, `F-02`, `F-03`)**:
    - The firewall sits inline on every DOM inspection and tool call. It performs streaming HTML AST rewriting (`lol_html`), Unicode tag normalization (`R-02`), `Ed25519` + RFC 9421 cryptographic verification, and INT8 quantized ONNX inference (`ort`).
@@ -45,7 +45,7 @@ Many hackathon projects choose languages by convenience. **PactPay** assigns eac
 
 ## 3. Sponsor Technology Integration Matrix (All 10 Hackathon Ecosystem Partners)
 
-| # | Sponsor / Partner | Judge Representative | How PactPay Integrates It | Exact Repo Location | Target Prize Pool |
+| # | Sponsor / Partner | Judge Representative | How TALOS Integrates It | Exact Repo Location | Target Prize Pool |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **1** | **PayPal** (`Sandbox`, `Orders v2`, `Tracking v1`, `Disputes v1`, `MCP`, `JS SDK v6`) | PayPal Core Jury (Soups Ranjan, etc.) | Reversible `Orders v2 AUTHORIZE` escrow holds, automatic `CAPTURE` on carrier delivery (`create_tracking`), instant `VOID` on SLA breach, `Disputes v1` evidence upload, and `JS SDK v6` human step-up co-sign. | `services/orchestrator-go/internal/paypal/`, `web/src/components/PayPalStepUpModal.tsx` | **$12k 1st / $8k 2nd / $5k 3rd + $5k Agentic Commerce + $5k PayPal+AI** |
 | **2** | **AG Grid & AG Studio** | **Sylwia Vargas** (Judge #8) | Live streaming escrow blotter (`applyTransactionAsync`), Master-Detail DOM diff & Ed25519 forensic viewer, integrated AG Charts price spread, and **AG Studio** natural-language AI copilot. | `web/src/components/AgStudioBlotter.tsx` | **Best Use of AG Grid ($5,000 1st / $2,000 2nd / 3× $1,000 3rd)** |
@@ -54,7 +54,7 @@ Many hackathon projects choose languages by convenience. **PactPay** assigns eac
 | **5** | **Channel3** (`trychannel3.com`) | **Ignacio Valdez Bicard** (Judge #10) | Real-time fair-market median price discovery across 100M+ SKUs; blocks merchant price gouging (`>15%` spread) and auto-reroutes checkout to verified Channel3 sellers. | `services/orchestrator-go/internal/channel3/oracle.go` | **Best Use of Channel3 ($1,500 Cash)** |
 | **6** | **Render** (`render.yaml` Blueprint) | **Shifra Williams** (Judge #13) | 1-click native polyglot `render.yaml` provisioning `runtime: rust`, `runtime: go`, `runtime: node`, Render PostgreSQL 16, and Render Valkey. | `render.yaml` | **Best Use of Render ($1,000 / $750 / $500 Credits)** |
 | **7** | **Elastic** (`Elastic Cloud APM` + `Elasticsearch Vector Store`) | **Carly Richmond** (Judge #11) | Distributed OpenTelemetry tracing across Next.js → Go → Rust → PayPal Sandbox + `elser_model_2` vector indexing of intercepted DOM prompt injections (`E-04`). | `services/firewall-rs/src/telemetry.rs`, `services/orchestrator-go/internal/telemetry/` | Jury Technical & Observability Score Multiplier |
-| **8** | **Postman** (`Postman v11` + `MCP Client` + `Newman`) | **Pooja Mistry** (Judge #12) | Complete `PactPay-Sandbox-MCP.postman_collection.json` + environment + 1-click `"Run in Postman"` badge + Newman CI contract gate. | `postman/PactPay-Sandbox-MCP.postman_collection.json` | Jury DX & Demo Verification Score Multiplier |
+| **8** | **Postman** (`Postman v11` + `MCP Client` + `Newman`) | **Pooja Mistry** (Judge #12) | Complete `Talos-Sandbox-MCP.postman_collection.json` + environment + 1-click `"Run in Postman"` badge + Newman CI contract gate. | `postman/Talos-Sandbox-MCP.postman_collection.json` | Jury DX & Demo Verification Score Multiplier |
 | **9** | **KERNEL** (`onkernel.com`) | Sponsor Partner | Disposable headless cloud browser inspecting untrusted merchant checkout DOMs before streaming HTML into Rust `lol_html`. | `services/orchestrator-go/internal/kernel/browser.go` | Agentic Security Realism |
 | **10** | **Astropods & Zapier** | Sponsor Partners | Outbound webhook connectors dispatching Slack/Email CFO escalation alerts when an escrow enters `STEP_UP_REQUIRED` or `PAYPAL_VOIDED`. | `services/orchestrator-go/internal/webhooks/outbound.go` | Enterprise FinOps Workflow Completion |
 
@@ -66,4 +66,4 @@ Many hackathon projects choose languages by convenience. **PactPay** assigns eac
 | :--- | :--- | :--- |
 | **Settlement Rail** | PayPal Sandbox `Orders v2` (`USD`, `EUR`, `GBP`, `INR` display equivalents at `1 USD = ₹84.00`). | PayPal Cross-Border Seller Payouts (`PA-CB` compliant via licensed partner bank) + ONDC B2B RSP integration. |
 | **Identity & Mandate Signing** | `Ed25519` keypair per Principal (`E-01`) & Agent (`E-02`) + RFC 9421 HTTP Message Signatures. | Corporate OIDC + India DigiLocker / Aadhaar eSign for high-value B2B procurement mandates (`>₹5,00,000`). |
-| **Data Residency & Privacy** | Synthetic Sandbox accounts (`buyer-pactpay@personal.example.com`), zero real PAN/CVV (`R-06`). | AWS Mumbai (`ap-south-1`) primary database shard; CERT-In 180-day immutable audit log retention; DPDP Act 2023 §8 PII redaction. |
+| **Data Residency & Privacy** | Synthetic Sandbox accounts (`buyer-talos@personal.example.com`), zero real PAN/CVV (`R-06`). | AWS Mumbai (`ap-south-1`) primary database shard; CERT-In 180-day immutable audit log retention; DPDP Act 2023 §8 PII redaction. |
