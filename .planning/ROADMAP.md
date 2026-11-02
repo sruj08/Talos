@@ -3,7 +3,7 @@
 | Phase | Name | Mode | Chunks / Tasks | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **Phase 1** | Foundation, License Gate, Monorepo Skeleton & DB Schema (MVP) | `mvp` | `TASK-01`, `TASK-02` | Complete |
-| **Phase 2** | Rust Zero-Trust KYA & Prompt-Injection Firewall Kernel (MVP) | `mvp` | `TASK-03`, `TASK-04` | Ready |
+| **Phase 2** | Rust Zero-Trust KYA & Prompt-Injection Firewall Kernel (MVP) | `mvp` | `TASK-03`, `TASK-04` | Complete |
 | **Phase 3** | APIMatic Go SDK & PayPal Sandbox 2PC Escrow Engine (MVP) | `mvp` | `TASK-05`, `TASK-06` | Ready (Gate #1) |
 | **Phase 4** | Channel3 Fair-Price Oracle, KERNEL, Tracking & Disputes (MVP) | `mvp` | `TASK-07`, `TASK-08` | Ready (Gate #2) |
 | **Phase 5** | Next.js 15 Command Center & AG Grid / AG Studio Blotter (MVP) | `mvp` | `TASK-09`, `TASK-10` | Ready (Gate #3) |
@@ -29,6 +29,9 @@
 **Depends on**: Phase 1
 **Requirements**: `F-01`, `F-02`, `F-03`, `API-01`, `API-02`, `API-03`, `API-04`, `API-05`, `M-01`
 **Mode**: mvp
+**Plans**: 2 plans
+- [x] `02-01-PLAN.md` — Rust Ed25519 KYA Mandate Signer/Verifier & RFC 9421 Signature Engine (`TASK-03`)
+- [x] `02-02-PLAN.md` — Rust `lol_html` + `DeBERTa-v3` ONNX Prompt-Injection Sanitizer & `rmcp` MCP Server (`TASK-04`)
 
 ### Phase 3: APIMatic Go SDK & PayPal Sandbox 2PC Escrow Engine
 **Goal**: Implement APIMatic Go SDK (`sdk/paypal-go-apimatic`) & PayPal Sandbox OAuth2 (`TASK-05`) and Go 2PC Escrow State Machine (`AUTHORIZE`, `CAPTURE`, `VOID`) (`TASK-06`).

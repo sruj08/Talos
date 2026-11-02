@@ -1,8 +1,8 @@
 {
   "version": "2.0.0",
   "generator": "gsd-graphify",
-  "generated_at": "2026-11-01T15:50:35.989754+00:00",
-  "workspace": "g:/PAYPAL",
+  "generated_at": "2026-11-02T13:29:00+05:30",
+  "workspace": "d:/Hackathons/PayPal/Talos",
   "project": "TALOS",
   "stats": {
     "total_nodes": 188,

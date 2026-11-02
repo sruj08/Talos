@@ -1,7 +1,7 @@
 # GSD-Graphify Knowledge Graph Report — TALOS
 
-- **Generated At**: `2026-11-01T15:18:02.627575+00:00`
-- **Total Indexed Nodes**: `183` files & canonical artifacts
+- **Generated At**: `2026-11-02T13:29:00+05:30`
+- **Total Indexed Nodes**: `188` files & canonical artifacts
 - **Total Architectural Edges**: `31` primary cross-module contracts
 - **Leiden Communities**: `8` (`C-01`..`C-08`)
 
@@ -12,14 +12,14 @@ When an AI coding agent or developer starts any task, inspect the relevant God N
 
 | Rank | Node Path | Community | Role & Why It Matters |
 | :---: | :--- | :---: | :--- |
-| **1** | [`MAP.md`](file:///g:/PAYPAL/MAP.md) | `C-06` | Master O(1) lookup index mapping every user prompt/intent to the exact file, symbol, endpoint, or database table. |
-| **2** | [`docs/00-overview/PROJECT_BRIEF.md`](file:///g:/PAYPAL/docs/00-overview/PROJECT_BRIEF.md) | `C-07` | Canonical ID registry (`F-01`..`F-14`, `P-01`..`P-04`, `E-01`..`E-10`, `API-01`..`API-16`, `M-01`..`M-04`, `R-01`..`R-06`). |
-| **3** | [`docs/08-project/PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md`](file:///g:/PAYPAL/docs/08-project/PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md) | `C-06` | Step-by-step 8-Phase / 16-Task execution guide with `[HUMAN ACTION REQUIRED]` gates and `/gsd-*` + `/ralph-loop` commands. |
-| **4** | [`services/orchestrator-go/internal/escrow/machine.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/escrow/machine.go) | `C-02` | Core Go 1.24 2PC state machine coordinating Channel3, PayPal `AUTHORIZE`/`CAPTURE`/`VOID`, Tracking v1, and Disputes v1. |
-| **5** | [`services/firewall-rs/src/main.rs`](file:///g:/PAYPAL/services/firewall-rs/src/main.rs) | `C-01` | Core Rust 1.85 security data plane combining `mandate.rs`, `sanitizer.rs`, `webhook_verify.rs`, and `mcp_server.rs`. |
-| **6** | [`api/openapi.yaml`](file:///g:/PAYPAL/api/openapi.yaml) | `C-04` | Complete OpenAPI 3.1 contract for `API-01`..`API-16` and schemas `E-01`..`E-10`. |
-| **7** | [`services/orchestrator-go/migrations/0001_init_schema.up.sql`](file:///g:/PAYPAL/services/orchestrator-go/migrations/0001_init_schema.up.sql) | `C-04` | PostgreSQL 16 schema with `BIGINT` `_cents` columns and the `trg_audit_events_hash_chain` SHA-256 trigger. |
-| **8** | [`web/src/app/page.tsx`](file:///g:/PAYPAL/web/src/app/page.tsx) | `C-03` | Next.js 15 Command Center hosting `MandateStudio`, `PoisonedStoreSim`, `AgStudioBlotter`, `BryntumSlaBoard`, and `PayPalStepUpModal`. |
+| **1** | [`MAP.md`](file:///d:/Hackathons/PayPal/Talos/MAP.md) | `C-06` | Master O(1) lookup index mapping every user prompt/intent to the exact file, symbol, endpoint, or database table. |
+| **2** | [`docs/00-overview/PROJECT_BRIEF.md`](file:///d:/Hackathons/PayPal/Talos/docs/00-overview/PROJECT_BRIEF.md) | `C-07` | Canonical ID registry (`F-01`..`F-14`, `P-01`..`P-04`, `E-01`..`E-10`, `API-01`..`API-16`, `M-01`..`M-04`, `R-01`..`R-06`). |
+| **3** | [`docs/08-project/PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md`](file:///d:/Hackathons/PayPal/Talos/docs/08-project/PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md) | `C-06` | Step-by-step 8-Phase / 16-Task execution guide with `[HUMAN ACTION REQUIRED]` gates and `/gsd-*` + `/ralph-loop` commands. |
+| **4** | [`services/orchestrator-go/internal/escrow/machine.go`](file:///d:/Hackathons/PayPal/Talos/services/orchestrator-go/internal/escrow/machine.go) | `C-02` | Core Go 1.24 2PC state machine coordinating Channel3, PayPal `AUTHORIZE`/`CAPTURE`/`VOID`, Tracking v1, and Disputes v1. |
+| **5** | [`services/firewall-rs/src/main.rs`](file:///d:/Hackathons/PayPal/Talos/services/firewall-rs/src/main.rs) | `C-01` | Core Rust 1.85 security data plane combining `mandate.rs`, `sanitizer.rs`, `webhook_verify.rs`, and `mcp_server.rs`. |
+| **6** | [`api/openapi.yaml`](file:///d:/Hackathons/PayPal/Talos/api/openapi.yaml) | `C-04` | Complete OpenAPI 3.1 contract for `API-01`..`API-16` and schemas `E-01`..`E-10`. |
+| **7** | [`services/orchestrator-go/migrations/0001_init_schema.up.sql`](file:///d:/Hackathons/PayPal/Talos/services/orchestrator-go/migrations/0001_init_schema.up.sql) | `C-04` | PostgreSQL 16 schema with `BIGINT` `_cents` columns and the `trg_audit_events_hash_chain` SHA-256 trigger. |
+| **8** | [`web/src/app/page.tsx`](file:///d:/Hackathons/PayPal/Talos/web/src/app/page.tsx) | `C-03` | Next.js 15 Command Center hosting `MandateStudio`, `PoisonedStoreSim`, `AgStudioBlotter`, `BryntumSlaBoard`, and `PayPalStepUpModal`. |
 
 ---
 

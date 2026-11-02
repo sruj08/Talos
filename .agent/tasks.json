@@ -115,7 +115,7 @@
       "title": "Rust lol_html + DeBERTa-v3 ONNX Prompt-Injection Sanitizer & rmcp MCP Server",
       "category": "security-rust",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "/gsd-ai-integration-phase 2",

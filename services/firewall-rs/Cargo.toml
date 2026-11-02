@@ -30,3 +30,9 @@ opt-level = 2
 
 [profile.dev.package.sha2]
 opt-level = 2
+
+[profile.dev.package.aho-corasick]
+opt-level = 2
+
+[profile.dev.package.lol_html]
+opt-level = 2
