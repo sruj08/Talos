@@ -73,13 +73,24 @@ fn is_valid_paypal_cert_url(cert_url: &str) -> bool {
     let Some(rest) = cert_url.strip_prefix("https://") else {
         return false;
     };
-    let host = rest
-        .split('/')
-        .next()
-        .unwrap_or_default()
-        .to_ascii_lowercase();
-    (host == "api.paypal.com" || host == "api.sandbox.paypal.com" || host.ends_with(".paypal.com"))
-        && !host.contains('@')
+    if rest
+        .chars()
+        .any(|c| c.is_whitespace() || matches!(c, '?' | '#' | '@' | '\\' | ':'))
+    {
+        return false;
+    }
+    let Some((host_raw, path)) = rest.split_once('/') else {
+        return false;
+    };
+    let host = host_raw.to_ascii_lowercase();
+    !path.is_empty()
+        && !host.contains("..")
+        && host
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '.' || c == '-')
+        && (host == "api.paypal.com"
+            || host == "api.sandbox.paypal.com"
+            || host.ends_with(".paypal.com"))
 }
 
 /// PayPal Webhook cryptographic verification:
@@ -108,9 +119,12 @@ pub fn verify_webhook(req: WebhookVerifyRequest) -> WebhookVerifyResponse {
         && !req.transmission_id.trim().is_empty()
         && !req.transmission_time.trim().is_empty()
         && !req.webhook_id.trim().is_empty()
+        && !req.raw_body.is_empty()
         && crc > 0;
     let sig_trimmed = req.transmission_sig.trim();
-    let rsa_sig_verified = if sig_trimmed.len() == 128 {
+    let rsa_sig_verified = if sig_trimmed.is_empty() {
+        false
+    } else if sig_trimmed.len() == 128 {
         (|| -> Option<()> {
             let sig_arr: [u8; 64] = hex::decode(sig_trimmed).ok()?.try_into().ok()?;
             let vk: VerifyingKey = webhook_signing_key().verifying_key();
@@ -121,8 +135,6 @@ pub fn verify_webhook(req: WebhookVerifyRequest) -> WebhookVerifyResponse {
             .ok()
         })()
         .is_some()
-    } else if sig_trimmed.is_empty() {
-        crc32_verified
     } else {
         let mut h = Sha256::new();
         h.update(validation_payload.as_bytes());
@@ -155,55 +167,42 @@ pub async fn handle_verify_webhook(
 }
 
 #[cfg(test)]
+#[rustfmt::skip]
 mod tests {
     use super::*;
 
     #[test]
     fn test_webhook_crc32_and_signature_verification() {
         let body = r#"{"id":"WH-2WR32451HC0233532-67976317FL4543714","event_type":"PAYMENT.CAPTURE.COMPLETED"}"#;
-        let sig = sign_webhook_payload(
-            "69cd13f0-d67a-11ef",
-            "2026-03-31T01:10:00Z",
-            "5GP028458E2496506",
-            body,
-        );
-        let res = verify_webhook(WebhookVerifyRequest {
+        let sig = sign_webhook_payload("69cd13f0-d67a-11ef", "2026-03-31T01:10:00Z", "5GP028458E2496506", body);
+        let mk_req = |cert: &str, signature: &str, raw: &str| WebhookVerifyRequest {
             transmission_id: "69cd13f0-d67a-11ef".to_string(),
             transmission_time: "2026-03-31T01:10:00Z".to_string(),
             webhook_id: "5GP028458E2496506".to_string(),
-            cert_url: default_cert_url(),
+            cert_url: cert.to_string(),
             auth_algo: default_auth_algo(),
-            transmission_sig: sig.clone(),
-            raw_body: body.to_string(),
+            transmission_sig: signature.to_string(),
+            raw_body: raw.to_string(),
             expected_crc32: None,
-        });
-        assert!(res.verified && res.crc32_verified && res.rsa_sig_verified);
+        };
+        let res = verify_webhook(mk_req(&default_cert_url(), &sig, body));
+        assert!(res.verified && res.crc32_verified && res.rsa_sig_verified && res.latency_us < 1_000);
         assert_eq!(res.crc32_decimal, crc32fast::hash(body.as_bytes()));
-        assert!(res.latency_us < 1_000);
 
-        let tampered = verify_webhook(WebhookVerifyRequest {
-            transmission_id: "69cd13f0-d67a-11ef".to_string(),
-            transmission_time: "2026-03-31T01:10:00Z".to_string(),
-            webhook_id: "5GP028458E2496506".to_string(),
-            cert_url: default_cert_url(),
-            auth_algo: default_auth_algo(),
-            transmission_sig: sig.clone(),
-            raw_body: r#"{"id":"WH-TAMPERED","event_type":"PAYMENT.CAPTURE.COMPLETED"}"#
-                .to_string(),
-            expected_crc32: None,
-        });
+        let tampered = verify_webhook(mk_req(&default_cert_url(), &sig, r#"{"id":"WH-TAMPERED"}"#));
         assert!(!tampered.verified && !tampered.rsa_sig_verified);
 
-        let evil_cert = verify_webhook(WebhookVerifyRequest {
-            transmission_id: "69cd13f0-d67a-11ef".to_string(),
-            transmission_time: "2026-03-31T01:10:00Z".to_string(),
-            webhook_id: "5GP028458E2496506".to_string(),
-            cert_url: "https://evil-attacker.com/paypal.pem".to_string(),
-            auth_algo: default_auth_algo(),
-            transmission_sig: sig,
-            raw_body: body.to_string(),
-            expected_crc32: None,
-        });
-        assert!(!evil_cert.verified && evil_cert.reason == "INVALID_PAYPAL_CERT_URL");
+        let empty_sig = verify_webhook(mk_req(&default_cert_url(), "", body));
+        assert!(!empty_sig.verified && !empty_sig.rsa_sig_verified && empty_sig.reason == "WEBHOOK_SIGNATURE_INVALID");
+
+        for bad_url in [
+            "https://evil-attacker.com/paypal.pem",
+            "https://evil.com?.paypal.com/v1/certs",
+            "https://evil.com#.paypal.com/v1/certs",
+            "https://api.paypal.com",
+        ] {
+            let evil = verify_webhook(mk_req(bad_url, &sig, body));
+            assert!(!evil.verified && evil.reason == "INVALID_PAYPAL_CERT_URL", "url: {bad_url}");
+        }
     }
 }
