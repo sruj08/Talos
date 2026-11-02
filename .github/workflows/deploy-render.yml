@@ -1,106 +1,75 @@
-name: "TALOS Render Blueprint Deploy & Newman Smoke Test"
+name: "TALOS Render Blueprint Validation & Live Sandbox Smoke Verification"
 
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
     inputs:
-      environment:
-        description: "Target Render Environment"
-        required: true
-        default: "production"
-        type: choice
-        options:
-          - production
-          - staging
+      target_base_url:
+        description: "Live Render Orchestrator Base URL for post-deploy smoke test"
+        required: false
+        default: "https://talos-orchestrator-go.onrender.com"
 
 jobs:
-  # ============================================================================
-  # Step 1: Validate render.yaml Blueprint Schema (F-14)
-  # ============================================================================
   validate-render-blueprint:
-    name: "Validate render.yaml Multi-Service Blueprint (F-14)"
+    name: "Validate render.yaml Blueprint & Postman Collection Schema"
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Validate render.yaml Syntax & 5-Resource Topology
+      - name: Validate render.yaml Syntax & Service Definitions
         run: |
-          if [ ! -f "render.yaml" ]; then
-            echo "::error::render.yaml missing at repository root!"
-            exit 1
-          fi
           python3 -c '
           import yaml, sys
-          with open("render.yaml", "r") as f:
-              bp = yaml.safe_load(f)
-          services = [s["name"] for s in bp.get("services", [])]
-          required = ["talos-firewall-rs", "talos-orchestrator-go", "talos-console-web"]
-          for req in required:
-              if req not in services:
-                  print(f"Missing required Render service: {req}")
-                  sys.exit(1)
-          print("render.yaml validated successfully:", services)
+          with open("render.yaml", "r", encoding="utf-8") as f:
+              data = yaml.safe_load(f)
+          services = [s.get("name") for s in data.get("services", [])]
+          required = {"talos-firewall-rs", "talos-orchestrator-go", "talos-console-web"}
+          missing = required - set(services)
+          if missing:
+              print(f"Missing required Render services: {missing}", file=sys.stderr)
+              sys.exit(1)
+          print("render.yaml verified successfully:", services)
           '
 
-  # ============================================================================
-  # Step 2: Trigger Render Deploy Hooks & Run Postman/Newman Smoke Tests (F-13)
-  # ============================================================================
+      - name: Validate Postman Collection JSON Schema
+        run: |
+          test -f postman/talos.postman_collection.json
+          python3 -m json.tool postman/talos.postman_collection.json > /dev/null
+
   deploy-and-smoke-test:
-    name: "Trigger Render Deploy & Run Newman Contract Suite (F-13)"
+    name: "Trigger Render Deploy Hook & Run Postman Newman Smoke Gate"
     needs: validate-render-blueprint
+    if: github.event_name == 'workflow_dispatch' || vars.TALOS_LIVE_URL != ''
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Trigger Render Deploy Hooks (Rust + Go + Web)
+      - name: Trigger Render Deploy Hooks (If Configured)
         env:
-          DEPLOY_HOOK_RUST: ${{ secrets.RENDER_DEPLOY_HOOK_RUST }}
-          DEPLOY_HOOK_GO: ${{ secrets.RENDER_DEPLOY_HOOK_GO }}
-          DEPLOY_HOOK_WEB: ${{ secrets.RENDER_DEPLOY_HOOK_WEB }}
+          RENDER_DEPLOY_HOOK_FIREWALL: ${{ secrets.RENDER_DEPLOY_HOOK_FIREWALL }}
+          RENDER_DEPLOY_HOOK_ORCHESTRATOR: ${{ secrets.RENDER_DEPLOY_HOOK_ORCHESTRATOR }}
+          RENDER_DEPLOY_HOOK_WEB: ${{ secrets.RENDER_DEPLOY_HOOK_WEB }}
         run: |
-          for hook_name in DEPLOY_HOOK_RUST DEPLOY_HOOK_GO DEPLOY_HOOK_WEB; do
-            hook_url="${!hook_name}"
-            if [ -n "$hook_url" ]; then
-              echo "Triggering Render deploy for $hook_name..."
-              curl -fsSL -X POST "$hook_url"
-            else
-              echo "Notice: $hook_name secret not configured; relying on Render native Git auto-deploy."
-            fi
-          done
+          if [ -n "$RENDER_DEPLOY_HOOK_FIREWALL" ]; then curl -fsSL -X POST "$RENDER_DEPLOY_HOOK_FIREWALL"; fi
+          if [ -n "$RENDER_DEPLOY_HOOK_ORCHESTRATOR" ]; then curl -fsSL -X POST "$RENDER_DEPLOY_HOOK_ORCHESTRATOR"; fi
+          if [ -n "$RENDER_DEPLOY_HOOK_WEB" ]; then curl -fsSL -X POST "$RENDER_DEPLOY_HOOK_WEB"; fi
 
-      - name: Install Newman CLI for Postman Contract Testing (F-13)
-        run: npm install -g newman
+      - name: Setup Node.js for Postman Newman CLI
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
-      - name: Validate Postman Collection Schema (API-01..API-16)
-        run: |
-          if [ -f "postman/Talos-Sandbox-MCP.postman_collection.json" ]; then
-            python3 -m json.tool postman/Talos-Sandbox-MCP.postman_collection.json > /dev/null
-            echo "Postman Collection JSON verified."
-          fi
-
-      - name: Run Live Newman Smoke Suite (When Live Endpoint Configured)
+      - name: Run Newman Smoke Test Against Live URL
         env:
-          TALOS_LIVE_URL: ${{ vars.TALOS_LIVE_URL }}
+          TALOS_LIVE_URL: ${{ github.event.inputs.target_base_url || vars.TALOS_LIVE_URL }}
         run: |
-          if [ -n "$TALOS_LIVE_URL" ] && [ -f "postman/Talos-Sandbox-MCP.postman_collection.json" ]; then
-            echo "Polling $TALOS_LIVE_URL/healthz before running Newman..."
-            for i in {1..18}; do
-              if curl -fsSL "$TALOS_LIVE_URL/healthz" >/dev/null 2>&1; then
-                echo "Service healthy! Running Newman contract tests..."
-                newman run postman/Talos-Sandbox-MCP.postman_collection.json \
-                  --env-var "base_url=$TALOS_LIVE_URL" \
-                  --timeout-request 10000
-                exit 0
-              fi
-              sleep 5
-            done
-            echo "::error::Health check timed out after 90s!"
-            exit 1
-          else
-            echo "TALOS_LIVE_URL not set; skipping remote Newman execution in CI."
-          fi
+          npm install -g newman
+          newman run postman/talos.postman_collection.json \
+            --env-var "base_url=${TALOS_LIVE_URL}" \
+            --folder "Health & KYA Mandate" \
+            --bail

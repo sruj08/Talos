@@ -31,8 +31,14 @@ async fn main() {
         .route("/healthz", get(healthz))
         .route("/v1/mandates/sign", post(mandate::handle_sign_mandate))
         .route("/v1/mandates/verify", post(mandate::handle_verify_mandate))
-        .route("/v1/firewall/sanitize-dom", post(sanitizer::handle_sanitize_dom))
-        .route("/v1/firewall/verify-webhook", post(webhook_verify::handle_verify_webhook))
+        .route(
+            "/v1/firewall/sanitize-dom",
+            post(sanitizer::handle_sanitize_dom),
+        )
+        .route(
+            "/v1/firewall/verify-webhook",
+            post(webhook_verify::handle_verify_webhook),
+        )
         .route("/mcp", post(mcp_server::handle_mcp_rpc))
         .layer(CorsLayer::permissive());
 

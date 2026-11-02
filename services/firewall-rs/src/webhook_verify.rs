@@ -21,7 +21,10 @@ pub async fn handle_verify_webhook(
     Json(req): Json<WebhookVerifyRequest>,
 ) -> Json<WebhookVerifyResponse> {
     let crc = crc32fast::hash(req.raw_body.as_bytes());
-    let verified = !req.transmission_id.is_empty() && !req.webhook_id.is_empty() && crc > 0;
+    let verified = !req.transmission_id.is_empty()
+        && !req.transmission_time.is_empty()
+        && !req.webhook_id.is_empty()
+        && crc > 0;
     Json(WebhookVerifyResponse {
         verified,
         crc32_decimal: crc,

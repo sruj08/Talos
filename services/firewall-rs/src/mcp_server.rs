@@ -21,6 +21,11 @@ pub struct McpJsonRpcResponse {
 }
 
 pub async fn handle_mcp_rpc(Json(req): Json<McpJsonRpcRequest>) -> Json<McpJsonRpcResponse> {
+    let jsonrpc = if req.jsonrpc.is_empty() {
+        "2.0".to_string()
+    } else {
+        req.jsonrpc
+    };
     let result = match req.method.as_str() {
         "tools/list" => json!({
             "tools": [
@@ -29,10 +34,14 @@ pub async fn handle_mcp_rpc(Json(req): Json<McpJsonRpcRequest>) -> Json<McpJsonR
                 { "name": "talos_sanitize_dom", "description": "Strip indirect DOM prompt injections via lol_html + DeBERTa-v3 ONNX" }
             ]
         }),
-        _ => json!({ "status": "ok", "method": req.method }),
+        _ => json!({
+            "status": "ok",
+            "method": req.method,
+            "has_params": req.params.is_some()
+        }),
     };
     Json(McpJsonRpcResponse {
-        jsonrpc: "2.0".to_string(),
+        jsonrpc,
         id: req.id,
         result,
     })

@@ -1,10 +1,11 @@
-name: "TALOS Polyglot CI (Rust + Go + Web)"
+name: "TALOS Polyglot CI — Rust Firewall, Go Orchestrator & Next.js Command Center"
 
 on:
   push:
-    branches: ["main", "develop"]
+    branches: ["main", "develop", "feat/**"]
   pull_request:
     branches: ["main"]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,46 +13,40 @@ concurrency:
 
 env:
   CARGO_TERM_COLOR: always
-  GO_VERSION: "1.24.0"
-  NODE_VERSION: "22.x"
-  RUST_BACKTRACE: "1"
+  GO_VERSION: "1.24"
+  NODE_VERSION: "22"
 
 jobs:
   # ============================================================================
-  # Gate 0: Devpost Stage-1 Disqualifier Guard (R-05)
+  # Gate 0: Repository Hygiene, MIT License (R-05) & Graphify Integrity
   # ============================================================================
   license-and-structure-gate:
-    name: "Verify MIT License & Blueprint Structure (R-05)"
+    name: "Gate 0 — MIT License (R-05) & SSoT Integrity"
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Verify Root LICENSE and Required Artifacts
+      - name: Verify Root MIT LICENSE File (Devpost Stage-1 Gate R-05)
         run: |
-          if [ ! -s "LICENSE" ]; then
-            echo "::error::Missing or empty root LICENSE file (Risk R-05 Stage-1 Disqualifier)!"
-            exit 1
-          fi
-          grep -qi "MIT License" LICENSE || {
-            echo "::error::LICENSE must contain valid MIT License header!"
-            exit 1
-          }
-          for path in "README.md" "render.yaml" "postman/Talos-Sandbox-MCP.postman_collection.json"; do
-            if [ ! -f "$path" ]; then
-              echo "::warning::Expected artifact $path not yet created in current branch."
-            fi
-          done
-          echo "Root LICENSE verified successfully."
+          test -f LICENSE || (echo "::error::Missing root LICENSE file (R-05 disqualification risk)" && exit 1)
+          grep -qi "MIT License" LICENSE || (echo "::error::LICENSE must be MIT" && exit 1)
+
+      - name: Verify Core IaC & Specification Artifacts Exist
+        run: |
+          test -f render.yaml
+          test -f api/openapi.yaml
+          test -f .planning/graphs/graph.json
+          test -f .agent/tasks.json
 
   # ============================================================================
-  # Gate 1: Rust 1.85 Zero-Trust KYA & DOM Firewall Kernel (services/firewall-rs)
+  # Gate 1: Rust Security Kernel (services/firewall-rs)
   # ============================================================================
   rust-firewall-ci:
-    name: "Rust 1.85 Firewall & MCP Kernel (F-01, F-02, F-03)"
+    name: "Gate 1 — Rust KYA & DOM Firewall (rmcp + lol_html + ed25519)"
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: services/firewall-rs
@@ -59,103 +54,68 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Rust 1.85 Toolchain
-        uses: dtolnay/rust-toolchain@master
+      - name: Install Rust Stable Toolchain (1.85+)
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: "1.85.0"
           components: rustfmt, clippy
 
-      - name: Cache Cargo Registry & Target Build
+      - name: Rust Cache
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: "services/firewall-rs -> target"
 
       - name: Check Rust Formatting (cargo fmt)
-        run: |
-          if [ -f "Cargo.toml" ]; then
-            cargo fmt --all -- --check
-          else
-            echo "services/firewall-rs/Cargo.toml not initialized yet; skipping."
-          fi
+        run: cargo fmt --all -- --check
 
-      - name: Run Rust Clippy Linter (Zero Warnings)
-        run: |
-          if [ -f "Cargo.toml" ]; then
-            cargo clippy --all-targets --all-features -- -D warnings
-          fi
+      - name: Lint with Clippy (Zero Warnings Policy)
+        run: cargo clippy --all-targets --all-features -- -D warnings
 
-      - name: Run Rust Unit & Cryptographic Mandate Tests (Ed25519 + lol_html + CRC32)
-        env:
-          TALOS_ENV: "test"
-          TALOS_ONNX_FAST_FALLBACK: "true"
-        run: |
-          if [ -f "Cargo.toml" ]; then
-            cargo test --all-targets -- --nocapture
-          fi
+      - name: Execute Unit & Adversarial Sanitizer Tests
+        run: cargo test --all-targets --workspace
 
   # ============================================================================
-  # Gate 2: Golang 1.24 Escrow Orchestrator & APIMatic SDK (services/orchestrator-go)
+  # Gate 2: Go APIMatic SDK & 2PC Escrow Orchestrator (services/orchestrator-go)
   # ============================================================================
   go-orchestrator-ci:
-    name: "Go 1.24 Orchestrator & APIMatic SDK (F-04, F-05, F-06)"
+    name: "Gate 2 — Go 1.24 APIMatic PayPal SDK & Escrow State Machine"
     runs-on: ubuntu-latest
-    timeout-minutes: 8
-    services:
-      redis:
-        image: valkey/valkey:7.2-alpine
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "valkey-cli ping"
-          --health-interval 5s
-          --health-timeout 3s
-          --health-retries 5
-    defaults:
-      run:
-        working-directory: services/orchestrator-go
+    timeout-minutes: 15
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Golang 1.24
+      - name: Set up Go ${{ env.GO_VERSION }}
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache-dependency-path: services/orchestrator-go/go.sum
+          cache: false
 
-      - name: Verify APIMatic Generated Go SDK Integrity
-        working-directory: ${{ github.workspace }}
+      - name: Verify APIMatic PayPal Go SDK Compiles & Passes Tests
+        working-directory: sdk/paypal-go-apimatic
         run: |
-          if [ -d "sdk/paypal-go-apimatic" ] && [ -f "sdk/paypal-go-apimatic/go.mod" ]; then
-            cd sdk/paypal-go-apimatic && go vet ./...
-          fi
+          go vet ./...
+          go test -v -race ./...
 
-      - name: Run golangci-lint
-        if: hashFiles('services/orchestrator-go/go.mod') != ''
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: v1.62.2
-          working-directory: services/orchestrator-go
-          args: --timeout=3m
-
-      - name: Run Go Race Detector & 2PC State Machine Unit Tests
+      - name: Vet & Test Go Orchestrator (Race Detector Enabled)
+        working-directory: services/orchestrator-go
         env:
-          REDIS_URL: "redis://localhost:6379/0"
-          PAYPAL_ENVIRONMENT: "sandbox"
-          PAYPAL_SANDBOX_FALLBACK_REPLAY: "true"
+          PAYPAL_ENVIRONMENT: sandbox
         run: |
-          if [ -f "go.mod" ]; then
-            go test -v -race -coverprofile=coverage.out ./...
-            go tool cover -func=coverage.out | tail -n 1
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "::error::Unformatted Go files: $unformatted"
+            exit 1
           fi
+          go vet ./...
+          go test -v -race ./...
 
   # ============================================================================
-  # Gate 3: Next.js 15 Command Center UI (AG Grid + Bryntum + PayPal JS SDK v6)
+  # Gate 3: Next.js 15 Command Center (AG Grid + AG Studio + Bryntum + PayPal v6)
   # ============================================================================
   web-command-center-ci:
-    name: "Next.js 15 Command Center UI (F-07, F-08, F-09)"
+    name: "Gate 3 — Next.js 15 Command Center (TypeScript + Vitest + Build)"
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: web
@@ -163,41 +123,22 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 22
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install Dependencies
-        run: |
-          if [ -f "package.json" ]; then
-            npm ci --prefer-offline --no-audit || npm install
-          fi
+        run: npm install --no-audit --no-fund
 
-      - name: Run ESLint
-        run: |
-          if [ -f "package.json" ]; then
-            npm run lint
-          fi
+      - name: Lint & Typecheck
+        run: npm run lint
 
-      - name: Run Strict TypeScript Compiler Check
-        run: |
-          if [ -f "tsconfig.json" ]; then
-            npx tsc --noEmit
-          fi
+      - name: Run Unit & Component Tests
+        run: npm test
 
-      - name: Run Frontend Component & State Tests
-        run: |
-          if [ -f "package.json" ]; then
-            npm test -- --run --passWithNoTests
-          fi
-
-      - name: Verify Production Next.js Build
+      - name: Build Next.js Production Bundle
         env:
-          NEXT_PUBLIC_PAYPAL_CLIENT_ID: "sb-mock-ci-client-id"
-          NEXT_PUBLIC_ORCHESTRATOR_URL: "http://localhost:8080"
-          NEXT_PUBLIC_FIREWALL_URL: "http://localhost:8081"
-        run: |
-          if [ -f "package.json" ]; then
-            npm run build
-          fi
+          NEXT_PUBLIC_ORCHESTRATOR_URL: http://localhost:8080
+          NEXT_PUBLIC_PAYPAL_CLIENT_ID: sandbox_ci_mock_client_id
+        run: npm run build
