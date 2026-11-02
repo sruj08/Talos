@@ -29,7 +29,7 @@
         ".planning/config.json",
         ".planning/graphs/graph.json"
       ],
-      "description": "Verify MIT LICENSE at repo root (Official Rules \u00a76 gate), Docker Compose for PostgreSQL 16 + Valkey/Redis, and Graphify knowledge graph in .planning/graphs/.",
+      "description": "Verify MIT LICENSE at repo root (Official Rules §6 gate), Docker Compose for PostgreSQL 16 + Valkey/Redis, and Graphify knowledge graph in .planning/graphs/.",
       "steps": [
         "Verify LICENSE file exists at repo root with standard MIT text",
         "Verify docker-compose.yml defines postgres:16-alpine and valkey/valkey:7.2-alpine with healthchecks",
@@ -47,7 +47,7 @@
       "title": "PostgreSQL 16 Schema (E-01..E-09) & Redis Idempotency Locks (E-10)",
       "category": "database",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "postgres",

@@ -4,7 +4,7 @@
   "title": "PostgreSQL 16 Schema (E-01..E-09) & Redis Idempotency Locks (E-10)",
   "category": "database",
   "priority": 2,
-  "passes": false,
+  "passes": true,
   "human_gate": null,
   "skills": [
     "postgres",
