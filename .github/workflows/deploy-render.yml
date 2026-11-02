@@ -34,10 +34,12 @@ jobs:
           print("render.yaml verified successfully:", services)
           '
 
-      - name: Validate Postman Collection JSON Schema
+      - name: Validate Postman Collection & Environment JSON Schemas
         run: |
-          test -f postman/talos.postman_collection.json
-          python3 -m json.tool postman/talos.postman_collection.json > /dev/null
+          test -f postman/Talos-Sandbox-MCP.postman_collection.json
+          test -f postman/Talos-Sandbox.postman_environment.json
+          python3 -m json.tool postman/Talos-Sandbox-MCP.postman_collection.json > /dev/null
+          python3 -m json.tool postman/Talos-Sandbox.postman_environment.json > /dev/null
 
   deploy-and-smoke-test:
     name: "Trigger Render Deploy Hook & Run Postman Newman Smoke Gate"
@@ -69,7 +71,7 @@ jobs:
           TALOS_LIVE_URL: ${{ github.event.inputs.target_base_url || vars.TALOS_LIVE_URL }}
         run: |
           npm install -g newman
-          newman run postman/talos.postman_collection.json \
+          newman run postman/Talos-Sandbox-MCP.postman_collection.json \
+            -e postman/Talos-Sandbox.postman_environment.json \
             --env-var "base_url=${TALOS_LIVE_URL}" \
-            --folder "Health & KYA Mandate" \
             --bail
