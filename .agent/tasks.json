@@ -79,7 +79,7 @@
       "title": "Rust Ed25519 KYA Mandate Signer/Verifier & RFC 9421 Signature Engine",
       "category": "security-rust",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "/gsd-spec-phase 2",
