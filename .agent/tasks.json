@@ -8,7 +8,7 @@
       "title": "Monorepo Bootstrap, MIT License Gate & Graphify Initialization",
       "category": "foundation",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "/gsd-new-project",
