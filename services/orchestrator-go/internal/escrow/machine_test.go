@@ -77,6 +77,8 @@ func TestStateTransitionGraphAndIllegalTransitions(t *testing.T) {
 		{StateTrackingVerified, StatePayPalCaptured},
 		{StateTrackingVerified, StatePayPalVoided},
 		{StateTrackingVerified, StateDisputeFiled},
+		{StatePayPalCaptured, StateDisputeFiled},
+		{StatePayPalVoided, StateDisputeFiled},
 		{StateDisputeFiled, StateDisputeEvidenceSubmitted},
 	}
 	for _, pair := range validPairs {

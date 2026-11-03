@@ -22,6 +22,7 @@ type Event struct {
 	EscrowID         string `json:"escrow_id"`
 	PreviousState    string `json:"previous_state"`
 	CurrentState     string `json:"current_state"`
+	NewState         string `json:"new_state,omitempty"`
 	PayPalOrderID    string `json:"paypal_order_id,omitempty"`
 	AgGridRowDelta   any    `json:"ag_grid_row_delta,omitempty"`
 	BryntumTaskDelta any    `json:"bryntum_task_delta,omitempty"`
@@ -76,6 +77,9 @@ func (h *Hub) Broadcast(evt Event) {
 	}
 	if evt.Timestamp == "" {
 		evt.Timestamp = time.Now().UTC().Format(time.RFC3339)
+	}
+	if evt.NewState == "" {
+		evt.NewState = evt.CurrentState
 	}
 	raw, err := json.Marshal(evt)
 	if err != nil {

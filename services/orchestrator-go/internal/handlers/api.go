@@ -43,15 +43,21 @@ type EscrowEntry struct {
 }
 
 type SLATask struct {
-	ID          string `json:"id"`
-	EscrowID    string `json:"escrow_id"`
-	Name        string `json:"name"`
-	StartDate   string `json:"start_date"`
-	EndDate     string `json:"end_date"`
-	SlaDeadline string `json:"sla_deadline"`
-	PercentDone int    `json:"percent_done"`
-	SlaStatus   string `json:"sla_status"`
-	Carrier     string `json:"carrier"`
+	ID               string `json:"id"`
+	EscrowID         string `json:"escrow_id"`
+	Name             string `json:"name"`
+	StartDate        string `json:"start_date"`
+	StartDateCamel   string `json:"startDate,omitempty"`
+	EndDate          string `json:"end_date"`
+	EndDateCamel     string `json:"endDate,omitempty"`
+	SlaDeadline      string `json:"sla_deadline"`
+	AuthExpiryDate   string `json:"authExpiryDate,omitempty"`
+	PercentDone      int    `json:"percent_done"`
+	PercentDoneCamel int    `json:"percentDone"`
+	SlaStatus        string `json:"sla_status"`
+	EscrowState      string `json:"escrowState,omitempty"`
+	Carrier          string `json:"carrier"`
+	ResourceID       string `json:"resourceId,omitempty"`
 }
 
 type Server struct {
@@ -71,10 +77,7 @@ type Server struct {
 }
 
 func NewServer(eng *escrow.Engine, ppSvc *paypal.SandboxService, ora *channel3.Oracle, krn *kernel.Inspector, hub *ws.Hub) *Server {
-	fwURL := strings.TrimRight(os.Getenv("FIREWALL_RS_INTERNAL_URL"), "/")
-	if fwURL == "" {
-		fwURL = "http://localhost:8081"
-	}
+	fwURL := strings.TrimRight(firstNonEmpty(os.Getenv("FIREWALL_RS_INTERNAL_URL"), os.Getenv("FIREWALL_URL"), "http://localhost:8081"), "/")
 	return &Server{
 		engine: eng, paypalSvc: ppSvc, oracle: ora, kernelInsp: krn, hub: hub,
 		firewallBaseURL: fwURL, httpClient: &http.Client{Timeout: 2 * time.Second},
@@ -96,6 +99,10 @@ func (s *Server) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("PATCH /api/v1/sla/timeline/{task_id}", s.handlePatchSLATimeline)
 	mux.HandleFunc("POST /api/v1/webhooks/paypal", s.handlePayPalWebhook)
 	mux.HandleFunc("GET /ws/events", s.hub.ServeWS)
+}
+
+func requestIdempKey(r *http.Request, fallback string) string {
+	return firstNonEmpty(r.Header.Get("PayPal-Request-Id"), r.Header.Get("Idempotency-Key"), fallback)
 }
 
 func (s *Server) handleChannel3Benchmark(w http.ResponseWriter, r *http.Request) {
@@ -133,36 +140,29 @@ func (s *Server) handleAttachTracking(w http.ResponseWriter, r *http.Request) {
 		writeProblem(w, http.StatusBadRequest, "TALOS_INVALID_TRACKING_REQUEST", "carrier and tracking_number are required", r.URL.Path, nil)
 		return
 	}
-	if req.Carrier == "" {
-		req.Carrier = "FEDEX"
-	}
-	if req.Status == "" {
-		req.Status = "DELIVERED"
-	}
+	req.Carrier = firstNonEmpty(req.Carrier, "FEDEX")
+	statusUpper := strings.ToUpper(firstNonEmpty(req.Status, "DELIVERED"))
 	autoCapture := req.AutoCaptureOnDelivery == nil || *req.AutoCaptureOnDelivery
-	idempKey := strings.TrimSpace(r.Header.Get("Idempotency-Key"))
-	if idempKey == "" {
-		idempKey = fmt.Sprintf("trk-%s-%s", escrowID, req.TrackingNumber)
-	}
+	idempKey := requestIdempKey(r, fmt.Sprintf("trk-%s-%s", escrowID, req.TrackingNumber))
 
-	prevState := string(rec.State)
+	prevState, trackerID := string(rec.State), fmt.Sprintf("TRK-%s-%s", escrowID, req.TrackingNumber)
 	if s.paypalSvc != nil {
-		txID := rec.PayPalCaptureID
-		if txID == "" {
-			txID = rec.PayPalAuthorizationID
-		}
-		_, _ = s.paypalSvc.AttachTracking(r.Context(), idempKey, txID, req.TrackingNumber, req.Carrier, req.Status)
+		txID := firstNonEmpty(rec.PayPalCaptureID, rec.PayPalAuthorizationID)
+		_, _ = s.paypalSvc.AttachTracking(r.Context(), idempKey, txID, req.TrackingNumber, req.Carrier, statusUpper)
 	}
-	_, _ = s.engine.AdvanceState(escrowID, escrow.StateTrackingVerified)
-	rec.Carrier, rec.TrackingNumber, rec.State = req.Carrier, req.TrackingNumber, escrow.StateTrackingVerified
+	if _, err := s.engine.AdvanceState(escrowID, escrow.StateTrackingVerified); err == nil {
+		rec.State = escrow.StateTrackingVerified
+	}
+	rec.Carrier, rec.TrackingNumber = req.Carrier, req.TrackingNumber
 
-	switch strings.ToUpper(req.Status) {
+	autoCaptured := false
+	switch statusUpper {
 	case "DELIVERED":
 		if autoCapture {
 			if capRes, err := s.engine.CaptureHold(r.Context(), escrow.CaptureRequest{
 				EscrowID: escrowID, PayPalRequestID: idempKey + "-cap", TrackingNumber: req.TrackingNumber, Carrier: req.Carrier,
 			}); err == nil {
-				rec.State, rec.PayPalCaptureID = capRes.State, capRes.PayPalCaptureID
+				rec.State, rec.PayPalCaptureID, autoCaptured = capRes.State, capRes.PayPalCaptureID, true
 			}
 		}
 		s.updateSLATaskStatus(escrowID, req.Carrier, "DELIVERED_ON_TIME", 100)
@@ -174,14 +174,14 @@ func (s *Server) handleAttachTracking(w http.ResponseWriter, r *http.Request) {
 		}
 		s.updateSLATaskStatus(escrowID, req.Carrier, "SLA_BREACHED", 100)
 	}
-
 	s.saveEscrowEntry(rec)
 	s.broadcastTransition(rec, prevState)
 	writeJSON(w, http.StatusOK, map[string]any{
-		"escrow_id": rec.ID, "state": rec.State, "escrow_state": rec.State,
-		"carrier": rec.Carrier, "tracking_number": rec.TrackingNumber,
-		"paypal_tracker_status": strings.ToUpper(req.Status), "paypal_capture_id": rec.PayPalCaptureID,
-		"captured_amount_cents": rec.AmountCents, "escrow": rec,
+		"escrow_id": rec.ID, "state": rec.State, "escrow_state": rec.State, "new_escrow_state": rec.State,
+		"carrier": rec.Carrier, "tracking_number": rec.TrackingNumber, "paypal_tracker_id": trackerID,
+		"tracking_status": statusUpper, "paypal_tracker_status": statusUpper,
+		"sla_met": statusUpper == "DELIVERED", "auto_capture_triggered": autoCaptured, "auto_captured": autoCaptured,
+		"paypal_capture_id": rec.PayPalCaptureID, "captured_amount_cents": rec.AmountCents, "escrow": rec,
 	})
 }
 
@@ -202,19 +202,10 @@ func (s *Server) handleSubmitDisputeEvidence(w http.ResponseWriter, r *http.Requ
 		KernelScreenshotURL string `json:"kernel_screenshot_url"`
 	}
 	_ = json.NewDecoder(r.Body).Decode(&req)
-	if req.PayPalDisputeID == "" {
-		req.PayPalDisputeID = "PP-D-TALOS-" + escrowID
-	}
-	if req.DisputeReason == "" {
-		req.DisputeReason = "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED"
-	}
-	if req.KernelScreenshotURL == "" {
-		req.KernelScreenshotURL = fmt.Sprintf("https://cdn.onkernel.com/talos-forensics/%s.png", escrowID)
-	}
-	idempKey := strings.TrimSpace(r.Header.Get("Idempotency-Key"))
-	if idempKey == "" {
-		idempKey = "dsp-" + escrowID
-	}
+	req.PayPalDisputeID = firstNonEmpty(req.PayPalDisputeID, "PP-D-TALOS-"+escrowID)
+	req.DisputeReason = firstNonEmpty(req.DisputeReason, "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED")
+	req.KernelScreenshotURL = firstNonEmpty(req.KernelScreenshotURL, fmt.Sprintf("https://cdn.onkernel.com/talos-forensics/%s.png", escrowID))
+	idempKey := requestIdempKey(r, "dsp-"+escrowID)
 
 	sum := sha256.Sum256([]byte(fmt.Sprintf("%s|%s|%s|%d|%s", escrowID, req.PayPalDisputeID, rec.MandateID, rec.Channel3MedianCents, req.KernelScreenshotURL)))
 	digest := hex.EncodeToString(sum[:])
@@ -225,10 +216,12 @@ func (s *Server) handleSubmitDisputeEvidence(w http.ResponseWriter, r *http.Requ
 		})
 	}
 	prevState := string(rec.State)
-	if rec.State != escrow.StateDisputeFiled {
+	if rec.State != escrow.StateDisputeFiled && rec.State != escrow.StateDisputeEvidenceSubmitted {
 		_, _ = s.engine.AdvanceState(escrowID, escrow.StateDisputeFiled)
 	}
-	_, _ = s.engine.AdvanceState(escrowID, escrow.StateDisputeEvidenceSubmitted)
+	if rec.State != escrow.StateDisputeEvidenceSubmitted {
+		_, _ = s.engine.AdvanceState(escrowID, escrow.StateDisputeEvidenceSubmitted)
+	}
 	rec.DisputeID, rec.State = req.PayPalDisputeID, escrow.StateDisputeEvidenceSubmitted
 	s.saveEscrowEntry(rec)
 	s.broadcastTransition(rec, prevState)

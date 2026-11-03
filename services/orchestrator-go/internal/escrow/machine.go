@@ -46,6 +46,8 @@ var allowedTransitions = map[State][]State{
 	StatePayPalAuthorized:    {StateSLAScheduled, StateTrackingVerified, StatePayPalCaptured, StatePayPalVoided, StateDisputeFiled},
 	StateSLAScheduled:        {StateTrackingVerified, StatePayPalCaptured, StatePayPalVoided, StateDisputeFiled},
 	StateTrackingVerified:    {StatePayPalCaptured, StatePayPalVoided, StateDisputeFiled},
+	StatePayPalCaptured:      {StateDisputeFiled},
+	StatePayPalVoided:        {StateDisputeFiled},
 	StateDisputeFiled:        {StateDisputeEvidenceSubmitted},
 }
 

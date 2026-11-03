@@ -21,8 +21,10 @@ var ErrInvalidSKURequest = errors.New("channel3: sku_query is required and liste
 
 type BenchmarkRequest struct {
 	SKUQuery            string `json:"sku_query"`
+	ProductQuery        string `json:"product_query,omitempty"`
 	MerchantAskCents    int64  `json:"merchant_ask_cents"`
 	ListedPriceCents    int64  `json:"listed_price_cents"`
+	QuotedPriceCents    int64  `json:"quoted_price_cents,omitempty"`
 	MaxAllowedSpreadBps int64  `json:"max_allowed_spread_bps"`
 	MaxSpreadBps        int64  `json:"max_spread_bps"`
 	AutoReroute         bool   `json:"auto_reroute,omitempty"`
@@ -53,41 +55,17 @@ type BenchmarkResult struct {
 }
 
 type catalogItem struct {
-	ProductID          string
-	CanonicalTitle     string
-	GTIN               string
-	Keywords           []string
-	OfferPricesCents   []int64
-	LowestPriceCents   int64
-	LowestMerchantName string
-	LowestMerchantURL  string
+	ProductID, CanonicalTitle, GTIN, LowestMerchantName, LowestMerchantURL string
+	Keywords                                                               []string
+	OfferPricesCents                                                       []int64
+	LowestPriceCents                                                       int64
 }
 
 var defaultCatalog = []catalogItem{
-	{
-		ProductID: "CH3-SHURE-SM7B-001", CanonicalTitle: "Shure SM7B Vocal Dynamic Microphone", GTIN: "00042406396981",
-		Keywords: []string{"sm7b", "shure", "vocal dynamic"}, OfferPricesCents: []int64{24900, 24900, 25500},
-		LowestPriceCents: 24900, LowestMerchantName: "Channel3 Verified Audio Direct",
-		LowestMerchantURL: "https://verified-audio.trychannel3.com/sku/shure-sm7b",
-	},
-	{
-		ProductID: "CH3-SCARLETT-2I2-4G", CanonicalTitle: "Focusrite Scarlett 2i2 4th Gen USB Audio Interface", GTIN: "00815301001485",
-		Keywords: []string{"scarlett", "focusrite", "2i2"}, OfferPricesCents: []int64{18999, 19999, 20499},
-		LowestPriceCents: 18999, LowestMerchantName: "ProStudio Verified Outlet",
-		LowestMerchantURL: "https://verified-audio.trychannel3.com/sku/scarlett-2i2-4g",
-	},
-	{
-		ProductID: "CH3-RODE-PODMIC-USB", CanonicalTitle: "Rode PodMic USB Broadcast Microphone", GTIN: "00698813010929",
-		Keywords: []string{"podmic", "rode"}, OfferPricesCents: []int64{19500, 19900, 20500},
-		LowestPriceCents: 19500, LowestMerchantName: "BroadcastGear Verified",
-		LowestMerchantURL: "https://verified-audio.trychannel3.com/sku/rode-podmic-usb",
-	},
-	{
-		ProductID: "CH3-CLOUDLIFTER-CL1", CanonicalTitle: "Cloud Microphones Cloudlifter CL-1 Mic Activator", GTIN: "00855068002003",
-		Keywords: []string{"cloudlifter", "cl-1", "cl1"}, OfferPricesCents: []int64{14900, 14900, 15500},
-		LowestPriceCents: 14900, LowestMerchantName: "Channel3 Verified Audio Direct",
-		LowestMerchantURL: "https://verified-audio.trychannel3.com/sku/cloudlifter-cl1",
-	},
+	{ProductID: "CH3-SHURE-SM7B-001", CanonicalTitle: "Shure SM7B Vocal Dynamic Microphone", GTIN: "00042406396981", Keywords: []string{"sm7b", "shure", "vocal dynamic"}, OfferPricesCents: []int64{24900, 24900, 25500}, LowestPriceCents: 24900, LowestMerchantName: "Channel3 Verified Audio Direct", LowestMerchantURL: "https://verified-audio.trychannel3.com/sku/shure-sm7b"},
+	{ProductID: "CH3-SCARLETT-2I2-4G", CanonicalTitle: "Focusrite Scarlett 2i2 4th Gen USB Audio Interface", GTIN: "00815301001485", Keywords: []string{"scarlett", "focusrite", "2i2"}, OfferPricesCents: []int64{18999, 19999, 20499}, LowestPriceCents: 18999, LowestMerchantName: "ProStudio Verified Outlet", LowestMerchantURL: "https://verified-audio.trychannel3.com/sku/scarlett-2i2-4g"},
+	{ProductID: "CH3-RODE-PODMIC-USB", CanonicalTitle: "Rode PodMic USB Broadcast Microphone", GTIN: "00698813010929", Keywords: []string{"podmic", "rode"}, OfferPricesCents: []int64{19500, 19900, 20500}, LowestPriceCents: 19500, LowestMerchantName: "BroadcastGear Verified", LowestMerchantURL: "https://verified-audio.trychannel3.com/sku/rode-podmic-usb"},
+	{ProductID: "CH3-CLOUDLIFTER-CL1", CanonicalTitle: "Cloud Microphones Cloudlifter CL-1 Mic Activator", GTIN: "00855068002003", Keywords: []string{"cloudlifter", "cl-1", "cl1"}, OfferPricesCents: []int64{14900, 14900, 15500}, LowestPriceCents: 14900, LowestMerchantName: "Channel3 Verified Audio Direct", LowestMerchantURL: "https://verified-audio.trychannel3.com/sku/cloudlifter-cl1"},
 }
 
 type Oracle struct {
@@ -97,13 +75,22 @@ type Oracle struct {
 	allowLive  bool
 }
 
+func normalizeChannel3Base(raw string) string {
+	u := strings.TrimRight(strings.TrimSpace(raw), "/")
+	u = strings.TrimSuffix(u, "/v1")
+	if u == "" {
+		return "https://api.trychannel3.com"
+	}
+	return u
+}
+
 func NewOracle() *Oracle {
-	baseURL := strings.TrimRight(os.Getenv("CHANNEL3_BASE_URL"), "/")
-	if baseURL == "" {
-		baseURL = "https://api.trychannel3.com"
+	rawBase := os.Getenv("CHANNEL3_API_BASE_URL")
+	if rawBase == "" {
+		rawBase = os.Getenv("CHANNEL3_BASE_URL")
 	}
 	return &Oracle{
-		baseURL: baseURL, apiKey: strings.TrimSpace(os.Getenv("CHANNEL3_API_KEY")),
+		baseURL: normalizeChannel3Base(rawBase), apiKey: strings.TrimSpace(os.Getenv("CHANNEL3_API_KEY")),
 		httpClient: &http.Client{Timeout: 3 * time.Second}, allowLive: os.Getenv("CHANNEL3_LIVE_CALLS") == "true",
 	}
 }
@@ -113,12 +100,11 @@ func NewOracleWithClient(baseURL, apiKey string, client *http.Client) *Oracle {
 		client = &http.Client{Timeout: 3 * time.Second}
 	}
 	return &Oracle{
-		baseURL: strings.TrimRight(baseURL, "/"), apiKey: strings.TrimSpace(apiKey),
+		baseURL: normalizeChannel3Base(baseURL), apiKey: strings.TrimSpace(apiKey),
 		httpClient: client, allowLive: true,
 	}
 }
 
-// ComputeSpreadBps calculates integer basis points spread: ((listed - median) * 10000) / median.
 func ComputeSpreadBps(listedPriceCents, medianPriceCents int64) int64 {
 	if medianPriceCents <= 0 {
 		return 0
@@ -126,7 +112,6 @@ func ComputeSpreadBps(listedPriceCents, medianPriceCents int64) int64 {
 	return ((listedPriceCents - medianPriceCents) * 10000) / medianPriceCents
 }
 
-// ComputeMedianCents computes the integer median of positive price offers in cents.
 func ComputeMedianCents(prices []int64) int64 {
 	valid := make([]int64, 0, len(prices))
 	for _, p := range prices {
@@ -147,9 +132,15 @@ func ComputeMedianCents(prices []int64) int64 {
 
 func (o *Oracle) EvaluateSKU(ctx context.Context, req BenchmarkRequest) (*BenchmarkResult, error) {
 	query := strings.TrimSpace(req.SKUQuery)
+	if query == "" {
+		query = strings.TrimSpace(req.ProductQuery)
+	}
 	askCents := req.MerchantAskCents
 	if askCents <= 0 {
 		askCents = req.ListedPriceCents
+	}
+	if askCents <= 0 {
+		askCents = req.QuotedPriceCents
 	}
 	if query == "" || askCents <= 0 {
 		return nil, ErrInvalidSKURequest
@@ -213,6 +204,7 @@ func (o *Oracle) queryLiveAPI(ctx context.Context, query string) (catalogItem, e
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("x-api-key", o.apiKey)
+	req.Header.Set("Authorization", "Bearer "+o.apiKey)
 	resp, err := o.httpClient.Do(req)
 	if err != nil {
 		return catalogItem{}, err
@@ -224,7 +216,7 @@ func (o *Oracle) queryLiveAPI(ctx context.Context, query string) (catalogItem, e
 	var payload struct {
 		Products []struct {
 			ID, Title, GTIN, Merchant, URL string
-			PriceCts                       int64 `json:"price_cents"`
+			PriceCts                       int64  `json:"price_cents"`
 			MerchantName                   string `json:"merchant_name"`
 		} `json:"products"`
 	}

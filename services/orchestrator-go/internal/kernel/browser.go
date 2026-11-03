@@ -40,13 +40,22 @@ type Inspector struct {
 	allowLive  bool
 }
 
+func normalizeKernelBase(raw string) string {
+	u := strings.TrimRight(strings.TrimSpace(raw), "/")
+	u = strings.TrimSuffix(u, "/v1")
+	if u == "" {
+		return "https://api.onkernel.com"
+	}
+	return u
+}
+
 func NewInspector() *Inspector {
-	baseURL := strings.TrimRight(os.Getenv("KERNEL_BASE_URL"), "/")
-	if baseURL == "" {
-		baseURL = "https://api.onkernel.com"
+	rawBase := os.Getenv("KERNEL_API_BASE_URL")
+	if rawBase == "" {
+		rawBase = os.Getenv("KERNEL_BASE_URL")
 	}
 	return &Inspector{
-		baseURL:    baseURL,
+		baseURL:    normalizeKernelBase(rawBase),
 		apiKey:     strings.TrimSpace(os.Getenv("KERNEL_API_KEY")),
 		httpClient: &http.Client{Timeout: 4 * time.Second},
 		allowLive:  os.Getenv("KERNEL_LIVE_CALLS") == "true",
@@ -58,7 +67,7 @@ func NewInspectorWithClient(baseURL, apiKey string, client *http.Client) *Inspec
 		client = &http.Client{Timeout: 4 * time.Second}
 	}
 	return &Inspector{
-		baseURL:    strings.TrimRight(baseURL, "/"),
+		baseURL:    normalizeKernelBase(baseURL),
 		apiKey:     strings.TrimSpace(apiKey),
 		httpClient: client,
 		allowLive:  true,

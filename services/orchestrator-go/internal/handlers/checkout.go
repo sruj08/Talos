@@ -16,22 +16,25 @@ import (
 )
 
 type CheckoutEvaluationRequest struct {
-	EscrowID        string `json:"escrow_id"`
-	MandateID       string `json:"mandate_id"`
-	AgentID         string `json:"agent_id"`
-	PrincipalID     string `json:"principal_id"`
-	MerchantURL     string `json:"merchant_url"`
-	MerchantName    string `json:"merchant_name"`
-	SKUQuery        string `json:"sku_query"`
-	AmountCents     int64  `json:"amount_cents"`
-	CurrencyCode    string `json:"currency_code"`
-	MaxAmountCents  int64  `json:"max_amount_cents"`
-	MaxSpreadBps    int64  `json:"max_spread_bps"`
-	SlaHours        int    `json:"sla_hours"`
-	AutoReroute     bool   `json:"auto_reroute"`
-	SignatureBase64 string `json:"signature_base64"`
-	PublicKeyBase64 string `json:"public_key_base64"`
-	RawHTMLOverride string `json:"raw_html_override"`
+	EscrowID         string `json:"escrow_id"`
+	MandateID        string `json:"mandate_id"`
+	AgentID          string `json:"agent_id"`
+	PrincipalID      string `json:"principal_id"`
+	MerchantURL      string `json:"merchant_url"`
+	MerchantName     string `json:"merchant_name"`
+	SKUQuery         string `json:"sku_query"`
+	ProductQuery     string `json:"product_query,omitempty"`
+	AmountCents      int64  `json:"amount_cents"`
+	QuotedPriceCents int64  `json:"quoted_price_cents,omitempty"`
+	CurrencyCode     string `json:"currency_code"`
+	Currency         string `json:"currency,omitempty"`
+	MaxAmountCents   int64  `json:"max_amount_cents"`
+	MaxSpreadBps     int64  `json:"max_spread_bps"`
+	SlaHours         int    `json:"sla_hours"`
+	AutoReroute      bool   `json:"auto_reroute"`
+	SignatureBase64  string `json:"signature_base64"`
+	PublicKeyBase64  string `json:"public_key_base64"`
+	RawHTMLOverride  string `json:"raw_html_override"`
 }
 
 type FirewallScanSummary struct {
@@ -51,58 +54,32 @@ func (s *Server) handleCheckoutEvaluate(w http.ResponseWriter, r *http.Request) 
 		writeProblem(w, http.StatusBadRequest, "TALOS_INVALID_JSON", "Invalid checkout JSON payload", r.URL.Path, nil)
 		return
 	}
-	if strings.TrimSpace(req.MerchantURL) == "" || strings.TrimSpace(req.SKUQuery) == "" || req.AmountCents <= 0 {
+	req.SKUQuery, req.CurrencyCode = firstNonEmpty(req.SKUQuery, req.ProductQuery), firstNonEmpty(req.CurrencyCode, req.Currency, "USD")
+	req.EscrowID, req.MandateID, req.AgentID = firstNonEmpty(req.EscrowID, fmt.Sprintf("ESC-%d", time.Now().UTC().UnixNano()%1000000)), firstNonEmpty(req.MandateID, "MND-DEFAULT-01"), firstNonEmpty(req.AgentID, "agent-procurement-01")
+	if req.AmountCents <= 0 {
+		req.AmountCents = req.QuotedPriceCents
+	}
+	if strings.TrimSpace(req.MerchantURL) == "" || req.SKUQuery == "" || req.AmountCents <= 0 {
 		writeProblem(w, http.StatusBadRequest, "TALOS_INVALID_CHECKOUT_REQUEST", "merchant_url, sku_query, and amount_cents > 0 are required", r.URL.Path, nil)
 		return
 	}
-	if req.EscrowID == "" {
-		req.EscrowID = fmt.Sprintf("ESC-%d", time.Now().UTC().UnixNano()%1000000)
-	}
-	if req.MandateID == "" {
-		req.MandateID = "MND-DEFAULT-01"
-	}
-	if req.AgentID == "" {
-		req.AgentID = "agent-procurement-01"
-	}
-	if req.CurrencyCode == "" {
-		req.CurrencyCode = "USD"
-	}
 	if req.MaxAmountCents <= 0 {
-		req.MaxAmountCents = 30000 // $300.00 default step-up threshold
+		req.MaxAmountCents = 30000
 	}
 	if req.MaxSpreadBps <= 0 {
 		req.MaxSpreadBps = channel3.DefaultMaxSpreadBps
 	}
 
-	var (
-		wg     sync.WaitGroup
-		fwScan *FirewallScanSummary
-		fwErr  error
-		ch3Res *channel3.BenchmarkResult
-		ch3Err error
-	)
-	wg.Add(2)
-	go func() {
-		defer wg.Done()
-		fwScan, fwErr = s.inspectDOMAndFirewall(r.Context(), req)
-	}()
-	go func() {
-		defer wg.Done()
-		ch3Res, ch3Err = s.oracle.EvaluateSKU(r.Context(), channel3.BenchmarkRequest{
-			SKUQuery: req.SKUQuery, MerchantAskCents: req.AmountCents,
-			MaxAllowedSpreadBps: req.MaxSpreadBps, AutoReroute: req.AutoReroute,
-		})
-	}()
-	wg.Wait()
-
-	if fwErr != nil || ch3Err != nil {
-		errMsg := "upstream evaluation error"
-		if fwErr != nil {
-			errMsg = fwErr.Error()
-		} else if ch3Err != nil {
-			errMsg = ch3Err.Error()
-		}
-		writeProblem(w, http.StatusBadRequest, "TALOS_EVALUATION_FAILED", errMsg, r.URL.Path, nil)
+	var fwScan *FirewallScanSummary
+	var ch3Res *channel3.BenchmarkResult
+	eg, egCtx := withErrGroup(r.Context())
+	eg.Go(func() (err error) { fwScan, err = s.inspectDOMAndFirewall(egCtx, req); return err })
+	eg.Go(func() (err error) {
+		ch3Res, err = s.oracle.EvaluateSKU(egCtx, channel3.BenchmarkRequest{SKUQuery: req.SKUQuery, MerchantAskCents: req.AmountCents, MaxAllowedSpreadBps: req.MaxSpreadBps, AutoReroute: req.AutoReroute})
+		return err
+	})
+	if err := eg.Wait(); err != nil {
+		writeProblem(w, http.StatusBadRequest, "TALOS_EVALUATION_FAILED", err.Error(), r.URL.Path, nil)
 		return
 	}
 
@@ -157,18 +134,13 @@ func (s *Server) handleCheckoutEvaluate(w http.ResponseWriter, r *http.Request) 
 		s.broadcastTransition(stepRec, string(escrow.StateInitiated))
 		writeJSON(w, http.StatusAccepted, map[string]any{
 			"step_up_required": true, "approval_id": "APR-" + req.EscrowID,
-			"reason":             fmt.Sprintf("Checkout amount %d cents exceeds mandate cap %d cents", effectiveAmount, req.MaxAmountCents),
-			"escrow":             stepRec,
-			"firewall_scan":      fwScan,
-			"channel3_benchmark": ch3Res,
+			"reason":   fmt.Sprintf("Checkout amount %d cents exceeds mandate cap %d cents", effectiveAmount, req.MaxAmountCents),
+			"escrow":   stepRec, "firewall_scan": fwScan, "channel3_benchmark": ch3Res,
 		})
 		return
 	}
 
-	idempKey := strings.TrimSpace(r.Header.Get("Idempotency-Key"))
-	if idempKey == "" {
-		idempKey = "eval-" + req.EscrowID
-	}
+	idempKey := requestIdempKey(r, "eval-"+req.EscrowID)
 	authRes, err := s.engine.AuthorizeHold(r.Context(), escrow.AuthorizeRequest{
 		EscrowID: req.EscrowID, MandateID: req.MandateID, BuyerAgentID: req.AgentID,
 		AmountCents: effectiveAmount, CurrencyCode: req.CurrencyCode, Description: req.SKUQuery, PayPalRequestID: idempKey,
@@ -187,6 +159,9 @@ func (s *Server) handleCheckoutEvaluate(w http.ResponseWriter, r *http.Request) 
 	slaTask := s.upsertSLATask(authEntry, req.SlaHours)
 	s.broadcastTransition(authEntry, string(escrow.StateInitiated))
 	writeJSON(w, http.StatusCreated, map[string]any{
+		"escrow_id": authEntry.ID, "state": authEntry.State, "amount_cents": authEntry.AmountCents,
+		"currency": authEntry.CurrencyCode, "paypal_order_id": authEntry.PayPalOrderID,
+		"paypal_auth_id": authEntry.PayPalAuthorizationID, "step_up_required": false,
 		"escrow": authEntry, "firewall_scan": fwScan, "channel3_benchmark": ch3Res, "sla_task": slaTask,
 	})
 }
@@ -198,15 +173,37 @@ func (s *Server) inspectDOMAndFirewall(ctx context.Context, req CheckoutEvaluati
 	if err != nil {
 		return nil, err
 	}
-	body, _ := json.Marshal(map[string]any{"merchant_url": req.MerchantURL, "raw_html": domRes.RawHTML})
-	if fwReq, err := http.NewRequestWithContext(ctx, http.MethodPost, s.firewallBaseURL+"/v1/dom/sanitize", bytes.NewReader(body)); err == nil {
+	body, _ := json.Marshal(map[string]any{"merchant_url": req.MerchantURL, "raw_html": domRes.RawHTML, "kernel_session_id": domRes.SessionID})
+	if fwReq, err := http.NewRequestWithContext(ctx, http.MethodPost, s.firewallBaseURL+"/v1/firewall/sanitize-dom", bytes.NewReader(body)); err == nil {
 		fwReq.Header.Set("Content-Type", "application/json")
 		if resp, err := s.httpClient.Do(fwReq); err == nil {
 			defer resp.Body.Close()
-			var liveScan FirewallScanSummary
-			if json.NewDecoder(resp.Body).Decode(&liveScan) == nil && (liveScan.Safe || liveScan.InjectionDetected) {
-				liveScan.KernelSessionID, liveScan.KernelScreenshotURL = domRes.SessionID, domRes.ScreenshotURL
-				return &liveScan, nil
+			var live struct {
+				ScanID           string   `json:"scan_id"`
+				Action           string   `json:"action"`
+				RawDOMHash       string   `json:"raw_dom_hash"`
+				SanitizedDOMHash string   `json:"sanitized_dom_hash"`
+				Safe             *bool    `json:"safe"`
+				Injection        bool     `json:"injection_detected"`
+				RiskScore        float64  `json:"risk_score"`
+				ThreatScoreBps   int64    `json:"threat_score_bps"`
+				StrippedPayloads []string `json:"stripped_payloads"`
+				MatchedPatterns  []string `json:"matched_patterns"`
+			}
+			if json.NewDecoder(resp.Body).Decode(&live) == nil && (live.ScanID != "" || live.Action != "" || live.Safe != nil || live.Injection) {
+				inj := live.Injection || strings.EqualFold(live.Action, "BLOCKED")
+				patterns, score := live.MatchedPatterns, live.ThreatScoreBps
+				if len(patterns) == 0 {
+					patterns = live.StrippedPayloads
+				}
+				if score == 0 && live.RiskScore > 0 {
+					score = int64(live.RiskScore * 10000)
+				}
+				return &FirewallScanSummary{
+					Safe: !inj, InjectionDetected: inj, ThreatScoreBps: score, StrippedVectorsCount: len(patterns),
+					MatchedPatterns: patterns, KernelSessionID: domRes.SessionID, KernelScreenshotURL: domRes.ScreenshotURL,
+					SanitizedDOMHash: firstNonEmpty(live.SanitizedDOMHash, live.RawDOMHash, domRes.DOMSHA256),
+				}, nil
 			}
 		}
 	}
@@ -222,3 +219,26 @@ func (s *Server) inspectDOMAndFirewall(ctx context.Context, req CheckoutEvaluati
 		MatchedPatterns: patterns, KernelSessionID: domRes.SessionID, KernelScreenshotURL: domRes.ScreenshotURL, SanitizedDOMHash: domRes.DOMSHA256,
 	}, nil
 }
+
+type errgroup struct {
+	cancel context.CancelFunc
+	wg     sync.WaitGroup
+	once   sync.Once
+	err    error
+}
+
+func withErrGroup(ctx context.Context) (*errgroup, context.Context) {
+	egCtx, cancel := context.WithCancel(ctx)
+	return &errgroup{cancel: cancel}, egCtx
+}
+
+func (g *errgroup) Go(fn func() error) {
+	g.wg.Add(1)
+	go func() {
+		defer g.wg.Done()
+		if err := fn(); err != nil {
+			g.once.Do(func() { g.err = err; g.cancel() })
+		}
+	}()
+}
+func (g *errgroup) Wait() error { g.wg.Wait(); g.cancel(); return g.err }
