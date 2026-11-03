@@ -188,7 +188,7 @@
       "title": "Go 2PC Escrow State Machine: PayPal Orders v2 AUTHORIZE, CAPTURE & VOID",
       "category": "escrow-go",
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "/gsd-execute-phase 3",

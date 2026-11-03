@@ -40,12 +40,12 @@ type orderV2WireAmount struct {
 }
 
 type orderV2WirePurchaseUnit struct {
-	ReferenceID string             `json:"reference_id,omitempty"`
-	CustomID    string             `json:"custom_id,omitempty"`
-	InvoiceID   string             `json:"invoice_id,omitempty"`
-	Description string             `json:"description,omitempty"`
-	Amount      orderV2WireAmount  `json:"amount"`
-	Payments    *orderV2Payments   `json:"payments,omitempty"`
+	ReferenceID string           `json:"reference_id,omitempty"`
+	CustomID    string           `json:"custom_id,omitempty"`
+	InvoiceID   string           `json:"invoice_id,omitempty"`
+	Description string           `json:"description,omitempty"`
+	Amount      orderV2WireAmount `json:"amount"`
+	Payments    *orderV2Payments `json:"payments,omitempty"`
 }
 
 type orderV2Payments struct {
@@ -99,7 +99,6 @@ func (c *Client) CreateOrder(ctx context.Context, req CreateOrderRequest) (*Orde
 	if currency == "" {
 		currency = "USD"
 	}
-
 	now := time.Now().UTC()
 	if c.FallbackMode {
 		seed := requestID + ":" + req.CustomID
@@ -119,20 +118,14 @@ func (c *Client) CreateOrder(ctx context.Context, req CreateOrderRequest) (*Orde
 
 	wireReq := orderV2WireRequest{
 		Intent: "AUTHORIZE",
-		PurchaseUnits: []orderV2WirePurchaseUnit{
-			{
-				ReferenceID: "PU-TALOS-ESCROW",
-				CustomID:    req.CustomID,
-				InvoiceID:   req.InvoiceID,
-				Description: req.Description,
-				Amount: orderV2WireAmount{
-					CurrencyCode: currency,
-					Value:        FormatCentsToDecimal(req.AmountCents),
-				},
-			},
-		},
+		PurchaseUnits: []orderV2WirePurchaseUnit{{
+			ReferenceID: "PU-TALOS-ESCROW",
+			CustomID:    req.CustomID,
+			InvoiceID:   req.InvoiceID,
+			Description: req.Description,
+			Amount:      orderV2WireAmount{CurrencyCode: currency, Value: FormatCentsToDecimal(req.AmountCents)},
+		}},
 	}
-
 	var wireResp orderV2WireResponse
 	if _, err := c.doJSON(ctx, http.MethodPost, "/v2/checkout/orders", requestID, wireReq, &wireResp); err != nil {
 		return nil, err
@@ -163,15 +156,13 @@ func (c *Client) CreateOrder(ctx context.Context, req CreateOrderRequest) (*Orde
 
 // AuthorizeOrder invokes POST /v2/checkout/orders/{id}/authorize to place a 2PC escrow hold.
 func (c *Client) AuthorizeOrder(ctx context.Context, orderID, paypalRequestID string) (*OrderAuthorizationResponse, error) {
-	orderID = strings.TrimSpace(orderID)
+	orderID, requestID := strings.TrimSpace(orderID), strings.TrimSpace(paypalRequestID)
 	if orderID == "" {
 		return nil, ErrEmptyIdentifier
 	}
-	requestID := strings.TrimSpace(paypalRequestID)
 	if requestID == "" {
 		return nil, ErrMissingRequestID
 	}
-
 	now := time.Now().UTC()
 	if c.FallbackMode {
 		return &OrderAuthorizationResponse{
@@ -186,12 +177,10 @@ func (c *Client) AuthorizeOrder(ctx context.Context, orderID, paypalRequestID st
 		}, nil
 	}
 
-	path := fmt.Sprintf("/v2/checkout/orders/%s/authorize", orderID)
 	var wireResp orderV2WireResponse
-	if _, err := c.doJSON(ctx, http.MethodPost, path, requestID, map[string]any{}, &wireResp); err != nil {
+	if _, err := c.doJSON(ctx, http.MethodPost, fmt.Sprintf("/v2/checkout/orders/%s/authorize", orderID), requestID, map[string]any{}, &wireResp); err != nil {
 		return nil, err
 	}
-
 	out := &OrderAuthorizationResponse{
 		OrderID:      wireResp.ID,
 		Status:       wireResp.Status,
@@ -212,12 +201,6 @@ func (c *Client) AuthorizeOrder(ctx context.Context, orderID, paypalRequestID st
 			if auth.Status != "" {
 				out.Status = auth.Status
 			}
-			if auth.CreateTime != "" {
-				out.CreatedAt = auth.CreateTime
-			}
-			if auth.ExpirationTime != "" {
-				out.ExpiresAt = auth.ExpirationTime
-			}
 		}
 	}
 	return out, nil
@@ -229,12 +212,11 @@ func (c *Client) CreateAndAuthorizeOrder(ctx context.Context, req CreateOrderReq
 	if err != nil {
 		return nil, err
 	}
-	authReqID := req.PayPalRequestID + "-auth"
 	if c.FallbackMode {
 		created.Status = "AUTHORIZED"
 		return created, nil
 	}
-	authorized, err := c.AuthorizeOrder(ctx, created.OrderID, authReqID)
+	authorized, err := c.AuthorizeOrder(ctx, created.OrderID, req.PayPalRequestID+"-auth")
 	if err != nil {
 		var apiErr *APIError
 		if errors.As(err, &apiErr) && apiErr.StatusCode == http.StatusUnprocessableEntity {

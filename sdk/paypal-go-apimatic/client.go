@@ -17,19 +17,14 @@ import (
 )
 
 const (
-	// DefaultSandboxBaseURL is the canonical PayPal Sandbox REST API endpoint.
 	DefaultSandboxBaseURL = "https://api-m.sandbox.paypal.com"
-	// UserAgent identifies APIMatic-generated PayPal Sandbox SDK requests.
-	UserAgent = "APIMatic-Talos-PayPal-Go-SDK/1.0"
+	UserAgent             = "APIMatic-Talos-PayPal-Go-SDK/1.0"
 )
 
 var (
-	// ErrMissingRequestID is returned when a mutating call omits PayPal-Request-Id.
 	ErrMissingRequestID = errors.New("paypal-go-apimatic: PayPal-Request-Id header is required")
-	// ErrInvalidIntent is returned when an Order v2 request does not use AUTHORIZE intent.
-	ErrInvalidIntent = errors.New("paypal-go-apimatic: order intent must be AUTHORIZE for 2PC escrow")
-	// ErrEmptyIdentifier is returned when a required order, authorization, or dispute ID is blank.
-	ErrEmptyIdentifier = errors.New("paypal-go-apimatic: resource identifier must not be empty")
+	ErrInvalidIntent    = errors.New("paypal-go-apimatic: order intent must be AUTHORIZE for 2PC escrow")
+	ErrEmptyIdentifier  = errors.New("paypal-go-apimatic: resource identifier must not be empty")
 )
 
 // APIError represents a structured error response from PayPal REST APIs.
@@ -53,8 +48,7 @@ type oauthTokenResponse struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-// Client is the APIMatic-generated Go SDK client for PayPal Sandbox APIs
-// (Orders v2, Payments v2, Shipping Tracking v1, and Customer Disputes v1).
+// Client is the APIMatic-generated Go SDK client for PayPal Sandbox APIs.
 type Client struct {
 	BaseURL      string
 	ClientID     string
@@ -97,7 +91,6 @@ func (c *Client) GetAccessToken(ctx context.Context) (string, error) {
 	if c.FallbackMode {
 		return "sandbox-fallback-bearer-token", nil
 	}
-
 	c.mu.RLock()
 	if c.accessToken != "" && time.Now().Add(60*time.Second).Before(c.tokenExpiry) {
 		tok := c.accessToken
@@ -137,11 +130,8 @@ func (c *Client) GetAccessToken(ctx context.Context) (string, error) {
 	}
 
 	var parsed oauthTokenResponse
-	if err := json.Unmarshal(raw, &parsed); err != nil {
-		return "", fmt.Errorf("decode oauth2 response: %w", err)
-	}
-	if parsed.AccessToken == "" {
-		return "", errors.New("paypal-go-apimatic: empty access_token in oauth2 response")
+	if err := json.Unmarshal(raw, &parsed); err != nil || parsed.AccessToken == "" {
+		return "", errors.New("paypal-go-apimatic: invalid oauth2 token response")
 	}
 	ttl := parsed.ExpiresIn
 	if ttl <= 0 {
@@ -156,16 +146,13 @@ func (c *Client) doJSON(ctx context.Context, method, path, paypalRequestID strin
 	if (method == http.MethodPost || method == http.MethodPatch || method == http.MethodPut) && strings.TrimSpace(paypalRequestID) == "" {
 		return 0, ErrMissingRequestID
 	}
-
 	var payloadBytes []byte
 	if reqBody != nil {
 		var err error
-		payloadBytes, err = json.Marshal(reqBody)
-		if err != nil {
+		if payloadBytes, err = json.Marshal(reqBody); err != nil {
 			return 0, fmt.Errorf("marshal request payload: %w", err)
 		}
 	}
-
 	maxAttempts := c.MaxRetries + 1
 	if maxAttempts < 1 {
 		maxAttempts = 1
@@ -176,13 +163,11 @@ func (c *Client) doJSON(ctx context.Context, method, path, paypalRequestID strin
 		if err != nil {
 			return 0, err
 		}
-
 		var bodyReader io.Reader
 		if payloadBytes != nil {
 			bodyReader = bytes.NewReader(payloadBytes)
 		}
-		endpoint := strings.TrimRight(c.BaseURL, "/") + path
-		req, err := http.NewRequestWithContext(ctx, method, endpoint, bodyReader)
+		req, err := http.NewRequestWithContext(ctx, method, strings.TrimRight(c.BaseURL, "/")+path, bodyReader)
 		if err != nil {
 			return 0, fmt.Errorf("create request %s %s: %w", method, path, err)
 		}
@@ -204,14 +189,12 @@ func (c *Client) doJSON(ctx context.Context, method, path, paypalRequestID strin
 		if readErr != nil {
 			return resp.StatusCode, fmt.Errorf("read response %s %s: %w", method, path, readErr)
 		}
-
 		if (resp.StatusCode == http.StatusBadGateway || resp.StatusCode == http.StatusServiceUnavailable || resp.StatusCode == http.StatusGatewayTimeout) && attempt+1 < maxAttempts {
 			if err := sleepWithContext(ctx, c.backoffDuration(attempt)); err != nil {
 				return resp.StatusCode, err
 			}
 			continue
 		}
-
 		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 			return resp.StatusCode, parseAPIError(resp.StatusCode, raw)
 		}

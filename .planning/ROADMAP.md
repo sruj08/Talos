@@ -4,7 +4,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | **Phase 1** | Foundation, License Gate, Monorepo Skeleton & DB Schema (MVP) | `mvp` | `TASK-01`, `TASK-02` | Complete |
 | **Phase 2** | Rust Zero-Trust KYA & Prompt-Injection Firewall Kernel (MVP) | `mvp` | `TASK-03`, `TASK-04` | Complete |
-| **Phase 3** | APIMatic Go SDK & PayPal Sandbox 2PC Escrow Engine (MVP) | `mvp` | `TASK-05`, `TASK-06` | Ready (Gate #1) |
+| **Phase 3** | APIMatic Go SDK & PayPal Sandbox 2PC Escrow Engine (MVP) | `mvp` | `TASK-05`, `TASK-06` | Complete |
 | **Phase 4** | Channel3 Fair-Price Oracle, KERNEL, Tracking & Disputes (MVP) | `mvp` | `TASK-07`, `TASK-08` | Ready (Gate #2) |
 | **Phase 5** | Next.js 15 Command Center & AG Grid / AG Studio Blotter (MVP) | `mvp` | `TASK-09`, `TASK-10` | Ready (Gate #3) |
 | **Phase 6** | Bryntum Scheduler Pro 2-Way SLA Board & PayPal JS SDK v6 (MVP) | `mvp` | `TASK-11`, `TASK-12` | Ready (Gate #4) |
@@ -36,8 +36,11 @@
 ### Phase 3: APIMatic Go SDK & PayPal Sandbox 2PC Escrow Engine
 **Goal**: Implement APIMatic Go SDK (`sdk/paypal-go-apimatic`) & PayPal Sandbox OAuth2 (`TASK-05`) and Go 2PC Escrow State Machine (`AUTHORIZE`, `CAPTURE`, `VOID`) (`TASK-06`).
 **Depends on**: Phase 2
-**Requirements**: `F-04`, `F-10`, `API-06`, `API-07`, `API-08`, `API-09`
+**Requirements**: `F-04`, `F-10`, `API-06`, `API-07`, `API-08`, `API-09`, `API-10`
 **Mode**: mvp
+**Plans**: 2 plans
+- [x] `03-01-PLAN.md` — APIMatic Go SDK Generation (`sdk/paypal-go-apimatic`) & PayPal Sandbox OAuth2 (`TASK-05`)
+- [x] `03-02-PLAN.md` — Go 2PC Escrow State Machine (`AUTHORIZE`, `CAPTURE`, `VOID`) & Idempotency Gate (`TASK-06`)
 
 ### Phase 4: Channel3 Fair-Price Oracle, KERNEL, Tracking & Disputes
 **Goal**: Implement Go `errgroup` Channel3 Fair-Price Oracle & KERNEL Browser Inspector (`TASK-07`) and Shipment Tracking v1, Disputes v1 & WebSocket Hub (`TASK-08`).
