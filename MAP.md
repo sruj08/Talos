@@ -161,6 +161,13 @@ flowchart TD
 - [`08-POSTMAN_MCP_AND_COLLECTION_GUIDE.md`](file:///g:/PAYPAL/docs/09-integrations-and-guides/08-POSTMAN_MCP_AND_COLLECTION_GUIDE.md)
 - [`09-KERNEL_ASTROPODS_ZAPIER_GUIDE.md`](file:///g:/PAYPAL/docs/09-integrations-and-guides/09-KERNEL_ASTROPODS_ZAPIER_GUIDE.md)
 
+### Group 12 — `web/` Next.js 15 Command Center (Phase 5 · `TASK-09` / `TASK-10`)
+- Shell: [`web/src/components/CommandCenter.tsx`](web/src/components/CommandCenter.tsx), [`KpiHeader.tsx`](web/src/components/KpiHeader.tsx), [`StatusBadge.tsx`](web/src/components/StatusBadge.tsx), [`web/src/app/globals.css`](web/src/app/globals.css) (design tokens).
+- KYA Mandate Studio (`API-01`): [`MandateStudio.tsx`](web/src/components/MandateStudio.tsx) + WebCrypto fallback [`lib/mandateCrypto.ts`](web/src/lib/mandateCrypto.ts).
+- Live store (`API-12` / `API-15`): [`hooks/useEscrowStream.ts`](web/src/hooks/useEscrowStream.ts), [`lib/escrowStore.ts`](web/src/lib/escrowStore.ts), Sandbox Replay [`lib/escrowSim.ts`](web/src/lib/escrowSim.ts), HTTP client [`lib/api.ts`](web/src/lib/api.ts), wire types [`lib/types.ts`](web/src/lib/types.ts).
+- AG Grid blotter: [`AgStudioBlotter.tsx`](web/src/components/AgStudioBlotter.tsx), [`ForensicDetailPanel.tsx`](web/src/components/ForensicDetailPanel.tsx), [`blotter/columns.tsx`](web/src/components/blotter/columns.tsx), [`blotter/gridSetup.ts`](web/src/components/blotter/gridSetup.ts), AG Studio Copilot [`lib/copilot.ts`](web/src/lib/copilot.ts) + [`blotter/CopilotBar.tsx`](web/src/components/blotter/CopilotBar.tsx).
+- Tests: `web/src/**/*.test.ts(x)` via [`web/vitest.config.mts`](web/vitest.config.mts).
+
 ### Graphify, GSD & Ralph Loop Automation Directories (`.planning/` & `.agent/`)
 - [`.planning/graphs/graph.json`](file:///g:/PAYPAL/.planning/graphs/graph.json), [`.planning/graphs/GRAPH_REPORT.md`](file:///g:/PAYPAL/.planning/graphs/GRAPH_REPORT.md), [`.planning/graphs/CODEBASE_INDEX.md`](file:///g:/PAYPAL/.planning/graphs/CODEBASE_INDEX.md).
 - [`.planning/config.json`](file:///g:/PAYPAL/.planning/config.json), [`.planning/PROJECT.md`](file:///g:/PAYPAL/.planning/PROJECT.md), [`.planning/ROADMAP.md`](file:///g:/PAYPAL/.planning/ROADMAP.md), [`.planning/STATE.md`](file:///g:/PAYPAL/.planning/STATE.md).

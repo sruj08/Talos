@@ -4,7 +4,7 @@
   "title": "AgStudioBlotter.tsx: AG Grid Enterprise Live Escrow Blotter, Master-Detail Forensics & AG Studio Copilot",
   "category": "sponsor-ag-grid",
   "priority": 10,
-  "passes": false,
+  "passes": true,
   "human_gate": null,
   "skills": [
     "/gsd-execute-phase 5",

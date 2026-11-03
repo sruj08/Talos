@@ -6,7 +6,7 @@
 | **Phase 2** | Rust Zero-Trust KYA & Prompt-Injection Firewall Kernel (MVP) | `mvp` | `TASK-03`, `TASK-04` | Complete |
 | **Phase 3** | APIMatic Go SDK & PayPal Sandbox 2PC Escrow Engine (MVP) | `mvp` | `TASK-05`, `TASK-06` | Complete |
 | **Phase 4** | Channel3 Fair-Price Oracle, KERNEL, Tracking & Disputes (MVP) | `mvp` | `TASK-07`, `TASK-08` | Complete |
-| **Phase 5** | Next.js 15 Command Center & AG Grid / AG Studio Blotter (MVP) | `mvp` | `TASK-09`, `TASK-10` | Ready (Gate #3) |
+| **Phase 5** | Next.js 15 Command Center & AG Grid / AG Studio Blotter (MVP) | `mvp` | `TASK-09`, `TASK-10` | Complete |
 | **Phase 6** | Bryntum Scheduler Pro 2-Way SLA Board & PayPal JS SDK v6 (MVP) | `mvp` | `TASK-11`, `TASK-12` | Ready (Gate #4) |
 | **Phase 7** | Elastic OpenTelemetry APM, Postman Collection & E2E Tests | `standard` | `TASK-13`, `TASK-14` | Ready (Gate #5) |
 | **Phase 8** | Render Native Polyglot Deployment (`render.yaml`) & Demo Polish | `mvp` | `TASK-15`, `TASK-16` | Ready (Gates #6-#7) |
@@ -56,6 +56,9 @@
 **Depends on**: Phase 4
 **Requirements**: `F-01`, `F-07`, `M-03`
 **Mode**: mvp
+**Plans**: 2 plans
+- [x] `05-01-PLAN.md` — Next.js 15 Command Center Shell, KYA Mandate Studio & Live WebSocket Store (`TASK-09`)
+- [x] `05-02-PLAN.md` — AG Grid Enterprise Live Escrow Blotter, Master-Detail Forensics & AG Studio Copilot (`TASK-10`)
 
 ### Phase 6: Bryntum Scheduler Pro 2-Way SLA Board & PayPal JS SDK v6
 **Goal**: Build `BryntumSlaBoard.tsx` 2-Way Payment SLA Timeline (`TASK-11`) and `PayPalStepUpModal.tsx`, `PoisonedStoreSim.tsx` & `@paypal/agent-toolkit` MCP Bridge (`TASK-12`).
