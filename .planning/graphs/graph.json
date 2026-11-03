@@ -1591,6 +1591,30 @@
       "bytes": 540
     },
     {
+      "id": "services/orchestrator-go/internal/handlers/api.go",
+      "label": "api.go",
+      "path": "services/orchestrator-go/internal/handlers/api.go",
+      "type": "code",
+      "community": "C-02",
+      "bytes": 7150
+    },
+    {
+      "id": "services/orchestrator-go/internal/handlers/checkout.go",
+      "label": "checkout.go",
+      "path": "services/orchestrator-go/internal/handlers/checkout.go",
+      "type": "code",
+      "community": "C-02",
+      "bytes": 6980
+    },
+    {
+      "id": "services/orchestrator-go/internal/handlers/sla_blotter.go",
+      "label": "sla_blotter.go",
+      "path": "services/orchestrator-go/internal/handlers/sla_blotter.go",
+      "type": "code",
+      "community": "C-02",
+      "bytes": 7580
+    },
+    {
       "id": "web/src/hooks/useEscrowStream.ts",
       "label": "useEscrowStream.ts",
       "path": "web/src/hooks/useEscrowStream.ts",
@@ -1664,6 +1688,26 @@
       "source": "services/orchestrator-go/cmd/server/main.go",
       "target": "services/orchestrator-go/internal/escrow/machine.go",
       "relation": "executes_2pc_state_machine_F04"
+    },
+    {
+      "source": "services/orchestrator-go/cmd/server/main.go",
+      "target": "services/orchestrator-go/internal/handlers/api.go",
+      "relation": "mounts_unified_api05_api15_router"
+    },
+    {
+      "source": "services/orchestrator-go/internal/handlers/checkout.go",
+      "target": "services/orchestrator-go/internal/channel3/oracle.go",
+      "relation": "parallel_evaluates_channel3_spread_bps_API06"
+    },
+    {
+      "source": "services/orchestrator-go/internal/handlers/checkout.go",
+      "target": "services/orchestrator-go/internal/kernel/browser.go",
+      "relation": "parallel_extracts_kernel_dom_F11"
+    },
+    {
+      "source": "services/orchestrator-go/internal/handlers/sla_blotter.go",
+      "target": "services/orchestrator-go/internal/ws/hub.go",
+      "relation": "broadcasts_escrow_state_transition_API15"
     },
     {
       "source": "services/orchestrator-go/internal/escrow/machine.go",

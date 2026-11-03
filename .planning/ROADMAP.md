@@ -5,7 +5,7 @@
 | **Phase 1** | Foundation, License Gate, Monorepo Skeleton & DB Schema (MVP) | `mvp` | `TASK-01`, `TASK-02` | Complete |
 | **Phase 2** | Rust Zero-Trust KYA & Prompt-Injection Firewall Kernel (MVP) | `mvp` | `TASK-03`, `TASK-04` | Complete |
 | **Phase 3** | APIMatic Go SDK & PayPal Sandbox 2PC Escrow Engine (MVP) | `mvp` | `TASK-05`, `TASK-06` | Complete |
-| **Phase 4** | Channel3 Fair-Price Oracle, KERNEL, Tracking & Disputes (MVP) | `mvp` | `TASK-07`, `TASK-08` | Ready (Gate #2) |
+| **Phase 4** | Channel3 Fair-Price Oracle, KERNEL, Tracking & Disputes (MVP) | `mvp` | `TASK-07`, `TASK-08` | Complete |
 | **Phase 5** | Next.js 15 Command Center & AG Grid / AG Studio Blotter (MVP) | `mvp` | `TASK-09`, `TASK-10` | Ready (Gate #3) |
 | **Phase 6** | Bryntum Scheduler Pro 2-Way SLA Board & PayPal JS SDK v6 (MVP) | `mvp` | `TASK-11`, `TASK-12` | Ready (Gate #4) |
 | **Phase 7** | Elastic OpenTelemetry APM, Postman Collection & E2E Tests | `standard` | `TASK-13`, `TASK-14` | Ready (Gate #5) |
@@ -47,6 +47,9 @@
 **Depends on**: Phase 3
 **Requirements**: `F-05`, `F-06`, `F-11`, `API-11`, `API-12`, `API-13`, `API-15`, `API-16`
 **Mode**: mvp
+**Plans**: 2 plans
+- [x] `04-01-PLAN.md` — Channel3 Fair-Market Price Oracle (`API-06`, `F-04`) & KERNEL Disposable Cloud Browser Inspector (`F-11`) (`TASK-07`)
+- [x] `04-02-PLAN.md` — Unified Protected Checkout (`API-05`), Shipment Tracking v1 (`API-08`), Disputes v1 (`API-11`) & RFC 6455 WebSocket Hub (`API-15`) (`TASK-08`)
 
 ### Phase 5: Next.js 15 Command Center & AG Grid / AG Studio Blotter
 **Goal**: Build Next.js 15 Dark-Mode Command Shell & KYA Mandate Studio (`TASK-09`) and `AgStudioBlotter.tsx` with Master-Detail Forensics & AG Studio Copilot (`TASK-10`).

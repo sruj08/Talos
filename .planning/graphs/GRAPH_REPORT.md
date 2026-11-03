@@ -1,8 +1,8 @@
 # GSD-Graphify Knowledge Graph Report — TALOS
 
-- **Generated At**: `2026-11-02T13:29:00+05:30`
-- **Total Indexed Nodes**: `188` files & canonical artifacts
-- **Total Architectural Edges**: `31` primary cross-module contracts
+- **Generated At**: `2026-11-03T18:20:00+05:30`
+- **Total Indexed Nodes**: `194` files & canonical artifacts
+- **Total Architectural Edges**: `37` primary cross-module contracts
 - **Leiden Communities**: `8` (`C-01`..`C-08`)
 
 ---
@@ -27,7 +27,7 @@ When an AI coding agent or developer starts any task, inspect the relevant God N
 | Community ID | Cluster Name | Primary Directory Scope | Key Files |
 | :--- | :--- | :--- | :--- |
 | **`C-01`** | **Rust Security Data Plane** | `services/firewall-rs/`, `tests/redteam/`, `docs/04-ai/` | `mandate.rs`, `sanitizer.rs`, `mcp_server.rs`, `webhook_verify.rs`, `MODELS.md`, `PROMPTS.md` |
-| **`C-02`** | **Go 2PC Control Plane & APIMatic SDK** | `services/orchestrator-go/`, `sdk/paypal-go-apimatic/`, `postman/` | `machine.go`, `oracle.go`, `orders_v2.go`, `payments_v2.go`, `tracking_v1.go`, `disputes_v1.go` |
+| **`C-02`** | **Go 2PC Control Plane & APIMatic SDK** | `services/orchestrator-go/`, `sdk/paypal-go-apimatic/`, `postman/` | `machine.go`, `oracle.go`, `browser.go`, `hub.go`, `api.go`, `checkout.go`, `sla_blotter.go`, `orders_v2.go`, `payments_v2.go`, `tracking_v1.go`, `disputes_v1.go` |
 | **`C-03`** | **Next.js 15 FinOps Command Center** | `web/` | `AgStudioBlotter.tsx`, `BryntumSlaBoard.tsx`, `PayPalStepUpModal.tsx`, `PoisonedStoreSim.tsx`, `ForensicDetailPanel.tsx` |
 | **`C-04`** | **Ledger Schemas & API Contracts** | `api/`, `services/orchestrator-go/migrations/`, `docs/03-engineering/` | `openapi.yaml`, `0001_init_schema.up.sql`, `DATA_MODEL.md`, `API_SPEC.md` |
 | **`C-05`** | **Sponsor & Sandbox Integration Guides** | `docs/09-integrations-and-guides/` | `00-TRACKS_AND_SUBMISSION_STRATEGY.md` .. `09-KERNEL_ASTROPODS_ZAPIER_GUIDE.md` |
