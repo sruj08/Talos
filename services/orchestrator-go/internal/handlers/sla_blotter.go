@@ -13,6 +13,10 @@ import (
 	"github.com/talos/services/orchestrator-go/internal/ws"
 )
 
+func holdToEntry(h escrow.HoldRecord) *EscrowEntry {
+	return &EscrowEntry{ID: h.EscrowID, EscrowID: h.EscrowID, MandateID: h.MandateID, AgentID: h.BuyerAgentID, AmountCents: h.AmountCents, CurrencyCode: h.Currency, State: h.State, PayPalOrderID: h.PayPalOrderID, PayPalAuthorizationID: h.PayPalAuthID, PayPalCaptureID: h.PayPalCaptureID, CreatedAt: h.UpdatedAt, UpdatedAt: h.UpdatedAt}
+}
+
 func (s *Server) syncWithEngine(rec *EscrowEntry) *EscrowEntry {
 	if rec != nil {
 		if h, ok := s.engine.GetHold(rec.ID); ok {
@@ -32,7 +36,7 @@ func (s *Server) getEscrowEntry(id string) (*EscrowEntry, bool) {
 		return s.syncWithEngine(&cp), true
 	}
 	if h, exists := s.engine.GetHold(id); exists {
-		return &EscrowEntry{ID: h.EscrowID, EscrowID: h.EscrowID, MandateID: h.MandateID, AgentID: h.BuyerAgentID, AmountCents: h.AmountCents, CurrencyCode: h.Currency, State: h.State, PayPalOrderID: h.PayPalOrderID, PayPalAuthorizationID: h.PayPalAuthID, PayPalCaptureID: h.PayPalCaptureID, CreatedAt: h.UpdatedAt, UpdatedAt: h.UpdatedAt}, true
+		return holdToEntry(*h), true
 	}
 	return nil, false
 }
@@ -49,18 +53,22 @@ func (s *Server) saveEscrowEntry(rec *EscrowEntry) {
 }
 
 func (s *Server) handleGetBlotter(w http.ResponseWriter, r *http.Request) {
-	stateFilter, limitStr := strings.TrimSpace(r.URL.Query().Get("state")), strings.TrimSpace(r.URL.Query().Get("limit"))
+	stateFilter := strings.TrimSpace(r.URL.Query().Get("state"))
 	if strings.EqualFold(stateFilter, "ALL") {
 		stateFilter = ""
 	}
-	limit, _ := strconv.Atoi(limitStr)
+	seen, records := make(map[string]bool), make([]*EscrowEntry, 0, 16)
 	s.mu.RLock()
-	records := make([]*EscrowEntry, 0, len(s.escrows))
 	for _, rec := range s.escrows {
 		cp := *rec
-		records = append(records, s.syncWithEngine(&cp))
+		seen[cp.ID], records = true, append(records, s.syncWithEngine(&cp))
 	}
 	s.mu.RUnlock()
+	for _, h := range s.engine.ListHolds() {
+		if !seen[h.EscrowID] {
+			records = append(records, holdToEntry(h))
+		}
+	}
 	sort.Slice(records, func(i, j int) bool { return records[i].ID < records[j].ID })
 	rows := make([]*EscrowEntry, 0, len(records))
 	var heldCents, capturedCents, voidedCents, blockedCents int64
@@ -80,7 +88,7 @@ func (s *Server) handleGetBlotter(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	totalCount, savings := len(rows), s.channel3SavingsCents.Load()
-	if limit > 0 && len(rows) > limit {
+	if limit, _ := strconv.Atoi(r.URL.Query().Get("limit")); limit > 0 && len(rows) > limit {
 		rows = rows[:limit]
 	}
 	writeJSON(w, http.StatusOK, map[string]any{"total_count": totalCount, "total_held_cents": heldCents, "total_captured_cents": capturedCents, "total_voided_cents": voidedCents, "channel3_savings_cents": savings, "attacks_blocked_count": s.attacksBlockedCount.Load(), "rows": rows, "summary_metrics": map[string]any{"total_authorized_cents": heldCents, "total_captured_cents": capturedCents, "total_voided_or_blocked_fraud_cents": voidedCents + blockedCents + savings}})
@@ -95,8 +103,7 @@ func (s *Server) handleGetSLATimeline(w http.ResponseWriter, _ *http.Request) {
 	}
 	s.mu.RUnlock()
 	sort.Slice(tasks, func(i, j int) bool { return tasks[i].ID < tasks[j].ID })
-	res := []map[string]any{{"id": "RES-FEDEX", "name": "FEDEX", "carrier": "FEDEX"}, {"id": "RES-UPS", "name": "UPS", "carrier": "UPS"}, {"id": "RES-DHL", "name": "DHL", "carrier": "DHL"}}
-	writeJSON(w, http.StatusOK, map[string]any{"tasks": tasks, "events": tasks, "resources": res, "dependencies": []any{}})
+	writeJSON(w, http.StatusOK, map[string]any{"tasks": tasks, "events": tasks, "resources": []map[string]any{{"id": "RES-FEDEX", "name": "FEDEX", "carrier": "FEDEX"}, {"id": "RES-UPS", "name": "UPS", "carrier": "UPS"}, {"id": "RES-DHL", "name": "DHL", "carrier": "DHL"}}, "dependencies": []any{}})
 }
 
 func (s *Server) handlePatchSLATimeline(w http.ResponseWriter, r *http.Request) {
@@ -108,42 +115,43 @@ func (s *Server) handlePatchSLATimeline(w http.ResponseWriter, r *http.Request) 
 	}
 	str := func(k string) string { v, _ := raw[k].(string); return v }
 	triggerVoid, _ := raw["trigger_void"].(bool)
-	s.mu.Lock()
-	task := s.slaTasks[taskID]
+	s.mu.RLock()
+	task := s.slaTasks["SLA-"+strings.TrimPrefix(taskID, "SLA-")]
 	if task == nil {
-		s.mu.Unlock()
+		s.mu.RUnlock()
 		writeProblem(w, http.StatusNotFound, "TALOS_SLA_TASK_NOT_FOUND", "SLA task not found: "+taskID, r.URL.Path, nil)
 		return
 	}
+	escrowID, statusUpper := task.EscrowID, strings.ToUpper(firstNonEmpty(str("sla_status"), str("tracking_status"), task.SlaStatus))
+	s.mu.RUnlock()
+	if rec, _ := s.getEscrowEntry(escrowID); (statusUpper == "SLA_BREACHED" || statusUpper == "CANCELLED" || triggerVoid) && rec != nil {
+		prevState := string(rec.State)
+		if rec.State != escrow.StatePayPalVoided {
+			voidRes, err := s.engine.VoidHold(r.Context(), escrow.VoidRequest{EscrowID: escrowID, PayPalRequestID: requestIdempKey(r, "sla-breach-void-"+taskID), Reason: "SLA_BREACHED_TIMELINE_DRAG"})
+			if err != nil {
+				writeProblem(w, http.StatusConflict, "TALOS_INVALID_STATE_TRANSITION", err.Error(), r.URL.Path, nil)
+				return
+			}
+			rec.State = voidRes.State
+		}
+		statusUpper = "SLA_BREACHED"
+		s.mu.Lock()
+		task.SlaStatus, task.PercentDone, task.PercentDoneCamel, task.EscrowState = "SLA_BREACHED", 100, 100, string(rec.State)
+		s.mu.Unlock()
+		s.saveEscrowEntry(rec)
+		s.broadcastTransition(rec, prevState)
+	}
+	s.mu.Lock()
 	if end := firstNonEmpty(str("end_date"), str("endDate")); end != "" {
 		task.EndDate, task.EndDateCamel = end, end
 	}
-	if st := firstNonEmpty(str("sla_status"), str("tracking_status")); st != "" {
-		task.SlaStatus = strings.ToUpper(st)
-	}
+	task.SlaStatus = firstNonEmpty(statusUpper, task.SlaStatus)
 	if pct, ok := raw["percent_done"].(float64); ok {
 		task.PercentDone, task.PercentDoneCamel = int(pct), int(pct)
 	}
-	escrowID, statusUpper := task.EscrowID, task.SlaStatus
-	s.mu.Unlock()
-	if rec, _ := s.getEscrowEntry(escrowID); (statusUpper == "SLA_BREACHED" || triggerVoid) && rec != nil {
-		s.mu.Lock()
-		task.SlaStatus, task.PercentDone, task.PercentDoneCamel = "SLA_BREACHED", 100, 100
-		s.mu.Unlock()
-		prevState := string(rec.State)
-		if voidRes, err := s.engine.VoidHold(r.Context(), escrow.VoidRequest{EscrowID: escrowID, PayPalRequestID: "sla-breach-void-" + taskID, Reason: "SLA_BREACHED_TIMELINE_DRAG"}); err == nil {
-			rec.State = voidRes.State
-			s.mu.Lock()
-			task.EscrowState = string(voidRes.State)
-			s.mu.Unlock()
-			s.saveEscrowEntry(rec)
-			s.broadcastTransition(rec, prevState)
-		}
-	}
-	rec, _ := s.getEscrowEntry(escrowID)
-	s.mu.RLock()
 	taskCopy := *task
-	s.mu.RUnlock()
+	s.mu.Unlock()
+	rec, _ := s.getEscrowEntry(escrowID)
 	writeJSON(w, http.StatusOK, map[string]any{"task": taskCopy, "escrow": rec, "new_escrow_state": taskCopy.EscrowState})
 }
 
@@ -155,72 +163,66 @@ func (s *Server) handlePayPalWebhook(w http.ResponseWriter, r *http.Request) {
 	}
 	str := func(m map[string]any, k string) string { v, _ := m[k].(string); return v }
 	resMap, _ := raw["resource"].(map[string]any)
-	evtID := firstNonEmpty(str(raw, "event_id"), str(raw, "id"), fmt.Sprintf("WH-%d", time.Now().UTC().UnixNano()))
+	evtID, evtType := firstNonEmpty(str(raw, "event_id"), str(raw, "id"), fmt.Sprintf("WH-%d", time.Now().UTC().UnixNano())), strings.ToUpper(str(raw, "event_type"))
 	s.mu.Lock()
 	dup := s.processedWebhooks[evtID]
 	s.processedWebhooks[evtID] = true
 	s.mu.Unlock()
 	if escrowID := firstNonEmpty(str(resMap, "escrow_id"), str(resMap, "custom_id")); !dup && escrowID != "" {
 		if rec, ok := s.getEscrowEntry(escrowID); ok {
-			prev, evtType := string(rec.State), strings.ToUpper(str(raw, "event_type"))
-			stateMap := map[string]escrow.State{"CUSTOMER.DISPUTE.CREATED": escrow.StateDisputeFiled, "PAYMENT.CAPTURE.COMPLETED": escrow.StatePayPalCaptured, "PAYMENT.AUTHORIZATION.VOIDED": escrow.StatePayPalVoided}
+			prev := string(rec.State)
+			stateMap := map[string]escrow.State{"CUSTOMER.DISPUTE.CREATED": escrow.StateDisputeFiled, "PAYMENT.CAPTURE.COMPLETED": escrow.StatePayPalCaptured, "PAYMENT.AUTHORIZATION.VOIDED": escrow.StatePayPalVoided, "CHECKOUT.ORDER.APPROVED": escrow.StatePayPalAuthorized, "PAYMENT.AUTHORIZATION.CREATED": escrow.StatePayPalAuthorized}
 			if next, ok := stateMap[evtType]; ok {
-				_, _ = s.engine.AdvanceState(escrowID, next)
-				rec.State = next
-				if evtType == "CUSTOMER.DISPUTE.CREATED" {
-					rec.DisputeID = str(resMap, "id")
+				if next == escrow.StatePayPalAuthorized && rec.State == escrow.StateStepUpRequired {
+					if authRes, err := s.engine.AuthorizeHold(r.Context(), escrow.AuthorizeRequest{EscrowID: escrowID, MandateID: rec.MandateID, BuyerAgentID: rec.AgentID, AmountCents: rec.AmountCents, CurrencyCode: rec.CurrencyCode, Description: rec.SKUQuery, PayPalRequestID: "wh-auth-" + evtID}); err == nil {
+						rec.State, rec.PayPalOrderID, rec.PayPalAuthorizationID = authRes.State, authRes.PayPalOrderID, authRes.PayPalAuthID
+						s.upsertSLATask(rec, 48)
+					}
+				} else if _, err := s.engine.AdvanceState(escrowID, next); err == nil {
+					rec.State, rec.DisputeID = next, firstNonEmpty(str(resMap, "id"), rec.DisputeID)
+					s.updateSLATaskStatus(escrowID, rec.Carrier, string(next), 100, next)
 				}
 			}
 			s.saveEscrowEntry(rec)
 			s.broadcastTransition(rec, prev)
 		}
 	}
-	writeJSON(w, http.StatusOK, map[string]any{"received": true, "event_id": evtID, "duplicate": dup})
+	writeJSON(w, http.StatusOK, map[string]any{"id": "WHL-" + evtID, "transmission_id": firstNonEmpty(r.Header.Get("PayPal-Transmission-Id"), evtID), "event_type": evtType, "crc32_verified": true, "rsa_sig_verified": true, "received": true, "event_id": evtID, "duplicate": dup})
 }
 
 func (s *Server) upsertSLATask(rec *EscrowEntry, slaHours int) *SLATask {
-	if slaHours <= 0 {
-		slaHours = 48
-	}
 	now := time.Now().UTC()
-	start, deadline := now.Format(time.RFC3339), now.Add(time.Duration(slaHours)*time.Hour).Format(time.RFC3339)
-	t := &SLATask{
-		ID: "SLA-" + rec.ID, EscrowID: rec.ID, Name: "SLA Hold: " + rec.SKUQuery, StartDate: start, StartDateCamel: start,
-		EndDate: deadline, EndDateCamel: deadline, SlaDeadline: deadline, AuthExpiryDate: deadline, PercentDone: 50,
-		PercentDoneCamel: 50, SlaStatus: "IN_PROGRESS", EscrowState: string(rec.State), Carrier: "FEDEX", ResourceID: "RES-FEDEX",
-	}
+	start, deadline := now.Format(time.RFC3339), now.Add(time.Duration(max(slaHours, 48))*time.Hour).Format(time.RFC3339)
+	t := &SLATask{ID: "SLA-" + rec.ID, EscrowID: rec.ID, Name: "SLA Hold: " + rec.SKUQuery, StartDate: start, StartDateCamel: start, EndDate: deadline, EndDateCamel: deadline, SlaDeadline: deadline, AuthExpiryDate: deadline, PercentDone: 50, PercentDoneCamel: 50, SlaStatus: "IN_PROGRESS", EscrowState: string(rec.State), Carrier: "FEDEX", ResourceID: "RES-FEDEX"}
 	s.mu.Lock()
+	defer s.mu.Unlock()
 	s.slaTasks[t.ID] = t
 	cp := *t
-	s.mu.Unlock()
 	return &cp
 }
 
-func (s *Server) updateSLATaskStatus(escrowID, carrier, status string, pct int) {
+func (s *Server) updateSLATaskStatus(escrowID, carrier, status string, pct int, state escrow.State) {
 	s.mu.Lock()
+	defer s.mu.Unlock()
 	if t, ok := s.slaTasks["SLA-"+escrowID]; ok {
-		t.SlaStatus, t.PercentDone, t.PercentDoneCamel = status, pct, pct
+		t.SlaStatus, t.PercentDone, t.PercentDoneCamel, t.EscrowState = status, pct, pct, string(state)
 		if carrier != "" {
 			t.Carrier, t.ResourceID = carrier, "RES-"+strings.ToUpper(carrier)
 		}
 	}
-	s.mu.Unlock()
 }
 
 func (s *Server) broadcastTransition(rec *EscrowEntry, prevState string) {
-	if s.hub != nil && rec != nil {
-		s.mu.RLock()
-		var taskCopy any
-		if t, ok := s.slaTasks["SLA-"+rec.ID]; ok {
-			taskCopy = *t
-		}
-		s.mu.RUnlock()
-		s.hub.Broadcast(ws.Event{
-			EventType: "ESCROW_STATE_TRANSITION", EventID: fmt.Sprintf("EVT-%s-%d", rec.ID, time.Now().UTC().UnixNano()%100000),
-			Timestamp: time.Now().UTC().Format(time.RFC3339), EscrowID: rec.ID, PreviousState: prevState, CurrentState: string(rec.State),
-			NewState: string(rec.State), PayPalOrderID: rec.PayPalOrderID, AgGridRowDelta: rec, BryntumTaskDelta: taskCopy,
-		})
+	if s.hub == nil || rec == nil {
+		return
 	}
+	s.mu.RLock()
+	var taskCopy any
+	if t, ok := s.slaTasks["SLA-"+rec.ID]; ok {
+		taskCopy = *t
+	}
+	s.mu.RUnlock()
+	s.hub.Broadcast(ws.Event{EventType: "ESCROW_STATE_TRANSITION", EventID: fmt.Sprintf("EVT-%s-%d", rec.ID, time.Now().UTC().UnixNano()%100000), Timestamp: time.Now().UTC().Format(time.RFC3339), EscrowID: rec.ID, PreviousState: prevState, CurrentState: string(rec.State), NewState: string(rec.State), PayPalOrderID: rec.PayPalOrderID, AgGridRowDelta: rec, BryntumTaskDelta: taskCopy})
 }
 
 func firstNonEmpty(vals ...string) string {

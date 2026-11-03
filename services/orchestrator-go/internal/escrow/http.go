@@ -67,6 +67,17 @@ func (e *Engine) handleGet(w http.ResponseWriter, r *http.Request) {
 	writeEscrowJSON(w, http.StatusOK, rec, nil)
 }
 
+// ListHolds returns a concurrency-safe snapshot of all holds managed by the 2PC Engine.
+func (e *Engine) ListHolds() []HoldRecord {
+	e.mu.RLock()
+	defer e.mu.RUnlock()
+	out := make([]HoldRecord, 0, len(e.holds))
+	for _, rec := range e.holds {
+		out = append(out, cloneHold(rec))
+	}
+	return out
+}
+
 func writeEscrowJSON(w http.ResponseWriter, okStatus int, payload any, err error) {
 	w.Header().Set("Content-Type", "application/json")
 	if err != nil {

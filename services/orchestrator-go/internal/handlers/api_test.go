@@ -121,7 +121,7 @@ func TestGoldenFlows_FirewallBlock_Channel3Reroute_TrackingAutoCapture_SLAVoid_A
 		t.Fatalf("unexpected dispute evidence response: %+v", bodyDsp)
 	}
 
-	// Step-up approval check ($450 > $300 max_amount_cents) -> 202 Accepted
+	// Step-up approval check ($450 > $300 max_amount_cents) -> 202 Accepted, then CHECKOUT.ORDER.APPROVED webhook -> PAYPAL_AUTHORIZED
 	recStep, bodyStep := doJSON(t, mux, http.MethodPost, "/api/v1/checkout/evaluate", map[string]any{
 		"escrow_id": "ESC-STEP-450", "merchant_url": "https://verified-audio.trychannel3.com/sku/shure-sm7b",
 		"sku_query": "Shure SM7B", "amount_cents": 45000, "max_amount_cents": 30000, "max_spread_bps": 9999,
@@ -129,23 +129,35 @@ func TestGoldenFlows_FirewallBlock_Channel3Reroute_TrackingAutoCapture_SLAVoid_A
 	if recStep.Code != http.StatusAccepted || bodyStep["step_up_required"] != true {
 		t.Fatalf("expected 202 Accepted step_up_required, got %d: %+v", recStep.Code, bodyStep)
 	}
+	recApproveWH, bodyApproveWH := doJSON(t, mux, http.MethodPost, "/api/v1/webhooks/paypal", map[string]any{
+		"event_id": "WH-EVT-902", "event_type": "CHECKOUT.ORDER.APPROVED",
+		"resource": map[string]any{"custom_id": "ESC-STEP-450"},
+	})
+	if recApproveWH.Code != http.StatusOK || bodyApproveWH["crc32_verified"] != true || bodyApproveWH["rsa_sig_verified"] != true {
+		t.Fatalf("expected CHECKOUT.ORDER.APPROVED webhook 200 OK with verification flags, got %+v", bodyApproveWH)
+	}
 
-	// Verify Blotter KPIs with state=ALL&limit=1 (API-12), Channel3 Direct Endpoint (API-06), SLA Timeline GET (API-13)
+	// Direct API-07 hold must appear in GET /api/v1/escrow/blotter (API-12)
+	if recAuth07, _ := doJSON(t, mux, http.MethodPost, "/api/v1/escrow/ESC-API07/authorize", map[string]any{"mandate_id": "MND-07", "buyer_agent_id": "AG-07", "amount_cents": 12000, "paypal_request_id": "pp-req-07"}); recAuth07.Code != http.StatusCreated {
+		t.Fatalf("expected 201 Created from API-07 authorize, got %d", recAuth07.Code)
+	}
 	recBlot, bodyBlot := doJSON(t, mux, http.MethodGet, "/api/v1/escrow/blotter?state=ALL&limit=1", nil)
 	rowsBlot, _ := bodyBlot["rows"].([]any)
 	metrics, _ := bodyBlot["summary_metrics"].(map[string]any)
-	if recBlot.Code != http.StatusOK || int(bodyBlot["total_count"].(float64)) < 2 || len(rowsBlot) != 1 || metrics == nil {
+	if recBlot.Code != http.StatusOK || int(bodyBlot["total_count"].(float64)) < 4 || int64(bodyBlot["total_held_cents"].(float64)) < 57000 || len(rowsBlot) != 1 || metrics == nil {
 		t.Fatalf("unexpected blotter state=ALL&limit=1 response: %+v", bodyBlot)
 	}
-	recCh3, bodyCh3 := doJSON(t, mux, http.MethodPost, "/api/v1/channel3/benchmark", map[string]any{
-		"product_query": "Shure SM7B", "quoted_price_cents": 48000,
-	})
+	recCh3, bodyCh3 := doJSON(t, mux, http.MethodPost, "/api/v1/channel3/benchmark", map[string]any{"product_query": "Shure SM7B", "quoted_price_cents": 48000})
 	if recCh3.Code != http.StatusOK || int64(bodyCh3["spread_bps"].(float64)) != 9277 {
 		t.Fatalf("unexpected channel3 endpoint response: %+v", bodyCh3)
 	}
 	recTL, bodyTL := doJSON(t, mux, http.MethodGet, "/api/v1/sla/timeline", nil)
-	if recTL.Code != http.StatusOK || bodyTL["resources"] == nil || bodyTL["events"] == nil {
-		t.Fatalf("expected 200 OK with resources & events from GET /api/v1/sla/timeline, got %+v", bodyTL)
+	tasksTL, _ := bodyTL["tasks"].([]any)
+	if recTL.Code != http.StatusOK || len(tasksTL) == 0 || tasksTL[0].(map[string]any)["escrowState"] != "PAYPAL_CAPTURED" {
+		t.Fatalf("expected SLA-ESC-GOLD-249 escrowState=PAYPAL_CAPTURED in GET /api/v1/sla/timeline, got %+v", bodyTL)
+	}
+	if recConflict, _ := doJSON(t, mux, http.MethodPatch, "/api/v1/sla/timeline/SLA-ESC-GOLD-249", map[string]any{"sla_status": "SLA_BREACHED", "trigger_void": true}); recConflict.Code != http.StatusConflict {
+		t.Fatalf("expected 409 Conflict when voiding already-captured escrow via SLA patch, got %d", recConflict.Code)
 	}
 
 	select {
@@ -178,6 +190,9 @@ func TestNegativeGuards_LiveFirewall_AndConcurrentConvergence(t *testing.T) {
 	if rec, _ := doJSON(t, mux, http.MethodPost, "/api/v1/checkout/evaluate", map[string]any{"sku_query": "SM7B"}); rec.Code != http.StatusBadRequest {
 		t.Fatalf("expected 400 on missing checkout fields, got %d", rec.Code)
 	}
+	if rec, body := doJSON(t, mux, http.MethodPost, "/api/v1/checkout/evaluate", map[string]any{"merchant_url": "https://verified-audio.trychannel3.com/sku/sm7b", "sku_query": "SM7B", "amount_cents": 24900, "ed25519_signature": "tampered_sig", "category": "Audio", "merchant_paypal_email": "m@example.com"}); rec.Code != http.StatusUnprocessableEntity || body["error"].(map[string]any)["code"] != "TALOS_MANDATE_SIGNATURE_INVALID" {
+		t.Fatalf("expected 422 TALOS_MANDATE_SIGNATURE_INVALID on tampered ed25519_signature, got %d: %+v", rec.Code, body)
+	}
 	if rec, body := doJSON(t, mux, http.MethodPost, "/api/v1/checkout/evaluate", map[string]any{"merchant_url": "ftp://bad.example/item", "sku_query": "SM7B", "amount_cents": 24900}); rec.Code != http.StatusBadRequest || body["error"].(map[string]any)["code"] != "TALOS_EVALUATION_FAILED" {
 		t.Fatalf("expected 400 TALOS_EVALUATION_FAILED on invalid merchant_url in errgroup, got %d: %+v", rec.Code, body)
 	}
@@ -188,11 +203,7 @@ func TestNegativeGuards_LiveFirewall_AndConcurrentConvergence(t *testing.T) {
 		t.Fatalf("expected 404 on unknown SLA task patch, got %d", rec.Code)
 	}
 
-	// Verify live firewall endpoint /v1/firewall/sanitize-dom + PayPal-Request-Id idempotency + concurrent SLA Void vs Tracking Capture convergence
-	bodyBytes, _ := json.Marshal(map[string]any{
-		"escrow_id": "ESC-RACE-1", "merchant_url": "https://verified-audio.trychannel3.com/sku/rode-podmic-usb",
-		"sku_query": "Rode PodMic USB", "amount_cents": 19500,
-	})
+	bodyBytes, _ := json.Marshal(map[string]any{"escrow_id": "ESC-RACE-1", "merchant_url": "https://verified-audio.trychannel3.com/sku/rode-podmic-usb", "sku_query": "Rode PodMic USB", "amount_cents": 19500})
 	for i := 0; i < 2; i++ {
 		req := httptest.NewRequest(http.MethodPost, "/api/v1/checkout/evaluate", bytes.NewReader(bodyBytes))
 		req.Header.Set("Content-Type", "application/json")

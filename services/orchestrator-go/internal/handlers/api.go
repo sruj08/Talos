@@ -159,20 +159,28 @@ func (s *Server) handleAttachTracking(w http.ResponseWriter, r *http.Request) {
 	switch statusUpper {
 	case "DELIVERED":
 		if autoCapture {
-			if capRes, err := s.engine.CaptureHold(r.Context(), escrow.CaptureRequest{
+			capRes, err := s.engine.CaptureHold(r.Context(), escrow.CaptureRequest{
 				EscrowID: escrowID, PayPalRequestID: idempKey + "-cap", TrackingNumber: req.TrackingNumber, Carrier: req.Carrier,
-			}); err == nil {
-				rec.State, rec.PayPalCaptureID, autoCaptured = capRes.State, capRes.PayPalCaptureID, true
+			})
+			if err != nil {
+				writeProblem(w, http.StatusConflict, "TALOS_INVALID_STATE_TRANSITION", err.Error(), r.URL.Path, nil)
+				return
 			}
+			rec.State, rec.PayPalCaptureID, autoCaptured = capRes.State, capRes.PayPalCaptureID, true
 		}
-		s.updateSLATaskStatus(escrowID, req.Carrier, "DELIVERED_ON_TIME", 100)
-	case "SLA_BREACHED":
-		if voidRes, err := s.engine.VoidHold(r.Context(), escrow.VoidRequest{
+		s.updateSLATaskStatus(escrowID, req.Carrier, "DELIVERED_ON_TIME", 100, rec.State)
+	case "SLA_BREACHED", "CANCELLED":
+		voidRes, err := s.engine.VoidHold(r.Context(), escrow.VoidRequest{
 			EscrowID: escrowID, PayPalRequestID: idempKey + "-void", Reason: "SLA_BREACHED_TRACKING",
-		}); err == nil {
-			rec.State = voidRes.State
+		})
+		if err != nil {
+			writeProblem(w, http.StatusConflict, "TALOS_INVALID_STATE_TRANSITION", err.Error(), r.URL.Path, nil)
+			return
 		}
-		s.updateSLATaskStatus(escrowID, req.Carrier, "SLA_BREACHED", 100)
+		rec.State = voidRes.State
+		s.updateSLATaskStatus(escrowID, req.Carrier, "SLA_BREACHED", 100, rec.State)
+	default:
+		s.updateSLATaskStatus(escrowID, req.Carrier, statusUpper, 65, rec.State)
 	}
 	s.saveEscrowEntry(rec)
 	s.broadcastTransition(rec, prevState)

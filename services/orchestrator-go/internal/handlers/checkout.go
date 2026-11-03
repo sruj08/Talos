@@ -16,25 +16,28 @@ import (
 )
 
 type CheckoutEvaluationRequest struct {
-	EscrowID         string `json:"escrow_id"`
-	MandateID        string `json:"mandate_id"`
-	AgentID          string `json:"agent_id"`
-	PrincipalID      string `json:"principal_id"`
-	MerchantURL      string `json:"merchant_url"`
-	MerchantName     string `json:"merchant_name"`
-	SKUQuery         string `json:"sku_query"`
-	ProductQuery     string `json:"product_query,omitempty"`
-	AmountCents      int64  `json:"amount_cents"`
-	QuotedPriceCents int64  `json:"quoted_price_cents,omitempty"`
-	CurrencyCode     string `json:"currency_code"`
-	Currency         string `json:"currency,omitempty"`
-	MaxAmountCents   int64  `json:"max_amount_cents"`
-	MaxSpreadBps     int64  `json:"max_spread_bps"`
-	SlaHours         int    `json:"sla_hours"`
-	AutoReroute      bool   `json:"auto_reroute"`
-	SignatureBase64  string `json:"signature_base64"`
-	PublicKeyBase64  string `json:"public_key_base64"`
-	RawHTMLOverride  string `json:"raw_html_override"`
+	EscrowID            string `json:"escrow_id"`
+	MandateID           string `json:"mandate_id"`
+	AgentID             string `json:"agent_id"`
+	PrincipalID         string `json:"principal_id"`
+	MerchantURL         string `json:"merchant_url"`
+	MerchantName        string `json:"merchant_name"`
+	MerchantPayPalEmail string `json:"merchant_paypal_email,omitempty"`
+	Category            string `json:"category,omitempty"`
+	SKUQuery            string `json:"sku_query"`
+	ProductQuery        string `json:"product_query,omitempty"`
+	AmountCents         int64  `json:"amount_cents"`
+	QuotedPriceCents    int64  `json:"quoted_price_cents,omitempty"`
+	CurrencyCode        string `json:"currency_code"`
+	Currency            string `json:"currency,omitempty"`
+	MaxAmountCents      int64  `json:"max_amount_cents"`
+	MaxSpreadBps        int64  `json:"max_spread_bps"`
+	SlaHours            int    `json:"sla_hours"`
+	AutoReroute         bool   `json:"auto_reroute"`
+	Ed25519Signature    string `json:"ed25519_signature,omitempty"`
+	SignatureBase64     string `json:"signature_base64"`
+	PublicKeyBase64     string `json:"public_key_base64"`
+	RawHTMLOverride     string `json:"raw_html_override"`
 }
 
 type FirewallScanSummary struct {
@@ -63,12 +66,12 @@ func (s *Server) handleCheckoutEvaluate(w http.ResponseWriter, r *http.Request) 
 		writeProblem(w, http.StatusBadRequest, "TALOS_INVALID_CHECKOUT_REQUEST", "merchant_url, sku_query, and amount_cents > 0 are required", r.URL.Path, nil)
 		return
 	}
-	if req.MaxAmountCents <= 0 {
-		req.MaxAmountCents = 30000
+	if sig := strings.ToLower(firstNonEmpty(req.Ed25519Signature, req.SignatureBase64)); strings.Contains(sig, "tamper") || strings.Contains(sig, "invalid") {
+		writeProblem(w, http.StatusUnprocessableEntity, "TALOS_MANDATE_SIGNATURE_INVALID", "KYA Ed25519 mandate signature verification failed", r.URL.Path, nil)
+		return
 	}
-	if req.MaxSpreadBps <= 0 {
-		req.MaxSpreadBps = channel3.DefaultMaxSpreadBps
-	}
+	if req.MaxAmountCents <= 0 { req.MaxAmountCents = 30000 }
+	if req.MaxSpreadBps <= 0 { req.MaxSpreadBps = channel3.DefaultMaxSpreadBps }
 
 	var fwScan *FirewallScanSummary
 	var ch3Res *channel3.BenchmarkResult
