@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strings"
 )
 
 // RegisterRoutes wires API-07 (/authorize), API-08 (GET), API-09 (/capture), and API-10 (/void) onto an http.ServeMux.
@@ -24,6 +25,9 @@ func (e *Engine) handleAuthorize(w http.ResponseWriter, r *http.Request) {
 	if hdr := r.Header.Get("PayPal-Request-Id"); hdr != "" {
 		req.PayPalRequestID = hdr
 	}
+	if strings.TrimSpace(req.EscrowID) == "" && strings.TrimSpace(req.PayPalRequestID) != "" {
+		req.EscrowID = "esc_" + strings.TrimSpace(req.PayPalRequestID)
+	}
 	res, err := e.AuthorizeHold(r.Context(), req)
 	writeEscrowJSON(w, http.StatusCreated, res, err)
 }
@@ -38,7 +42,7 @@ func (e *Engine) handleCapture(w http.ResponseWriter, r *http.Request) {
 		req.PayPalRequestID = hdr
 	}
 	res, err := e.CaptureHold(r.Context(), req)
-	writeEscrowJSON(w, http.StatusOK, res, err)
+	writeEscrowJSON(w, http.StatusCreated, res, err)
 }
 
 func (e *Engine) handleVoid(w http.ResponseWriter, r *http.Request) {
@@ -67,13 +71,24 @@ func writeEscrowJSON(w http.ResponseWriter, okStatus int, payload any, err error
 	w.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		status := http.StatusBadRequest
-		if errors.Is(err, ErrInvalidStateTransition) || errors.Is(err, ErrDuplicateRequestID) {
+		code := "TALOS_BAD_REQUEST"
+		if errors.Is(err, ErrInvalidStateTransition) {
 			status = http.StatusConflict
+			code = "TALOS_INVALID_STATE_TRANSITION"
+		} else if errors.Is(err, ErrDuplicateRequestID) {
+			status = http.StatusConflict
+			code = "TALOS_IDEMPOTENCY_CONFLICT"
 		} else if errors.Is(err, ErrEscrowNotFound) {
 			status = http.StatusNotFound
+			code = "TALOS_NOT_FOUND"
 		}
 		w.WriteHeader(status)
-		_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		_ = json.NewEncoder(w).Encode(map[string]any{
+			"code":        code,
+			"error":       err.Error(),
+			"message":     err.Error(),
+			"http_status": status,
+		})
 		return
 	}
 	w.WriteHeader(okStatus)

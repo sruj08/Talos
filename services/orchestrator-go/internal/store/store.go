@@ -2,11 +2,9 @@
 package store
 
 import (
-	"bufio"
 	"context"
 	"errors"
 	"fmt"
-	"net"
 	"strings"
 	"sync"
 	"time"
@@ -217,29 +215,4 @@ func (s *Store) LockAndTransitionEscrow(ctx context.Context, escrowID string, ne
 	rec.UpdatedAt = time.Now().UTC()
 	cp := *rec
 	return &cp, nil
-}
-
-func parseRedisAddr(raw string) string {
-	raw = strings.TrimPrefix(strings.TrimPrefix(strings.TrimSpace(raw), "redis://"), "valkey://")
-	if idx := strings.IndexByte(raw, '/'); idx >= 0 {
-		return raw[:idx]
-	}
-	return raw
-}
-
-func tryRedisSetNX(ctx context.Context, addr, key, val string, ttlSec int64) (bool, bool) {
-	conn, err := (&net.Dialer{Timeout: 400 * time.Millisecond}).DialContext(ctx, "tcp", addr)
-	if err != nil {
-		return false, false
-	}
-	defer conn.Close()
-	_ = conn.SetDeadline(time.Now().Add(500 * time.Millisecond))
-	ttlStr := fmt.Sprintf("%d", ttlSec)
-	cmd := fmt.Sprintf("*6\r\n$3\r\nSET\r\n$%d\r\n%s\r\n$%d\r\n%s\r\n$2\r\nNX\r\n$2\r\nEX\r\n$%d\r\n%s\r\n",
-		len(key), key, len(val), val, len(ttlStr), ttlStr)
-	if _, err := conn.Write([]byte(cmd)); err != nil {
-		return false, false
-	}
-	line, err := bufio.NewReader(conn).ReadString('\n')
-	return strings.HasPrefix(line, "+OK"), err == nil && (strings.HasPrefix(line, "+OK") || strings.HasPrefix(line, "$-1"))
 }

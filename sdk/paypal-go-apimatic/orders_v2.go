@@ -111,7 +111,7 @@ func (c *Client) CreateOrder(ctx context.Context, req CreateOrderRequest) (*Orde
 			CurrencyCode:    currency,
 			CustomID:        req.CustomID,
 			CreatedAt:       now.Format(time.RFC3339),
-			ExpiresAt:       now.Add(72 * time.Hour).Format(time.RFC3339),
+			ExpiresAt:       now.Add(29 * 24 * time.Hour).Format(time.RFC3339),
 			FallbackReplay:  true,
 		}, nil
 	}
@@ -139,7 +139,7 @@ func (c *Client) CreateOrder(ctx context.Context, req CreateOrderRequest) (*Orde
 		CurrencyCode: currency,
 		CustomID:     req.CustomID,
 		CreatedAt:    wireResp.CreateTime,
-		ExpiresAt:    now.Add(72 * time.Hour).Format(time.RFC3339),
+		ExpiresAt:    now.Add(29 * 24 * time.Hour).Format(time.RFC3339),
 	}
 	if out.CreatedAt == "" {
 		out.CreatedAt = now.Format(time.RFC3339)
@@ -172,7 +172,7 @@ func (c *Client) AuthorizeOrder(ctx context.Context, orderID, paypalRequestID st
 			RequestID:       requestID,
 			CurrencyCode:    "USD",
 			CreatedAt:       now.Format(time.RFC3339),
-			ExpiresAt:       now.Add(72 * time.Hour).Format(time.RFC3339),
+			ExpiresAt:       now.Add(29 * 24 * time.Hour).Format(time.RFC3339),
 			FallbackReplay:  true,
 		}, nil
 	}
@@ -186,20 +186,32 @@ func (c *Client) AuthorizeOrder(ctx context.Context, orderID, paypalRequestID st
 		Status:       wireResp.Status,
 		RequestID:    requestID,
 		CurrencyCode: "USD",
-		CreatedAt:    now.Format(time.RFC3339),
-		ExpiresAt:    now.Add(72 * time.Hour).Format(time.RFC3339),
+		CreatedAt:    wireResp.CreateTime,
+		ExpiresAt:    now.Add(29 * 24 * time.Hour).Format(time.RFC3339),
 	}
 	if out.OrderID == "" {
 		out.OrderID = orderID
 	}
+	if out.CreatedAt == "" {
+		out.CreatedAt = now.Format(time.RFC3339)
+	}
 	if len(wireResp.PurchaseUnits) > 0 {
 		pu := wireResp.PurchaseUnits[0]
 		out.CustomID = pu.CustomID
+		if pu.Amount.CurrencyCode != "" {
+			out.CurrencyCode = pu.Amount.CurrencyCode
+		}
 		if pu.Payments != nil && len(pu.Payments.Authorizations) > 0 {
 			auth := pu.Payments.Authorizations[0]
 			out.AuthorizationID = auth.ID
 			if auth.Status != "" {
 				out.Status = auth.Status
+			}
+			if auth.CreateTime != "" {
+				out.CreatedAt = auth.CreateTime
+			}
+			if auth.ExpirationTime != "" {
+				out.ExpiresAt = auth.ExpirationTime
 			}
 		}
 	}

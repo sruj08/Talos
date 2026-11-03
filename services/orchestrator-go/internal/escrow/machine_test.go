@@ -35,6 +35,13 @@ func (g *memoryIdempGate) AcquireIdempotencyLock(_ context.Context, key string, 
 	return true, nil
 }
 
+func (g *memoryIdempGate) ReleaseIdempotencyLock(_ context.Context, key string) error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	delete(g.keys, key)
+	return nil
+}
+
 type countingPayPalProvider struct {
 	inner     paypal.Provider
 	authCalls atomic.Int32

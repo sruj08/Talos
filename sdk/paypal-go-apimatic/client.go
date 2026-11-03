@@ -216,20 +216,19 @@ func (c *Client) httpClient() *http.Client {
 }
 
 func (c *Client) backoffDuration(attempt int) time.Duration {
-	base := c.RetryBackoff
-	if base <= 0 {
-		base = 25 * time.Millisecond
+	if c.RetryBackoff <= 0 {
+		return (25 * time.Millisecond) * time.Duration(1<<attempt)
 	}
-	return base * time.Duration(1<<attempt)
+	return c.RetryBackoff * time.Duration(1<<attempt)
 }
 
 func sleepWithContext(ctx context.Context, d time.Duration) error {
-	timer := time.NewTimer(d)
-	defer timer.Stop()
+	t := time.NewTimer(d)
+	defer t.Stop()
 	select {
 	case <-ctx.Done():
 		return ctx.Err()
-	case <-timer.C:
+	case <-t.C:
 		return nil
 	}
 }

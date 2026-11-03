@@ -45,7 +45,7 @@ func TestOAuth2TokenCachingAndLifecycleEndpoints(t *testing.T) {
 
 		case r.Method == http.MethodPost && r.URL.Path == "/v2/checkout/orders/5O190127TN364715T/authorize":
 			w.WriteHeader(http.StatusCreated)
-			_, _ = w.Write([]byte(`{"id":"5O190127TN364715T","status":"COMPLETED","purchase_units":[{"custom_id":"escrow_001","payments":{"authorizations":[{"id":"0VF52814937998046","status":"CREATED"}]}}]}`))
+			_, _ = w.Write([]byte(`{"id":"5O190127TN364715T","status":"COMPLETED","purchase_units":[{"custom_id":"escrow_001","payments":{"authorizations":[{"id":"0VF52814937998046","status":"CREATED","expiration_time":"2026-05-03T07:00:00Z"}]}}]}`))
 
 		case r.Method == http.MethodPost && r.URL.Path == "/v2/payments/authorizations/0VF52814937998046/capture":
 			var body map[string]any
@@ -99,7 +99,7 @@ func TestOAuth2TokenCachingAndLifecycleEndpoints(t *testing.T) {
 		Description:     "Precision Milling Spindle",
 		PayPalRequestID: "req-transient-503",
 	})
-	if err != nil || authResp.OrderID != "5O190127TN364715T" || authResp.AuthorizationID != "0VF52814937998046" {
+	if err != nil || authResp.OrderID != "5O190127TN364715T" || authResp.AuthorizationID != "0VF52814937998046" || authResp.ExpiresAt != "2026-05-03T07:00:00Z" {
 		t.Fatalf("CreateAndAuthorizeOrder failed: %+v err=%v", authResp, err)
 	}
 

@@ -83,6 +83,14 @@ func TestRedisIdempotencyLockSetNX(t *testing.T) {
 		t.Fatalf("expected duplicate PayPal-Request-Id lock acquisition to be rejected")
 	}
 
+	if err := s.ReleaseIdempotencyLock(ctx, "test-req-1"); err != nil {
+		t.Fatalf("ReleaseIdempotencyLock failed: %v", err)
+	}
+	ok3, err := s.AcquireIdempotencyLock(ctx, "test-req-1", "LOCKED", DefaultIdempotencyTTL)
+	if err != nil || !ok3 {
+		t.Fatalf("expected SetNX lock acquisition to succeed after ReleaseIdempotencyLock, got ok=%v err=%v", ok3, err)
+	}
+
 	if _, err := s.AcquireIdempotencyLock(ctx, "   ", "LOCKED", DefaultIdempotencyTTL); !errors.Is(err, ErrEmptyRequestID) {
 		t.Fatalf("expected ErrEmptyRequestID for blank request id, got %v", err)
 	}
@@ -100,6 +108,13 @@ func TestLiveValkeyIdempotencyLockIfAvailable(t *testing.T) {
 	ok2, err := s.AcquireIdempotencyLock(ctx, reqID, "LOCKED", DefaultIdempotencyTTL)
 	if err != nil || ok2 {
 		t.Fatalf("expected second SetNX call for %s to reject duplicate: ok=%v err=%v", reqID, ok2, err)
+	}
+	if err := s.ReleaseIdempotencyLock(ctx, reqID); err != nil {
+		t.Fatalf("expected ReleaseIdempotencyLock for %s to succeed: %v", reqID, err)
+	}
+	ok3, err := s.AcquireIdempotencyLock(ctx, reqID, "LOCKED", DefaultIdempotencyTTL)
+	if err != nil || !ok3 {
+		t.Fatalf("expected SetNX call for %s after release to succeed: ok=%v err=%v", reqID, ok3, err)
 	}
 }
 

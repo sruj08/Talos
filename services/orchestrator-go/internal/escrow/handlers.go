@@ -21,7 +21,7 @@ func (e *Engine) AuthorizeHold(ctx context.Context, req AuthorizeRequest) (*Tran
 	rowMu.Lock()
 	defer rowMu.Unlock()
 
-	if replay, err := e.checkOrLockIdempotency(ctx, req.PayPalRequestID, escrowID); err != nil || replay != nil {
+	if replay, err := e.checkCachedIdempotency(req.PayPalRequestID, escrowID); err != nil || replay != nil {
 		return replay, err
 	}
 
@@ -32,10 +32,14 @@ func (e *Engine) AuthorizeHold(ctx context.Context, req AuthorizeRequest) (*Tran
 		return nil, fmt.Errorf("%w: %s -> %s", ErrInvalidStateTransition, existing.State, StatePayPalAuthorized)
 	}
 
-	currency := strings.ToUpper(strings.TrimSpace(req.CurrencyCode))
-	if currency == "" {
-		currency = "USD"
+	replay, acquired, err := e.acquireIdempotency(ctx, req.PayPalRequestID, escrowID)
+	if err != nil || replay != nil {
+		return replay, err
 	}
+
+	currency := strings.ToUpper(firstNonEmpty(req.CurrencyCode, req.Currency, "USD"))
+	buyerAgentID := firstNonEmpty(req.BuyerAgentID, req.AgentID)
+	sellerID := firstNonEmpty(req.SellerID, req.PayeeSandboxEmail)
 
 	holdRes, err := e.paypalSvc.AuthorizeEscrowHold(ctx, paypal.HoldRequest{
 		EscrowID:        escrowID,
@@ -46,39 +50,40 @@ func (e *Engine) AuthorizeHold(ctx context.Context, req AuthorizeRequest) (*Tran
 		PayPalRequestID: req.PayPalRequestID,
 	})
 	if err != nil {
+		if acquired {
+			e.releaseIdempotency(ctx, req.PayPalRequestID)
+		}
 		return nil, err
 	}
 
-	now := time.Now().UTC()
 	rec := &HoldRecord{
-		EscrowID:        escrowID,
-		MandateID:       req.MandateID,
-		BuyerAgentID:    req.BuyerAgentID,
-		SellerID:        req.SellerID,
-		AmountCents:     req.AmountCents,
-		CurrencyCode:    currency,
-		PayPalOrderID:   holdRes.OrderID,
-		PayPalAuthID:    holdRes.AuthorizationID,
-		PayPalRequestID: strings.TrimSpace(req.PayPalRequestID),
-		State:           StatePayPalAuthorized,
-		StateHistory: []State{
-			StateInitiated,
-			StateMandateVerified,
-			StateChannel3Benchmarked,
-			StatePayPalAuthorized,
-		},
-		ExpiresAt: holdRes.ExpiresAt,
-		UpdatedAt: now,
-		Version:   1,
+		EscrowID:              escrowID,
+		MandateID:             req.MandateID,
+		BuyerAgentID:          buyerAgentID,
+		SellerID:              sellerID,
+		PayerSandboxEmail:     strings.TrimSpace(req.PayerSandboxEmail),
+		PayeeSandboxEmail:     strings.TrimSpace(req.PayeeSandboxEmail),
+		AmountCents:           req.AmountCents,
+		Currency:              currency,
+		CurrencyCode:          currency,
+		PayPalOrderID:         holdRes.OrderID,
+		PayPalAuthID:          holdRes.AuthorizationID,
+		PayPalAuthorizationID: holdRes.AuthorizationID,
+		PayPalRequestID:       strings.TrimSpace(req.PayPalRequestID),
+		State:                 StatePayPalAuthorized,
+		StateHistory:          []State{StateInitiated, StateMandateVerified, StateChannel3Benchmarked, StatePayPalAuthorized},
+		ExpiresAt:             holdRes.ExpiresAt,
+		UpdatedAt:             time.Now().UTC(),
+		Version:               1,
 	}
 	if exists {
 		rec.Version = existing.Version + 1
 		rec.StateHistory = append(append([]State{}, existing.StateHistory...), StatePayPalAuthorized)
 	}
 
-	res := TransitionResult{Record: cloneHold(rec), FallbackReplay: holdRes.FallbackReplay}
 	e.mu.Lock()
 	e.holds[escrowID] = rec
+	res := newTransitionResult(rec, holdRes.FallbackReplay)
 	e.idempCache[strings.TrimSpace(req.PayPalRequestID)] = res
 	e.mu.Unlock()
 	return &res, nil
@@ -95,44 +100,41 @@ func (e *Engine) CaptureHold(ctx context.Context, req CaptureRequest) (*Transiti
 	rowMu.Lock()
 	defer rowMu.Unlock()
 
-	if replay, err := e.checkOrLockIdempotency(ctx, req.PayPalRequestID, escrowID); err != nil || replay != nil {
+	rec, replay, acquired, err := e.prepareExistingTransition(ctx, escrowID, req.PayPalRequestID, StatePayPalCaptured)
+	if err != nil || replay != nil {
 		return replay, err
 	}
 
-	e.mu.RLock()
-	rec, ok := e.holds[escrowID]
-	e.mu.RUnlock()
-	if !ok {
-		return nil, ErrEscrowNotFound
-	}
-	if !CanTransition(rec.State, StatePayPalCaptured) {
-		return nil, fmt.Errorf("%w: %s -> %s", ErrInvalidStateTransition, rec.State, StatePayPalCaptured)
-	}
-
+	finalCap := req.FinalCapture == nil || *req.FinalCapture
 	capRes, err := e.paypalSvc.CaptureEscrowHold(ctx, paypal.CaptureRequest{
 		AuthorizationID: rec.PayPalAuthID,
 		PayPalRequestID: req.PayPalRequestID,
 		AmountCents:     rec.AmountCents,
 		CurrencyCode:    rec.CurrencyCode,
 		NoteToPayer:     req.NoteToPayer,
-		FinalCapture:    true,
+		FinalCapture:    finalCap,
 	})
 	if err != nil {
+		if acquired {
+			e.releaseIdempotency(ctx, req.PayPalRequestID)
+		}
 		return nil, err
 	}
 
 	e.mu.Lock()
-	if rec.State == StatePayPalAuthorized {
+	switch rec.State {
+	case StatePayPalAuthorized:
 		rec.StateHistory = append(rec.StateHistory, StateSLAScheduled, StateTrackingVerified)
-	} else if rec.State == StateSLAScheduled {
+	case StateSLAScheduled:
 		rec.StateHistory = append(rec.StateHistory, StateTrackingVerified)
 	}
 	rec.State = StatePayPalCaptured
 	rec.StateHistory = append(rec.StateHistory, StatePayPalCaptured)
 	rec.PayPalCaptureID = capRes.CaptureID
+	rec.CapturedAmountCents = rec.AmountCents
 	rec.UpdatedAt = time.Now().UTC()
 	rec.Version++
-	res := TransitionResult{Record: cloneHold(rec), FallbackReplay: capRes.FallbackReplay}
+	res := newTransitionResult(rec, capRes.FallbackReplay)
 	e.idempCache[strings.TrimSpace(req.PayPalRequestID)] = res
 	e.mu.Unlock()
 	return &res, nil
@@ -149,35 +151,49 @@ func (e *Engine) VoidHold(ctx context.Context, req VoidRequest) (*TransitionResu
 	rowMu.Lock()
 	defer rowMu.Unlock()
 
-	if replay, err := e.checkOrLockIdempotency(ctx, req.PayPalRequestID, escrowID); err != nil || replay != nil {
+	rec, replay, acquired, err := e.prepareExistingTransition(ctx, escrowID, req.PayPalRequestID, StatePayPalVoided)
+	if err != nil || replay != nil {
 		return replay, err
-	}
-
-	e.mu.RLock()
-	rec, ok := e.holds[escrowID]
-	e.mu.RUnlock()
-	if !ok {
-		return nil, ErrEscrowNotFound
-	}
-	if !CanTransition(rec.State, StatePayPalVoided) {
-		return nil, fmt.Errorf("%w: %s -> %s", ErrInvalidStateTransition, rec.State, StatePayPalVoided)
 	}
 
 	voidRes, err := e.paypalSvc.VoidEscrowHold(ctx, rec.PayPalAuthID, req.PayPalRequestID)
 	if err != nil {
+		if acquired {
+			e.releaseIdempotency(ctx, req.PayPalRequestID)
+		}
 		return nil, err
 	}
 
+	reason := firstNonEmpty(req.Reason, req.VoidReason)
 	e.mu.Lock()
 	rec.State = StatePayPalVoided
 	rec.StateHistory = append(rec.StateHistory, StatePayPalVoided)
-	rec.FailureReason = strings.TrimSpace(req.Reason)
+	rec.FailureReason = reason
+	rec.VoidReason = reason
+	rec.BuyerFundsReleasedCents = rec.AmountCents
 	rec.UpdatedAt = time.Now().UTC()
 	rec.Version++
-	res := TransitionResult{Record: cloneHold(rec), FallbackReplay: voidRes.FallbackReplay}
+	res := newTransitionResult(rec, voidRes.FallbackReplay)
 	e.idempCache[strings.TrimSpace(req.PayPalRequestID)] = res
 	e.mu.Unlock()
 	return &res, nil
+}
+
+func (e *Engine) prepareExistingTransition(ctx context.Context, escrowID, reqID string, target State) (*HoldRecord, *TransitionResult, bool, error) {
+	if replay, err := e.checkCachedIdempotency(reqID, escrowID); err != nil || replay != nil {
+		return nil, replay, false, err
+	}
+	e.mu.RLock()
+	rec, ok := e.holds[escrowID]
+	e.mu.RUnlock()
+	if !ok {
+		return nil, nil, false, ErrEscrowNotFound
+	}
+	if !CanTransition(rec.State, target) {
+		return nil, nil, false, fmt.Errorf("%w: %s -> %s", ErrInvalidStateTransition, rec.State, target)
+	}
+	replay, acquired, err := e.acquireIdempotency(ctx, reqID, escrowID)
+	return rec, replay, acquired, err
 }
 
 // AdvanceState transitions an escrow hold along valid intermediate states (e.g., SLA_SCHEDULED, TRACKING_VERIFIED, DISPUTE_FILED).
@@ -219,4 +235,13 @@ func cloneHold(rec *HoldRecord) HoldRecord {
 	copied := *rec
 	copied.StateHistory = append([]State{}, rec.StateHistory...)
 	return copied
+}
+
+func firstNonEmpty(vals ...string) string {
+	for _, v := range vals {
+		if s := strings.TrimSpace(v); s != "" {
+			return s
+		}
+	}
+	return ""
 }
