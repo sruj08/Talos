@@ -1,0 +1,27 @@
+{
+  "generator": "APIMatic CodeGen Engine",
+  "language": "GO_GENERIC_LIB",
+  "package_name": "paypalapimatic",
+  "module_path": "github.com/talos/sdk/paypal-go-apimatic",
+  "sandbox_base_url": "https://api-m.sandbox.paypal.com",
+  "validation_summary": {
+    "errors": 0,
+    "warnings": 0,
+    "status": "VALIDATED"
+  },
+  "bound_endpoints": [
+    "POST /v1/oauth2/token",
+    "POST /v2/checkout/orders",
+    "POST /v2/checkout/orders/{id}/authorize",
+    "POST /v2/payments/authorizations/{id}/capture",
+    "POST /v2/payments/authorizations/{id}/void",
+    "POST /v1/shipping/trackers-batch",
+    "POST /v1/customer/disputes/{id}/provide-evidence"
+  ],
+  "features": [
+    "oauth2_client_credentials_token_cache",
+    "paypal_request_id_idempotency_header",
+    "exponential_backoff_retry_502_503_504",
+    "deterministic_sandbox_replay_fallback"
+  ]
+}
