@@ -26,9 +26,24 @@ pub async fn healthz() -> Json<Value> {
     }))
 }
 
+pub fn resolve_listen_port_from_vars(port_var: Option<&str>, firewall_port_var: Option<&str>) -> u16 {
+    port_var
+        .and_then(|p| p.trim().parse::<u16>().ok())
+        .filter(|&p| p > 0)
+        .or_else(|| firewall_port_var.and_then(|p| p.trim().parse::<u16>().ok()).filter(|&p| p > 0))
+        .unwrap_or(8081)
+}
+
+pub fn resolve_listen_port() -> u16 {
+    let port_var = std::env::var("PORT").ok();
+    let fw_port_var = std::env::var("RUST_FIREWALL_PORT").ok();
+    resolve_listen_port_from_vars(port_var.as_deref(), fw_port_var.as_deref())
+}
+
 pub fn build_router() -> Router {
     Router::new()
         .route("/healthz", get(healthz))
+        .route("/api/healthz", get(healthz))
         .route("/v1/telemetry/spans", get(otel::handle_get_spans))
         .route("/v1/mandates/sign", post(mandate::handle_sign_mandate))
         .route("/v1/firewall/mandate/sign", post(mandate::handle_sign_mandate))
@@ -55,7 +70,7 @@ async fn main() {
     tracing_subscriber::fmt::init();
 
     let app = build_router();
-    let port: u16 = std::env::var("RUST_FIREWALL_PORT").ok().and_then(|p| p.parse().ok()).unwrap_or(8081);
+    let port = resolve_listen_port();
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
     tracing::info!("talos-firewall-rs listening on {}", addr);
 
@@ -73,6 +88,10 @@ mod tests {
         let Json(val) = healthz().await;
         assert_eq!(val["service"], "talos-firewall-rs");
         assert_eq!(val["status"], "ok");
+
+        assert_eq!(resolve_listen_port_from_vars(Some("10000"), Some("8081")), 10000);
+        assert_eq!(resolve_listen_port_from_vars(None, Some("9091")), 9091);
+        assert_eq!(resolve_listen_port_from_vars(Some("invalid"), None), 8081);
 
         let tp = "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01";
         let m_span = otel::record_mandate_verify_span(Some(tp), "mnd-test-01", true, "talos-kya-01", 0, 310);

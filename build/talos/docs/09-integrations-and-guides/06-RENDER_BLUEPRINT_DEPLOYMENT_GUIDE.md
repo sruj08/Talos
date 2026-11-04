@@ -1,6 +1,6 @@
 # 06 — Render Native Polyglot Blueprint (`render.yaml`) Deployment Guide — TALOS
 > Project: TALOS · Sponsor: **Render (`$1,000` 1st / `$750` 2nd / `$500` 3rd Credits — 3 Winners)** · Judge: **Shifra Williams** (Founding Developer Relations Engineer, Render) · Status: Approved v1.0 · Last updated: 2026-11-01
-> Related: [00-TRACKS_AND_SUBMISSION_STRATEGY](00-TRACKS_AND_SUBMISSION_STRATEGY.md) · [CICD_AND_INFRA](../04-ops/CICD_AND_INFRA.md) · [RUNBOOK](../04-ops/RUNBOOK.md)
+> Related: [00-TRACKS_AND_SUBMISSION_STRATEGY](00-TRACKS_AND_SUBMISSION_STRATEGY.md) · [INFRASTRUCTURE](../05-ops/INFRASTRUCTURE.md) · [RUNBOOK](../05-ops/RUNBOOK.md)
 
 ---
 
@@ -50,11 +50,13 @@ Most teams deploy a single static frontend or a single Node container to Render 
 Below is the exact `render.yaml` file placed at the root of `g:\PAYPAL\render.yaml` (validated against Render's official Blueprint Specification):
 
 ```yaml
-# render.yaml — TALOS 1-Click Native Polyglot Cloud Blueprint
-# Provisions Rust 1.85 + Go 1.24 + Next.js 15 + PostgreSQL 16 + Valkey 8 on Render
-
+# ==============================================================================
+# TALOS — RENDER NATIVE POLYGLOT BLUEPRINT (render.yaml)
+# Targets: Best Use of Render ($1,000 / $750 / $500 Credits) — Judge Shifra Williams
+# Deploys Rust 1.85 + Golang 1.24 + Next.js 15 + PostgreSQL 16 + Valkey in 1 click!
+# ==============================================================================
 services:
-  # 1. RUST ZERO-TRUST KYA & DOM PROMPT-INJECTION FIREWALL KERNEL
+  # 1. Rust Zero-Trust KYA & Prompt-Injection Firewall Kernel (runtime: rust)
   - type: web
     name: talos-firewall-rs
     runtime: rust
@@ -69,6 +71,10 @@ services:
         value: info,talos_firewall_rs=debug
       - key: PORT
         value: "8081"
+      - key: RUST_FIREWALL_PORT
+        value: "8081"
+      - key: RUST_ED25519_SEED_HEX
+        generateValue: true
       - key: MANDATE_SIGNING_SEED_HEX
         generateValue: true
       - key: ELASTIC_OTLP_ENDPOINT
@@ -76,7 +82,7 @@ services:
       - key: ELASTIC_API_KEY
         sync: false
 
-  # 2. GOLANG 2PC ESCROW STATE MACHINE & MULTI-SPONSOR ORCHESTRATOR
+  # 2. Golang 2PC Escrow State Machine & APIMatic PayPal Sandbox Gateway (runtime: go)
   - type: web
     name: talos-orchestrator-go
     runtime: go
@@ -89,6 +95,8 @@ services:
     envVars:
       - key: PORT
         value: "8080"
+      - key: GO_ORCHESTRATOR_PORT
+        value: "8080"
       - key: DATABASE_URL
         fromDatabase:
           name: talos-postgres
@@ -98,11 +106,18 @@ services:
           type: keyvalue
           name: talos-valkey
           property: connectionString
-      - key: FIREWALL_RS_INTERNAL_URL
+      - key: RUST_FIREWALL_URL
         fromService:
           type: web
           name: talos-firewall-rs
           envVarKey: RENDER_EXTERNAL_URL
+      - key: FIREWALL_RS_INTERNAL_URL
+        fromService:
+          type: web
+          name: talos-firewall-rs
+          property: hostport
+      - key: PAYPAL_ENVIRONMENT
+        value: sandbox
       - key: PAYPAL_ENV
         value: sandbox
       - key: PAYPAL_API_BASE_URL
@@ -121,8 +136,12 @@ services:
         sync: false
       - key: ELASTIC_API_KEY
         sync: false
+      - key: ELASTICSEARCH_URL
+        sync: false
+      - key: TALOS_SANDBOX_FALLBACK_ENABLED
+        value: "true"
 
-  # 3. NEXT.JS 15 COMMAND CENTER (AG STUDIO + BRYNTUM SCHEDULER PRO + PAYPAL JS SDK v6)
+  # 3. Next.js 15 Command Center UI: AG Studio + Bryntum Scheduler Pro + PayPal JS SDK v6 (runtime: node)
   - type: web
     name: talos-console-web
     runtime: node
@@ -135,12 +154,21 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: "3000"
       - key: NEXT_PUBLIC_ORCHESTRATOR_URL
         fromService:
           type: web
           name: talos-orchestrator-go
           envVarKey: RENDER_EXTERNAL_URL
+      - key: NEXT_PUBLIC_FIREWALL_URL
+        fromService:
+          type: web
+          name: talos-firewall-rs
+          envVarKey: RENDER_EXTERNAL_URL
       - key: NEXT_PUBLIC_PAYPAL_CLIENT_ID
+        sync: false
+      - key: NEXT_PUBLIC_AG_GRID_LICENSE_KEY
         sync: false
       - key: PAYPAL_CLIENT_ID
         sync: false
@@ -148,19 +176,22 @@ services:
         sync: false
       - key: APIMATIC_API_KEY
         sync: false
+      - key: NEXT_PUBLIC_TALOS_SANDBOX_FALLBACK_ENABLED
+        value: "true"
 
-  # 4. RENDER MANAGED KEY-VALUE (VALKEY / REDIS) FOR PAYPAL-REQUEST-ID IDEMPOTENCY LOCKS
+  # 4. Managed Valkey / Redis for PayPal-Request-Id Idempotency Locks & WebSocket Pub/Sub
   - type: keyvalue
     name: talos-valkey
     plan: starter
     region: oregon
+    maxmemoryPolicy: allkeys-lru
     ipAllowList: []
 
 databases:
-  # 5. RENDER MANAGED POSTGRESQL 16 FOR IMMUTABLE 2PC ESCROW & AUDIT LEDGERS
+  # 5. Managed PostgreSQL 16 for Immutable 2PC Escrow & KYA Mandate Ledger
   - name: talos-postgres
     databaseName: talos
-    user: talos_admin
+    user: talos
     plan: starter
     region: oregon
     postgresMajorVersion: "16"
@@ -171,11 +202,12 @@ databases:
 ## 4. Post-Deployment Verification & Updating Your PayPal Sandbox Webhook URL
 
 Once all 5 services turn green (`Live`) in the Render Dashboard:
-1. Verify each service's health check endpoint in your browser or terminal:
+1. Verify each service's health check and webhook verification endpoints via `scripts/verify-deployment.sh` (or `scripts/verify-deployment.ps1`):
    ```bash
-   curl -s https://talos-firewall-rs.onrender.com/healthz
-   curl -s https://talos-orchestrator-go.onrender.com/healthz
-   curl -s https://talos-console-web.onrender.com/api/healthz
+   RUST_FIREWALL_URL="https://talos-firewall-rs.onrender.com" \
+   GO_ORCHESTRATOR_URL="https://talos-orchestrator-go.onrender.com" \
+   WEB_CONSOLE_URL="https://talos-console-web.onrender.com" \
+   bash scripts/verify-deployment.sh
    ```
 2. Copy your live Go Orchestrator URL (`https://talos-orchestrator-go.onrender.com`) and paste `https://talos-orchestrator-go.onrender.com/api/v1/webhooks/paypal` into your **PayPal Developer Dashboard → Apps & Credentials → Sandbox Webhooks** (Step 2.4 of Guide `01`).
 3. Copy your live Next.js Command Center URL (`https://talos-console-web.onrender.com`) and place it at the very top of `README.md` and in the **Devpost "Try It Out" URL** field!
@@ -184,6 +216,7 @@ Once all 5 services turn green (`Live`) in the Render Dashboard:
 
 ## 5. Verification Checklist for Judge Shifra Williams (`Best Use of Render`)
 
-- [ ] **1. `render.yaml` Committed at Repo Root**: Uses native `runtime: rust`, `runtime: go`, `runtime: node`, `type: keyvalue`, and `databases:` with `fromService` and `fromDatabase` service discovery wiring.
-- [ ] **2. Zero-Downtime Health Checks (`/healthz`)**: Every service exposes a fast `/healthz` endpoint returning service build SHA, uptime, and connected backing-store latency.
-- [ ] **3. Deploy to Render Badge in `README.md`**: Includes `[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)` at the top of `README.md`.
+- [x] **1. `render.yaml` Committed at Repo Root**: Uses native `runtime: rust`, `runtime: go`, `runtime: node`, `type: keyvalue`, and `databases:` (`postgresMajorVersion: "16"`) with `fromService` and `fromDatabase` service discovery wiring.
+- [x] **2. Zero-Downtime Health Checks (`/healthz` & `/api/healthz`)**: Every service (`talos-firewall-rs`, `talos-orchestrator-go`, `talos-console-web`) exposes `/healthz` and `/api/healthz` returning `200 OK` JSON.
+- [x] **3. Deploy to Render Badge in `README.md`**: Includes `[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)` at the top of `README.md`.
+

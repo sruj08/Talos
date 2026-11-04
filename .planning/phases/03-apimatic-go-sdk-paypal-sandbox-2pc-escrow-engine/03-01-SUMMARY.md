@@ -41,8 +41,8 @@ metrics:
 # Phase 03 Plan 01: APIMatic Go SDK Generation & Verification Summary
 
 ## Accomplishments
-- Implemented `Client` in [`client.go`](file:///d:/Hackathons/PayPal/Talos/sdk/paypal-go-apimatic/client.go) (`241` lines) with `GetAccessToken(ctx)` (`POST /v1/oauth2/token`), thread-safe `sync.RWMutex` token caching with a 60-second safety margin, `PayPal-Request-Id` header enforcement on mutating calls, exponential backoff retry on `502`/`503`/`504`, and `FallbackMode`.
-- Implemented PayPal Orders v2 methods (`CreateOrder`, `AuthorizeOrder`, `CreateAndAuthorizeOrder`) in [`orders_v2.go`](file:///d:/Hackathons/PayPal/Talos/sdk/paypal-go-apimatic/orders_v2.go) (`243` lines).
-- Implemented PayPal Payments v2 methods (`CaptureAuthorization`, `VoidAuthorization`) in [`payments_v2.go`](file:///d:/Hackathons/PayPal/Talos/sdk/paypal-go-apimatic/payments_v2.go) (`155` lines).
-- Implemented PayPal Shipping Tracking v1 (`CreateTrackingBatch`) in [`tracking_v1.go`](file:///d:/Hackathons/PayPal/Talos/sdk/paypal-go-apimatic/tracking_v1.go) (`64` lines) and Customer Disputes v1 (`ProvideDisputeEvidence`) in [`disputes_v1.go`](file:///d:/Hackathons/PayPal/Talos/sdk/paypal-go-apimatic/disputes_v1.go) (`91` lines).
-- Verified with unit tests, concurrent token cache tests, retry recovery tests, deterministic fallback tests, and live PayPal Sandbox OAuth2 + `CreateOrder` smoke tests in [`client_test.go`](file:///d:/Hackathons/PayPal/Talos/sdk/paypal-go-apimatic/client_test.go) (`239` lines).
+- Implemented `Client` in [`client.go`](file:///g:/PAYPAL/sdk/paypal-go-apimatic/client.go) (`231` lines) with `AcquireToken(ctx)` (`POST /v1/oauth2/token`), thread-safe `sync.RWMutex` token caching with a 60-second safety margin, `PayPal-Request-Id` header enforcement on mutating calls, exponential backoff retry on `502`/`503`/`504`, and `FallbackMode`.
+- Implemented PayPal Orders v2 methods (`CreateOrder`, `AuthorizeOrder`) in [`orders_v2.go`](file:///g:/PAYPAL/sdk/paypal-go-apimatic/orders_v2.go) (`221` lines).
+- Implemented PayPal Payments v2 methods (`CaptureAuthorization`, `VoidAuthorization`) in [`payments_v2.go`](file:///g:/PAYPAL/sdk/paypal-go-apimatic/payments_v2.go) (`149` lines).
+- Implemented PayPal Shipping Tracking v1 (`CreateTrackingBatch`) in [`tracking_v1.go`](file:///g:/PAYPAL/sdk/paypal-go-apimatic/tracking_v1.go) (`79` lines) and Customer Disputes v1 (`ProvideDisputeEvidence`) in [`disputes_v1.go`](file:///g:/PAYPAL/sdk/paypal-go-apimatic/disputes_v1.go) (`82` lines).
+- Verified with unit tests, concurrent token cache tests, retry recovery tests, deterministic fallback tests, and live PayPal Sandbox OAuth2 + `CreateOrder` smoke tests in [`client_test.go`](file:///g:/PAYPAL/sdk/paypal-go-apimatic/client_test.go) (`197` lines).

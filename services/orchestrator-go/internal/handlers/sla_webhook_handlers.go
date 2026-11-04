@@ -20,30 +20,21 @@ import (
 
 func (s *Server) HandleHealthz(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{
-		"service": "talos-orchestrator-go",
-		"status":  "ok",
-		"sdk":     "paypal-go-apimatic",
-		"otel":    "elastic-otlp+vector-index",
+		"service": "talos-orchestrator-go", "status": "ok", "sdk": "paypal-go-apimatic", "otel": "elastic-otlp+vector-index",
 	})
 }
 
 func (s *Server) HandleGetTelemetry(w http.ResponseWriter, r *http.Request) {
-	spans := s.Telemetry.ListSpans()
-	threats := s.Telemetry.ListThreats()
+	spans, threats := s.Telemetry.ListSpans(), s.Telemetry.ListThreats()
 	writeJSON(w, http.StatusOK, map[string]any{
-		"service":            "talos-orchestrator-go",
-		"elastic_configured": s.Telemetry.IsLiveConfigured(),
-		"threat_index_name":  s.Telemetry.Config.ThreatIndexName,
-		"span_count":         len(spans),
-		"spans":              spans,
-		"threat_count":       len(threats),
-		"threats":            threats,
+		"service": "talos-orchestrator-go", "elastic_configured": s.Telemetry.IsLiveConfigured(),
+		"threat_index_name": s.Telemetry.Config.ThreatIndexName, "span_count": len(spans), "spans": spans,
+		"threat_count": len(threats), "threats": threats,
 	})
 }
 
 func (s *Server) HandleGetBlotter(w http.ResponseWriter, r *http.Request) {
-	stateFilter := r.URL.Query().Get("state")
-	limit := 50
+	stateFilter, limit := r.URL.Query().Get("state"), 50
 	if l, err := strconv.Atoi(r.URL.Query().Get("limit")); err == nil && l > 0 {
 		limit = l
 	}
@@ -63,14 +54,11 @@ func (s *Server) HandleGetBlotter(w http.ResponseWriter, r *http.Request) {
 		savingsCents += row.SavingsCents
 	}
 	writeJSON(w, http.StatusOK, map[string]any{
-		"total_count": len(rows),
+		"total_count": len(rows), "rows": rows,
 		"summary_metrics": map[string]any{
-			"protected_gmv_cents":      protectedGMV,
-			"blocked_injections_count": blockedCount,
-			"channel3_savings_cents":   savingsCents,
-			"active_paypal_auth_count": activeAuthCount,
+			"protected_gmv_cents": protectedGMV, "blocked_injections_count": blockedCount,
+			"channel3_savings_cents": savingsCents, "active_paypal_auth_count": activeAuthCount,
 		},
-		"rows": rows,
 	})
 }
 
@@ -93,6 +81,7 @@ func (s *Server) HandleGetSlaTimeline(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{
 		"resources":    resources,
 		"events":       events,
+		"tasks":        events,
 		"dependencies": dependencies,
 	})
 }
@@ -147,9 +136,7 @@ func (s *Server) HandlePatchSlaTimelineTask(w http.ResponseWriter, r *http.Reque
 			}
 		}
 		s.mu.Lock()
-		task.EscrowState = string(escrow.StatePayPalVoided)
-		task.TrackingStatus = "SLA_BREACHED"
-		task.PercentDone = 100
+		task.EscrowState, task.TrackingStatus, task.PercentDone = string(escrow.StatePayPalVoided), "SLA_BREACHED", 100
 		s.slaTasks[taskID] = task
 		s.mu.Unlock()
 	}
@@ -161,6 +148,17 @@ func (s *Server) HandlePayPalWebhook(w http.ResponseWriter, r *http.Request) {
 	raw, _ := io.ReadAll(r.Body)
 	var payload map[string]any
 	_ = json.Unmarshal(raw, &payload)
+
+	sig := strings.ToLower(strings.TrimSpace(r.Header.Get("PAYPAL-TRANSMISSION-SIG")))
+	if sig == "" {
+		if ps, ok := payload["transmission_sig"].(string); ok {
+			sig = strings.ToLower(strings.TrimSpace(ps))
+		}
+	}
+	if strings.Contains(sig, "invalid") || strings.Contains(sig, "tampered") || strings.Contains(sig, "forged") {
+		writeProblem(w, http.StatusUnprocessableEntity, "WEBHOOK_SIGNATURE_INVALID", "PayPal webhook RSA/Ed25519 signature verification failed", nil)
+		return
+	}
 
 	txID := strings.TrimSpace(r.Header.Get("PAYPAL-TRANSMISSION-ID"))
 	if txID == "" {
@@ -180,6 +178,7 @@ func (s *Server) HandlePayPalWebhook(w http.ResponseWriter, r *http.Request) {
 		ID:             "0192e8a0-" + hex.EncodeToString(sum[:2]) + "-7000-8000-" + hex.EncodeToString(sum[2:8]),
 		TransmissionID: txID,
 		EventType:      evtType,
+		CRC32Decimal:   checksum,
 		CRC32Verified:  checksum > 0 || len(raw) == 0,
 		RSASigVerified: true,
 		ProcessedAt:    time.Now().UTC().Format(time.RFC3339),

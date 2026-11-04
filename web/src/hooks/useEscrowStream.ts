@@ -6,6 +6,7 @@ import {
   TALOS_ESCROW_EVENT,
   TalosEscrowEventDetail,
   formatUsdInr,
+  resolveOrchestratorWsUrl,
 } from '../lib/phase6-events';
 
 export interface EscrowBlotterRow {
@@ -168,7 +169,7 @@ export function applyEscrowEventToRows(
 }
 
 export function useEscrowStream(
-  wsUrl = process.env.NEXT_PUBLIC_ORCHESTRATOR_WS_URL || 'ws://localhost:8080/ws/events'
+  wsUrl = resolveOrchestratorWsUrl()
 ) {
   const [connected, setConnected] = useState<boolean>(Boolean(wsUrl));
   const [mode, setMode] = useState<'LIVE_WS' | 'SIMULATION_FALLBACK'>('SIMULATION_FALLBACK');

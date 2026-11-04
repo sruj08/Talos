@@ -1,6 +1,6 @@
 # 07 — Elastic Cloud OpenTelemetry APM & Vector Threat Index Guide — TALOS
 > Project: TALOS · Jury Alignment: **Elastic** · Judge: **Carly Richmond** (Principal Developer Advocate & Team Lead, Elastic) · Status: Approved v1.0 · Last updated: 2026-11-01
-> Related: [00-TRACKS_AND_SUBMISSION_STRATEGY](00-TRACKS_AND_SUBMISSION_STRATEGY.md) · [AI_AND_MODELS](../03-engineering/AI_AND_MODELS.md) · [OBSERVABILITY](../04-ops/OBSERVABILITY.md)
+> Related: [00-TRACKS_AND_SUBMISSION_STRATEGY](00-TRACKS_AND_SUBMISSION_STRATEGY.md) · [MODELS](../04-ai/MODELS.md) · [OBSERVABILITY](../05-ops/OBSERVABILITY.md)
 
 ---
 

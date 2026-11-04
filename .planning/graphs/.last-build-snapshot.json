@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "timestamp": "2026-11-02T05:56:14.724Z",
+  "timestamp": "2026-11-04T14:17:35.544Z",
   "nodes": [
     {
       "id": ".env.example",
@@ -104,7 +104,7 @@
       "path": "biblehackathon.pdf",
       "type": "doc",
       "community": "C-07",
-      "bytes": 979491
+      "bytes": 979372
     },
     {
       "id": "docker-compose.yml",
@@ -112,7 +112,7 @@
       "path": "docker-compose.yml",
       "type": "config",
       "community": "C-08",
-      "bytes": 754
+      "bytes": 708
     },
     {
       "id": "ideas.md",
@@ -128,7 +128,7 @@
       "path": "ideas.pdf",
       "type": "doc",
       "community": "C-07",
-      "bytes": 1952279
+      "bytes": 1952588
     },
     {
       "id": "render.yaml",
@@ -168,7 +168,7 @@
       "path": ".agent/tasks.json",
       "type": "config",
       "community": "C-06",
-      "bytes": 25625
+      "bytes": 25054
     },
     {
       "id": ".agent/logs/LOG.md",
@@ -176,7 +176,7 @@
       "path": ".agent/logs/LOG.md",
       "type": "config",
       "community": "C-06",
-      "bytes": 166
+      "bytes": 3872
     },
     {
       "id": ".agent/prd/PRD.md",
@@ -200,7 +200,7 @@
       "path": ".agent/tasks/TASK-01.json",
       "type": "config",
       "community": "C-06",
-      "bytes": 1275
+      "bytes": 1237
     },
     {
       "id": ".agent/tasks/TASK-02.json",
@@ -208,7 +208,7 @@
       "path": ".agent/tasks/TASK-02.json",
       "type": "config",
       "community": "C-06",
-      "bytes": 1195
+      "bytes": 1164
     },
     {
       "id": ".agent/tasks/TASK-03.json",
@@ -280,7 +280,7 @@
       "path": ".agent/tasks/TASK-11.json",
       "type": "config",
       "community": "C-06",
-      "bytes": 1687
+      "bytes": 1656
     },
     {
       "id": ".agent/tasks/TASK-12.json",
@@ -288,7 +288,7 @@
       "path": ".agent/tasks/TASK-12.json",
       "type": "config",
       "community": "C-06",
-      "bytes": 1693
+      "bytes": 1658
     },
     {
       "id": ".agent/tasks/TASK-13.json",
@@ -328,7 +328,7 @@
       "path": ".github/workflows/ci-rust-go-web.yml",
       "type": "config",
       "community": "C-08",
-      "bytes": 6795
+      "bytes": 4804
     },
     {
       "id": ".github/workflows/deploy-render.yml",
@@ -336,7 +336,7 @@
       "path": ".github/workflows/deploy-render.yml",
       "type": "config",
       "community": "C-08",
-      "bytes": 4235
+      "bytes": 3172
     },
     {
       "id": ".github/workflows/security-and-eval.yml",
@@ -344,7 +344,7 @@
       "path": ".github/workflows/security-and-eval.yml",
       "type": "config",
       "community": "C-08",
-      "bytes": 4559
+      "bytes": 2925
     },
     {
       "id": ".planning/PROJECT.md",
@@ -360,7 +360,7 @@
       "path": ".planning/ROADMAP.md",
       "type": "config",
       "community": "C-06",
-      "bytes": 1138
+      "bytes": 4762
     },
     {
       "id": ".planning/STATE.md",
@@ -368,7 +368,7 @@
       "path": ".planning/STATE.md",
       "type": "config",
       "community": "C-06",
-      "bytes": 436
+      "bytes": 757
     },
     {
       "id": ".planning/config.json",
@@ -384,7 +384,7 @@
       "path": ".planning/graphs/CODEBASE_INDEX.md",
       "type": "config",
       "community": "C-06",
-      "bytes": 8958
+      "bytes": 9881
     },
     {
       "id": ".planning/graphs/GRAPH_REPORT.md",
@@ -392,7 +392,7 @@
       "path": ".planning/graphs/GRAPH_REPORT.md",
       "type": "config",
       "community": "C-06",
-      "bytes": 4235
+      "bytes": 4340
     },
     {
       "id": ".planning/graphs/graph.json",
@@ -400,7 +400,7 @@
       "path": ".planning/graphs/graph.json",
       "type": "config",
       "community": "C-06",
-      "bytes": 50534
+      "bytes": 51526
     },
     {
       "id": "api/openapi.yaml",
@@ -1136,7 +1136,7 @@
       "path": "sdk/paypal-go-apimatic/client.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 738
+      "bytes": 710
     },
     {
       "id": "sdk/paypal-go-apimatic/disputes_v1.go",
@@ -1144,7 +1144,7 @@
       "path": "sdk/paypal-go-apimatic/disputes_v1.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 430
+      "bytes": 420
     },
     {
       "id": "sdk/paypal-go-apimatic/go.mod",
@@ -1160,7 +1160,7 @@
       "path": "sdk/paypal-go-apimatic/orders_v2.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 729
+      "bytes": 711
     },
     {
       "id": "sdk/paypal-go-apimatic/payments_v2.go",
@@ -1168,7 +1168,7 @@
       "path": "sdk/paypal-go-apimatic/payments_v2.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 571
+      "bytes": 557
     },
     {
       "id": "sdk/paypal-go-apimatic/tracking_v1.go",
@@ -1176,7 +1176,7 @@
       "path": "sdk/paypal-go-apimatic/tracking_v1.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 364
+      "bytes": 355
     },
     {
       "id": "services/firewall-rs/Cargo.toml",
@@ -1192,7 +1192,7 @@
       "path": "services/firewall-rs/src/main.rs",
       "type": "code",
       "community": "C-01",
-      "bytes": 1602
+      "bytes": 1624
     },
     {
       "id": "services/firewall-rs/src/mandate.rs",
@@ -1200,7 +1200,7 @@
       "path": "services/firewall-rs/src/mandate.rs",
       "type": "code",
       "community": "C-01",
-      "bytes": 2919
+      "bytes": 4375
     },
     {
       "id": "services/firewall-rs/src/mcp_server.rs",
@@ -1208,7 +1208,7 @@
       "path": "services/firewall-rs/src/mcp_server.rs",
       "type": "code",
       "community": "C-01",
-      "bytes": 1334
+      "bytes": 1468
     },
     {
       "id": "services/firewall-rs/src/sanitizer.rs",
@@ -1216,7 +1216,7 @@
       "path": "services/firewall-rs/src/sanitizer.rs",
       "type": "code",
       "community": "C-01",
-      "bytes": 1783
+      "bytes": 2321
     },
     {
       "id": "services/firewall-rs/src/webhook_verify.rs",
@@ -1224,7 +1224,7 @@
       "path": "services/firewall-rs/src/webhook_verify.rs",
       "type": "code",
       "community": "C-01",
-      "bytes": 830
+      "bytes": 862
     },
     {
       "id": "services/orchestrator-go/go.mod",
@@ -1240,7 +1240,7 @@
       "path": "services/orchestrator-go/cmd/server/main.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 697
+      "bytes": 669
     },
     {
       "id": "services/orchestrator-go/internal/channel3/oracle.go",
@@ -1248,7 +1248,7 @@
       "path": "services/orchestrator-go/internal/channel3/oracle.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 815
+      "bytes": 795
     },
     {
       "id": "services/orchestrator-go/internal/escrow/machine.go",
@@ -1256,7 +1256,7 @@
       "path": "services/orchestrator-go/internal/escrow/machine.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 1379
+      "bytes": 1343
     },
     {
       "id": "services/orchestrator-go/internal/kernel/browser.go",
@@ -1264,7 +1264,7 @@
       "path": "services/orchestrator-go/internal/kernel/browser.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 260
+      "bytes": 253
     },
     {
       "id": "services/orchestrator-go/internal/paypal/service.go",
@@ -1272,7 +1272,7 @@
       "path": "services/orchestrator-go/internal/paypal/service.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 233
+      "bytes": 225
     },
     {
       "id": "services/orchestrator-go/internal/store/store.go",
@@ -1280,7 +1280,7 @@
       "path": "services/orchestrator-go/internal/store/store.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 204
+      "bytes": 9385
     },
     {
       "id": "services/orchestrator-go/internal/telemetry/elastic_otel.go",
@@ -1288,7 +1288,7 @@
       "path": "services/orchestrator-go/internal/telemetry/elastic_otel.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 251
+      "bytes": 243
     },
     {
       "id": "services/orchestrator-go/internal/ws/hub.go",
@@ -1296,7 +1296,7 @@
       "path": "services/orchestrator-go/internal/ws/hub.go",
       "type": "code",
       "community": "C-02",
-      "bytes": 300
+      "bytes": 292
     },
     {
       "id": "services/orchestrator-go/migrations/0001_init_schema.up.sql",
@@ -1304,7 +1304,7 @@
       "path": "services/orchestrator-go/migrations/0001_init_schema.up.sql",
       "type": "code",
       "community": "C-02",
-      "bytes": 4570
+      "bytes": 13105
     },
     {
       "id": "tests/redteam/prompt_injection_suite.json",
@@ -1416,7 +1416,7 @@
       "path": "web/package.json",
       "type": "code",
       "community": "C-03",
-      "bytes": 856
+      "bytes": 846
     },
     {
       "id": "web/e2e/talos-3act-demo.spec.ts",
@@ -1448,7 +1448,7 @@
       "path": "web/src/app/api/mcp/paypal-bridge/route.ts",
       "type": "code",
       "community": "C-03",
-      "bytes": 384
+      "bytes": 6694
     },
     {
       "id": "web/src/components/AgStudioBlotter.tsx",
@@ -1464,7 +1464,7 @@
       "path": "web/src/components/BryntumSlaBoard.tsx",
       "type": "code",
       "community": "C-03",
-      "bytes": 551
+      "bytes": 10022
     },
     {
       "id": "web/src/components/ForensicDetailPanel.tsx",
@@ -1488,7 +1488,7 @@
       "path": "web/src/components/PayPalStepUpModal.tsx",
       "type": "code",
       "community": "C-03",
-      "bytes": 510
+      "bytes": 5789
     },
     {
       "id": "web/src/components/PoisonedStoreSim.tsx",
@@ -1496,7 +1496,7 @@
       "path": "web/src/components/PoisonedStoreSim.tsx",
       "type": "code",
       "community": "C-03",
-      "bytes": 540
+      "bytes": 5198
     },
     {
       "id": "web/src/hooks/useEscrowStream.ts",
@@ -1505,6 +1505,278 @@
       "type": "code",
       "community": "C-03",
       "bytes": 252
+    },
+    {
+      "id": "web/src/lib/phase6-events.ts",
+      "label": "phase6-events.ts",
+      "path": "web/src/lib/phase6-events.ts",
+      "type": "code",
+      "community": "C-03",
+      "bytes": 6367
+    },
+    {
+      "id": "web/src/hooks/useBryntumTimeline.ts",
+      "label": "useBryntumTimeline.ts",
+      "path": "web/src/hooks/useBryntumTimeline.ts",
+      "type": "code",
+      "community": "C-03",
+      "bytes": 9057
+    },
+    {
+      "id": "web/src/hooks/usePayPalStepUp.ts",
+      "label": "usePayPalStepUp.ts",
+      "path": "web/src/hooks/usePayPalStepUp.ts",
+      "type": "code",
+      "community": "C-03",
+      "bytes": 6185
+    },
+    {
+      "id": "web/src/hooks/usePoisonedStoreSim.ts",
+      "label": "usePoisonedStoreSim.ts",
+      "path": "web/src/hooks/usePoisonedStoreSim.ts",
+      "type": "code",
+      "community": "C-03",
+      "bytes": 8236
+    },
+    {
+      "id": "web/src/components/BryntumSlaBoard.spec.tsx",
+      "label": "BryntumSlaBoard.spec.tsx",
+      "path": "web/src/components/BryntumSlaBoard.spec.tsx",
+      "type": "test",
+      "community": "C-03",
+      "bytes": 3297
+    },
+    {
+      "id": "web/src/components/Phase6Integration.spec.tsx",
+      "label": "Phase6Integration.spec.tsx",
+      "path": "web/src/components/Phase6Integration.spec.tsx",
+      "type": "test",
+      "community": "C-03",
+      "bytes": 7593
+    },
+    {
+      "id": "services/firewall-rs/.cargo/config.toml",
+      "label": "config.toml",
+      "path": "services/firewall-rs/.cargo/config.toml",
+      "type": "config",
+      "community": "C-01",
+      "bytes": 42
+    },
+    {
+      "id": "sdk/paypal-go-apimatic/client_test.go",
+      "label": "client_test.go",
+      "path": "sdk/paypal-go-apimatic/client_test.go",
+      "type": "test",
+      "community": "C-02",
+      "bytes": 7912
+    },
+    {
+      "id": "sdk/paypal-go-apimatic/apimatic-context-manifest.json",
+      "label": "apimatic-context-manifest.json",
+      "path": "sdk/paypal-go-apimatic/apimatic-context-manifest.json",
+      "type": "config",
+      "community": "C-02",
+      "bytes": 1420
+    },
+    {
+      "id": "sdk/paypal-go-apimatic/apimatic-meta.json",
+      "label": "apimatic-meta.json",
+      "path": "sdk/paypal-go-apimatic/apimatic-meta.json",
+      "type": "config",
+      "community": "C-02",
+      "bytes": 980
+    },
+    {
+      "id": "services/orchestrator-go/internal/handlers/api.go",
+      "label": "api.go",
+      "path": "services/orchestrator-go/internal/handlers/api.go",
+      "type": "code",
+      "community": "C-02",
+      "bytes": 8940
+    },
+    {
+      "id": "services/orchestrator-go/internal/handlers/escrow_handlers.go",
+      "label": "escrow_handlers.go",
+      "path": "services/orchestrator-go/internal/handlers/escrow_handlers.go",
+      "type": "code",
+      "community": "C-02",
+      "bytes": 7120
+    },
+    {
+      "id": "services/orchestrator-go/internal/handlers/tracking_dispute_handlers.go",
+      "label": "tracking_dispute_handlers.go",
+      "path": "services/orchestrator-go/internal/handlers/tracking_dispute_handlers.go",
+      "type": "code",
+      "community": "C-02",
+      "bytes": 5840
+    },
+    {
+      "id": "services/orchestrator-go/internal/handlers/sla_webhook_handlers.go",
+      "label": "sla_webhook_handlers.go",
+      "path": "services/orchestrator-go/internal/handlers/sla_webhook_handlers.go",
+      "type": "code",
+      "community": "C-02",
+      "bytes": 7680
+    },
+    {
+      "id": "services/orchestrator-go/internal/handlers/api_test.go",
+      "label": "api_test.go",
+      "path": "services/orchestrator-go/internal/handlers/api_test.go",
+      "type": "test",
+      "community": "C-02",
+      "bytes": 7240
+    },
+    {
+      "id": "web/src/hooks/useAgStudioBlotter.ts",
+      "label": "useAgStudioBlotter.ts",
+      "path": "web/src/hooks/useAgStudioBlotter.ts",
+      "type": "code",
+      "community": "C-03",
+      "bytes": 9210
+    },
+    {
+      "id": "web/src/components/MandateStudio.spec.tsx",
+      "label": "MandateStudio.spec.tsx",
+      "path": "web/src/components/MandateStudio.spec.tsx",
+      "type": "test",
+      "community": "C-03",
+      "bytes": 6120
+    },
+    {
+      "id": "web/src/components/AgStudioBlotter.spec.tsx",
+      "label": "AgStudioBlotter.spec.tsx",
+      "path": "web/src/components/AgStudioBlotter.spec.tsx",
+      "type": "test",
+      "community": "C-03",
+      "bytes": 7480
+    },
+    {
+      "id": "services/firewall-rs/src/otel.rs",
+      "label": "otel.rs",
+      "path": "services/firewall-rs/src/otel.rs",
+      "type": "code",
+      "community": "C-01",
+      "bytes": 7850
+    },
+    {
+      "id": "services/firewall-rs/tests/redteam_suite.rs",
+      "label": "redteam_suite.rs",
+      "path": "services/firewall-rs/tests/redteam_suite.rs",
+      "type": "test",
+      "community": "C-01",
+      "bytes": 3240
+    },
+    {
+      "id": "services/orchestrator-go/internal/telemetry/elastic_exporter.go",
+      "label": "elastic_exporter.go",
+      "path": "services/orchestrator-go/internal/telemetry/elastic_exporter.go",
+      "type": "code",
+      "community": "C-08",
+      "bytes": 8620
+    },
+    {
+      "id": "services/orchestrator-go/internal/telemetry/elastic_otel_test.go",
+      "label": "elastic_otel_test.go",
+      "path": "services/orchestrator-go/internal/telemetry/elastic_otel_test.go",
+      "type": "test",
+      "community": "C-08",
+      "bytes": 5395
+    },
+    {
+      "id": "web/playwright.config.ts",
+      "label": "playwright.config.ts",
+      "path": "web/playwright.config.ts",
+      "type": "config",
+      "community": "C-03",
+      "bytes": 882
+    },
+    {
+      "id": ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-01-PLAN.md",
+      "label": "07-01-PLAN.md",
+      "path": ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-01-PLAN.md",
+      "type": "doc",
+      "community": "C-06",
+      "bytes": 3480
+    },
+    {
+      "id": ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-01-SUMMARY.md",
+      "label": "07-01-SUMMARY.md",
+      "path": ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-01-SUMMARY.md",
+      "type": "doc",
+      "community": "C-06",
+      "bytes": 3920
+    },
+    {
+      "id": ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-EVAL-REVIEW.md",
+      "label": "07-EVAL-REVIEW.md",
+      "path": ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-EVAL-REVIEW.md",
+      "type": "doc",
+      "community": "C-06",
+      "bytes": 3760
+    },
+    {
+      "id": ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-VERIFICATION.md",
+      "label": "07-VERIFICATION.md",
+      "path": ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-VERIFICATION.md",
+      "type": "doc",
+      "community": "C-06",
+      "bytes": 3810
+    },
+    {
+      "id": "web/src/app/api/healthz/route.ts",
+      "label": "route.ts",
+      "path": "web/src/app/api/healthz/route.ts",
+      "type": "code",
+      "community": "C-03",
+      "bytes": 1040
+    },
+    {
+      "id": "web/src/app/healthz/route.ts",
+      "label": "route.ts",
+      "path": "web/src/app/healthz/route.ts",
+      "type": "code",
+      "community": "C-03",
+      "bytes": 48
+    },
+    {
+      "id": "web/src/app/api/healthz/route.spec.ts",
+      "label": "route.spec.ts",
+      "path": "web/src/app/api/healthz/route.spec.ts",
+      "type": "test",
+      "community": "C-03",
+      "bytes": 890
+    },
+    {
+      "id": "services/orchestrator-go/internal/handlers/deployment_webhook_test.go",
+      "label": "deployment_webhook_test.go",
+      "path": "services/orchestrator-go/internal/handlers/deployment_webhook_test.go",
+      "type": "test",
+      "community": "C-02",
+      "bytes": 1560
+    },
+    {
+      "id": "scripts/verify-deployment.ps1",
+      "label": "verify-deployment.ps1",
+      "path": "scripts/verify-deployment.ps1",
+      "type": "code",
+      "community": "C-08",
+      "bytes": 4210
+    },
+    {
+      "id": ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-01-PLAN.md",
+      "label": "08-01-PLAN.md",
+      "path": ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-01-PLAN.md",
+      "type": "doc",
+      "community": "C-06",
+      "bytes": 2350
+    },
+    {
+      "id": ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-01-SUMMARY.md",
+      "label": "08-01-SUMMARY.md",
+      "path": ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-01-SUMMARY.md",
+      "type": "doc",
+      "community": "C-06",
+      "bytes": 2180
     }
   ],
   "edges": [
@@ -1662,6 +1934,111 @@
       "source": "render.yaml",
       "target": "web/package.json",
       "relation": "deploys_nextjs15_web_service_F12"
+    },
+    {
+      "source": "web/src/components/BryntumSlaBoard.tsx",
+      "target": "web/src/hooks/useBryntumTimeline.ts",
+      "relation": "delegates_2way_sla_timeline_state_F08"
+    },
+    {
+      "source": "web/src/components/PayPalStepUpModal.tsx",
+      "target": "web/src/hooks/usePayPalStepUp.ts",
+      "relation": "delegates_paypal_js_sdk_v6_stepup_F09"
+    },
+    {
+      "source": "web/src/components/PoisonedStoreSim.tsx",
+      "target": "web/src/hooks/usePoisonedStoreSim.ts",
+      "relation": "delegates_3act_judge_simulator_F06"
+    },
+    {
+      "source": "web/src/hooks/useBryntumTimeline.ts",
+      "target": "web/src/lib/phase6-events.ts",
+      "relation": "dispatches_and_subscribes_talos_escrow_event_F08"
+    },
+    {
+      "source": "web/src/hooks/usePayPalStepUp.ts",
+      "target": "web/src/lib/phase6-events.ts",
+      "relation": "dispatches_and_subscribes_talos_escrow_event_F09"
+    },
+    {
+      "source": "web/src/hooks/usePoisonedStoreSim.ts",
+      "target": "web/src/lib/phase6-events.ts",
+      "relation": "dispatches_3act_scenario_events_F06"
+    },
+    {
+      "source": "services/orchestrator-go/cmd/server/main.go",
+      "target": "services/orchestrator-go/internal/handlers/api.go",
+      "relation": "mounts_chi_router_API05_API15"
+    },
+    {
+      "source": "services/orchestrator-go/internal/handlers/api.go",
+      "target": "services/orchestrator-go/internal/handlers/escrow_handlers.go",
+      "relation": "delegates_escrow_2pc_handlers_API07_09_10"
+    },
+    {
+      "source": "services/orchestrator-go/internal/handlers/api.go",
+      "target": "services/orchestrator-go/internal/handlers/tracking_dispute_handlers.go",
+      "relation": "delegates_channel3_tracking_dispute_handlers_API06_08_11"
+    },
+    {
+      "source": "services/orchestrator-go/internal/handlers/api.go",
+      "target": "services/orchestrator-go/internal/handlers/sla_webhook_handlers.go",
+      "relation": "delegates_blotter_sla_webhook_handlers_API12_13_14"
+    },
+    {
+      "source": "web/src/components/AgStudioBlotter.tsx",
+      "target": "web/src/hooks/useAgStudioBlotter.ts",
+      "relation": "delegates_ag_grid_copilot_and_presets_F07"
+    },
+    {
+      "source": "services/firewall-rs/src/main.rs",
+      "target": "services/firewall-rs/src/otel.rs",
+      "relation": "propagates_w3c_traceparent_and_otel_spans_F13"
+    },
+    {
+      "source": "services/firewall-rs/tests/redteam_suite.rs",
+      "target": "tests/redteam/prompt_injection_suite.json",
+      "relation": "executes_redteam_prompt_injection_benchmark"
+    },
+    {
+      "source": "services/orchestrator-go/internal/telemetry/elastic_otel.go",
+      "target": "services/orchestrator-go/internal/telemetry/elastic_exporter.go",
+      "relation": "exports_otlp_spans_and_threat_vectors_F13"
+    },
+    {
+      "source": "services/orchestrator-go/internal/handlers/api.go",
+      "target": "services/orchestrator-go/internal/telemetry/elastic_otel.go",
+      "relation": "records_checkout_trace_and_threat_embeddings_F13"
+    },
+    {
+      "source": "web/playwright.config.ts",
+      "target": "web/e2e/talos-3act-demo.spec.ts",
+      "relation": "executes_3act_judge_e2e_suite"
+    },
+    {
+      "source": ".github/workflows/deploy-render.yml",
+      "target": "postman/Talos-Sandbox-MCP.postman_collection.json",
+      "relation": "runs_newman_1click_smoke_suite"
+    },
+    {
+      "source": "render.yaml",
+      "target": "web/src/app/api/healthz/route.ts",
+      "relation": "probes_web_console_healthz_F12"
+    },
+    {
+      "source": "web/src/app/healthz/route.ts",
+      "target": "web/src/app/api/healthz/route.ts",
+      "relation": "aliases_root_healthz_to_api_healthz"
+    },
+    {
+      "source": "scripts/verify-deployment.sh",
+      "target": "render.yaml",
+      "relation": "verifies_5_resource_render_blueprint_TASK15"
+    },
+    {
+      "source": "scripts/verify-deployment.ps1",
+      "target": "render.yaml",
+      "relation": "verifies_5_resource_render_blueprint_TASK15"
     }
   ]
 }

@@ -8,6 +8,7 @@ import {
   TalosEscrowEventDetail,
   broadcastTalosEscrowEvent,
   formatUsdInr,
+  resolveOrchestratorUrl,
 } from '../lib/phase6-events';
 
 export interface UsePayPalStepUpOptions {
@@ -40,7 +41,7 @@ export function usePayPalStepUp({
 
   const createPayPalSandboxOrder = useCallback(async (): Promise<string> => {
     try {
-      const res = await fetch(`/api/v1/escrow/${stepUp.escrowId}/authorize`, {
+      const res = await fetch(resolveOrchestratorUrl(`/api/v1/escrow/${stepUp.escrowId}/authorize`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +70,7 @@ export function usePayPalStepUp({
       const orderId = approvedOrderId || (await createPayPalSandboxOrder());
       const authId = stepUp.paypalAuthId || `2ASTEPUP-${orderId.slice(-6)}`;
       try {
-        await fetch(`/api/v1/escrow/${stepUp.escrowId}/step-up-approve`, {
+        await fetch(resolveOrchestratorUrl(`/api/v1/escrow/${stepUp.escrowId}/step-up-approve`), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

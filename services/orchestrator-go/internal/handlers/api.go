@@ -62,10 +62,7 @@ func NewServer(st *store.Store, m *escrow.Machine, pp *paypal.SandboxService, or
 	if hub == nil {
 		hub = ws.NewHub()
 	}
-	fwURL := strings.TrimRight(strings.TrimSpace(os.Getenv("RUST_FIREWALL_URL")), "/")
-	if fwURL == "" {
-		fwURL = "http://localhost:8081"
-	}
+	fwURL := ResolveFirewallURL()
 	now := time.Now().UTC()
 	s := &Server{
 		Store: st, Machine: m, PayPal: pp, Oracle: orc, Inspector: insp, Telemetry: telemetry.InitElasticOTel(), Hub: hub,
@@ -105,6 +102,7 @@ func (s *Server) Router() http.Handler {
 	r.Post("/v1/mandates/verify", s.HandleProxyVerifyMandate)
 	r.Post("/v1/firewall/sanitize-dom", s.HandleProxySanitizeDOM)
 	r.Post("/v1/firewall/verify-webhook", s.HandleProxyVerifyWebhook)
+	r.Post("/v1/firewall/webhook/verify", s.HandleProxyVerifyWebhook)
 	r.Post("/mcp", s.HandleProxyMCP)
 	r.Post("/api/mcp/paypal-bridge", s.HandleProxyMCP)
 	r.Get("/ws/events", s.Hub.ServeHTTP)

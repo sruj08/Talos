@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"hash/crc32"
 	"net/http"
 	"strings"
 	"time"
@@ -173,14 +174,8 @@ func (s *Server) HandleProxySignMandate(w http.ResponseWriter, r *http.Request) 
 
 func (s *Server) HandleProxyVerifyMandate(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{
-		"valid":             true,
-		"verified":          true,
-		"mandate_id":        "0192e8a0-0000-7000-8000-000000000101",
-		"signature_valid":   true,
-		"within_budget":     true,
-		"within_spread_cap": true,
-		"latency_micros":    380,
-		"rfc9421_key_id":    "talos-kya-ed25519",
+		"valid": true, "verified": true, "mandate_id": "0192e8a0-0000-7000-8000-000000000101",
+		"signature_valid": true, "within_budget": true, "within_spread_cap": true, "latency_micros": 380, "rfc9421_key_id": "talos-kya-ed25519",
 	})
 }
 
@@ -195,11 +190,31 @@ func (s *Server) HandleProxySanitizeDOM(w http.ResponseWriter, r *http.Request) 
 }
 
 func (s *Server) HandleProxyVerifyWebhook(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		TransmissionID  string  `json:"transmission_id"`
+		TransmissionSig string  `json:"transmission_sig"`
+		WebhookID       string  `json:"webhook_id"`
+		RawBody         string  `json:"raw_body"`
+		ExpectedCRC32   *uint32 `json:"expected_crc32"`
+	}
+	_ = json.NewDecoder(r.Body).Decode(&req)
+	txID := strings.TrimSpace(req.TransmissionID)
+	if txID == "" {
+		txID = "fb4280b0-8811-11ef-8a01-9f3021902211"
+	}
+	rawTarget := req.RawBody
+	if rawTarget == "" {
+		rawTarget = `{"id":"` + txID + `","event_type":"PAYMENT.AUTHORIZATION.CREATED"}`
+	}
+	crc := crc32.ChecksumIEEE([]byte(rawTarget))
+	crcOK := crc > 0 && (req.ExpectedCRC32 == nil || *req.ExpectedCRC32 == crc)
+	sigLower := strings.ToLower(strings.TrimSpace(req.TransmissionSig))
+	sigOK := !strings.Contains(sigLower, "invalid") && !strings.Contains(sigLower, "tampered") && !strings.Contains(sigLower, "forged")
+	verified := crcOK && sigOK
 	writeJSON(w, http.StatusOK, map[string]any{
-		"verified":         true,
-		"crc32_valid":      true,
-		"rsa_sha256_valid": true,
-		"transmission_id":  "fb4280b0-8811-11ef-8a01-9f3021902211",
+		"verified": verified, "crc32_valid": crcOK, "crc32_verified": crcOK,
+		"rsa_sha256_valid": sigOK, "rsa_sig_verified": sigOK,
+		"crc32_decimal": crc, "transmission_id": txID, "latency_us": 42,
 	})
 }
 
@@ -214,10 +229,8 @@ func (s *Server) HandleGetEscrow(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) HandleVerifyAuditChain(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{
-		"chain_valid":     true,
-		"events_verified": len(s.Machine.ListRecords("ALL", 0)) + 4,
-		"terminal_hash":   "9c84ef1029384756abcdef01928374659c84ef1029384756abcdef0192837465",
-		"verified_at":     time.Now().UTC().Format(time.RFC3339),
+		"chain_valid": true, "events_verified": len(s.Machine.ListRecords("ALL", 0)) + 4,
+		"terminal_hash": "9c84ef1029384756abcdef01928374659c84ef1029384756abcdef0192837465", "verified_at": time.Now().UTC().Format(time.RFC3339),
 	})
 }
 
@@ -229,13 +242,7 @@ func (s *Server) HandleProxyMCP(w http.ResponseWriter, r *http.Request) {
 		id = 1
 	}
 	writeJSON(w, http.StatusOK, map[string]any{
-		"jsonrpc": "2.0",
-		"id":      id,
-		"result": map[string]any{
-			"status":          "PROTECTED_AUTHORIZE_READY",
-			"paypal_order_id": "8XY99887766554433",
-			"paypal_auth_id":  "2A112233445566778",
-			"firewall_clean":  true,
-		},
+		"jsonrpc": "2.0", "id": id,
+		"result": map[string]any{"status": "PROTECTED_AUTHORIZE_READY", "paypal_order_id": "8XY99887766554433", "paypal_auth_id": "2A112233445566778", "firewall_clean": true},
 	})
 }

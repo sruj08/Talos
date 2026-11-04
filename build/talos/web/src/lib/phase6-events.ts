@@ -166,6 +166,27 @@ export function broadcastTalosEscrowEvent(detail: TalosEscrowEventDetail): void 
   }
 }
 
+export function resolveOrchestratorUrl(path: string): string {
+  const raw = (process.env.NEXT_PUBLIC_ORCHESTRATOR_URL || '').trim();
+  if (!raw) return path;
+  const withScheme = /^https?:\/\//i.test(raw) ? raw : `http://${raw}`;
+  const base = withScheme.replace(/\/+$/, '');
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${base}${cleanPath}`;
+}
+
+export function resolveOrchestratorWsUrl(): string {
+  const wsEnv = (process.env.NEXT_PUBLIC_ORCHESTRATOR_WS_URL || '').trim();
+  if (wsEnv) return wsEnv;
+  const httpEnv = (process.env.NEXT_PUBLIC_ORCHESTRATOR_URL || '').trim();
+  if (httpEnv) {
+    const withScheme = /^https?:\/\//i.test(httpEnv) ? httpEnv : `http://${httpEnv}`;
+    const wsBase = withScheme.replace(/\/+$/, '').replace(/^https:/i, 'wss:').replace(/^http:/i, 'ws:');
+    return `${wsBase}/ws/events`;
+  }
+  return 'ws://localhost:8080/ws/events';
+}
+
 export async function callEscrowVoidApi(
   escrowId: string,
   taskId: string,
@@ -176,13 +197,13 @@ export async function callEscrowVoidApi(
     'PayPal-Request-Id': `void-${escrowId}`,
   };
   try {
-    await fetch(`/api/v1/sla/timeline/${taskId}`, {
+    await fetch(resolveOrchestratorUrl(`/api/v1/sla/timeline/${taskId}`), {
       method: 'PATCH',
       headers: reqHeaders,
       body: JSON.stringify({ tracking_status: 'SLA_BREACHED', trigger_void: true }),
     }).catch(() => null);
 
-    const res = await fetch(`/api/v1/escrow/${escrowId}/void`, {
+    const res = await fetch(resolveOrchestratorUrl(`/api/v1/escrow/${escrowId}/void`), {
       method: 'POST',
       headers: reqHeaders,
       body: JSON.stringify({

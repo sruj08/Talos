@@ -1,12 +1,12 @@
 {
     "version":  "2.0.0",
     "generator":  "gsd-graphify",
-    "generated_at":  "2026-11-04T19:00:00.0000000Z",
+    "generated_at":  "2026-11-04T20:32:00.0000000Z",
     "workspace":  "g:/PAYPAL",
     "project":  "TALOS",
     "stats":  {
-                  "total_nodes":  215,
-                  "total_edges":  48,
+                  "total_nodes":  229,
+                  "total_edges":  55,
                   "total_communities":  8
               },
     "communities":  [
@@ -1813,6 +1813,118 @@
                       "type":  "doc",
                       "community":  "C-06",
                       "bytes":  3810
+                  },
+                  {
+                      "id":  "web/src/app/api/healthz/route.ts",
+                      "label":  "route.ts",
+                      "path":  "web/src/app/api/healthz/route.ts",
+                      "type":  "code",
+                      "community":  "C-03",
+                      "bytes":  1040
+                  },
+                  {
+                      "id":  "web/src/app/healthz/route.ts",
+                      "label":  "route.ts",
+                      "path":  "web/src/app/healthz/route.ts",
+                      "type":  "code",
+                      "community":  "C-03",
+                      "bytes":  48
+                  },
+                  {
+                      "id":  "web/src/app/api/healthz/route.spec.ts",
+                      "label":  "route.spec.ts",
+                      "path":  "web/src/app/api/healthz/route.spec.ts",
+                      "type":  "test",
+                      "community":  "C-03",
+                      "bytes":  890
+                  },
+                  {
+                      "id":  "services/orchestrator-go/internal/handlers/deployment_webhook_test.go",
+                      "label":  "deployment_webhook_test.go",
+                      "path":  "services/orchestrator-go/internal/handlers/deployment_webhook_test.go",
+                      "type":  "test",
+                      "community":  "C-02",
+                      "bytes":  1560
+                  },
+                  {
+                      "id":  "scripts/verify-deployment.ps1",
+                      "label":  "verify-deployment.ps1",
+                      "path":  "scripts/verify-deployment.ps1",
+                      "type":  "code",
+                      "community":  "C-08",
+                      "bytes":  4210
+                  },
+                  {
+                      "id":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-01-PLAN.md",
+                      "label":  "08-01-PLAN.md",
+                      "path":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-01-PLAN.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  2350
+                  },
+                  {
+                      "id":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-01-SUMMARY.md",
+                      "label":  "08-01-SUMMARY.md",
+                      "path":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-01-SUMMARY.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  2830
+                  },
+                  {
+                      "id":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-02-PLAN.md",
+                      "label":  "08-02-PLAN.md",
+                      "path":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-02-PLAN.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  2850
+                  },
+                  {
+                      "id":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-02-SUMMARY.md",
+                      "label":  "08-02-SUMMARY.md",
+                      "path":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-02-SUMMARY.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  2760
+                  },
+                  {
+                      "id":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-DEVPOST-SUBMISSION-PACKET.md",
+                      "label":  "08-DEVPOST-SUBMISSION-PACKET.md",
+                      "path":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-DEVPOST-SUBMISSION-PACKET.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  12140
+                  },
+                  {
+                      "id":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-UAT.md",
+                      "label":  "08-UAT.md",
+                      "path":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-UAT.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  1760
+                  },
+                  {
+                      "id":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-VERIFICATION.md",
+                      "label":  "08-VERIFICATION.md",
+                      "path":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-VERIFICATION.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  1890
+                  },
+                  {
+                      "id":  ".planning/MILESTONE-AUDIT.md",
+                      "label":  "MILESTONE-AUDIT.md",
+                      "path":  ".planning/MILESTONE-AUDIT.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  5120
+                  },
+                  {
+                      "id":  ".planning/MILESTONE-SUMMARY.md",
+                      "label":  "MILESTONE-SUMMARY.md",
+                      "path":  ".planning/MILESTONE-SUMMARY.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  4480
                   }
               ],
     "edges":  [
@@ -2055,6 +2167,41 @@
                       "source":  ".github/workflows/deploy-render.yml",
                       "target":  "postman/Talos-Sandbox-MCP.postman_collection.json",
                       "relation":  "runs_newman_1click_smoke_suite"
+                  },
+                  {
+                      "source":  "render.yaml",
+                      "target":  "web/src/app/api/healthz/route.ts",
+                      "relation":  "probes_web_console_healthz_F12"
+                  },
+                  {
+                      "source":  "web/src/app/healthz/route.ts",
+                      "target":  "web/src/app/api/healthz/route.ts",
+                      "relation":  "aliases_root_healthz_to_api_healthz"
+                  },
+                  {
+                      "source":  "scripts/verify-deployment.sh",
+                      "target":  "render.yaml",
+                      "relation":  "verifies_5_resource_render_blueprint_TASK15"
+                  },
+                  {
+                      "source":  "scripts/verify-deployment.ps1",
+                      "target":  "render.yaml",
+                      "relation":  "verifies_5_resource_render_blueprint_TASK15"
+                  },
+                  {
+                      "source":  "docs/09-integrations-and-guides/00-TRACKS_AND_SUBMISSION_STRATEGY.md",
+                      "target":  ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-DEVPOST-SUBMISSION-PACKET.md",
+                      "relation":  "supplies_14_prize_devpost_submission_copy_TASK16"
+                  },
+                  {
+                      "source":  ".planning/MILESTONE-AUDIT.md",
+                      "target":  ".planning/MILESTONE-SUMMARY.md",
+                      "relation":  "certifies_v1_0_milestone_completion_TASK16"
+                  },
+                  {
+                      "source":  "README.md",
+                      "target":  "MAP.md",
+                      "relation":  "links_master_o1_codebase_index_TASK16"
                   }
               ]
 }

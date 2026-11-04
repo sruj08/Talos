@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/go-chi/chi/v5"
@@ -11,6 +12,24 @@ import (
 	"github.com/talos/services/orchestrator-go/internal/escrow"
 	"github.com/talos/services/orchestrator-go/internal/ws"
 )
+
+func NormalizeServiceURL(raw, fallback string) string {
+	val := strings.TrimSpace(raw)
+	if val == "" {
+		return fallback
+	}
+	if !strings.HasPrefix(val, "http://") && !strings.HasPrefix(val, "https://") {
+		val = "http://" + val
+	}
+	return strings.TrimRight(val, "/")
+}
+
+func ResolveFirewallURL() string {
+	if v := strings.TrimSpace(os.Getenv("RUST_FIREWALL_URL")); v != "" {
+		return NormalizeServiceURL(v, "http://localhost:8081")
+	}
+	return NormalizeServiceURL(os.Getenv("FIREWALL_RS_INTERNAL_URL"), "http://localhost:8081")
+}
 
 type SlaTimelineTask struct {
 	ID             string `json:"id"`
@@ -40,6 +59,7 @@ type WebhookEventLedger struct {
 	ID             string `json:"id"`
 	TransmissionID string `json:"transmission_id"`
 	EventType      string `json:"event_type"`
+	CRC32Decimal   uint32 `json:"crc32_decimal"`
 	CRC32Verified  bool   `json:"crc32_verified"`
 	RSASigVerified bool   `json:"rsa_sig_verified"`
 	ProcessedAt    string `json:"processed_at"`
@@ -60,19 +80,12 @@ func parseCheckoutReq(raw map[string]any) CheckoutEvaluateRequest {
 	}
 	reroute, _ := raw["allow_auto_reroute"].(bool)
 	return CheckoutEvaluateRequest{
-		MandateID:           str("mandate_id", "0192e8a0-0000-7000-8000-000000000101"),
-		Ed25519Signature:    str("ed25519_signature", strings.Repeat("b1", 64)),
-		SKUQuery:            str("sku_query", "Shure SM7B Vocal Dynamic Microphone"),
-		Category:            str("category", "Studio Audio"),
-		MerchantName:        str("merchant_name", "AudioPro Verified (Channel3 Preferred)"),
-		MerchantURL:         str("merchant_url", "https://verified-audio.trychannel3.com/sku/shure-sm7b"),
-		MerchantPayPalEmail: str("merchant_paypal_email", "merchant-talos@business.example.com"),
-		Currency:            str("currency", "USD"),
-		AmountCents:         num("amount_cents", 24900),
-		MaxAmountCents:      num("max_amount_cents", 30000),
-		MaxSpreadBps:        num("max_spread_bps", 1500),
-		RawHTMLOverride:     str("raw_html_override", ""),
-		AllowAutoReroute:    reroute,
+		MandateID: str("mandate_id", "0192e8a0-0000-7000-8000-000000000101"), Ed25519Signature: str("ed25519_signature", strings.Repeat("b1", 64)),
+		SKUQuery: str("sku_query", "Shure SM7B Vocal Dynamic Microphone"), Category: str("category", "Studio Audio"),
+		MerchantName: str("merchant_name", "AudioPro Verified (Channel3 Preferred)"), MerchantURL: str("merchant_url", "https://verified-audio.trychannel3.com/sku/shure-sm7b"),
+		MerchantPayPalEmail: str("merchant_paypal_email", "merchant-talos@business.example.com"), Currency: str("currency", "USD"),
+		AmountCents: num("amount_cents", 24900), MaxAmountCents: num("max_amount_cents", 30000), MaxSpreadBps: num("max_spread_bps", 1500),
+		RawHTMLOverride: str("raw_html_override", ""), AllowAutoReroute: reroute,
 	}
 }
 
@@ -112,12 +125,8 @@ func (s *Server) HandleAuthorizeEscrow(w http.ResponseWriter, r *http.Request) {
 			})
 		}
 		return s.Machine.Transition(escrowID, escrow.StatePayPalAuthorized, func(rec *escrow.Record) {
-			rec.PayPalOrderID = authResp.OrderID
-			rec.PayPalAuthID = authResp.AuthorizationID
-			rec.PayPalRequestID = reqID
-			rec.AmountCents = body.AmountCents
-			rec.StepUpRequired = false
-			rec.SandboxMode = authResp.SandboxMode
+			rec.PayPalOrderID, rec.PayPalAuthID, rec.PayPalRequestID = authResp.OrderID, authResp.AuthorizationID, reqID
+			rec.AmountCents, rec.StepUpRequired, rec.SandboxMode = body.AmountCents, false, authResp.SandboxMode
 		})
 	})
 	if err != nil {
@@ -181,8 +190,7 @@ func (s *Server) HandleCaptureEscrow(w http.ResponseWriter, r *http.Request) {
 			return nil, cErr
 		}
 		return s.Machine.Transition(escrowID, escrow.StatePayPalCaptured, func(r *escrow.Record) {
-			r.PayPalCaptureID = capResp.CaptureID
-			r.PayPalRequestID = reqID
+			r.PayPalCaptureID, r.PayPalRequestID = capResp.CaptureID, reqID
 		})
 	})
 	if err != nil {
@@ -206,6 +214,9 @@ func (s *Server) HandleVoidEscrow(w http.ResponseWriter, r *http.Request) {
 		if !ok {
 			return nil, escrow.ErrEscrowNotFound
 		}
+		if rec.State == escrow.StatePayPalVoided {
+			return rec, nil
+		}
 		authID := rec.PayPalAuthID
 		if authID == "" {
 			authID = "2A-" + escrowID
@@ -214,8 +225,7 @@ func (s *Server) HandleVoidEscrow(w http.ResponseWriter, r *http.Request) {
 			return nil, vErr
 		}
 		return s.Machine.Transition(escrowID, escrow.StatePayPalVoided, func(r *escrow.Record) {
-			r.PayPalRequestID = reqID
-			r.TrackingStatus = "SLA_BREACHED"
+			r.PayPalRequestID, r.TrackingStatus = reqID, "SLA_BREACHED"
 		})
 	})
 	if err != nil {

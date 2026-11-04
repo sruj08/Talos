@@ -1,8 +1,8 @@
 # GSD-Graphify Knowledge Graph Report — TALOS
 
-- **Generated At**: `2026-11-04T18:08:00+05:30`
-- **Total Indexed Nodes**: `215` files & canonical artifacts
-- **Total Architectural Edges**: `48` primary cross-module contracts
+- **Generated At**: `2026-11-04T20:32:00+05:30`
+- **Total Indexed Nodes**: `229` files & canonical artifacts
+- **Total Architectural Edges**: `55` primary cross-module contracts
 - **Leiden Communities**: `8` (`C-01`..`C-08`)
 
 ---
@@ -27,10 +27,12 @@ When an AI coding agent or developer starts any task, inspect the relevant God N
 | Community ID | Cluster Name | Primary Directory Scope | Key Files |
 | :--- | :--- | :--- | :--- |
 | **`C-01`** | **Rust Security Data Plane** | `services/firewall-rs/`, `tests/redteam/`, `docs/04-ai/` | `mandate.rs`, `sanitizer.rs`, `mcp_server.rs`, `webhook_verify.rs`, `otel.rs`, `redteam_suite.rs`, `prompt_injection_suite.json`, `MODELS.md`, `PROMPTS.md` |
-| **`C-02`** | **Go 2PC Control Plane & APIMatic SDK** | `services/orchestrator-go/`, `sdk/paypal-go-apimatic/`, `postman/` | `machine.go`, `oracle.go`, `browser.go`, `service.go`, `elastic_otel.go`, `elastic_exporter.go`, `api.go`, `escrow_handlers.go`, `tracking_dispute_handlers.go`, `sla_webhook_handlers.go`, `orders_v2.go`, `payments_v2.go`, `tracking_v1.go`, `disputes_v1.go`, `Talos-Sandbox-MCP.postman_collection.json` |
-| **`C-03`** | **Next.js 15 FinOps Command Center** | `web/` | `AgStudioBlotter.tsx`, `BryntumSlaBoard.tsx`, `PayPalStepUpModal.tsx`, `PoisonedStoreSim.tsx`, `ForensicDetailPanel.tsx`, `MandateStudio.tsx`, `useAgStudioBlotter.ts`, `useBryntumTimeline.ts`, `usePayPalStepUp.ts`, `usePoisonedStoreSim.ts`, `useEscrowStream.ts`, `phase6-events.ts`, `route.ts`, `talos-3act-demo.spec.ts` |
+| **`C-02`** | **Go 2PC Control Plane & APIMatic SDK** | `services/orchestrator-go/`, `sdk/paypal-go-apimatic/`, `postman/` | `machine.go`, `oracle.go`, `browser.go`, `service.go`, `elastic_otel.go`, `elastic_exporter.go`, `api.go`, `escrow_handlers.go`, `tracking_dispute_handlers.go`, `sla_webhook_handlers.go`, `deployment_webhook_test.go`, `orders_v2.go`, `payments_v2.go`, `tracking_v1.go`, `disputes_v1.go`, `Talos-Sandbox-MCP.postman_collection.json` |
+| **`C-03`** | **Next.js 15 FinOps Command Center** | `web/` | `AgStudioBlotter.tsx`, `BryntumSlaBoard.tsx`, `PayPalStepUpModal.tsx`, `PoisonedStoreSim.tsx`, `ForensicDetailPanel.tsx`, `MandateStudio.tsx`, `useAgStudioBlotter.ts`, `useBryntumTimeline.ts`, `usePayPalStepUp.ts`, `usePoisonedStoreSim.ts`, `useEscrowStream.ts`, `phase6-events.ts`, `route.ts` (`/api/mcp/paypal-bridge`, `/api/healthz`, `/healthz`), `talos-3act-demo.spec.ts` |
 | **`C-04`** | **Ledger Schemas & API Contracts** | `api/`, `services/orchestrator-go/migrations/`, `docs/03-engineering/` | `openapi.yaml`, `0001_init_schema.up.sql`, `DATA_MODEL.md`, `API_SPEC.md` |
 | **`C-05`** | **Sponsor & Sandbox Integration Guides** | `docs/09-integrations-and-guides/` | `00-TRACKS_AND_SUBMISSION_STRATEGY.md` .. `09-KERNEL_ASTROPODS_ZAPIER_GUIDE.md` |
-| **`C-06`** | **GSD & Ralph Loop Execution Engine** | `.planning/`, `.agent/`, `docs/08-project/` | `PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md`, `tasks.json`, `TASK-01.json`..`TASK-16.json`, `ROADMAP.md` |
+| **`C-06`** | **GSD & Ralph Loop Execution Engine** | `.planning/`, `.agent/`, `docs/08-project/` | `PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md`, `tasks.json`, `TASK-01.json`..`TASK-16.json`, `ROADMAP.md`, `08-01-PLAN.md`, `08-01-SUMMARY.md`, `08-02-PLAN.md`, `08-02-SUMMARY.md`, `08-DEVPOST-SUBMISSION-PACKET.md`, `08-UAT.md`, `08-VERIFICATION.md`, `MILESTONE-AUDIT.md`, `MILESTONE-SUMMARY.md` |
 | **`C-07`** | **Product, Design & Business Strategy** | `docs/00-overview/`, `docs/01-product/`, `docs/02-design/`, `docs/07-business/` | `PROJECT_BRIEF.md`, `PRD.md`, `PITCH.md`, `UI_SPEC.md`, `BUSINESS_MODEL.md` |
-| **`C-08`** | **DevOps, Security & Compliance** | `.github/workflows/`, `docs/05-ops/`, `docs/06-security-compliance/` | `render.yaml`, `ci-rust-go-web.yml`, `SECURITY_ARCHITECTURE.md`, `THREAT_MODEL.md`, `COMPLIANCE.md` |
+| **`C-08`** | **DevOps, Security & Compliance** | `.github/workflows/`, `scripts/`, `docs/05-ops/`, `docs/06-security-compliance/` | `render.yaml`, `verify-deployment.sh`, `verify-deployment.ps1`, `ci-rust-go-web.yml`, `deploy-render.yml`, `SECURITY_ARCHITECTURE.md`, `THREAT_MODEL.md`, `COMPLIANCE.md` |
+
+

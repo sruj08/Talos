@@ -5,6 +5,7 @@ import {
   DEFAULT_STEP_UP_REQUEST,
   broadcastTalosEscrowEvent,
   callEscrowVoidApi,
+  resolveOrchestratorUrl,
 } from '../lib/phase6-events';
 
 export type JudgeActId = 'ACT_1' | 'ACT_2' | 'ACT_3';
@@ -75,7 +76,7 @@ export function usePoisonedStoreSim() {
     setActiveAct('ACT_1');
     setTelemetry(SCENARIO_PRESETS.ACT_1);
     try {
-      await fetch('/api/v1/checkout/evaluate', {
+      await fetch(resolveOrchestratorUrl('/api/v1/checkout/evaluate'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

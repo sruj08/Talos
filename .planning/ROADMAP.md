@@ -9,7 +9,7 @@
 | **Phase 5** | Next.js 15 Command Center & AG Grid / AG Studio Blotter (MVP) | `mvp` | `TASK-09`, `TASK-10` | Complete |
 | **Phase 6** | Bryntum Scheduler Pro 2-Way SLA Board & PayPal JS SDK v6 (MVP) | `mvp` | `TASK-11`, `TASK-12` | Complete |
 | **Phase 7** | Elastic OpenTelemetry APM, Postman Collection & E2E Tests | `standard` | `TASK-13`, `TASK-14` | Complete |
-| **Phase 8** | Render Native Polyglot Deployment (`render.yaml`) & Demo Polish | `mvp` | `TASK-15`, `TASK-16` | Ready (Gates #6-#7) |
+| **Phase 8** | Render Native Polyglot Deployment (`render.yaml`) & Demo Polish | `mvp` | `TASK-15`, `TASK-16` | Complete |
 
 ---
 
@@ -83,4 +83,9 @@
 **Depends on**: Phase 7
 **Requirements**: `F-12`, `R-05`
 **Mode**: mvp
+**Plans**: 2 plans
+- [x] `08-01-PLAN.md` — Render Native Polyglot Blueprint (`render.yaml`) Deployment & Live Webhook Verification (`TASK-15`)
+- [x] `08-02-PLAN.md` — 3-Minute YouTube Demo Recording & Devpost 14-Prize Submission Audit (`TASK-16`)
+
+
 

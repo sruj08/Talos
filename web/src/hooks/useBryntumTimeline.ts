@@ -9,6 +9,7 @@ import {
   broadcastTalosEscrowEvent,
   callEscrowVoidApi,
   formatUsdInr,
+  resolveOrchestratorUrl,
 } from '../lib/phase6-events';
 
 export interface UseBryntumTimelineOptions {
@@ -90,7 +91,7 @@ export function useBryntumTimeline({
     async (task: SlaTaskRecord) => {
       const captureId = `9CAP-${task.paypalAuthId.slice(0, 8)}`;
       try {
-        await fetch(`/api/v1/escrow/${task.escrowId}/tracking`, {
+        await fetch(resolveOrchestratorUrl(`/api/v1/escrow/${task.escrowId}/tracking`), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'PayPal-Request-Id': `trk-${task.escrowId}` },
           body: JSON.stringify({

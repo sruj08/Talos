@@ -1,13 +1,13 @@
 # External Systems & Sponsor Integrations — TALOS
 > Project: TALOS · Owner: Platform Integrations Engineering · Status: Approved v1.0 · Last updated: 2026-11-01
-> Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [ARCHITECTURE](ARCHITECTURE.md) · [API_SPEC](API_SPEC.md) · [SPONSOR_INTEGRATION_COOKBOOK](../09-integrations-and-guides/SPONSOR_INTEGRATION_COOKBOOK.md) · [SANDBOX_AND_API_KEYS_SETUP](../09-integrations-and-guides/SANDBOX_AND_API_KEYS_SETUP.md)
+> Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [ARCHITECTURE](ARCHITECTURE.md) · [API_SPEC](API_SPEC.md) · [00-TRACKS_AND_SUBMISSION_STRATEGY](../09-integrations-and-guides/00-TRACKS_AND_SUBMISSION_STRATEGY.md) · [01-PAYPAL_SANDBOX_STEP_BY_STEP](../09-integrations-and-guides/01-PAYPAL_SANDBOX_STEP_BY_STEP.md)
 
 ---
 
 ## 1. Master Integration Matrix (All 10 Hackathon Sponsors & Ecosystem Partners)
 
 > [!TIP]
-> For step-by-step human registration, API key retrieval, and dashboard configuration screenshots, see **[SANDBOX_AND_API_KEYS_SETUP.md](../09-integrations-and-guides/SANDBOX_AND_API_KEYS_SETUP.md)** and **[SPONSOR_INTEGRATION_COOKBOOK.md](../09-integrations-and-guides/SPONSOR_INTEGRATION_COOKBOOK.md)**.
+> For step-by-step human registration, API key retrieval, and dashboard configuration guides, see **[01-PAYPAL_SANDBOX_STEP_BY_STEP.md](../09-integrations-and-guides/01-PAYPAL_SANDBOX_STEP_BY_STEP.md)** and **[00-TRACKS_AND_SUBMISSION_STRATEGY.md](../09-integrations-and-guides/00-TRACKS_AND_SUBMISSION_STRATEGY.md)**.
 
 | # | External System | Primary Role in TALOS | Auth Mechanism | Timeout / Circuit Breaker | Cost in MVP (`$` / `₹`) | Fallback (`R-01`) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |

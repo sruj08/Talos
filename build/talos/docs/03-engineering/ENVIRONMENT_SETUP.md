@@ -1,6 +1,6 @@
 # Local Environment Setup & Developer Guide — TALOS
 > Project: TALOS · Owner: Developer Experience (DX) Team · Status: Approved v1.0 · Last updated: 2026-11-01
-> Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [TECH_STACK](TECH_STACK.md) · [SANDBOX_AND_API_KEYS_SETUP](../09-integrations-and-guides/SANDBOX_AND_API_KEYS_SETUP.md)
+> Related: [PROJECT_BRIEF](../00-overview/PROJECT_BRIEF.md) · [TECH_STACK](TECH_STACK.md) · [01-PAYPAL_SANDBOX_STEP_BY_STEP](../09-integrations-and-guides/01-PAYPAL_SANDBOX_STEP_BY_STEP.md)
 
 ---
 

@@ -506,7 +506,7 @@
       "title": "Render Native Polyglot Blueprint (render.yaml) Deployment & Webhook Verification",
       "category": "deployment-render",
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "human_gate": "GATE #6: Follow docs/09-integrations-and-guides/06-RENDER_BLUEPRINT_DEPLOYMENT_GUIDE.md to deploy render.yaml on Render.com.",
       "skills": [
         "/gsd-graphify build",
@@ -519,7 +519,10 @@
       ],
       "files": [
         "render.yaml",
-        "scripts/verify-deployment.sh"
+        "scripts/verify-deployment.sh",
+        "scripts/verify-deployment.ps1",
+        "web/src/app/api/healthz/route.ts",
+        "web/src/app/healthz/route.ts"
       ],
       "description": "Validate render.yaml native polyglot Blueprint (runtime: rust, runtime: go, runtime: node, Render Postgres 16, Render Valkey) and deployment verification script.",
       "steps": [
@@ -536,7 +539,7 @@
       "title": "3-Minute YouTube Demo Recording & Devpost 14-Prize Submission Audit",
       "category": "submission",
       "priority": 16,
-      "passes": false,
+      "passes": true,
       "human_gate": "GATE #7: Record 2:45 demo video per docs/00-overview/PITCH.md, upload to YouTube (Public), and submit on Devpost per docs/09-integrations-and-guides/00-TRACKS_AND_SUBMISSION_STRATEGY.md.",
       "skills": [
         "/gsd-verify-work 8",
@@ -550,7 +553,8 @@
       ],
       "files": [
         "README.md",
-        "MAP.md"
+        "MAP.md",
+        ".planning/phases/08-render-native-polyglot-deployment-demo-polish/08-DEVPOST-SUBMISSION-PACKET.md"
       ],
       "description": "Final consistency check of README.md, MAP.md, LICENSE visibility, Postman badge, APIMatic badge, and Devpost submission fields.",
       "steps": [

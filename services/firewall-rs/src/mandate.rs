@@ -67,7 +67,7 @@ fn keypair() -> &'static (SigningKey, VerifyingKey, String) {
     KEYPAIR.get_or_init(|| {
         let mut seed = [0u8; 32];
         let mut loaded = false;
-        if let Ok(raw) = std::env::var("RUST_ED25519_SEED_HEX") {
+        if let Ok(raw) = std::env::var("RUST_ED25519_SEED_HEX").or_else(|_| std::env::var("MANDATE_SIGNING_SEED_HEX")) {
             let trimmed = raw.trim();
             if let Ok(b) = hex::decode(trimmed) {
                 if b.len() >= 32 { seed.copy_from_slice(&b[..32]); loaded = true; }
