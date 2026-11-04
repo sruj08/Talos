@@ -8,7 +8,7 @@
       "title": "Monorepo Bootstrap, MIT License Gate & Graphify Initialization",
       "category": "foundation",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "/gsd-new-project",
@@ -29,7 +29,7 @@
         ".planning/config.json",
         ".planning/graphs/graph.json"
       ],
-      "description": "Verify MIT LICENSE at repo root (Official Rules \u00a76 gate), Docker Compose for PostgreSQL 16 + Valkey/Redis, and Graphify knowledge graph in .planning/graphs/.",
+      "description": "Verify MIT LICENSE at repo root (Official Rules §6 gate), Docker Compose for PostgreSQL 16 + Valkey/Redis, and Graphify knowledge graph in .planning/graphs/.",
       "steps": [
         "Verify LICENSE file exists at repo root with standard MIT text",
         "Verify docker-compose.yml defines postgres:16-alpine and valkey/valkey:7.2-alpine with healthchecks",
@@ -47,7 +47,7 @@
       "title": "PostgreSQL 16 Schema (E-01..E-09) & Redis Idempotency Locks (E-10)",
       "category": "database",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "postgres",
@@ -79,7 +79,7 @@
       "title": "Rust Ed25519 KYA Mandate Signer/Verifier & RFC 9421 Signature Engine",
       "category": "security-rust",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "/gsd-spec-phase 2",
@@ -115,7 +115,7 @@
       "title": "Rust lol_html + DeBERTa-v3 ONNX Prompt-Injection Sanitizer & rmcp MCP Server",
       "category": "security-rust",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "/gsd-ai-integration-phase 2",
@@ -150,7 +150,7 @@
       "title": "APIMatic Go SDK Codegen (sdk/paypal-go-apimatic) & PayPal Sandbox OAuth2 Client",
       "category": "paypal-apimatic",
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "human_gate": "GATE #1: Follow docs/09-integrations-and-guides/01-PAYPAL_SANDBOX_STEP_BY_STEP.md and 02-APIMATIC_INTEGRATION_GUIDE.md to set PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, and PAYPAL_WEBHOOK_ID via the credentials skill.",
       "skills": [
         "credentials",
@@ -188,7 +188,7 @@
       "title": "Go 2PC Escrow State Machine: PayPal Orders v2 AUTHORIZE, CAPTURE & VOID",
       "category": "escrow-go",
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "/gsd-execute-phase 3",
@@ -224,7 +224,7 @@
       "title": "Go errgroup Channel3 Fair-Price Oracle (API-06) & KERNEL Cloud Browser Inspector (F-11)",
       "category": "sponsors-go",
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "human_gate": "GATE #2: Follow docs/09-integrations-and-guides/05-CHANNEL3_INTEGRATION_GUIDE.md and 09-KERNEL_ASTROPODS_ZAPIER_GUIDE.md to add CHANNEL3_API_KEY and KERNEL_API_KEY via the credentials skill.",
       "skills": [
         "credentials",
@@ -257,7 +257,7 @@
       "title": "Unified Protected Checkout (API-05), Shipment Tracking v1 (API-08), Disputes v1 (API-11) & WebSocket Hub (API-15)",
       "category": "orchestrator-go",
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "/gsd-execute-phase 4",
@@ -296,7 +296,7 @@
       "title": "Next.js 15 Dark-Mode Command Center Shell, KYA Mandate Studio & Live WebSocket Hook",
       "category": "frontend-web",
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "human_gate": "GATE #3: Optional NEXT_PUBLIC_AG_GRID_LICENSE_KEY in web/.env.local per docs/09-integrations-and-guides/03-AG_GRID_AND_AG_STUDIO_GUIDE.md.",
       "skills": [
         "/gsd-ui-phase 5",
@@ -335,7 +335,7 @@
       "title": "AgStudioBlotter.tsx: AG Grid Enterprise Live Escrow Blotter, Master-Detail Forensics & AG Studio Copilot",
       "category": "sponsor-ag-grid",
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "/gsd-execute-phase 5",
@@ -370,7 +370,7 @@
       "title": "BryntumSlaBoard.tsx: Bryntum Scheduler Pro / Gantt Bound Two-Way to PayPal AUTHORIZE & VOID",
       "category": "sponsor-bryntum",
       "priority": 11,
-      "passes": false,
+      "passes": true,
       "human_gate": "GATE #4: Follow docs/09-integrations-and-guides/04-BRYNTUM_SCHEDULER_AND_GANTT_GUIDE.md for Bryntum npm registry or use the included high-precision Bryntum Scheduler Pro interactive timeline adapter.",
       "skills": [
         "credentials",
@@ -402,7 +402,7 @@
       "title": "PayPalStepUpModal.tsx (PayPal JS SDK v6), PoisonedStoreSim.tsx & @paypal/agent-toolkit MCP Bridge",
       "category": "paypal-frontend",
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "human_gate": null,
       "skills": [
         "component-refactoring",

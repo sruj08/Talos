@@ -1,0 +1,27 @@
+{
+  "sdkName": "paypal-go-apimatic",
+  "sdkVersion": "1.1.0",
+  "apimaticGeneratorVersion": "3.8.0",
+  "platform": "GO_GENERIC_LIB",
+  "module": "github.com/talos/sdk/paypal-go-apimatic",
+  "environment": "SANDBOX",
+  "baseUrl": "https://api-m.sandbox.paypal.com",
+  "validationReport": {
+    "status": "PASSED",
+    "errorCount": 0,
+    "warningCount": 0,
+    "specsValidated": [
+      "checkout_orders_v2.json",
+      "payments_payment_v2.json",
+      "shipping_shipment_tracking_v1.json",
+      "customer_disputes_v1.json"
+    ]
+  },
+  "features": {
+    "oauth2ClientCredentials": true,
+    "tokenCaching": true,
+    "mandatoryPayPalRequestId": true,
+    "exponentialBackoffRetry": true,
+    "deterministicReplayFallback": true
+  }
+}

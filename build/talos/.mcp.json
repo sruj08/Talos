@@ -27,6 +27,28 @@
     },
     "bryntum-docs-mcp": {
       "url": "https://mcp.bryntum.com/mcp"
+    },
+    "apimatic-paypal-context": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@apimatic/context-mcp",
+        "--portal",
+        "paypal-server-sdk"
+      ],
+      "env": {
+        "APIMATIC_API_KEY": "${APIMATIC_API_KEY}"
+      }
+    },
+    "channel3-catalog": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@channel3/mcp-server"
+      ],
+      "env": {
+        "CHANNEL3_API_KEY": "${CHANNEL3_API_KEY}"
+      }
     }
   }
 }

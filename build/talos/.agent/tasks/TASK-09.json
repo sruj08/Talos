@@ -4,7 +4,8 @@
   "title": "Next.js 15 Dark-Mode Command Center Shell, KYA Mandate Studio & Live WebSocket Hook",
   "category": "frontend-web",
   "priority": 9,
-  "passes": false,
+  "passes": true,
+  "completed_at": "2026-11-04T15:38:00+05:30",
   "human_gate": "GATE #3: Optional NEXT_PUBLIC_AG_GRID_LICENSE_KEY in web/.env.local per docs/09-integrations-and-guides/03-AG_GRID_AND_AG_STUDIO_GUIDE.md.",
   "skills": [
     "/gsd-ui-phase 5",

@@ -21,3 +21,10 @@ tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 uuid = { version = "1.10", features = ["v4", "serde"] }
 chrono = { version = "0.4", features = ["serde"] }
 tower-http = { version = "0.6", features = ["cors", "trace"] }
+
+[profile.dev.package.curve25519-dalek]
+opt-level = 2
+
+[profile.dev.package.ed25519-dalek]
+opt-level = 2
+

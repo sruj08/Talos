@@ -5,6 +5,7 @@
   "category": "foundation",
   "priority": 1,
   "passes": true,
+  "completed_at": "2026-11-02T10:40:00+05:30",
   "human_gate": null,
   "skills": [
     "/gsd-new-project",

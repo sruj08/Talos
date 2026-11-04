@@ -2,27 +2,19 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/talos/services/orchestrator-go/internal/handlers"
 )
 
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(map[string]string{
-			"service": "talos-orchestrator-go",
-			"status":  "ok",
-			"sdk":     "paypal-go-apimatic",
-		})
-	})
-
+	srv := handlers.NewDefaultServer()
 	port := os.Getenv("GO_ORCHESTRATOR_PORT")
 	if port == "" {
 		port = "8080"
 	}
 	log.Printf("talos-orchestrator-go listening on :%s", port)
-	log.Fatal(http.ListenAndServe(":"+port, mux))
+	log.Fatal(http.ListenAndServe(":"+port, srv.Router()))
 }

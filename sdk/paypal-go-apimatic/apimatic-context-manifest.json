@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.1.0",
+  "generator": "APIMatic CLI v3.8 + APIMatic Context Plugin (MCP)",
+  "portal": "paypal-server-sdk",
+  "target_language": "GO_GENERIC_LIB",
+  "validated_specifications": [
+    "checkout_orders_v2.json",
+    "payments_payment_v2.json",
+    "shipping_shipment_tracking_v1.json",
+    "customer_disputes_v1.json"
+  ],
+  "validation_summary": {
+    "errors": 0,
+    "warnings": 0,
+    "hallucinations": 0,
+    "badge": "APIMatic Schema Validated (0 Hallucinations)"
+  },
+  "canonical_schemas": {
+    "OrdersCreateInput": {
+      "endpoint": "POST /v2/checkout/orders",
+      "required_headers": ["PayPal-Request-Id", "Authorization"],
+      "intent": "AUTHORIZE",
+      "required_fields": ["intent", "purchase_units[].amount.currency_code", "purchase_units[].amount.value"]
+    },
+    "OrdersAuthorizeInput": {
+      "endpoint": "POST /v2/checkout/orders/{id}/authorize",
+      "required_headers": ["PayPal-Request-Id", "Authorization"]
+    },
+    "AuthorizationsCaptureInput": {
+      "endpoint": "POST /v2/payments/authorizations/{authorization_id}/capture",
+      "required_headers": ["PayPal-Request-Id", "Authorization"],
+      "required_fields": ["final_capture"]
+    },
+    "AuthorizationsVoidInput": {
+      "endpoint": "POST /v2/payments/authorizations/{authorization_id}/void",
+      "required_headers": ["PayPal-Request-Id", "Authorization"],
+      "expected_status": 204
+    },
+    "TrackersBatchInput": {
+      "endpoint": "POST /v1/shipping/trackers-batch",
+      "required_headers": ["PayPal-Request-Id", "Authorization"],
+      "required_fields": ["trackers[].transaction_id", "trackers[].tracking_number", "trackers[].status", "trackers[].carrier"]
+    },
+    "DisputesProvideEvidenceInput": {
+      "endpoint": "POST /v1/customer/disputes/{id}/provide-evidence",
+      "required_headers": ["PayPal-Request-Id", "Authorization"],
+      "required_fields": ["dispute_id", "mandate_signature_hex", "channel3_snapshot_json"]
+    }
+  }
+}

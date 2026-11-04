@@ -4,7 +4,8 @@
   "title": "BryntumSlaBoard.tsx: Bryntum Scheduler Pro / Gantt Bound Two-Way to PayPal AUTHORIZE & VOID",
   "category": "sponsor-bryntum",
   "priority": 11,
-  "passes": false,
+  "passes": true,
+  "completed_at": "2026-11-04T12:11:00+05:30",
   "human_gate": "GATE #4: Follow docs/09-integrations-and-guides/04-BRYNTUM_SCHEDULER_AND_GANTT_GUIDE.md for Bryntum npm registry or use the included high-precision Bryntum Scheduler Pro interactive timeline adapter.",
   "skills": [
     "credentials",

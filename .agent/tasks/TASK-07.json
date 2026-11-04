@@ -4,7 +4,8 @@
   "title": "Go errgroup Channel3 Fair-Price Oracle (API-06) & KERNEL Cloud Browser Inspector (F-11)",
   "category": "sponsors-go",
   "priority": 7,
-  "passes": false,
+  "passes": true,
+  "completed_at": "2026-11-04T15:36:00+05:30",
   "human_gate": "GATE #2: Follow docs/09-integrations-and-guides/05-CHANNEL3_INTEGRATION_GUIDE.md and 09-KERNEL_ASTROPODS_ZAPIER_GUIDE.md to add CHANNEL3_API_KEY and KERNEL_API_KEY via the credentials skill.",
   "skills": [
     "credentials",

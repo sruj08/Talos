@@ -21,15 +21,25 @@
 | `VerifyResult`, `Oracle`, `VerifyMerchantAndSKU()` | Go 1.24 | [`services/orchestrator-go/internal/channel3/oracle.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/channel3/oracle.go) | `F-11`, `E-04`, `API-13` |
 | `BrowserClient`, `FetchRawMerchantDOM()` | Go 1.24 | [`services/orchestrator-go/internal/kernel/browser.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/kernel/browser.go) | `F-02`, `F-06` |
 | `InitElasticOTel()` | Go 1.24 | [`services/orchestrator-go/internal/telemetry/elastic_otel.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/telemetry/elastic_otel.go) | `F-13`, `M-04` |
-| `Hub`, `BroadcastJSON()` | Go 1.24 | [`services/orchestrator-go/internal/ws/hub.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/ws/hub.go) | `F-07`, `F-08`, `API-16` |
+| `Hub`, `BroadcastJSON()` | Go 1.24 | [`services/orchestrator-go/internal/ws/hub.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/ws/hub.go) | `F-07`, `F-08`, `API-15` |
+| `Server`, `HandleEvaluateCheckout()` | Go 1.24 | [`services/orchestrator-go/internal/handlers/api.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/handlers/api.go) | `API-05` |
+| `HandleAuthorizeEscrow()`, `HandleCaptureEscrow()`, `HandleVoidEscrow()` | Go 1.24 | [`services/orchestrator-go/internal/handlers/escrow_handlers.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/handlers/escrow_handlers.go) | `API-07`, `API-09`, `API-10` |
+| `HandleChannel3Benchmark()`, `HandleAttachTracking()`, `HandleSubmitDisputeEvidence()` | Go 1.24 | [`services/orchestrator-go/internal/handlers/tracking_dispute_handlers.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/handlers/tracking_dispute_handlers.go) | `API-06`, `API-08`, `API-11` |
+| `HandleGetBlotter()`, `HandleGetSlaTimeline()`, `HandlePayPalWebhook()` | Go 1.24 | [`services/orchestrator-go/internal/handlers/sla_webhook_handlers.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/handlers/sla_webhook_handlers.go) | `API-12`, `API-13`, `API-14` |
 | `agent_mandates`, `escrow_transactions`, `audit_events`, `compute_audit_event_hash()` | SQL (PG 16) | [`services/orchestrator-go/migrations/0001_init_schema.up.sql`](file:///g:/PAYPAL/services/orchestrator-go/migrations/0001_init_schema.up.sql) | `E-01`..`E-09`, `F-14` |
 | `MandateStudio` | TypeScript / React 19 | [`web/src/components/MandateStudio.tsx`](file:///g:/PAYPAL/web/src/components/MandateStudio.tsx) | `F-01`, `P-01` |
 | `PoisonedStoreSim` | TypeScript / React 19 | [`web/src/components/PoisonedStoreSim.tsx`](file:///g:/PAYPAL/web/src/components/PoisonedStoreSim.tsx) | `F-02`, `F-06`, `P-02` |
 | `AgStudioBlotter` | TypeScript / React 19 | [`web/src/components/AgStudioBlotter.tsx`](file:///g:/PAYPAL/web/src/components/AgStudioBlotter.tsx) | `F-07`, `M-03`, `P-03` |
+| `useAgStudioBlotter()`, `runAgStudioCopilotQuery()` | TypeScript / React 19 | [`web/src/hooks/useAgStudioBlotter.ts`](file:///g:/PAYPAL/web/src/hooks/useAgStudioBlotter.ts) | `F-07`, `F-08`, `M-03` |
 | `ForensicDetailPanel` | TypeScript / React 19 | [`web/src/components/ForensicDetailPanel.tsx`](file:///g:/PAYPAL/web/src/components/ForensicDetailPanel.tsx) | `F-07`, `E-03`, `E-06` |
-| `BryntumSlaBoard` | TypeScript / React 19 | [`web/src/components/BryntumSlaBoard.tsx`](file:///g:/PAYPAL/web/src/components/BryntumSlaBoard.tsx) | `F-08`, `API-09`, `P-03` |
+| `BryntumSlaBoard` | TypeScript / React 19 | [`web/src/components/BryntumSlaBoard.tsx`](file:///g:/PAYPAL/web/src/components/BryntumSlaBoard.tsx) | `F-08`, `API-09`, `API-13`, `P-03` |
 | `PayPalStepUpModal` | TypeScript / React 19 | [`web/src/components/PayPalStepUpModal.tsx`](file:///g:/PAYPAL/web/src/components/PayPalStepUpModal.tsx) | `F-09`, `API-10`, `P-03` |
-| `useEscrowStream()` | TypeScript / React 19 | [`web/src/hooks/useEscrowStream.ts`](file:///g:/PAYPAL/web/src/hooks/useEscrowStream.ts) | `API-16` |
+| `useBryntumTimeline()` | TypeScript / React 19 | [`web/src/hooks/useBryntumTimeline.ts`](file:///g:/PAYPAL/web/src/hooks/useBryntumTimeline.ts) | `F-08`, `API-09`, `API-13` |
+| `usePayPalStepUp()` | TypeScript / React 19 | [`web/src/hooks/usePayPalStepUp.ts`](file:///g:/PAYPAL/web/src/hooks/usePayPalStepUp.ts) | `F-09`, `API-10` |
+| `usePoisonedStoreSim()` | TypeScript / React 19 | [`web/src/hooks/usePoisonedStoreSim.ts`](file:///g:/PAYPAL/web/src/hooks/usePoisonedStoreSim.ts) | `F-02`, `F-06`, `P-02` |
+| `broadcastTalosEscrowEvent()`, `callEscrowVoidApi()` | TypeScript | [`web/src/lib/phase6-events.ts`](file:///g:/PAYPAL/web/src/lib/phase6-events.ts) | `F-07`, `F-08`, `F-09` |
+| `POST /api/mcp/paypal-bridge` (`PayPalAgentToolkit`) | TypeScript / Next.js 15 | [`web/src/app/api/mcp/paypal-bridge/route.ts`](file:///g:/PAYPAL/web/src/app/api/mcp/paypal-bridge/route.ts) | `F-03`, `F-10`, `API-16` |
+| `useEscrowStream()` | TypeScript / React 19 | [`web/src/hooks/useEscrowStream.ts`](file:///g:/PAYPAL/web/src/hooks/useEscrowStream.ts) | `API-15`, `API-16` |
 
 ---
 
@@ -52,4 +62,4 @@
 | **`API-13`** | `POST /api/v1/oracle/channel3/verify` | `orchestrator-go` (`:8080`) | [`services/orchestrator-go/internal/channel3/oracle.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/channel3/oracle.go) | [`api/openapi.yaml`](file:///g:/PAYPAL/api/openapi.yaml) |
 | **`API-14`** | `POST /api/v1/audit/verify-chain` | `orchestrator-go` (`:8080`) | [`services/orchestrator-go/migrations/0001_init_schema.up.sql`](file:///g:/PAYPAL/services/orchestrator-go/migrations/0001_init_schema.up.sql) | [`api/openapi.yaml`](file:///g:/PAYPAL/api/openapi.yaml) |
 | **`API-15`** | `POST /api/v1/webhooks/paypal` | `orchestrator-go` (`:8080`) | [`services/orchestrator-go/cmd/server/main.go`](file:///g:/PAYPAL/services/orchestrator-go/cmd/server/main.go) | [`api/openapi.yaml`](file:///g:/PAYPAL/api/openapi.yaml) |
-| **`API-16`** | `GET /ws/escrow-stream` | `orchestrator-go` (`:8080`) | [`services/orchestrator-go/internal/ws/hub.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/ws/hub.go) | [`api/openapi.yaml`](file:///g:/PAYPAL/api/openapi.yaml) |
+| **`API-16`** | `POST /api/mcp/paypal-bridge` & `GET /ws/escrow-stream` | `web` (`:3000`) & `orchestrator-go` (`:8080`) | [`web/src/app/api/mcp/paypal-bridge/route.ts`](file:///g:/PAYPAL/web/src/app/api/mcp/paypal-bridge/route.ts) | [`api/openapi.yaml`](file:///g:/PAYPAL/api/openapi.yaml) |
