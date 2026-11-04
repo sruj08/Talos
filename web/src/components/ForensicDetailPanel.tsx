@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { EscrowBlotterRow, SEEDED_ESCROW_ROWS } from '../hooks/useEscrowStream';
 import { broadcastTalosEscrowEvent, callEscrowVoidApi, formatUsdInr } from '../lib/phase6-events';
 
@@ -18,7 +18,7 @@ export async function executeForensicCapture(row: EscrowBlotterRow): Promise<For
   try {
     const res = await fetch(`/api/v1/escrow/${encodeURIComponent(row.escrow_id)}/capture`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'PayPal-Request-Id': row.paypal_request_id || `cap-${row.escrow_id}` },
       body: JSON.stringify({
         escrow_id: row.escrow_id,
         paypal_order_id: row.paypal_order_id,
@@ -75,7 +75,7 @@ export async function executeForensicDispute(row: EscrowBlotterRow): Promise<For
   try {
     await fetch(`/api/v1/escrow/${encodeURIComponent(row.escrow_id)}/dispute-evidence`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'PayPal-Request-Id': `disp-${row.escrow_id}` },
       body: JSON.stringify({ escrow_id: row.escrow_id, ed25519_signature: row.ed25519_signature, channel3_spread_bps: row.spread_bps, bundle_sha256: bundleHash }),
     });
   } catch {
@@ -94,6 +94,12 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
   const [currentState, setCurrentState] = useState<EscrowBlotterRow['state']>(row.state);
   const [captureId, setCaptureId] = useState<string | null | undefined>(row.paypal_capture_id);
   const [actionBanner, setActionBanner] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCurrentState(row.state);
+    setCaptureId(row.paypal_capture_id);
+    setActionBanner(null);
+  }, [row.escrow_id, row.state, row.paypal_capture_id]);
 
   const handleAction = useCallback(
     async (kind: 'CAPTURE' | 'VOID' | 'DISPUTE') => {

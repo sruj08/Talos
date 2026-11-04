@@ -26,7 +26,8 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
   } = usePayPalStepUp(props);
 
   const overageCents = Math.max(0, stepUp.amountCents - stepUp.mandateCapCents);
-  const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb';
+  const rawClientId = (process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '').trim();
+  const clientId = rawClientId && !rawClientId.startsWith('your_') ? rawClientId : 'sb';
 
   return (
     <section

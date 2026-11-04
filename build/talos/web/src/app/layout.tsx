@@ -1,4 +1,5 @@
 import React from 'react';
+import './globals.css';
 
 export const metadata = {
   title: 'TALOS — Zero-Trust Agentic Commerce Firewall & PayPal Escrow Referee',

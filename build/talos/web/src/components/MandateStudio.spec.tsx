@@ -11,6 +11,7 @@ import {
   SEEDED_ESCROW_ROWS,
   applyEscrowEventToRows,
   computeKpiMetrics,
+  normalizeEscrowState,
 } from '../hooks/useEscrowStream';
 import TALOSCommandCenterPage from '../app/page';
 
@@ -131,6 +132,60 @@ describe('Phase 5 Micro-Chunk 5.1 (TASK-09): MandateStudio, useEscrowStream & 4-
       expect(capturedRow?.settled_usd).toEqual(249);
       expect(voidedRow?.state).toEqual('PAYPAL_VOIDED');
       expect(voidedRow?.saved_fraud_usd).toEqual(219);
+    });
+
+    it('should normalize Go orchestrator ws.EventMessage payload envelopes without wiping existing row states or duplicating Act 1 rows', () => {
+      // Arrange & Act
+      expect(normalizeEscrowState('BLOCKED_FIREWALL')).toEqual('BLOCKED_DOM_INJECTION');
+      expect(normalizeEscrowState('BLOCKED_PRICE_GOUGING')).toEqual('BLOCKED_DOM_INJECTION');
+      expect(normalizeEscrowState('TRACKING_VERIFIED')).toEqual('PAYPAL_CAPTURED');
+      expect(normalizeEscrowState('INITIATED')).toBeUndefined();
+
+      const afterWsEnvelope = applyEscrowEventToRows(SEEDED_ESCROW_ROWS, {
+        event_id: 'evt-init-001',
+        event_type: 'ESCROW_STATE_TRANSITION',
+        timestamp: '2026-11-04T12:00:00Z',
+        escrow_id: 'esc-902-sm7b',
+        new_state: undefined as unknown as 'PAYPAL_AUTHORIZED',
+        ag_grid_row_delta: undefined as unknown as { escrow_id: string; state: 'PAYPAL_AUTHORIZED' },
+        payload: {
+          state: 'PAYPAL_AUTHORIZED',
+          paypal_order_id: '8XY99887766554433',
+          paypal_auth_id: '2A112233445566778',
+          amount_cents: 24900,
+        },
+      });
+      const afterAct1Ws = applyEscrowEventToRows(afterWsEnvelope, {
+        event_id: 'evt-act1-ws',
+        event_type: 'ESCROW_STATE_TRANSITION',
+        timestamp: '2026-11-04T12:00:02Z',
+        escrow_id: '0192e8a0-4138-7000-8000-0a8e783c4720',
+        new_state: undefined as unknown as 'BLOCKED_DOM_INJECTION',
+        ag_grid_row_delta: undefined as unknown as { escrow_id: string; state: 'BLOCKED_DOM_INJECTION' },
+        payload: {
+          escrow_id: '0192e8a0-4138-7000-8000-0a8e783c4720',
+          paypal_request_id: 'act1-poisoned-sm7b',
+          state: 'BLOCKED_FIREWALL',
+          amount_cents: 48000,
+        },
+      });
+      const afterEmptyEnvelope = applyEscrowEventToRows(afterAct1Ws, {
+        event_id: 'evt-ping-002',
+        event_type: 'ESCROW_STATE_TRANSITION',
+        timestamp: '2026-11-04T12:00:05Z',
+        escrow_id: 'esc-903-scarlett',
+        new_state: undefined as unknown as 'PAYPAL_AUTHORIZED',
+        ag_grid_row_delta: undefined as unknown as { escrow_id: string; state: 'PAYPAL_AUTHORIZED' },
+        payload: {},
+      });
+
+      // Assert
+      expect(afterEmptyEnvelope).toHaveLength(4);
+      expect(afterEmptyEnvelope[0].escrow_id).toEqual('esc-901-trap');
+      expect(afterEmptyEnvelope[0].state).toEqual('BLOCKED_DOM_INJECTION');
+      const metrics = computeKpiMetrics(afterEmptyEnvelope);
+      expect(metrics.activePayPalAuthCount).toEqual(2);
+      expect(metrics.blockedInjectionsCount).toEqual(3);
     });
   });
 

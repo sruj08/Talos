@@ -72,9 +72,26 @@ export function usePoisonedStoreSim() {
   const [running, setRunning] = useState(false);
 
   const runAct1PoisonedAttack = useCallback(async () => {
-    setRunning(true);
     setActiveAct('ACT_1');
     setTelemetry(SCENARIO_PRESETS.ACT_1);
+    broadcastTalosEscrowEvent({
+      event_id: `evt-act1-${Date.now()}`,
+      event_type: 'ACT_SCENARIO_TRIGGERED',
+      timestamp: new Date().toISOString(),
+      escrow_id: 'esc-901-trap',
+      new_state: 'BLOCKED_DOM_INJECTION',
+      sku_summary: 'Shure SM7B (Poisoned DOM + +92.7% Gouge)',
+      merchant_name: 'ShadowGear Unverified Trap',
+      amount_cents: 48000,
+      ag_grid_row_delta: {
+        escrow_id: 'esc-901-trap',
+        state: 'BLOCKED_DOM_INJECTION',
+        amount_cents: 48000,
+        sku_summary: 'Shure SM7B (Poisoned DOM + +92.7% Gouge)',
+        merchant_name: 'ShadowGear Unverified Trap',
+      },
+    });
+    setRunning(true);
     try {
       await fetch(resolveOrchestratorUrl('/api/v1/checkout/evaluate'), {
         method: 'POST',
@@ -93,31 +110,43 @@ export function usePoisonedStoreSim() {
         }),
       }).catch(() => null);
     } finally {
-      broadcastTalosEscrowEvent({
-        event_id: `evt-act1-${Date.now()}`,
-        event_type: 'ACT_SCENARIO_TRIGGERED',
-        timestamp: new Date().toISOString(),
-        escrow_id: 'esc-901-trap',
-        new_state: 'BLOCKED_DOM_INJECTION',
-        sku_summary: 'Shure SM7B (Poisoned DOM + +92.7% Gouge)',
-        merchant_name: 'ShadowGear Unverified Trap',
-        amount_cents: 48000,
-        ag_grid_row_delta: {
-          escrow_id: 'esc-901-trap',
-          state: 'BLOCKED_DOM_INJECTION',
-          amount_cents: 48000,
-          sku_summary: 'Shure SM7B (Poisoned DOM + +92.7% Gouge)',
-          merchant_name: 'ShadowGear Unverified Trap',
-        },
-      });
       setRunning(false);
     }
   }, []);
 
   const runAct2HappyPathCapture = useCallback(async () => {
-    setRunning(true);
     setActiveAct('ACT_2');
     setTelemetry(SCENARIO_PRESETS.ACT_2);
+    broadcastTalosEscrowEvent({
+      event_id: `evt-act2-${Date.now()}`,
+      event_type: 'ESCROW_STATE_TRANSITION',
+      timestamp: new Date().toISOString(),
+      escrow_id: 'esc-902-sm7b',
+      previous_state: 'PAYPAL_AUTHORIZED',
+      new_state: 'PAYPAL_CAPTURED',
+      sku_summary: 'Shure SM7B Vocal Dynamic Microphone',
+      merchant_name: 'AudioPro Verified (Channel3 Preferred)',
+      amount_cents: 24900,
+      paypal_order_id: '8XY99887766554433',
+      paypal_auth_id: '2A112233445566778',
+      paypal_capture_id: '9CAP-2A112233',
+      ag_grid_row_delta: {
+        escrow_id: 'esc-902-sm7b',
+        state: 'PAYPAL_CAPTURED',
+        paypal_order_id: '8XY99887766554433',
+        paypal_auth_id: '2A112233445566778',
+        paypal_capture_id: '9CAP-2A112233',
+        amount_cents: 24900,
+      },
+      bryntum_task_delta: {
+        id: 'task-sm7b-01',
+        escrowId: 'esc-902-sm7b',
+        escrowState: 'PAYPAL_CAPTURED',
+        percentDone: 100,
+        downstreamLocked: false,
+      },
+    });
+    setRunning(true);
     try {
       await fetch('/api/mcp/paypal-bridge', {
         method: 'POST',
@@ -139,43 +168,44 @@ export function usePoisonedStoreSim() {
         }),
       }).catch(() => null);
     } finally {
-      broadcastTalosEscrowEvent({
-        event_id: `evt-act2-${Date.now()}`,
-        event_type: 'ESCROW_STATE_TRANSITION',
-        timestamp: new Date().toISOString(),
-        escrow_id: 'esc-902-sm7b',
-        previous_state: 'PAYPAL_AUTHORIZED',
-        new_state: 'PAYPAL_CAPTURED',
-        sku_summary: 'Shure SM7B Vocal Dynamic Microphone',
-        merchant_name: 'AudioPro Verified (Channel3 Preferred)',
-        amount_cents: 24900,
-        paypal_order_id: '8XY99887766554433',
-        paypal_auth_id: '2A112233445566778',
-        paypal_capture_id: '9CAP-2A112233',
-        ag_grid_row_delta: {
-          escrow_id: 'esc-902-sm7b',
-          state: 'PAYPAL_CAPTURED',
-          paypal_order_id: '8XY99887766554433',
-          paypal_auth_id: '2A112233445566778',
-          paypal_capture_id: '9CAP-2A112233',
-          amount_cents: 24900,
-        },
-        bryntum_task_delta: {
-          id: 'task-sm7b-01',
-          escrowId: 'esc-902-sm7b',
-          escrowState: 'PAYPAL_CAPTURED',
-          percentDone: 100,
-          downstreamLocked: false,
-        },
-      });
       setRunning(false);
     }
   }, []);
 
   const runAct3SlaBreachAndStepUp = useCallback(async () => {
-    setRunning(true);
     setActiveAct('ACT_3');
     setTelemetry(SCENARIO_PRESETS.ACT_3);
+    broadcastTalosEscrowEvent({
+      event_id: `evt-act3-${Date.now()}`,
+      event_type: 'STEP_UP_REQUIRED',
+      timestamp: new Date().toISOString(),
+      escrow_id: 'esc-903-scarlett',
+      previous_state: 'PAYPAL_AUTHORIZED',
+      new_state: 'PAYPAL_VOIDED',
+      paypal_order_id: '4KL88210938471122',
+      paypal_auth_id: '2A883120944556677',
+      void_reason: 'ACT_3_BRYNTUM_CARRIER_DELAY_SLA_BREACH',
+      ag_grid_row_delta: {
+        escrow_id: 'esc-903-scarlett',
+        state: 'PAYPAL_VOIDED',
+        paypal_order_id: '4KL88210938471122',
+        paypal_auth_id: '2A883120944556677',
+        amount_cents: 21900,
+      },
+      bryntum_task_delta: {
+        id: 'task-scarlett-02',
+        escrowId: 'esc-903-scarlett',
+        escrowState: 'PAYPAL_VOIDED',
+        percentDone: 100,
+        slaHoursElapsed: 56,
+        downstreamLocked: true,
+      },
+      step_up_request: {
+        ...DEFAULT_STEP_UP_REQUEST,
+        approved: false,
+      },
+    });
+    setRunning(true);
     try {
       await callEscrowVoidApi(
         'esc-903-scarlett',
@@ -183,36 +213,6 @@ export function usePoisonedStoreSim() {
         'ACT_3_BRYNTUM_CARRIER_DELAY_SLA_BREACH'
       );
     } finally {
-      broadcastTalosEscrowEvent({
-        event_id: `evt-act3-${Date.now()}`,
-        event_type: 'STEP_UP_REQUIRED',
-        timestamp: new Date().toISOString(),
-        escrow_id: 'esc-903-scarlett',
-        previous_state: 'PAYPAL_AUTHORIZED',
-        new_state: 'PAYPAL_VOIDED',
-        paypal_order_id: '4KL88210938471122',
-        paypal_auth_id: '2A883120944556677',
-        void_reason: 'ACT_3_BRYNTUM_CARRIER_DELAY_SLA_BREACH',
-        ag_grid_row_delta: {
-          escrow_id: 'esc-903-scarlett',
-          state: 'PAYPAL_VOIDED',
-          paypal_order_id: '4KL88210938471122',
-          paypal_auth_id: '2A883120944556677',
-          amount_cents: 21900,
-        },
-        bryntum_task_delta: {
-          id: 'task-scarlett-02',
-          escrowId: 'esc-903-scarlett',
-          escrowState: 'PAYPAL_VOIDED',
-          percentDone: 100,
-          slaHoursElapsed: 56,
-          downstreamLocked: true,
-        },
-        step_up_request: {
-          ...DEFAULT_STEP_UP_REQUEST,
-          approved: false,
-        },
-      });
       setRunning(false);
     }
   }, []);

@@ -57,6 +57,7 @@ export function applyPresetToGridApi(
     gridApi?.setFilterModel?.({
       deberta_Prompt_injection_score: { filterType: 'number', type: 'greaterThan', filter: 0.5 },
     });
+    gridApi?.expandAll?.();
     return {
       preset,
       explanation: 'Grouped by firewall_verdict, filtered DeBERTa score > 0.50, sorted by saved_fraud_usd DESC.',
@@ -88,6 +89,7 @@ export function applyPresetToGridApi(
       { colId: 'settled_usd', aggFunc: 'sum' },
     ];
     gridApi?.applyColumnState?.({ state: colState, defaultState: { rowGroup: false } });
+    gridApi?.expandAll?.();
     gridApi?.createCrossFilterChart?.({
       chartType: 'column',
       cellRange: { columns: ['merchant_domain', 'saved_fraud_usd', 'settled_usd'] },
@@ -126,6 +128,7 @@ export async function runAgStudioCopilotQuery(
       const json = await res.json();
       if (Array.isArray(json.ag_grid_column_state)) {
         gridApi?.applyColumnState?.({ state: json.ag_grid_column_state, applyOrder: true });
+        gridApi?.expandAll?.();
       }
       return {
         explanation: `AG Studio Copilot applied layout for "${naturalLanguageQuery}"`,
@@ -148,9 +151,13 @@ export function useAgStudioBlotter(initialRows?: EscrowBlotterRow[]) {
     const onEscrowEvt = (e: Event) => {
       const detail = (e as CustomEvent<TalosEscrowEventDetail>).detail;
       if (!detail || !gridApiRef.current) return;
+      const targetId = detail.ag_grid_row_delta?.escrow_id || detail.escrow_id;
+      const existed = baseRows.some((r) => r.escrow_id === targetId);
       const next = applyEscrowEventToRows(baseRows, detail);
-      const changed = next.find((r) => r.escrow_id === (detail.ag_grid_row_delta?.escrow_id || detail.escrow_id));
-      if (changed) gridApiRef.current.applyTransactionAsync?.({ update: [changed] });
+      const changed = next.find((r) => r.escrow_id === targetId);
+      if (changed) {
+        gridApiRef.current.applyTransactionAsync?.(existed ? { update: [changed] } : { add: [changed], addIndex: 0 });
+      }
     };
     window.addEventListener(TALOS_ESCROW_EVENT, onEscrowEvt);
     return () => window.removeEventListener(TALOS_ESCROW_EVENT, onEscrowEvt);

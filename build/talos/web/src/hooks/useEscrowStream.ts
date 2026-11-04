@@ -124,77 +124,91 @@ export function computeKpiMetrics(rows: EscrowBlotterRow[]): KpiMetricsSummary {
   };
 }
 
+export function normalizeEscrowState(raw: unknown): EscrowLifecycleState | undefined {
+  const s = String(raw || '').toUpperCase();
+  if (['PAYPAL_AUTHORIZED', 'SLA_SCHEDULED', 'MANDATE_VERIFIED', 'CHANNEL3_BENCHMARKED'].includes(s)) return 'PAYPAL_AUTHORIZED';
+  if (['PAYPAL_CAPTURED', 'TRACKING_VERIFIED', 'DISPUTE_FILED', 'DISPUTE_EVIDENCE_SUBMITTED'].includes(s)) return 'PAYPAL_CAPTURED';
+  if (s === 'PAYPAL_VOIDED') return 'PAYPAL_VOIDED';
+  if (s === 'STEP_UP_REQUIRED') return 'STEP_UP_REQUIRED';
+  if (['BLOCKED_DOM_INJECTION', 'BLOCKED_FIREWALL', 'BLOCKED_PRICE_GOUGING'].includes(s)) return 'BLOCKED_DOM_INJECTION';
+  return undefined;
+}
+
 export function applyEscrowEventToRows(
   rows: EscrowBlotterRow[],
-  detail: TalosEscrowEventDetail
+  detail: TalosEscrowEventDetail & { payload?: Record<string, unknown> }
 ): EscrowBlotterRow[] {
+  const p = detail.payload || {};
   const delta = detail.ag_grid_row_delta;
-  const targetId = delta?.escrow_id || detail.escrow_id;
+  const rawId = delta?.escrow_id || detail.escrow_id || (p.escrow_id as string);
+  if (!rawId) return rows;
+  const targetId =
+    rawId === '0192e8a0-4138-7000-8000-0a8e783c4720' || p.paypal_request_id === 'act1-poisoned-sm7b'
+      ? 'esc-901-trap'
+      : rawId;
+  const rawState = normalizeEscrowState(delta?.state || detail.new_state || p.state);
+  const pCents = typeof p.amount_cents === 'number' ? p.amount_cents : undefined;
+
   if (rows.some((r) => r.escrow_id === targetId)) {
     return rows.map((r) => {
       if (r.escrow_id !== targetId) return r;
-      const nextState = delta?.state || detail.new_state;
-      const nextAuth = delta?.paypal_auth_id || detail.paypal_auth_id || r.paypal_auth_id;
-      const nextCents = delta?.amount_cents ?? detail.amount_cents ?? r.amount_cents;
+      const nextState = rawState || r.state;
+      const nextAuth = delta?.paypal_auth_id || detail.paypal_auth_id || (p.paypal_auth_id as string) || (p.paypal_authorization_id as string) || r.paypal_auth_id;
+      const nextOrder = delta?.paypal_order_id || detail.paypal_order_id || (p.paypal_order_id as string) || r.paypal_order_id;
+      const nextCents = delta?.amount_cents ?? detail.amount_cents ?? pCents ?? r.amount_cents;
       return {
         ...r,
         state: nextState,
         escrowState: nextState,
-        paypal_order_id: delta?.paypal_order_id || detail.paypal_order_id || r.paypal_order_id,
+        paypal_order_id: nextOrder,
         paypal_auth_id: nextAuth,
         paypal_authorization_id: nextAuth,
-        paypal_capture_id: delta?.paypal_capture_id || detail.paypal_capture_id || r.paypal_capture_id,
+        paypal_capture_id: delta?.paypal_capture_id || detail.paypal_capture_id || (p.paypal_capture_id as string) || r.paypal_capture_id,
         amount_cents: nextCents,
         amountUsd: nextCents / 100,
+        attempted_price_usd: nextCents / 100,
         settled_usd: nextState === 'PAYPAL_CAPTURED' ? nextCents / 100 : r.settled_usd,
         saved_fraud_usd: nextState === 'PAYPAL_VOIDED' ? nextCents / 100 : r.saved_fraud_usd,
       };
     });
   }
-  const newCents = delta?.amount_cents ?? detail.amount_cents ?? 24500;
-  const auth = delta?.paypal_auth_id || detail.paypal_auth_id || '2AC3REROUTE';
-  const merchant = delta?.merchant_name || detail.merchant_name || 'Channel3 Verified Backup';
+  if (!rawState) return rows;
+  const isBlocked = rawState === 'BLOCKED_DOM_INJECTION';
+  const templateRow = isBlocked ? INITIAL_BLOTTER_ROWS[0] : INITIAL_BLOTTER_ROWS[1];
+  const newCents = delta?.amount_cents ?? detail.amount_cents ?? pCents ?? (isBlocked ? 48000 : 24500);
+  const auth = delta?.paypal_auth_id || detail.paypal_auth_id || (p.paypal_auth_id as string) || (isBlocked ? 'BLOCKED-NO-AUTH' : '2AC3REROUTE');
+  const merchant = delta?.merchant_name || detail.merchant_name || (p.merchant_name as string) || templateRow.merchant_name;
   return [
     {
-      ...INITIAL_BLOTTER_ROWS[1],
+      ...templateRow,
       escrow_id: targetId, escrowId: targetId, merchant_name: merchant, merchantName: merchant,
-      sku_summary: delta?.sku_summary || detail.sku_summary || 'Channel3 Auto-Rerouted SKU',
-      amount_cents: newCents, amountUsd: newCents / 100,
-      state: delta?.state || detail.new_state, escrowState: delta?.state || detail.new_state,
-      paypal_order_id: delta?.paypal_order_id || detail.paypal_order_id || '8XC3REROUTE',
+      sku_summary: delta?.sku_summary || detail.sku_summary || (p.sku_query as string) || templateRow.sku_summary,
+      amount_cents: newCents, amountUsd: newCents / 100, attempted_price_usd: newCents / 100,
+      state: rawState, escrowState: rawState,
+      paypal_order_id: delta?.paypal_order_id || detail.paypal_order_id || (p.paypal_order_id as string) || (isBlocked ? 'BLOCKED-NO-ORDER' : '8XC3REROUTE'),
       paypal_auth_id: auth, paypal_authorization_id: auth,
     },
     ...rows,
   ];
 }
 
-export function useEscrowStream(
-  wsUrl = resolveOrchestratorWsUrl()
-) {
+export function useEscrowStream(wsUrl = resolveOrchestratorWsUrl()) {
   const [connected, setConnected] = useState<boolean>(Boolean(wsUrl));
   const [mode, setMode] = useState<'LIVE_WS' | 'SIMULATION_FALLBACK'>('SIMULATION_FALLBACK');
   const [rows, setRows] = useState<EscrowBlotterRow[]>(INITIAL_BLOTTER_ROWS);
 
   const upsertRow = useCallback((updated: EscrowBlotterRow) => {
-    setRows((prev) =>
-      prev.some((r) => r.escrow_id === updated.escrow_id)
-        ? prev.map((r) => (r.escrow_id === updated.escrow_id ? updated : r))
-        : [updated, ...prev]
-    );
+    setRows((prev) => (prev.some((r) => r.escrow_id === updated.escrow_id) ? prev.map((r) => (r.escrow_id === updated.escrow_id ? updated : r)) : [updated, ...prev]));
   }, []);
 
-  const updateRowState = useCallback(
-    (escrowId: string, newState: EscrowLifecycleState, patch?: Partial<EscrowBlotterRow>) => {
-      setRows((prev) =>
-        prev.map((r) => (r.escrow_id === escrowId ? { ...r, state: newState, escrowState: newState, ...patch } : r))
-      );
-    },
-    []
-  );
+  const updateRowState = useCallback((escrowId: string, newState: EscrowLifecycleState, patch?: Partial<EscrowBlotterRow>) => {
+    setRows((prev) => prev.map((r) => (r.escrow_id === escrowId ? { ...r, state: newState, escrowState: newState, ...patch } : r)));
+  }, []);
 
   const resetRows = useCallback(() => setRows(INITIAL_BLOTTER_ROWS), []);
 
   useEffect(() => {
+    const mountedAt = Date.now();
     const onCustomEvent = (e: Event) => {
       const detail = (e as CustomEvent<TalosEscrowEventDetail>).detail;
       if (detail) setRows((prev) => applyEscrowEventToRows(prev, detail));
@@ -207,7 +221,9 @@ export function useEscrowStream(
         socket.onopen = () => { setConnected(true); setMode('LIVE_WS'); };
         socket.onmessage = (msg) => {
           try {
-            const parsed = JSON.parse(String(msg.data)) as TalosEscrowEventDetail;
+            const parsed = JSON.parse(String(msg.data)) as TalosEscrowEventDetail & { payload?: Record<string, unknown> };
+            const evtTs = parsed?.timestamp ? Date.parse(parsed.timestamp) : NaN;
+            if ((parsed?.event_type as string) === 'HUB_INITIALIZED' || (!Number.isNaN(evtTs) && evtTs < mountedAt - 2000)) return;
             if (parsed?.escrow_id) setRows((prev) => applyEscrowEventToRows(prev, parsed));
           } catch { /* ignore */ }
         };

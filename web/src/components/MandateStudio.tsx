@@ -134,18 +134,26 @@ export function MandateStudio({ initialValues = DEFAULT_MANDATE_VALUES, onMandat
   const handleSignSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      setSigning(true);
       const parsedCents = Math.max(100, Math.round(Number(budgetUsd || 300) * 100));
       const allowedCategories = categoriesInput.split(',').map((c) => c.trim()).filter(Boolean);
-      const result = await signKyaMandateRequest({
+      const nextValues: MandateFormValues = {
         ...initialValues,
         maxAmountCents: parsedCents,
         maxSpreadBps,
         slaHours,
         allowedCategories: allowedCategories.length ? allowedCategories : DEFAULT_MANDATE_VALUES.allowedCategories,
+      };
+      setSignedMandate({
+        ...DEFAULT_SIGNED_MANDATE,
+        max_amount_cents: nextValues.maxAmountCents,
+        max_spread_bps: nextValues.maxSpreadBps,
+        sla_hours: nextValues.slaHours,
+        allowed_categories: nextValues.allowedCategories,
+        ed25519_signature_hex: computeDeterministicSignatureHex(nextValues),
       });
-      setSignedMandate(result);
       setSigning(false);
+      const result = await signKyaMandateRequest(nextValues);
+      setSignedMandate(result);
       onMandateSigned?.(result);
     },
     [budgetUsd, categoriesInput, initialValues, maxSpreadBps, onMandateSigned, slaHours]

@@ -67,6 +67,36 @@ export function usePayPalStepUp({
 
   const handleApproveStepUp = useCallback(
     async (approvedOrderId?: string) => {
+      const initialOrderId = approvedOrderId || stepUp.paypalOrderId || '9STEPUP4500019283';
+      const initialAuthId = stepUp.paypalAuthId || `2ASTEPUP-${initialOrderId.slice(-6)}`;
+      setStepUp((prev) => ({ ...prev, paypalOrderId: initialOrderId, paypalAuthId: initialAuthId, approved: true }));
+      setStatusState('PAYPAL_AUTHORIZED');
+      setStatusNote(
+        `Co-Signed! 29-Day PayPal Sandbox AUTHORIZE Hold Locked (Order: ${initialOrderId} · Auth: ${initialAuthId}).`
+      );
+      broadcastTalosEscrowEvent({
+        event_id: `evt-stepup-ok-${Date.now()}`,
+        event_type: 'ESCROW_STATE_TRANSITION',
+        timestamp: new Date().toISOString(),
+        escrow_id: stepUp.escrowId,
+        previous_state: 'STEP_UP_REQUIRED',
+        new_state: 'PAYPAL_AUTHORIZED',
+        sku_summary: stepUp.skuSummary,
+        merchant_name: stepUp.merchantName,
+        amount_cents: stepUp.amountCents,
+        paypal_order_id: initialOrderId,
+        paypal_auth_id: initialAuthId,
+        ag_grid_row_delta: {
+          escrow_id: stepUp.escrowId,
+          state: 'PAYPAL_AUTHORIZED',
+          paypal_order_id: initialOrderId,
+          paypal_auth_id: initialAuthId,
+          amount_cents: stepUp.amountCents,
+          sku_summary: stepUp.skuSummary,
+          merchant_name: stepUp.merchantName,
+        },
+      });
+
       const orderId = approvedOrderId || (await createPayPalSandboxOrder());
       const authId = stepUp.paypalAuthId || `2ASTEPUP-${orderId.slice(-6)}`;
       try {
@@ -81,35 +111,10 @@ export function usePayPalStepUp({
       } catch {
         // Offline replay fallback
       }
-
       setStepUp((prev) => ({ ...prev, paypalOrderId: orderId, paypalAuthId: authId, approved: true }));
-      setStatusState('PAYPAL_AUTHORIZED');
       setStatusNote(
         `Co-Signed! 29-Day PayPal Sandbox AUTHORIZE Hold Locked (Order: ${orderId} · Auth: ${authId}).`
       );
-
-      broadcastTalosEscrowEvent({
-        event_id: `evt-stepup-ok-${Date.now()}`,
-        event_type: 'ESCROW_STATE_TRANSITION',
-        timestamp: new Date().toISOString(),
-        escrow_id: stepUp.escrowId,
-        previous_state: 'STEP_UP_REQUIRED',
-        new_state: 'PAYPAL_AUTHORIZED',
-        sku_summary: stepUp.skuSummary,
-        merchant_name: stepUp.merchantName,
-        amount_cents: stepUp.amountCents,
-        paypal_order_id: orderId,
-        paypal_auth_id: authId,
-        ag_grid_row_delta: {
-          escrow_id: stepUp.escrowId,
-          state: 'PAYPAL_AUTHORIZED',
-          paypal_order_id: orderId,
-          paypal_auth_id: authId,
-          amount_cents: stepUp.amountCents,
-          sku_summary: stepUp.skuSummary,
-          merchant_name: stepUp.merchantName,
-        },
-      });
       onStepUpComplete?.(orderId, authId);
     },
     [createPayPalSandboxOrder, onStepUpComplete, stepUp]

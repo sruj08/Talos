@@ -91,22 +91,22 @@ function buildAgStudioCopilotPlan(query: string) {
 
   const columnState = [
     {
-      colId: groupByMerchant ? 'merchant_name' : 'state',
+      colId: groupByMerchant ? 'merchant_domain' : 'state',
       rowGroup: true,
-      rowGroupIndex: 0,
     },
-    { colId: 'state', rowGroup: !groupByMerchant, rowGroupIndex: groupByMerchant ? null : 0 },
-    { colId: 'amount_cents', aggFunc: 'sum' },
-    { colId: 'channel3_spread_bps', aggFunc: 'avg' },
-    { colId: 'deberta_risk_score', sort: filterBlocked ? 'desc' : null },
+    { colId: 'state', rowGroup: !groupByMerchant },
+    { colId: 'saved_fraud_usd', aggFunc: 'sum' },
+    { colId: 'settled_usd', aggFunc: 'sum' },
+    { colId: 'spread_bps', aggFunc: 'max' },
+    { colId: 'deberta_Prompt_injection_score', sort: (filterBlocked ? 'desc' : null) as 'desc' | null },
   ];
 
   return {
     ag_grid_column_state: columnState,
     ag_charts_config: {
       chartType: filterVoided ? 'bar' : 'groupedColumn',
-      xKey: groupByMerchant ? 'merchant_name' : 'state',
-      yKeys: ['amount_cents'],
+      xKey: groupByMerchant ? 'merchant_domain' : 'state',
+      yKeys: ['saved_fraud_usd', 'settled_usd'],
       title: 'TALOS AG Studio Copilot — Protected PayPal Escrow Volume',
     },
     filter_preset: filterBlocked ? 'BLOCKED_THREATS' : filterVoided ? 'VOIDED_SLA' : 'ALL_ESCROWS',

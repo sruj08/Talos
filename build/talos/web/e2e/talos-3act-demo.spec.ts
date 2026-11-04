@@ -100,7 +100,9 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
     await expect(pom.telemetryCard).toContainText('Auto-CAPTURED');
 
     await page.getByTestId('select-row-esc-902-sm7b').click();
-    await expect(page.getByTestId('forensic-card-paypal-actions').last()).toContainText('esc-902-sm7b');
+    const paypalForensicCard = page.getByTestId('forensic-card-paypal-actions').last();
+    await expect(paypalForensicCard).toContainText('esc-902-sm7b (PAYPAL_CAPTURED)');
+    await expect(paypalForensicCard).toContainText('9CAP-2A112233');
 
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, 'act2-paypal-authorize-capture.png'),
