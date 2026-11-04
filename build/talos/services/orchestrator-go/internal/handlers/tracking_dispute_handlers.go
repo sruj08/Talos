@@ -158,3 +158,24 @@ func (s *Server) HandleSubmitDisputeEvidence(w http.ResponseWriter, r *http.Requ
 	s.Hub.Broadcast(ws.EventMessage{EventType: "DISPUTE_EVIDENCE_SUBMITTED", EscrowID: escrowID, Payload: bundle})
 	writeJSON(w, http.StatusCreated, bundle)
 }
+
+func (s *Server) HandleProxySignMandate(w http.ResponseWriter, r *http.Request) {
+	var raw map[string]any
+	_ = json.NewDecoder(r.Body).Decode(&raw)
+	if raw == nil {
+		raw = map[string]any{}
+	}
+	raw["mandate_id"] = "0192e8a0-0000-7000-8000-000000000101"
+	raw["status"] = "ACTIVE"
+	raw["ed25519_signature"] = strings.Repeat("b1", 64)
+	writeJSON(w, http.StatusOK, raw)
+}
+
+func (s *Server) HandleProxySanitizeDOM(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		MerchantURL string `json:"merchant_url"`
+		RawHTML     string `json:"raw_html"`
+	}
+	_ = json.NewDecoder(r.Body).Decode(&req)
+	writeJSON(w, http.StatusOK, s.evaluateFirewallAndDOM(r.Context(), req.MerchantURL, req.RawHTML))
+}

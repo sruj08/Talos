@@ -34,54 +34,26 @@ pub struct WebhookVerifyResponse {
 pub fn verify_paypal_webhook(req: &WebhookVerifyRequest) -> WebhookVerifyResponse {
     let start = Instant::now();
     let crc = crc32fast::hash(req.raw_body.as_bytes());
-    let crc32_verified = !req.raw_body.is_empty()
-        && crc > 0
-        && req.expected_crc32.is_none_or(|expected| expected == crc);
+    let crc32_verified = !req.raw_body.is_empty() && crc > 0 && req.expected_crc32.is_none_or(|expected| expected == crc);
 
-    let cert_ok = req.cert_url.is_empty()
-        || req.cert_url.starts_with("https://api.sandbox.paypal.com/")
-        || req.cert_url.starts_with("https://api.paypal.com/");
-    let algo_ok = req.auth_algo.is_empty()
-        || req.auth_algo.eq_ignore_ascii_case("SHA256withRSA")
-        || req.auth_algo.eq_ignore_ascii_case("ED25519");
+    let cert_ok = req.cert_url.is_empty() || req.cert_url.starts_with("https://api.sandbox.paypal.com/") || req.cert_url.starts_with("https://api.paypal.com/");
+    let algo_ok = req.auth_algo.is_empty() || req.auth_algo.eq_ignore_ascii_case("SHA256withRSA") || req.auth_algo.eq_ignore_ascii_case("ED25519");
     let sig_lower = req.transmission_sig.trim().to_ascii_lowercase();
-    let sig_present_and_well_formed = !sig_lower.is_empty()
-        && sig_lower.len() >= 4
-        && !sig_lower.contains("invalid")
-        && !sig_lower.contains("tampered")
-        && !sig_lower.contains("forged");
+    let sig_present_and_well_formed =
+        !sig_lower.is_empty() && sig_lower.len() >= 4 && !sig_lower.contains("invalid") && !sig_lower.contains("tampered") && !sig_lower.contains("forged");
 
-    let canonical_msg = format!(
-        "{}|{}|{}|{}",
-        req.transmission_id.trim(),
-        req.transmission_time.trim(),
-        req.webhook_id.trim(),
-        crc
-    );
+    let canonical_msg = format!("{}|{}|{}|{}", req.transmission_id.trim(), req.transmission_time.trim(), req.webhook_id.trim(), crc);
     let _msg_digest = Sha256::digest(canonical_msg.as_bytes());
 
-    let rsa_sig_verified = !req.transmission_id.trim().is_empty()
-        && !req.webhook_id.trim().is_empty()
-        && sig_present_and_well_formed
-        && cert_ok
-        && algo_ok;
+    let rsa_sig_verified = !req.transmission_id.trim().is_empty() && !req.webhook_id.trim().is_empty() && sig_present_and_well_formed && cert_ok && algo_ok;
 
     let verified = crc32_verified && rsa_sig_verified;
     let latency_us = start.elapsed().as_micros().max(1) as u64;
 
-    WebhookVerifyResponse {
-        verified,
-        crc32_verified,
-        rsa_sig_verified,
-        crc32_decimal: crc,
-        canonical_transmission_message: canonical_msg,
-        latency_us,
-    }
+    WebhookVerifyResponse { verified, crc32_verified, rsa_sig_verified, crc32_decimal: crc, canonical_transmission_message: canonical_msg, latency_us }
 }
 
-pub async fn handle_verify_webhook(
-    Json(req): Json<WebhookVerifyRequest>,
-) -> Json<WebhookVerifyResponse> {
+pub async fn handle_verify_webhook(Json(req): Json<WebhookVerifyRequest>) -> Json<WebhookVerifyResponse> {
     Json(verify_paypal_webhook(&req))
 }
 
@@ -135,4 +107,3 @@ mod tests {
         assert!(!bad_sig.rsa_sig_verified);
     }
 }
-

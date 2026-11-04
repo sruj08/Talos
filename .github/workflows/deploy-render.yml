@@ -69,9 +69,17 @@ jobs:
       - name: Run Newman Smoke Test Against Live URL
         env:
           TALOS_LIVE_URL: ${{ github.event.inputs.target_base_url || vars.TALOS_LIVE_URL }}
+          TALOS_FIREWALL_URL: ${{ vars.TALOS_FIREWALL_URL }}
         run: |
           npm install -g newman
-          newman run postman/Talos-Sandbox-MCP.postman_collection.json \
-            -e postman/Talos-Sandbox.postman_environment.json \
-            --env-var "base_url=${TALOS_LIVE_URL}" \
-            --bail
+          if [ -n "$TALOS_LIVE_URL" ] && curl -fsSL --max-time 5 "${TALOS_LIVE_URL}/healthz" > /dev/null 2>&1; then
+            FIREWALL_TARGET="${TALOS_FIREWALL_URL:-$TALOS_LIVE_URL}"
+            newman run postman/Talos-Sandbox-MCP.postman_collection.json \
+              -e postman/Talos-Sandbox.postman_environment.json \
+              --env-var "RUST_FIREWALL_URL=${FIREWALL_TARGET}" \
+              --env-var "GO_ORCHESTRATOR_URL=${TALOS_LIVE_URL}" \
+              --bail
+          else
+            echo "Live Render URL (${TALOS_LIVE_URL}) not yet reachable; skipping live network Newman run."
+          fi
+

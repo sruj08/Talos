@@ -50,13 +50,13 @@ type BenchmarkResult struct {
 }
 
 type catalogEntry struct {
-	ProductID          string
-	CanonicalTitle     string
-	GTIN               string
-	MedianCents        int64
+	ProductID           string
+	CanonicalTitle      string
+	GTIN                string
+	MedianCents         int64
 	LowestVerifiedCents int64
-	MerchantName       string
-	MerchantURL        string
+	MerchantName        string
+	MerchantURL         string
 }
 
 type OracleClient struct {

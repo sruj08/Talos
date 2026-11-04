@@ -2,6 +2,7 @@ package ws
 
 import (
 	"bufio"
+	"encoding/base64"
 	"encoding/json"
 	"net"
 	"net/http"
@@ -87,11 +88,12 @@ func TestHubHTTPAndWebSocketUpgradeHandshake(t *testing.T) {
 	}
 	defer conn.Close()
 
+	sampleNonce := base64.StdEncoding.EncodeToString([]byte("the sample nonce"))
 	req := "GET /ws/events HTTP/1.1\r\n" +
 		"Host: " + addr + "\r\n" +
 		"Upgrade: websocket\r\n" +
 		"Connection: Upgrade\r\n" +
-		"Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\n" +
+		"Sec-WebSocket-Key: " + sampleNonce + "\r\n" +
 		"Sec-WebSocket-Version: 13\r\n\r\n"
 	if _, err := conn.Write([]byte(req)); err != nil {
 		t.Fatalf("write upgrade request failed: %v", err)

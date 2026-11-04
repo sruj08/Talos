@@ -158,7 +158,9 @@ fn execute_tool_call(tool_name: &str, args: Value) -> Value {
                 "content": [{ "type": "text", "text": payload.to_string() }]
             })
         }
-        _ => json!({ "isError": true, "content": [{ "type": "text", "text": format!("unknown_tool: {}", tool_name) }] }),
+        _ => {
+            json!({ "isError": true, "content": [{ "type": "text", "text": format!("unknown_tool: {}", tool_name) }] })
+        }
     }
 }
 
@@ -175,7 +177,9 @@ pub async fn run_stdio_loop() -> std::io::Result<()> {
     let mut stdout = tokio::io::stdout();
     let mut lines = stdin.lines();
     while let Some(line) = lines.next_line().await? {
-        if line.trim().is_empty() { continue; }
+        if line.trim().is_empty() {
+            continue;
+        }
         if let Ok(req) = serde_json::from_str::<McpJsonRpcRequest>(&line) {
             let out = serde_json::to_string(&dispatch_mcp_request(req)).unwrap_or_default() + "\n";
             stdout.write_all(out.as_bytes()).await?;
@@ -201,7 +205,9 @@ mod tests {
     #[test]
     fn test_mcp_tools_call_issue_verify_sanitize_and_checkout() {
         let issue = dispatch_mcp_request(McpJsonRpcRequest {
-            jsonrpc: "2.0".to_string(), id: json!(3), method: "tools/call".to_string(),
+            jsonrpc: "2.0".to_string(),
+            id: json!(3),
+            method: "tools/call".to_string(),
             params: Some(json!({ "name": "talos_issue_mandate", "arguments": { "agent_id": "agent_mcp", "max_amount_cents": 25000, "allowed_categories": ["HARDWARE"] } })),
         });
         assert_eq!(issue.result["isError"], false);
@@ -209,7 +215,9 @@ mod tests {
         let sig = issue.result["data"]["ed25519_signature"].as_str().unwrap().to_string();
 
         let checkout = dispatch_mcp_request(McpJsonRpcRequest {
-            jsonrpc: "2.0".to_string(), id: json!(4), method: "tools/call".to_string(),
+            jsonrpc: "2.0".to_string(),
+            id: json!(4),
+            method: "tools/call".to_string(),
             params: Some(json!({
                 "name": "talos_execute_protected_checkout",
                 "arguments": {
@@ -223,5 +231,3 @@ mod tests {
         assert_eq!(checkout.result["data"]["firewall_scan"]["deberta_label"], "PROMPT_INJECTION");
     }
 }
-
-

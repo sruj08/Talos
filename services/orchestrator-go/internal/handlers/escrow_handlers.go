@@ -12,6 +12,39 @@ import (
 	"github.com/talos/services/orchestrator-go/internal/ws"
 )
 
+type SlaTimelineTask struct {
+	ID             string `json:"id"`
+	EscrowID       string `json:"escrow_id"`
+	ResourceID     string `json:"resourceId"`
+	Name           string `json:"name"`
+	StartDate      string `json:"startDate"`
+	EndDate        string `json:"endDate"`
+	AuthExpiryDate string `json:"authExpiryDate"`
+	EscrowState    string `json:"escrowState"`
+	PercentDone    int    `json:"percentDone"`
+	Carrier        string `json:"carrier,omitempty"`
+	TrackingNumber string `json:"tracking_number,omitempty"`
+	TrackingStatus string `json:"tracking_status,omitempty"`
+}
+
+type DisputeEvidenceBundle struct {
+	BundleID               string `json:"bundle_id"`
+	EscrowID               string `json:"escrow_id"`
+	PayPalDisputeID        string `json:"paypal_dispute_id"`
+	BundleSHA256           string `json:"bundle_sha256"`
+	PayPalSubmissionStatus string `json:"paypal_submission_status"`
+	SubmittedAt            string `json:"submitted_at"`
+}
+
+type WebhookEventLedger struct {
+	ID             string `json:"id"`
+	TransmissionID string `json:"transmission_id"`
+	EventType      string `json:"event_type"`
+	CRC32Verified  bool   `json:"crc32_verified"`
+	RSASigVerified bool   `json:"rsa_sig_verified"`
+	ProcessedAt    string `json:"processed_at"`
+}
+
 func parseCheckoutReq(raw map[string]any) CheckoutEvaluateRequest {
 	str := func(k, def string) string {
 		if v, ok := raw[k].(string); ok && strings.TrimSpace(v) != "" {

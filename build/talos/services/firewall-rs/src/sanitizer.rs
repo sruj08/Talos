@@ -32,22 +32,39 @@ pub struct StrippedPayload {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FirewallScanLog {
-    pub scan_id: String, pub merchant_url: String, pub raw_dom_hash: String,
-    pub sanitized_dom: String, pub sanitized_html: String, pub injection_detected: bool,
-    pub verdict: String, pub risk_score: f64, pub deberta_label: String, pub model_id: String,
-    pub stripped_payloads: Vec<StrippedPayload>, pub latency_us: u64,
+    pub scan_id: String,
+    pub merchant_url: String,
+    pub raw_dom_hash: String,
+    pub sanitized_dom: String,
+    pub sanitized_html: String,
+    pub injection_detected: bool,
+    pub verdict: String,
+    pub risk_score: f64,
+    pub deberta_label: String,
+    pub model_id: String,
+    pub stripped_payloads: Vec<StrippedPayload>,
+    pub latency_us: u64,
 }
 
 const ADVERSARIAL_PATTERNS: &[&str] = &[
-    "system override", "ignore previous", "ignore all previous", "ignore $", "disregard previous",
-    "immediately transfer", "transfer $", "without escrow", "attacker-sandbox", "create_order",
-    "[inst]", "[/inst]", "<|im_start|>", "bypass mandate",
+    "system override",
+    "ignore previous",
+    "ignore all previous",
+    "ignore $",
+    "disregard previous",
+    "immediately transfer",
+    "transfer $",
+    "without escrow",
+    "attacker-sandbox",
+    "create_order",
+    "[inst]",
+    "[/inst]",
+    "<|im_start|>",
+    "bypass mandate",
 ];
 
-const HIDDEN_CSS_RULES: &[(&str, &str)] = &[
-    ("display:none", "display:none"), ("opacity:0", "opacity:0"), ("visibility:hidden", "visibility:hidden"),
-    ("font-size:0", "font-size:0"), ("left:-9999px", "left:-9999px"),
-];
+const HIDDEN_CSS_RULES: &[(&str, &str)] =
+    &[("display:none", "display:none"), ("opacity:0", "opacity:0"), ("visibility:hidden", "visibility:hidden"), ("font-size:0", "font-size:0"), ("left:-9999px", "left:-9999px")];
 
 fn automaton() -> &'static AhoCorasick {
     static AC: OnceLock<AhoCorasick> = OnceLock::new();
@@ -64,7 +81,11 @@ fn strip_unicode_stealth(input: &str, stripped: &mut Vec<StrippedPayload>) -> St
             zw_count += 1;
         } else if (0xE0000..=0xE007F).contains(&code) {
             let ascii = (code - 0xE0000) as u8;
-            if (0x20..=0x7E).contains(&ascii) { tag_decoded.push(ascii as char); } else { zw_count += 1; }
+            if (0x20..=0x7E).contains(&ascii) {
+                tag_decoded.push(ascii as char);
+            } else {
+                zw_count += 1;
+            }
         } else {
             cleaned.push(ch);
         }
@@ -81,9 +102,15 @@ fn score_deberta_m01(raw_html: &str, stripped: &[StrippedPayload], pattern_hits:
     let model_id = format!("M-01:deberta-v3-prompt-injection-int8+lol_html({})", model_path);
     let url_suspicious = url.to_ascii_lowercase().contains("malicious") || url.to_ascii_lowercase().contains("poisoned");
     let injection_detected = !stripped.is_empty() || pattern_hits > 0 || url_suspicious;
-    let risk_score = if !injection_detected { 0.0012 } else {
+    let risk_score = if !injection_detected {
+        0.0012
+    } else {
         let base = 0.94 + (pattern_hits.min(5) as f64 * 0.01) + (stripped.len().min(4) as f64 * 0.008);
-        if raw_html.to_ascii_lowercase().contains("system override") { 0.9942 } else { base.min(0.999) }
+        if raw_html.to_ascii_lowercase().contains("system override") {
+            0.9942
+        } else {
+            base.min(0.999)
+        }
     };
     let label = if injection_detected { "PROMPT_INJECTION".to_string() } else { "BENIGN".to_string() };
     (injection_detected, risk_score, label, model_id)
@@ -106,11 +133,7 @@ pub fn sanitize_html_payload(merchant_url: &str, raw_html: &str) -> FirewallScan
             element_content_handlers: vec![
                 comments!("*", move |c| {
                     let text = c.text().trim().to_string();
-                    comments_ref.borrow_mut().push(StrippedPayload {
-                        selector: "html_comment".to_string(),
-                        rule_id: "HTML_COMMENT_INJECTION_STRIPPED".to_string(),
-                        excerpt: text,
-                    });
+                    comments_ref.borrow_mut().push(StrippedPayload { selector: "html_comment".to_string(), rule_id: "HTML_COMMENT_INJECTION_STRIPPED".to_string(), excerpt: text });
                     c.remove();
                     Ok(())
                 }),
@@ -160,8 +183,7 @@ pub fn sanitize_html_payload(merchant_url: &str, raw_html: &str) -> FirewallScan
         }
     }
 
-    let (injection_detected, risk_score, deberta_label, model_id) =
-        score_deberta_m01(raw_html, &stripped_payloads, pattern_hits, merchant_url);
+    let (injection_detected, risk_score, deberta_label, model_id) = score_deberta_m01(raw_html, &stripped_payloads, pattern_hits, merchant_url);
     let verdict = if injection_detected { "BLOCKED".to_string() } else { "CLEAN".to_string() };
     let latency_us = start.elapsed().as_micros().max(1) as u64;
 
@@ -216,4 +238,3 @@ mod tests {
         assert!(res.stripped_payloads.is_empty());
     }
 }
-

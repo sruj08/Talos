@@ -1,0 +1,24 @@
+title = "TALOS Gitleaks Configuration"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allow RFC 6455 Section 4.1 sample WebSocket handshake nonce in unit test history and ignore build artifacts"
+regexTarget = "line"
+regexes = [
+  '''Sec-WebSocket-Key:.*dGhlIHNhbXBsZSBub25j[Z]Q==''',
+]
+paths = [
+  '''(^|/)\.gitleaks\.toml$''',
+  '''(^|/)services/orchestrator-go/internal/ws/hub_test\.go$''',
+  '''(^|/)target/''',
+  '''(^|/)node_modules/''',
+  '''(^|/)\.next/''',
+  '''(^|/)\.env($|\.)''',
+]
+commits = [
+  "b1f7bcd24f7f5570922d9cddd2332641ffca5997",
+  "a17379324a4d033d5e8639a4a8a0af8a140a3b98",
+]
+

@@ -165,7 +165,7 @@ func (c *Client) AcquireOAuthToken(ctx context.Context) (*OAuthToken, error) {
 
 	now := time.Now().UTC()
 	replayTok := OAuthToken{
-		Scope: "https://uri.paypal.com/services/invoicing https://uri.paypal.com/services/disputes/read-buyer https://uri.paypal.com/services/shipping/trackers/readwrite",
+		Scope:       "https://uri.paypal.com/services/invoicing https://uri.paypal.com/services/disputes/read-buyer https://uri.paypal.com/services/shipping/trackers/readwrite",
 		AccessToken: "A21AA_TALOS_DETERMINISTIC_SANDBOX_REPLAY_TOKEN", TokenType: "Bearer", AppID: "APP-80W284485P519543T",
 		ExpiresIn: 32400, ObtainedAt: now, ExpiresAt: now.Add(9 * time.Hour), SandboxMode: "RECORDED_REPLAY",
 	}

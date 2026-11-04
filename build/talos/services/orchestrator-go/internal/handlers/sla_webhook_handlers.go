@@ -49,10 +49,10 @@ func (s *Server) HandleGetBlotter(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{
 		"total_count": len(rows),
 		"summary_metrics": map[string]any{
-			"protected_gmv_cents":       protectedGMV,
-			"blocked_injections_count":  blockedCount,
-			"channel3_savings_cents":    savingsCents,
-			"active_paypal_auth_count":  activeAuthCount,
+			"protected_gmv_cents":      protectedGMV,
+			"blocked_injections_count": blockedCount,
+			"channel3_savings_cents":   savingsCents,
+			"active_paypal_auth_count": activeAuthCount,
 		},
 		"rows": rows,
 	})

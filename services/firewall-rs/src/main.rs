@@ -27,32 +27,14 @@ pub fn build_router() -> Router {
     Router::new()
         .route("/healthz", get(healthz))
         .route("/v1/mandates/sign", post(mandate::handle_sign_mandate))
-        .route(
-            "/v1/firewall/mandate/sign",
-            post(mandate::handle_sign_mandate),
-        )
+        .route("/v1/firewall/mandate/sign", post(mandate::handle_sign_mandate))
         .route("/v1/mandates/verify", post(mandate::handle_verify_mandate))
-        .route(
-            "/v1/firewall/mandate/verify",
-            post(mandate::handle_verify_mandate),
-        )
-        .route(
-            "/v1/firewall/sanitize-dom",
-            post(sanitizer::handle_sanitize_dom),
-        )
-        .route(
-            "/v1/firewall/verify-webhook",
-            post(webhook_verify::handle_verify_webhook),
-        )
-        .route(
-            "/v1/firewall/webhook/verify",
-            post(webhook_verify::handle_verify_webhook),
-        )
+        .route("/v1/firewall/mandate/verify", post(mandate::handle_verify_mandate))
+        .route("/v1/firewall/sanitize-dom", post(sanitizer::handle_sanitize_dom))
+        .route("/v1/firewall/verify-webhook", post(webhook_verify::handle_verify_webhook))
+        .route("/v1/firewall/webhook/verify", post(webhook_verify::handle_verify_webhook))
         .route("/mcp", post(mcp_server::handle_mcp_rpc))
-        .route(
-            "/mcp/sse",
-            get(mcp_server::handle_mcp_sse).post(mcp_server::handle_mcp_rpc),
-        )
+        .route("/mcp/sse", get(mcp_server::handle_mcp_sse).post(mcp_server::handle_mcp_rpc))
         .layer(CorsLayer::permissive())
 }
 
@@ -68,10 +50,7 @@ async fn main() {
     tracing_subscriber::fmt::init();
 
     let app = build_router();
-    let port: u16 = std::env::var("RUST_FIREWALL_PORT")
-        .ok()
-        .and_then(|p| p.parse().ok())
-        .unwrap_or(8081);
+    let port: u16 = std::env::var("RUST_FIREWALL_PORT").ok().and_then(|p| p.parse().ok()).unwrap_or(8081);
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
     tracing::info!("talos-firewall-rs listening on {}", addr);
 
@@ -91,4 +70,3 @@ mod tests {
         assert_eq!(val["status"], "ok");
     }
 }
-

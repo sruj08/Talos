@@ -26,39 +26,6 @@ import (
 	"github.com/talos/services/orchestrator-go/internal/ws"
 )
 
-type SlaTimelineTask struct {
-	ID             string `json:"id"`
-	EscrowID       string `json:"escrow_id"`
-	ResourceID     string `json:"resourceId"`
-	Name           string `json:"name"`
-	StartDate      string `json:"startDate"`
-	EndDate        string `json:"endDate"`
-	AuthExpiryDate string `json:"authExpiryDate"`
-	EscrowState    string `json:"escrowState"`
-	PercentDone    int    `json:"percentDone"`
-	Carrier        string `json:"carrier,omitempty"`
-	TrackingNumber string `json:"tracking_number,omitempty"`
-	TrackingStatus string `json:"tracking_status,omitempty"`
-}
-
-type DisputeEvidenceBundle struct {
-	BundleID               string `json:"bundle_id"`
-	EscrowID               string `json:"escrow_id"`
-	PayPalDisputeID        string `json:"paypal_dispute_id"`
-	BundleSHA256           string `json:"bundle_sha256"`
-	PayPalSubmissionStatus string `json:"paypal_submission_status"`
-	SubmittedAt            string `json:"submitted_at"`
-}
-
-type WebhookEventLedger struct {
-	ID             string `json:"id"`
-	TransmissionID string `json:"transmission_id"`
-	EventType      string `json:"event_type"`
-	CRC32Verified  bool   `json:"crc32_verified"`
-	RSASigVerified bool   `json:"rsa_sig_verified"`
-	ProcessedAt    string `json:"processed_at"`
-}
-
 type Server struct {
 	Store       *store.Store
 	Machine     *escrow.Machine
@@ -75,14 +42,28 @@ type Server struct {
 }
 
 func NewServer(st *store.Store, m *escrow.Machine, pp *paypal.SandboxService, orc *channel3.OracleClient, insp *kernel.InspectorClient, hub *ws.Hub) *Server {
-	if st == nil { st = store.NewStore(os.Getenv("DATABASE_URL"), os.Getenv("REDIS_URL")) }
-	if m == nil { m = escrow.NewMachine() }
-	if pp == nil { pp = paypal.NewSandboxServiceFromEnv() }
-	if orc == nil { orc = channel3.NewOracleClientFromEnv() }
-	if insp == nil { insp = kernel.NewInspectorFromEnv() }
-	if hub == nil { hub = ws.NewHub() }
+	if st == nil {
+		st = store.NewStore(os.Getenv("DATABASE_URL"), os.Getenv("REDIS_URL"))
+	}
+	if m == nil {
+		m = escrow.NewMachine()
+	}
+	if pp == nil {
+		pp = paypal.NewSandboxServiceFromEnv()
+	}
+	if orc == nil {
+		orc = channel3.NewOracleClientFromEnv()
+	}
+	if insp == nil {
+		insp = kernel.NewInspectorFromEnv()
+	}
+	if hub == nil {
+		hub = ws.NewHub()
+	}
 	fwURL := strings.TrimRight(strings.TrimSpace(os.Getenv("RUST_FIREWALL_URL")), "/")
-	if fwURL == "" { fwURL = "http://localhost:8081" }
+	if fwURL == "" {
+		fwURL = "http://localhost:8081"
+	}
 	now := time.Now().UTC()
 	s := &Server{
 		Store: st, Machine: m, PayPal: pp, Oracle: orc, Inspector: insp, Hub: hub,
@@ -114,17 +95,19 @@ func (s *Server) Router() http.Handler {
 	r.Get("/api/v1/sla/timeline", s.HandleGetSlaTimeline)
 	r.Patch("/api/v1/sla/timeline/{task_id}", s.HandlePatchSlaTimelineTask)
 	r.Post("/api/v1/webhooks/paypal", s.HandlePayPalWebhook)
+	r.Post("/v1/mandates/sign", s.HandleProxySignMandate)
+	r.Post("/v1/firewall/sanitize-dom", s.HandleProxySanitizeDOM)
 	r.Get("/ws/events", s.Hub.ServeHTTP)
 	r.Get("/ws/escrow-stream", s.Hub.ServeHTTP)
 	return r
 }
 
 type CheckoutEvaluateRequest struct {
-	MandateID, Ed25519Signature, SKUQuery, Category             string
-	MerchantName, MerchantURL, MerchantPayPalEmail, Currency    string
-	AmountCents, MaxAmountCents, MaxSpreadBps                   int64
-	RawHTMLOverride                                             string
-	AllowAutoReroute                                            bool
+	MandateID, Ed25519Signature, SKUQuery, Category          string
+	MerchantName, MerchantURL, MerchantPayPalEmail, Currency string
+	AmountCents, MaxAmountCents, MaxSpreadBps                int64
+	RawHTMLOverride                                          string
+	AllowAutoReroute                                         bool
 }
 
 type domScanVerdict struct {

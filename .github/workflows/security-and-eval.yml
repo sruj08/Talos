@@ -33,18 +33,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Rust & Run cargo-audit
+      - name: Install Rust Stable Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run cargo-audit on Rust Firewall
         uses: actions-rust-lang/audit@v1
         with:
-          working-directory: services/firewall-rs
+          workingDirectory: services/firewall-rs
+          createIssues: "false"
 
       - name: Set up Go & Run govulncheck
         uses: actions/setup-go@v5
         with:
-          go-version: "1.24"
+          go-version: "stable"
           cache: false
       - name: Execute govulncheck on Go Orchestrator
         working-directory: services/orchestrator-go
+        env:
+          GOTOOLCHAIN: go1.27.3+auto
         run: |
           go install golang.org/x/vuln/cmd/govulncheck@latest
           govulncheck ./...

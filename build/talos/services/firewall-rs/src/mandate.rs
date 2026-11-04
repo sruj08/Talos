@@ -6,19 +6,22 @@ use chrono::{DateTime, Duration, SecondsFormat, TimeZone, Utc};
 use ed25519_dalek::{Signature, Signer, SigningKey, Verifier, VerifyingKey};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::{collections::HashMap, sync::{OnceLock, RwLock}, time::Instant};
+use std::{
+    collections::HashMap,
+    sync::{OnceLock, RwLock},
+    time::Instant,
+};
 use uuid::Uuid;
 
 pub type AgentMandate = KyaMandate;
 pub type SignedMandate = KyaMandate;
 
+#[rustfmt::skip]
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(default)]
 pub struct KyaMandate {
-    #[serde(alias = "id")] pub mandate_id: String,
-    pub principal_id: String, pub agent_id: String,
-    pub max_amount_cents: i64, pub inr_equivalent_display: String, pub currency: String,
-    pub allowed_categories: Vec<String>,
+    #[serde(alias = "id")] pub mandate_id: String, pub principal_id: String, pub agent_id: String,
+    pub max_amount_cents: i64, pub inr_equivalent_display: String, pub currency: String, pub allowed_categories: Vec<String>,
     pub max_spread_bps: i64, pub max_channel3_spread_bps: i64, pub sla_hours: i32,
     pub expires_at: String, pub expiry_utc: String, pub expires_at_unix: i64,
     pub ed25519_pubkey_hex: String, pub ed25519_signature: String, pub ed25519_signature_hex: String,
@@ -26,35 +29,29 @@ pub struct KyaMandate {
     #[serde(skip_serializing_if = "Option::is_none")] pub ttl_hours: Option<i64>,
 }
 
+#[rustfmt::skip]
 impl KyaMandate {
-    pub fn effective_spread_bps(&self) -> i64 {
-        if self.max_spread_bps > 0 { self.max_spread_bps } else if self.max_channel3_spread_bps > 0 { self.max_channel3_spread_bps } else { 1500 }
-    }
+    pub fn effective_spread_bps(&self) -> i64 { if self.max_spread_bps > 0 { self.max_spread_bps } else if self.max_channel3_spread_bps > 0 { self.max_channel3_spread_bps } else { 1500 } }
     pub fn effective_expires_unix(&self) -> i64 {
         let ts = if !self.expires_at.is_empty() { &self.expires_at } else { &self.expiry_utc };
-        if !ts.is_empty() {
-            if let Ok(dt) = DateTime::parse_from_rfc3339(ts) { return dt.timestamp(); }
-        }
+        if !ts.is_empty() { if let Ok(dt) = DateTime::parse_from_rfc3339(ts) { return dt.timestamp(); } }
         self.expires_at_unix
     }
-    pub fn effective_signature_hex(&self) -> &str {
-        if !self.ed25519_signature_hex.is_empty() { &self.ed25519_signature_hex } else { &self.ed25519_signature }
-    }
+    pub fn effective_signature_hex(&self) -> &str { if !self.ed25519_signature_hex.is_empty() { &self.ed25519_signature_hex } else { &self.ed25519_signature } }
 }
 
+#[rustfmt::skip]
 #[derive(Debug, Default, Deserialize)]
 #[serde(default)]
 pub struct VerifyMandateRequest {
-    pub mandate: Option<KyaMandate>,
-    #[serde(flatten)] pub flat: KyaMandate,
+    pub mandate: Option<KyaMandate>, #[serde(flatten)] pub flat: KyaMandate,
     #[serde(alias = "amount_cents")] pub requested_amount_cents: i64,
     #[serde(alias = "merchant_category", alias = "category")] pub requested_category: String,
     #[serde(alias = "spread_bps", alias = "channel3_spread_bps")] pub observed_spread_bps: Option<i64>,
-    pub now_unix: Option<i64>,
-    pub rfc9421_signature_input: Option<String>,
-    pub rfc9421_signature: Option<String>,
+    pub now_unix: Option<i64>, pub rfc9421_signature_input: Option<String>, pub rfc9421_signature: Option<String>,
 }
 
+#[rustfmt::skip]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VerifyMandateResponse {
     pub valid: bool, pub step_up_required: bool, pub reason: String,
@@ -64,6 +61,7 @@ pub struct VerifyMandateResponse {
 static KEYPAIR: OnceLock<(SigningKey, VerifyingKey, String)> = OnceLock::new();
 static MANDATE_REGISTRY: OnceLock<RwLock<HashMap<String, KyaMandate>>> = OnceLock::new();
 
+#[rustfmt::skip]
 fn keypair() -> &'static (SigningKey, VerifyingKey, String) {
     KEYPAIR.get_or_init(|| {
         let mut seed = [0u8; 32];
@@ -83,9 +81,14 @@ fn keypair() -> &'static (SigningKey, VerifyingKey, String) {
     })
 }
 
-pub fn signing_key() -> &'static SigningKey { &keypair().0 }
-fn registry() -> &'static RwLock<HashMap<String, KyaMandate>> { MANDATE_REGISTRY.get_or_init(|| RwLock::new(HashMap::new())) }
+pub fn signing_key() -> &'static SigningKey {
+    &keypair().0
+}
+fn registry() -> &'static RwLock<HashMap<String, KyaMandate>> {
+    MANDATE_REGISTRY.get_or_init(|| RwLock::new(HashMap::new()))
+}
 
+#[rustfmt::skip]
 pub fn canonical_mandate_digest(m: &KyaMandate) -> String {
     let cur = if m.currency.is_empty() { "USD" } else { &m.currency };
     let sla = if m.sla_hours > 0 { m.sla_hours } else { 48 };
@@ -93,6 +96,7 @@ pub fn canonical_mandate_digest(m: &KyaMandate) -> String {
     hex::encode(Sha256::digest(payload.as_bytes()))
 }
 
+#[rustfmt::skip]
 pub fn sign_mandate(m: &mut KyaMandate) {
     if m.mandate_id.is_empty() { m.mandate_id = Uuid::new_v4().to_string(); }
     if m.principal_id.is_empty() { m.principal_id = "0192e8a0-0000-7000-8000-000000000001".to_string(); }
@@ -121,8 +125,12 @@ pub fn sign_mandate(m: &mut KyaMandate) {
     if let Ok(mut reg) = registry().write() { reg.insert(m.mandate_id.clone(), m.clone()); }
 }
 
-pub async fn handle_sign_mandate(Json(mut m): Json<KyaMandate>) -> Json<KyaMandate> { sign_mandate(&mut m); Json(m) }
+pub async fn handle_sign_mandate(Json(mut m): Json<KyaMandate>) -> Json<KyaMandate> {
+    sign_mandate(&mut m);
+    Json(m)
+}
 
+#[rustfmt::skip]
 fn resolve_mandate(req: &VerifyMandateRequest) -> KyaMandate {
     if let Some(ref m) = req.mandate { return m.clone(); }
     if let Ok(reg) = registry().read() {
@@ -139,11 +147,10 @@ fn resolve_mandate(req: &VerifyMandateRequest) -> KyaMandate {
     req.flat.clone()
 }
 
+#[rustfmt::skip]
 fn verify_ed25519_sig(m: &KyaMandate, digest: &str, rfc_in: Option<&str>, rfc_sig: Option<&str>) -> Result<(), &'static str> {
     let (_, default_vk, default_pk_hex) = keypair();
-    let vk: VerifyingKey = if m.ed25519_pubkey_hex.is_empty() || &m.ed25519_pubkey_hex == default_pk_hex {
-        *default_vk
-    } else {
+    let vk: VerifyingKey = if m.ed25519_pubkey_hex.is_empty() || &m.ed25519_pubkey_hex == default_pk_hex { *default_vk } else {
         let pk = hex::decode(&m.ed25519_pubkey_hex).map_err(|_| "INVALID_ED25519_PUBKEY")?;
         VerifyingKey::from_bytes(pk.as_slice().try_into().map_err(|_| "INVALID_ED25519_PUBKEY_LEN")?).map_err(|_| "INVALID_ED25519_PUBKEY")?
     };
@@ -152,9 +159,7 @@ fn verify_ed25519_sig(m: &KyaMandate, digest: &str, rfc_in: Option<&str>, rfc_si
     let sig = Signature::from_slice(&sig_bytes).map_err(|_| "INVALID_ED25519_SIGNATURE: length mismatch")?;
     vk.verify(digest.as_bytes(), &sig).map_err(|_| "INVALID_ED25519_SIGNATURE: tampered mandate or signature")?;
     if let Some(inp) = rfc_in.filter(|s| !s.is_empty()) {
-        if !inp.contains("@method") || !inp.contains("ed25519") {
-            return Err("INVALID_RFC9421_SIGNATURE_INPUT: missing @method or alg=ed25519");
-        }
+        if !inp.contains("@method") || !inp.contains("ed25519") { return Err("INVALID_RFC9421_SIGNATURE_INPUT: missing @method or alg=ed25519"); }
     }
     if let Some(rs) = rfc_sig.filter(|s| !s.is_empty()) {
         let hex_part = rs.trim().trim_start_matches("sig1=:").trim_end_matches(':');
@@ -167,6 +172,7 @@ fn verify_ed25519_sig(m: &KyaMandate, digest: &str, rfc_in: Option<&str>, rfc_si
     Ok(())
 }
 
+#[rustfmt::skip]
 pub fn verify_mandate_rules(req: &VerifyMandateRequest) -> VerifyMandateResponse {
     let _ = (keypair(), registry());
     let m = resolve_mandate(req);
@@ -179,29 +185,25 @@ pub fn verify_mandate_rules(req: &VerifyMandateRequest) -> VerifyMandateResponse
         VerifyMandateResponse { valid, step_up_required, reason: reason.to_string(), canonical_digest_hex: digest.clone(), verification_latency_us: us, latency_us: us }
     };
     if exp > 0 && now > exp { return finish(false, false, "MANDATE_EXPIRED: mandate has expired before current UTC time"); }
-    if !m.allowed_categories.is_empty() && !req.requested_category.is_empty()
-        && !m.allowed_categories.iter().any(|c| c.eq_ignore_ascii_case(&req.requested_category))
-    {
+    if !m.allowed_categories.is_empty() && !req.requested_category.is_empty() && !m.allowed_categories.iter().any(|c| c.eq_ignore_ascii_case(&req.requested_category)) {
         return finish(false, false, "CATEGORY_NOT_ALLOWED: merchant category not in allowed_categories");
     }
     if let Some(obs) = req.observed_spread_bps {
         if obs > m.effective_spread_bps() { return finish(false, false, "SPREAD_LIMIT_EXCEEDED: observed spread bps exceeds max_spread_bps"); }
     }
-    if req.requested_amount_cents > m.max_amount_cents {
-        return finish(false, true, "AMOUNT_EXCEEDS_MANDATE_CAP_STEP_UP_REQUIRED: exceeds max_amount_cents; step_up required");
-    }
-    if let Err(err) = verify_ed25519_sig(&m, &digest, req.rfc9421_signature_input.as_deref(), req.rfc9421_signature.as_deref()) {
-        return finish(false, false, err);
-    }
+    if req.requested_amount_cents > m.max_amount_cents { return finish(false, true, "AMOUNT_EXCEEDS_MANDATE_CAP_STEP_UP_REQUIRED: exceeds max_amount_cents; step_up required"); }
+    if let Err(err) = verify_ed25519_sig(&m, &digest, req.rfc9421_signature_input.as_deref(), req.rfc9421_signature.as_deref()) { return finish(false, false, err); }
     finish(true, false, "KYA_MANDATE_VERIFIED")
 }
 
-pub fn verify_ed25519_mandate(req: &VerifyMandateRequest) -> VerifyMandateResponse { verify_mandate_rules(req) }
-
+pub fn verify_ed25519_mandate(req: &VerifyMandateRequest) -> VerifyMandateResponse {
+    verify_mandate_rules(req)
+}
 pub async fn handle_verify_mandate(Json(req): Json<VerifyMandateRequest>) -> Json<VerifyMandateResponse> {
     Json(verify_mandate_rules(&req))
 }
 
+#[rustfmt::skip]
 #[cfg(test)]
 mod tests {
     use super::*;
