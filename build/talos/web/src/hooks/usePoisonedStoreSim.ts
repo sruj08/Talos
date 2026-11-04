@@ -77,7 +77,11 @@ export function usePoisonedStoreSim() {
     try {
       await fetch('/api/v1/checkout/evaluate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'PayPal-Request-Id': 'act1-poisoned-sm7b' },
+        headers: {
+          'Content-Type': 'application/json',
+          'PayPal-Request-Id': 'act1-poisoned-sm7b',
+          traceparent: '00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b1-01',
+        },
         body: JSON.stringify({
           mandate_id: 'c3333333-4444-5555-6666-777777777777',
           sku_query: 'Shure SM7B Vocal Dynamic Microphone',
@@ -116,7 +120,10 @@ export function usePoisonedStoreSim() {
     try {
       await fetch('/api/mcp/paypal-bridge', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          traceparent: '00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b2-01',
+        },
         body: JSON.stringify({
           mode: 'PAYPAL_AGENT_TOOLKIT',
           tool_name: 'shipment_tracking.create',

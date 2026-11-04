@@ -8,7 +8,7 @@
 | **Phase 4** | Channel3 Fair-Price Oracle, KERNEL, Tracking & Disputes (MVP) | `mvp` | `TASK-07`, `TASK-08` | Complete |
 | **Phase 5** | Next.js 15 Command Center & AG Grid / AG Studio Blotter (MVP) | `mvp` | `TASK-09`, `TASK-10` | Complete |
 | **Phase 6** | Bryntum Scheduler Pro 2-Way SLA Board & PayPal JS SDK v6 (MVP) | `mvp` | `TASK-11`, `TASK-12` | Complete |
-| **Phase 7** | Elastic OpenTelemetry APM, Postman Collection & E2E Tests | `standard` | `TASK-13`, `TASK-14` | Ready (Gate #5) |
+| **Phase 7** | Elastic OpenTelemetry APM, Postman Collection & E2E Tests | `standard` | `TASK-13`, `TASK-14` | Complete |
 | **Phase 8** | Render Native Polyglot Deployment (`render.yaml`) & Demo Polish | `mvp` | `TASK-15`, `TASK-16` | Ready (Gates #6-#7) |
 
 ---
@@ -74,6 +74,9 @@
 **Depends on**: Phase 6
 **Requirements**: `F-13`, `M-04`
 **Mode**: standard
+**Plans**: 2 plans
+- [x] `07-01-PLAN.md` — Elastic Cloud OpenTelemetry APM + Vector Threat Index & Postman MCP Collection (`TASK-13`)
+- [x] `07-02-PLAN.md` — Red-Team Prompt-Injection Benchmark, Playwright 3-Act E2E Suite & Cross-Stack Audit (`TASK-14`)
 
 ### Phase 8: Render Native Polyglot Deployment & Demo Polish
 **Goal**: Validate `render.yaml` Native Polyglot Blueprint & deployment verification script (`TASK-15`) and complete final 3-Minute Demo & Devpost 14-Prize Submission Audit (`TASK-16`).

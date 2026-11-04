@@ -117,6 +117,10 @@ fn score_deberta_m01(raw_html: &str, stripped: &[StrippedPayload], pattern_hits:
 }
 
 pub fn sanitize_html_payload(merchant_url: &str, raw_html: &str) -> FirewallScanLog {
+    sanitize_html_with_context(merchant_url, raw_html, None, None)
+}
+
+pub fn sanitize_html_with_context(merchant_url: &str, raw_html: &str, traceparent: Option<&str>, mandate_id: Option<&str>) -> FirewallScanLog {
     let ac = automaton();
     let start = Instant::now();
     let raw_dom_hash = hex::encode(Sha256::digest(raw_html.as_bytes()));
@@ -137,7 +141,7 @@ pub fn sanitize_html_payload(merchant_url: &str, raw_html: &str) -> FirewallScan
                     c.remove();
                     Ok(())
                 }),
-                element!("*[style], *[hidden], *[data-llm-instruction]", move |el| {
+                element!("*[style], *[hidden], *[data-llm-instruction], *[data-agent-hint]", move |el| {
                     let style_raw = el.get_attribute("style").unwrap_or_default();
                     let norm = style_raw.to_ascii_lowercase().replace(' ', "");
                     let mut matched_rule: Option<&str> = None;
@@ -147,12 +151,12 @@ pub fn sanitize_html_payload(merchant_url: &str, raw_html: &str) -> FirewallScan
                             break;
                         }
                     }
-                    if matched_rule.is_none() && (el.has_attribute("hidden") || el.has_attribute("data-llm-instruction")) {
+                    if matched_rule.is_none() && (el.has_attribute("hidden") || el.has_attribute("data-llm-instruction") || el.has_attribute("data-agent-hint")) {
                         matched_rule = Some("hidden-attr");
                     }
                     if let Some(rule) = matched_rule {
                         let tag = el.tag_name();
-                        let llm_attr = el.get_attribute("data-llm-instruction").unwrap_or_default();
+                        let llm_attr = el.get_attribute("data-llm-instruction").or_else(|| el.get_attribute("data-agent-hint")).unwrap_or_default();
                         let excerpt = if !llm_attr.is_empty() { llm_attr } else { style_raw };
                         elements_ref.borrow_mut().push(StrippedPayload {
                             selector: format!("{}[style*=\"{}\"]", tag, rule),
@@ -186,6 +190,8 @@ pub fn sanitize_html_payload(merchant_url: &str, raw_html: &str) -> FirewallScan
     let (injection_detected, risk_score, deberta_label, model_id) = score_deberta_m01(raw_html, &stripped_payloads, pattern_hits, merchant_url);
     let verdict = if injection_detected { "BLOCKED".to_string() } else { "CLEAN".to_string() };
     let latency_us = start.elapsed().as_micros().max(1) as u64;
+    let m_id = mandate_id.filter(|s| !s.is_empty()).unwrap_or("talos-dom-scan");
+    let _ = crate::otel::record_dom_sanitize_span(traceparent, m_id, stripped_payloads.len(), risk_score, &verdict, latency_us);
 
     FirewallScanLog {
         scan_id: Uuid::new_v4().to_string(),
@@ -207,8 +213,9 @@ pub fn sanitize_dom_html(merchant_url: &str, raw_html: &str) -> FirewallScanLog 
     sanitize_html_payload(merchant_url, raw_html)
 }
 
-pub async fn handle_sanitize_dom(Json(req): Json<SanitizeDomRequest>) -> Json<FirewallScanLog> {
-    Json(sanitize_html_payload(&req.merchant_url, &req.raw_html))
+pub async fn handle_sanitize_dom(headers: axum::http::HeaderMap, Json(req): Json<SanitizeDomRequest>) -> Json<FirewallScanLog> {
+    let tp = headers.get("traceparent").and_then(|v| v.to_str().ok());
+    Json(sanitize_html_with_context(&req.merchant_url, &req.raw_html, tp, req.mandate_id.as_deref()))
 }
 
 #[cfg(test)]

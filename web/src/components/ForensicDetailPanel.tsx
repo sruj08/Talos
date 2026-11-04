@@ -114,6 +114,13 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
   );
 
   const maxBarPrice = Math.max(row.attempted_price_usd, row.channel3_median_usd, row.rerouted_price_usd, 1);
+  const getBarWidthClass = (price: number) => {
+    const ratio = price / maxBarPrice;
+    if (ratio >= 0.9) return 'w-full';
+    if (ratio >= 0.7) return 'w-3/4';
+    if (ratio >= 0.45) return 'w-1/2';
+    return 'w-1/3';
+  };
 
   return (
     <div
@@ -172,7 +179,7 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
                 <span>{formatUsdInr(Math.round(row.attempted_price_usd * 100))}</span>
               </div>
               <div className="mt-1 h-2 w-full rounded bg-slate-800">
-                <div className="h-2 rounded bg-rose-500" style={{ width: `${Math.min(100, (row.attempted_price_usd / maxBarPrice) * 100)}%` }} />
+                <div className={`h-2 rounded bg-rose-500 ${getBarWidthClass(row.attempted_price_usd)}`} />
               </div>
             </div>
             <div>
@@ -181,7 +188,7 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
                 <span>{formatUsdInr(Math.round(row.channel3_median_usd * 100))}</span>
               </div>
               <div className="mt-1 h-2 w-full rounded bg-slate-800">
-                <div className="h-2 rounded bg-sky-400" style={{ width: `${Math.min(100, (row.channel3_median_usd / maxBarPrice) * 100)}%` }} />
+                <div className={`h-2 rounded bg-sky-400 ${getBarWidthClass(row.channel3_median_usd)}`} />
               </div>
             </div>
             <div>
@@ -190,7 +197,7 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
                 <span>{formatUsdInr(Math.round(row.rerouted_price_usd * 100))}</span>
               </div>
               <div className="mt-1 h-2 w-full rounded bg-slate-800">
-                <div className="h-2 rounded bg-emerald-400" style={{ width: `${Math.min(100, (row.rerouted_price_usd / maxBarPrice) * 100)}%` }} />
+                <div className={`h-2 rounded bg-emerald-400 ${getBarWidthClass(row.rerouted_price_usd)}`} />
               </div>
             </div>
           </div>

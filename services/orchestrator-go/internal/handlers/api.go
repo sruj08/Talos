@@ -23,6 +23,7 @@ import (
 	"github.com/talos/services/orchestrator-go/internal/kernel"
 	"github.com/talos/services/orchestrator-go/internal/paypal"
 	"github.com/talos/services/orchestrator-go/internal/store"
+	"github.com/talos/services/orchestrator-go/internal/telemetry"
 	"github.com/talos/services/orchestrator-go/internal/ws"
 )
 
@@ -32,6 +33,7 @@ type Server struct {
 	PayPal      *paypal.SandboxService
 	Oracle      *channel3.OracleClient
 	Inspector   *kernel.InspectorClient
+	Telemetry   *telemetry.TelemetryEngine
 	Hub         *ws.Hub
 	FirewallURL string
 	HTTPClient  *http.Client
@@ -66,7 +68,7 @@ func NewServer(st *store.Store, m *escrow.Machine, pp *paypal.SandboxService, or
 	}
 	now := time.Now().UTC()
 	s := &Server{
-		Store: st, Machine: m, PayPal: pp, Oracle: orc, Inspector: insp, Hub: hub,
+		Store: st, Machine: m, PayPal: pp, Oracle: orc, Inspector: insp, Telemetry: telemetry.InitElasticOTel(), Hub: hub,
 		FirewallURL: fwURL, HTTPClient: &http.Client{Timeout: 2000 * time.Millisecond},
 		slaTasks: make(map[string]SlaTimelineTask), disputes: make(map[string]DisputeEvidenceBundle), webhooks: make([]WebhookEventLedger, 0, 16),
 	}
@@ -82,9 +84,11 @@ func (s *Server) Router() http.Handler {
 	r.Use(corsMiddleware)
 	r.Get("/healthz", s.HandleHealthz)
 	r.Get("/api/healthz", s.HandleHealthz)
+	r.Get("/api/v1/telemetry/traces", s.HandleGetTelemetry)
 	r.Post("/api/v1/checkout/evaluate", s.HandleEvaluateCheckout)
 	r.Post("/api/v1/escrow/checkout", s.HandleEvaluateCheckout)
 	r.Post("/api/v1/channel3/benchmark", s.HandleChannel3Benchmark)
+	r.Post("/api/v1/oracle/channel3/verify", s.HandleChannel3Benchmark)
 	r.Post("/api/v1/escrow/{id}/authorize", s.HandleAuthorizeEscrow)
 	r.Post("/api/v1/escrow/{id}/step-up-approve", s.HandleStepUpApprove)
 	r.Post("/api/v1/escrow/{id}/tracking", s.HandleAttachTracking)
@@ -92,11 +96,17 @@ func (s *Server) Router() http.Handler {
 	r.Post("/api/v1/escrow/{id}/void", s.HandleVoidEscrow)
 	r.Post("/api/v1/escrow/{id}/dispute-evidence", s.HandleSubmitDisputeEvidence)
 	r.Get("/api/v1/escrow/blotter", s.HandleGetBlotter)
+	r.Get("/api/v1/escrow/{id}", s.HandleGetEscrow)
 	r.Get("/api/v1/sla/timeline", s.HandleGetSlaTimeline)
 	r.Patch("/api/v1/sla/timeline/{task_id}", s.HandlePatchSlaTimelineTask)
 	r.Post("/api/v1/webhooks/paypal", s.HandlePayPalWebhook)
+	r.Post("/api/v1/audit/verify-chain", s.HandleVerifyAuditChain)
 	r.Post("/v1/mandates/sign", s.HandleProxySignMandate)
+	r.Post("/v1/mandates/verify", s.HandleProxyVerifyMandate)
 	r.Post("/v1/firewall/sanitize-dom", s.HandleProxySanitizeDOM)
+	r.Post("/v1/firewall/verify-webhook", s.HandleProxyVerifyWebhook)
+	r.Post("/mcp", s.HandleProxyMCP)
+	r.Post("/api/mcp/paypal-bridge", s.HandleProxyMCP)
 	r.Get("/ws/events", s.Hub.ServeHTTP)
 	r.Get("/ws/escrow-stream", s.Hub.ServeHTTP)
 	return r
@@ -130,6 +140,9 @@ func (s *Server) HandleEvaluateCheckout(w http.ResponseWriter, r *http.Request) 
 		reqID = fmt.Sprintf("eval-%d", time.Now().UnixNano())
 	}
 
+	incomingTP := r.Header.Get("traceparent")
+	_, _, _, respTP := telemetry.ParseOrGenerateTraceparent(incomingTP)
+	w.Header().Set("traceparent", respTP)
 	g, gctx := errgroup.WithContext(r.Context())
 	var scanRes domScanVerdict
 	var benchRes *channel3.BenchmarkResult
@@ -138,7 +151,7 @@ func (s *Server) HandleEvaluateCheckout(w http.ResponseWriter, r *http.Request) 
 		if err != nil {
 			return err
 		}
-		scanRes = s.evaluateFirewallAndDOM(gctx, req.MerchantURL, sess.RawHTML)
+		scanRes = s.evaluateFirewallAndDOM(gctx, req.MerchantURL, sess.RawHTML, incomingTP, req.MandateID)
 		return nil
 	})
 	g.Go(func() error {
@@ -163,6 +176,8 @@ func (s *Server) HandleEvaluateCheckout(w http.ResponseWriter, r *http.Request) 
 
 	if scanRes.InjectionDetected || scanRes.RiskScore >= 0.75 {
 		blocked, _ := s.Machine.Transition(escrowID, escrow.StateBlockedFirewall, nil)
+		_, _ = s.Telemetry.IndexThreatVector(r.Context(), telemetry.ThreatVectorDoc{ScanID: scanRes.ScanID, RawPayloadText: req.RawHTMLOverride, AttackCategory: "INDIRECT_DOM_OVERRIDE", MerchantDomain: req.MerchantURL, DebertaConfidence: scanRes.RiskScore})
+		s.Telemetry.RecordCheckoutTrace(r.Context(), telemetry.CheckoutTraceInput{Traceparent: incomingTP, MandateID: req.MandateID, RequestedAmountCents: req.AmountCents, FirewallRiskScore: scanRes.RiskScore, StrippedNodes: len(scanRes.StrippedPayloads), DOMVerdict: "BLOCKED", SKU: req.SKUQuery, MedianCents: benchRes.MedianPriceCents, SpreadBps: benchRes.SpreadBps, PayPalRequestID: reqID})
 		s.Hub.Broadcast(ws.EventMessage{EventType: "ESCROW_BLOCKED_FIREWALL", EscrowID: escrowID, Payload: blocked})
 		writeProblem(w, http.StatusUnprocessableEntity, "DOM_PROMPT_INJECTION_BLOCKED", "Blocked by Rust lol_html + DeBERTa-v3 ONNX Prompt-Injection Firewall",
 			map[string]any{"escrow_id": escrowID, "state": escrow.StateBlockedFirewall, "risk_score": scanRes.RiskScore, "stripped_payloads": scanRes.StrippedPayloads, "spread_bps": benchRes.SpreadBps})
@@ -170,6 +185,7 @@ func (s *Server) HandleEvaluateCheckout(w http.ResponseWriter, r *http.Request) 
 	}
 	if benchRes.GougingBlocked && !req.AllowAutoReroute {
 		blocked, _ := s.Machine.Transition(escrowID, escrow.StateBlockedPriceGouging, nil)
+		s.Telemetry.RecordCheckoutTrace(r.Context(), telemetry.CheckoutTraceInput{Traceparent: incomingTP, MandateID: req.MandateID, RequestedAmountCents: req.AmountCents, FirewallRiskScore: scanRes.RiskScore, DOMVerdict: "CLEAN", SKU: req.SKUQuery, MedianCents: benchRes.MedianPriceCents, SpreadBps: benchRes.SpreadBps, PayPalRequestID: reqID})
 		s.Hub.Broadcast(ws.EventMessage{EventType: "ESCROW_BLOCKED_PRICE_GOUGING", EscrowID: escrowID, Payload: blocked})
 		writeProblem(w, http.StatusUnprocessableEntity, "CHANNEL3_PRICE_GOUGING_BLOCKED", fmt.Sprintf("Merchant spread +%d bps exceeds mandate cap %d bps", benchRes.SpreadBps, req.MaxSpreadBps),
 			map[string]any{"escrow_id": escrowID, "state": escrow.StateBlockedPriceGouging, "spread_bps": benchRes.SpreadBps, "median_price_cents": benchRes.MedianPriceCents, "lowest_verified_price_cents": benchRes.LowestVerifiedPriceCents, "lowest_merchant_url": benchRes.LowestMerchantURL})
@@ -180,6 +196,7 @@ func (s *Server) HandleEvaluateCheckout(w http.ResponseWriter, r *http.Request) 
 	}
 	if req.AmountCents > req.MaxAmountCents {
 		stepUp, _ := s.Machine.Transition(escrowID, escrow.StateStepUpRequired, func(r *escrow.Record) { r.StepUpRequired, r.AmountCents = true, req.AmountCents })
+		s.Telemetry.RecordCheckoutTrace(r.Context(), telemetry.CheckoutTraceInput{Traceparent: incomingTP, MandateID: req.MandateID, RequestedAmountCents: req.AmountCents, FirewallRiskScore: scanRes.RiskScore, DOMVerdict: "CLEAN", SKU: req.SKUQuery, MedianCents: benchRes.MedianPriceCents, SpreadBps: benchRes.SpreadBps, PayPalRequestID: reqID})
 		s.Hub.Broadcast(ws.EventMessage{EventType: "STEP_UP_REQUIRED", EscrowID: escrowID, Payload: stepUp})
 		writeJSON(w, http.StatusAccepted, stepUp)
 		return
@@ -196,14 +213,17 @@ func (s *Server) HandleEvaluateCheckout(w http.ResponseWriter, r *http.Request) 
 		r.AmountCents, r.MerchantName, r.MerchantURL = req.AmountCents, req.MerchantName, req.MerchantURL
 		r.PayPalOrderID, r.PayPalAuthID, r.SandboxMode = authResp.OrderID, authResp.AuthorizationID, authResp.SandboxMode
 	})
+	s.Telemetry.RecordCheckoutTrace(r.Context(), telemetry.CheckoutTraceInput{Traceparent: incomingTP, MandateID: req.MandateID, BuyerEmail: req.MerchantPayPalEmail, RequestedAmountCents: req.AmountCents, FirewallRiskScore: scanRes.RiskScore, StrippedNodes: len(scanRes.StrippedPayloads), DOMVerdict: "CLEAN", SKU: req.SKUQuery, MedianCents: benchRes.MedianPriceCents, SpreadBps: benchRes.SpreadBps, PayPalOrderID: authResp.OrderID, PayPalAuthID: authResp.AuthorizationID, PayPalRequestID: reqID})
 	s.Hub.Broadcast(ws.EventMessage{EventType: "ESCROW_STATE_TRANSITION", EscrowID: escrowID, Payload: authed})
 	writeJSON(w, http.StatusCreated, authed)
 }
 
-func (s *Server) evaluateFirewallAndDOM(ctx context.Context, merchantURL, rawHTML string) domScanVerdict {
-	body, _ := json.Marshal(map[string]string{"merchant_url": merchantURL, "raw_html": rawHTML})
+func (s *Server) evaluateFirewallAndDOM(ctx context.Context, merchantURL, rawHTML, incomingTP, mandateID string) domScanVerdict {
+	body, _ := json.Marshal(map[string]string{"mandate_id": mandateID, "merchant_url": merchantURL, "raw_html": rawHTML})
 	if req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.FirewallURL+"/v1/firewall/sanitize-dom", bytes.NewReader(body)); err == nil {
 		req.Header.Set("Content-Type", "application/json")
+		_, _, _, tp := telemetry.ParseOrGenerateTraceparent(incomingTP)
+		req.Header.Set("traceparent", tp)
 		if resp, rErr := s.HTTPClient.Do(req); rErr == nil {
 			defer resp.Body.Close()
 			var v domScanVerdict

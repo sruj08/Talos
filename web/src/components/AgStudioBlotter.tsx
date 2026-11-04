@@ -37,6 +37,17 @@ export const talosDarkTheme = themeQuartz.withPart(colorSchemeDarkBlue).withPara
   fontSize: 13,
 });
 
+export const DEFAULT_COL_DEF = { enableCellChangeFlash: true };
+export const getEscrowRowId = (params: { data: EscrowBlotterRow }) => params.data.escrow_id;
+export const GRID_STATUS_BAR = {
+  statusPanels: [
+    { statusPanel: 'agTotalAndFilteredRowCountComponent', align: 'left' },
+    { statusPanel: 'agFilteredRowCountComponent' },
+    { statusPanel: 'agAggregationComponent' },
+  ],
+};
+export const GRID_SIDE_BAR = { toolPanels: ['columns', 'filters'], defaultToolPanel: '' };
+
 export interface AgStudioBlotterProps {
   initialRows?: EscrowBlotterRow[];
 }
@@ -175,8 +186,8 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
           theme={talosDarkTheme}
           rowData={visibleRows}
           columnDefs={colDefs}
-          defaultColDef={{ enableCellChangeFlash: true }}
-          getRowId={(params) => params.data.escrow_id}
+          defaultColDef={DEFAULT_COL_DEF}
+          getRowId={getEscrowRowId}
           onGridReady={onGridReady}
           asyncTransactionWaitMillis={50}
           cellFlashDuration={1200}
@@ -188,14 +199,8 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
           rowGroupPanelShow="always"
           cellSelection={true}
           enableCharts={true}
-          statusBar={{
-            statusPanels: [
-              { statusPanel: 'agTotalAndFilteredRowCountComponent', align: 'left' },
-              { statusPanel: 'agFilteredRowCountComponent' },
-              { statusPanel: 'agAggregationComponent' },
-            ],
-          }}
-          sideBar={{ toolPanels: ['columns', 'filters'], defaultToolPanel: '' }}
+          statusBar={GRID_STATUS_BAR}
+          sideBar={GRID_SIDE_BAR}
         />
       </div>
 

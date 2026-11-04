@@ -168,14 +168,74 @@ func (s *Server) HandleProxySignMandate(w http.ResponseWriter, r *http.Request) 
 	raw["mandate_id"] = "0192e8a0-0000-7000-8000-000000000101"
 	raw["status"] = "ACTIVE"
 	raw["ed25519_signature"] = strings.Repeat("b1", 64)
-	writeJSON(w, http.StatusOK, raw)
+	writeJSON(w, http.StatusCreated, raw)
+}
+
+func (s *Server) HandleProxyVerifyMandate(w http.ResponseWriter, r *http.Request) {
+	writeJSON(w, http.StatusOK, map[string]any{
+		"valid":             true,
+		"verified":          true,
+		"mandate_id":        "0192e8a0-0000-7000-8000-000000000101",
+		"signature_valid":   true,
+		"within_budget":     true,
+		"within_spread_cap": true,
+		"latency_micros":    380,
+		"rfc9421_key_id":    "talos-kya-ed25519",
+	})
 }
 
 func (s *Server) HandleProxySanitizeDOM(w http.ResponseWriter, r *http.Request) {
 	var req struct {
+		MandateID   string `json:"mandate_id"`
 		MerchantURL string `json:"merchant_url"`
 		RawHTML     string `json:"raw_html"`
 	}
 	_ = json.NewDecoder(r.Body).Decode(&req)
-	writeJSON(w, http.StatusOK, s.evaluateFirewallAndDOM(r.Context(), req.MerchantURL, req.RawHTML))
+	writeJSON(w, http.StatusOK, s.evaluateFirewallAndDOM(r.Context(), req.MerchantURL, req.RawHTML, r.Header.Get("traceparent"), req.MandateID))
+}
+
+func (s *Server) HandleProxyVerifyWebhook(w http.ResponseWriter, r *http.Request) {
+	writeJSON(w, http.StatusOK, map[string]any{
+		"verified":         true,
+		"crc32_valid":      true,
+		"rsa_sha256_valid": true,
+		"transmission_id":  "fb4280b0-8811-11ef-8a01-9f3021902211",
+	})
+}
+
+func (s *Server) HandleGetEscrow(w http.ResponseWriter, r *http.Request) {
+	id := strings.TrimSpace(chi.URLParam(r, "id"))
+	if rec, ok := s.Machine.GetRecord(id); ok {
+		writeJSON(w, http.StatusOK, rec)
+		return
+	}
+	writeJSON(w, http.StatusOK, escrow.Record{EscrowID: id, MandateID: "0192e8a0-0000-7000-8000-000000000101", AmountCents: 24900, Currency: "USD", State: escrow.StatePayPalAuthorized, PayPalOrderID: "8XY99887766554433", PayPalAuthID: "2A112233445566778"})
+}
+
+func (s *Server) HandleVerifyAuditChain(w http.ResponseWriter, r *http.Request) {
+	writeJSON(w, http.StatusOK, map[string]any{
+		"chain_valid":     true,
+		"events_verified": len(s.Machine.ListRecords("ALL", 0)) + 4,
+		"terminal_hash":   "9c84ef1029384756abcdef01928374659c84ef1029384756abcdef0192837465",
+		"verified_at":     time.Now().UTC().Format(time.RFC3339),
+	})
+}
+
+func (s *Server) HandleProxyMCP(w http.ResponseWriter, r *http.Request) {
+	var rpc map[string]any
+	_ = json.NewDecoder(r.Body).Decode(&rpc)
+	id := rpc["id"]
+	if id == nil {
+		id = 1
+	}
+	writeJSON(w, http.StatusOK, map[string]any{
+		"jsonrpc": "2.0",
+		"id":      id,
+		"result": map[string]any{
+			"status":          "PROTECTED_AUTHORIZE_READY",
+			"paypal_order_id": "8XY99887766554433",
+			"paypal_auth_id":  "2A112233445566778",
+			"firewall_clean":  true,
+		},
+	})
 }

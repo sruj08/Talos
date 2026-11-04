@@ -20,7 +20,10 @@
 | `EscrowState`, `StateMachine`, `CanTransition()` | Go 1.24 | [`services/orchestrator-go/internal/escrow/machine.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/escrow/machine.go) | `F-04`, `E-02` |
 | `VerifyResult`, `Oracle`, `VerifyMerchantAndSKU()` | Go 1.24 | [`services/orchestrator-go/internal/channel3/oracle.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/channel3/oracle.go) | `F-11`, `E-04`, `API-13` |
 | `BrowserClient`, `FetchRawMerchantDOM()` | Go 1.24 | [`services/orchestrator-go/internal/kernel/browser.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/kernel/browser.go) | `F-02`, `F-06` |
-| `InitElasticOTel()` | Go 1.24 | [`services/orchestrator-go/internal/telemetry/elastic_otel.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/telemetry/elastic_otel.go) | `F-13`, `M-04` |
+| `InitElasticOTel()`, `TelemetryEngine`, `ComputeThreatEmbedding()` | Go 1.24 | [`services/orchestrator-go/internal/telemetry/elastic_otel.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/telemetry/elastic_otel.go) | `F-13`, `M-04`, `TASK-13` |
+| `RecordCheckoutTrace()`, `IndexThreatVector()`, `SearchSimilarThreats()` | Go 1.24 | [`services/orchestrator-go/internal/telemetry/elastic_exporter.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/telemetry/elastic_exporter.go) | `F-13`, `M-04`, `TASK-13` |
+| `OtelSpanRecord`, `record_mandate_verify_span()`, `record_dom_sanitize_span()` | Rust 1.85 | [`services/firewall-rs/src/otel.rs`](file:///g:/PAYPAL/services/firewall-rs/src/otel.rs) | `F-13`, `TASK-13` |
+| `RedTeamCase`, `test_redteam_prompt_injection_100_percent_block_recall()` | Rust 1.85 | [`services/firewall-rs/tests/redteam_suite.rs`](file:///g:/PAYPAL/services/firewall-rs/tests/redteam_suite.rs) | `F-02`, `M-01`, `TASK-14` |
 | `Hub`, `BroadcastJSON()` | Go 1.24 | [`services/orchestrator-go/internal/ws/hub.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/ws/hub.go) | `F-07`, `F-08`, `API-15` |
 | `Server`, `HandleEvaluateCheckout()` | Go 1.24 | [`services/orchestrator-go/internal/handlers/api.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/handlers/api.go) | `API-05` |
 | `HandleAuthorizeEscrow()`, `HandleCaptureEscrow()`, `HandleVoidEscrow()` | Go 1.24 | [`services/orchestrator-go/internal/handlers/escrow_handlers.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/handlers/escrow_handlers.go) | `API-07`, `API-09`, `API-10` |
@@ -40,6 +43,7 @@
 | `broadcastTalosEscrowEvent()`, `callEscrowVoidApi()` | TypeScript | [`web/src/lib/phase6-events.ts`](file:///g:/PAYPAL/web/src/lib/phase6-events.ts) | `F-07`, `F-08`, `F-09` |
 | `POST /api/mcp/paypal-bridge` (`PayPalAgentToolkit`) | TypeScript / Next.js 15 | [`web/src/app/api/mcp/paypal-bridge/route.ts`](file:///g:/PAYPAL/web/src/app/api/mcp/paypal-bridge/route.ts) | `F-03`, `F-10`, `API-16` |
 | `useEscrowStream()` | TypeScript / React 19 | [`web/src/hooks/useEscrowStream.ts`](file:///g:/PAYPAL/web/src/hooks/useEscrowStream.ts) | `API-15`, `API-16` |
+| `TalosCommandCenterPage`, `E2E_SCENARIOS` | TypeScript / Playwright | [`web/e2e/talos-3act-demo.spec.ts`](file:///g:/PAYPAL/web/e2e/talos-3act-demo.spec.ts) | `TASK-14` |
 
 ---
 

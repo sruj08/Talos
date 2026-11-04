@@ -4,7 +4,7 @@
   "title": "Full Vitest + Playwright E2E Suite, Red-Team Benchmark & Cross-Stack Code Review",
   "category": "testing-qa",
   "priority": 14,
-  "passes": false,
+  "passes": true,
   "human_gate": null,
   "skills": [
     "e2e-tester",

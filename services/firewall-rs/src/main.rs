@@ -3,10 +3,12 @@
 
 pub mod mandate;
 pub mod mcp_server;
+pub mod otel;
 pub mod sanitizer;
 pub mod webhook_verify;
 
 use axum::{
+    middleware,
     routing::{get, post},
     Json, Router,
 };
@@ -19,6 +21,7 @@ pub async fn healthz() -> Json<Value> {
         "service": "talos-firewall-rs",
         "status": "ok",
         "engine": "ed25519-dalek + lol_html + deberta-v3-onnx",
+        "otel": "w3c-traceparent+elastic-apm",
         "version": "0.1.0"
     }))
 }
@@ -26,6 +29,7 @@ pub async fn healthz() -> Json<Value> {
 pub fn build_router() -> Router {
     Router::new()
         .route("/healthz", get(healthz))
+        .route("/v1/telemetry/spans", get(otel::handle_get_spans))
         .route("/v1/mandates/sign", post(mandate::handle_sign_mandate))
         .route("/v1/firewall/mandate/sign", post(mandate::handle_sign_mandate))
         .route("/v1/mandates/verify", post(mandate::handle_verify_mandate))
@@ -35,6 +39,7 @@ pub fn build_router() -> Router {
         .route("/v1/firewall/webhook/verify", post(webhook_verify::handle_verify_webhook))
         .route("/mcp", post(mcp_server::handle_mcp_rpc))
         .route("/mcp/sse", get(mcp_server::handle_mcp_sse).post(mcp_server::handle_mcp_rpc))
+        .layer(middleware::from_fn(otel::otel_trace_middleware))
         .layer(CorsLayer::permissive())
 }
 
@@ -63,10 +68,21 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    async fn test_healthz_and_router_construction() {
+    async fn test_healthz_and_otel_span_attributes() {
         let _router = build_router();
         let Json(val) = healthz().await;
         assert_eq!(val["service"], "talos-firewall-rs");
         assert_eq!(val["status"], "ok");
+
+        let tp = "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01";
+        let m_span = otel::record_mandate_verify_span(Some(tp), "mnd-test-01", true, "talos-kya-01", 0, 310);
+        assert_eq!(m_span.trace_id, "4bf92f3577b34da6a3ce929d0e0e4736");
+        assert_eq!(m_span.attributes["talos.mandate.id"], "mnd-test-01");
+        assert_eq!(m_span.attributes["kya.ed25519.verified"], true);
+
+        let d_span = otel::record_dom_sanitize_span(Some(tp), "mnd-test-01", 2, 0.9942, "BLOCKED", 2840);
+        assert_eq!(d_span.attributes["talos.firewall.risk_score"], 0.9942);
+        assert_eq!(d_span.attributes["dom.verdict"], "BLOCKED");
+        assert!(!otel::recent_spans().is_empty());
     }
 }

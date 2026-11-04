@@ -1,8 +1,8 @@
 # GSD-Graphify Knowledge Graph Report — TALOS
 
-- **Generated At**: `2026-11-04T15:42:00+05:30`
-- **Total Indexed Nodes**: `206` files & canonical artifacts
-- **Total Architectural Edges**: `42` primary cross-module contracts
+- **Generated At**: `2026-11-04T18:08:00+05:30`
+- **Total Indexed Nodes**: `215` files & canonical artifacts
+- **Total Architectural Edges**: `48` primary cross-module contracts
 - **Leiden Communities**: `8` (`C-01`..`C-08`)
 
 ---
@@ -16,7 +16,7 @@ When an AI coding agent or developer starts any task, inspect the relevant God N
 | **2** | [`docs/00-overview/PROJECT_BRIEF.md`](file:///g:/PAYPAL/docs/00-overview/PROJECT_BRIEF.md) | `C-07` | Canonical ID registry (`F-01`..`F-14`, `P-01`..`P-04`, `E-01`..`E-10`, `API-01`..`API-16`, `M-01`..`M-04`, `R-01`..`R-06`). |
 | **3** | [`docs/08-project/PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md`](file:///g:/PAYPAL/docs/08-project/PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md) | `C-06` | Step-by-step 8-Phase / 16-Task execution guide with `[HUMAN ACTION REQUIRED]` gates and `/gsd-*` + `/ralph-loop` commands. |
 | **4** | [`services/orchestrator-go/internal/escrow/machine.go`](file:///g:/PAYPAL/services/orchestrator-go/internal/escrow/machine.go) | `C-02` | Core Go 1.24 2PC state machine coordinating Channel3, PayPal `AUTHORIZE`/`CAPTURE`/`VOID`, Tracking v1, and Disputes v1. |
-| **5** | [`services/firewall-rs/src/main.rs`](file:///g:/PAYPAL/services/firewall-rs/src/main.rs) | `C-01` | Core Rust 1.85 security data plane combining `mandate.rs`, `sanitizer.rs`, `webhook_verify.rs`, and `mcp_server.rs`. |
+| **5** | [`services/firewall-rs/src/main.rs`](file:///g:/PAYPAL/services/firewall-rs/src/main.rs) | `C-01` | Core Rust 1.85 security data plane combining `mandate.rs`, `sanitizer.rs`, `webhook_verify.rs`, `mcp_server.rs`, and `otel.rs`. |
 | **6** | [`api/openapi.yaml`](file:///g:/PAYPAL/api/openapi.yaml) | `C-04` | Complete OpenAPI 3.1 contract for `API-01`..`API-16` and schemas `E-01`..`E-10`. |
 | **7** | [`services/orchestrator-go/migrations/0001_init_schema.up.sql`](file:///g:/PAYPAL/services/orchestrator-go/migrations/0001_init_schema.up.sql) | `C-04` | PostgreSQL 16 schema with `BIGINT` `_cents` columns and the `trg_audit_events_hash_chain` SHA-256 trigger. |
 | **8** | [`web/src/app/page.tsx`](file:///g:/PAYPAL/web/src/app/page.tsx) | `C-03` | Next.js 15 Command Center hosting `MandateStudio`, `PoisonedStoreSim`, `AgStudioBlotter`, `BryntumSlaBoard`, and `PayPalStepUpModal`. |
@@ -26,9 +26,9 @@ When an AI coding agent or developer starts any task, inspect the relevant God N
 ## 2. Community Cluster Breakdown (`C-01`..`C-08`)
 | Community ID | Cluster Name | Primary Directory Scope | Key Files |
 | :--- | :--- | :--- | :--- |
-| **`C-01`** | **Rust Security Data Plane** | `services/firewall-rs/`, `tests/redteam/`, `docs/04-ai/` | `mandate.rs`, `sanitizer.rs`, `mcp_server.rs`, `webhook_verify.rs`, `.cargo/config.toml`, `MODELS.md`, `PROMPTS.md` |
-| **`C-02`** | **Go 2PC Control Plane & APIMatic SDK** | `services/orchestrator-go/`, `sdk/paypal-go-apimatic/`, `postman/` | `machine.go`, `oracle.go`, `browser.go`, `service.go`, `api.go`, `escrow_handlers.go`, `tracking_dispute_handlers.go`, `sla_webhook_handlers.go`, `orders_v2.go`, `payments_v2.go`, `tracking_v1.go`, `disputes_v1.go` |
-| **`C-03`** | **Next.js 15 FinOps Command Center** | `web/` | `AgStudioBlotter.tsx`, `BryntumSlaBoard.tsx`, `PayPalStepUpModal.tsx`, `PoisonedStoreSim.tsx`, `ForensicDetailPanel.tsx`, `MandateStudio.tsx`, `useAgStudioBlotter.ts`, `useBryntumTimeline.ts`, `usePayPalStepUp.ts`, `usePoisonedStoreSim.ts`, `useEscrowStream.ts`, `phase6-events.ts`, `route.ts` |
+| **`C-01`** | **Rust Security Data Plane** | `services/firewall-rs/`, `tests/redteam/`, `docs/04-ai/` | `mandate.rs`, `sanitizer.rs`, `mcp_server.rs`, `webhook_verify.rs`, `otel.rs`, `redteam_suite.rs`, `prompt_injection_suite.json`, `MODELS.md`, `PROMPTS.md` |
+| **`C-02`** | **Go 2PC Control Plane & APIMatic SDK** | `services/orchestrator-go/`, `sdk/paypal-go-apimatic/`, `postman/` | `machine.go`, `oracle.go`, `browser.go`, `service.go`, `elastic_otel.go`, `elastic_exporter.go`, `api.go`, `escrow_handlers.go`, `tracking_dispute_handlers.go`, `sla_webhook_handlers.go`, `orders_v2.go`, `payments_v2.go`, `tracking_v1.go`, `disputes_v1.go`, `Talos-Sandbox-MCP.postman_collection.json` |
+| **`C-03`** | **Next.js 15 FinOps Command Center** | `web/` | `AgStudioBlotter.tsx`, `BryntumSlaBoard.tsx`, `PayPalStepUpModal.tsx`, `PoisonedStoreSim.tsx`, `ForensicDetailPanel.tsx`, `MandateStudio.tsx`, `useAgStudioBlotter.ts`, `useBryntumTimeline.ts`, `usePayPalStepUp.ts`, `usePoisonedStoreSim.ts`, `useEscrowStream.ts`, `phase6-events.ts`, `route.ts`, `talos-3act-demo.spec.ts` |
 | **`C-04`** | **Ledger Schemas & API Contracts** | `api/`, `services/orchestrator-go/migrations/`, `docs/03-engineering/` | `openapi.yaml`, `0001_init_schema.up.sql`, `DATA_MODEL.md`, `API_SPEC.md` |
 | **`C-05`** | **Sponsor & Sandbox Integration Guides** | `docs/09-integrations-and-guides/` | `00-TRACKS_AND_SUBMISSION_STRATEGY.md` .. `09-KERNEL_ASTROPODS_ZAPIER_GUIDE.md` |
 | **`C-06`** | **GSD & Ralph Loop Execution Engine** | `.planning/`, `.agent/`, `docs/08-project/` | `PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md`, `tasks.json`, `TASK-01.json`..`TASK-16.json`, `ROADMAP.md` |

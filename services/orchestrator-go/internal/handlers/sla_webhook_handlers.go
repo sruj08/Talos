@@ -14,6 +14,7 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/talos/services/orchestrator-go/internal/escrow"
+	"github.com/talos/services/orchestrator-go/internal/telemetry"
 	"github.com/talos/services/orchestrator-go/internal/ws"
 )
 
@@ -22,6 +23,21 @@ func (s *Server) HandleHealthz(w http.ResponseWriter, r *http.Request) {
 		"service": "talos-orchestrator-go",
 		"status":  "ok",
 		"sdk":     "paypal-go-apimatic",
+		"otel":    "elastic-otlp+vector-index",
+	})
+}
+
+func (s *Server) HandleGetTelemetry(w http.ResponseWriter, r *http.Request) {
+	spans := s.Telemetry.ListSpans()
+	threats := s.Telemetry.ListThreats()
+	writeJSON(w, http.StatusOK, map[string]any{
+		"service":            "talos-orchestrator-go",
+		"elastic_configured": s.Telemetry.IsLiveConfigured(),
+		"threat_index_name":  s.Telemetry.Config.ThreatIndexName,
+		"span_count":         len(spans),
+		"spans":              spans,
+		"threat_count":       len(threats),
+		"threats":            threats,
 	})
 }
 
@@ -190,9 +206,12 @@ func (s *Server) syncSlaTaskState(escrowID, escrowState, trackingStatus string, 
 
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		traceID, _, _, tp := telemetry.ParseOrGenerateTraceparent(r.Header.Get("traceparent"))
+		w.Header().Set("traceparent", tp)
+		w.Header().Set("X-Talos-Trace-Id", traceID)
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, PayPal-Request-Id, Signature, Signature-Input")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, PayPal-Request-Id, Signature, Signature-Input, traceparent")
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusNoContent)
 			return

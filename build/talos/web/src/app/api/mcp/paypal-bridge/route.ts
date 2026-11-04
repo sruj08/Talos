@@ -126,18 +126,24 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const traceparent =
+    req.headers.get('traceparent') || '00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01';
   const body = (await req.json().catch(() => ({}))) as McpBridgeRequestBody;
   const mode = body.mode || (body.natural_language_query ? 'AG_STUDIO_COPILOT' : 'PAYPAL_AGENT_TOOLKIT');
 
   if (mode === 'AG_STUDIO_COPILOT') {
     const plan = buildAgStudioCopilotPlan(body.natural_language_query || 'Group by state and sum escrow volume');
-    return Response.json({
-      status: 'ok',
-      mode: 'AG_STUDIO_COPILOT',
-      bridge: '@paypal/agent-toolkit + @paypal/paypal-server-sdk + APIMatic Context Plugin',
-      ...plan,
-      apimatic_context: APIMATIC_CONTEXT_SCHEMAS,
-    });
+    return Response.json(
+      {
+        status: 'ok',
+        mode: 'AG_STUDIO_COPILOT',
+        traceparent,
+        bridge: '@paypal/agent-toolkit + @paypal/paypal-server-sdk + APIMatic Context Plugin',
+        ...plan,
+        apimatic_context: APIMATIC_CONTEXT_SCHEMAS,
+      },
+      { headers: { traceparent } }
+    );
   }
 
   // Initialize official @paypal/agent-toolkit MCP server & @paypal/paypal-server-sdk controllers
@@ -148,6 +154,7 @@ export async function POST(req: Request) {
 
   const toolResult = {
     tool_name: toolName,
+    traceparent,
     mcp_toolkit_initialized: Boolean(mcpToolkit),
     apimatic_controllers_ready: Boolean(ordersController && paymentsController),
     sandbox_environment: Environment.Sandbox,
@@ -161,13 +168,17 @@ export async function POST(req: Request) {
     executed_at: new Date().toISOString(),
   };
 
-  return Response.json({
-    status: 'ok',
-    mode,
-    bridge: '@paypal/agent-toolkit + @paypal/paypal-server-sdk + APIMatic Context Plugin',
-    tool_result: toolResult,
-    apimatic_context: APIMATIC_CONTEXT_SCHEMAS,
-    explanation: `Executed ${toolName} via @paypal/agent-toolkit (mcp.paypal.com) & APIMatic-validated @paypal/paypal-server-sdk in PayPal Sandbox.`,
-    request: body,
-  });
+  return Response.json(
+    {
+      status: 'ok',
+      mode,
+      traceparent,
+      bridge: '@paypal/agent-toolkit + @paypal/paypal-server-sdk + APIMatic Context Plugin',
+      tool_result: toolResult,
+      apimatic_context: APIMATIC_CONTEXT_SCHEMAS,
+      explanation: `Executed ${toolName} via @paypal/agent-toolkit (mcp.paypal.com) & APIMatic-validated @paypal/paypal-server-sdk in PayPal Sandbox.`,
+      request: body,
+    },
+    { headers: { traceparent } }
+  );
 }

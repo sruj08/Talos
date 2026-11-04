@@ -1,12 +1,12 @@
 {
     "version":  "2.0.0",
     "generator":  "gsd-graphify",
-    "generated_at":  "2026-11-04T10:12:00.0000000Z",
+    "generated_at":  "2026-11-04T19:00:00.0000000Z",
     "workspace":  "g:/PAYPAL",
     "project":  "TALOS",
     "stats":  {
-                  "total_nodes":  206,
-                  "total_edges":  42,
+                  "total_nodes":  215,
+                  "total_edges":  48,
                   "total_communities":  8
               },
     "communities":  [
@@ -1741,6 +1741,78 @@
                       "type":  "test",
                       "community":  "C-03",
                       "bytes":  7480
+                  },
+                  {
+                      "id":  "services/firewall-rs/src/otel.rs",
+                      "label":  "otel.rs",
+                      "path":  "services/firewall-rs/src/otel.rs",
+                      "type":  "code",
+                      "community":  "C-01",
+                      "bytes":  7850
+                  },
+                  {
+                      "id":  "services/firewall-rs/tests/redteam_suite.rs",
+                      "label":  "redteam_suite.rs",
+                      "path":  "services/firewall-rs/tests/redteam_suite.rs",
+                      "type":  "test",
+                      "community":  "C-01",
+                      "bytes":  3240
+                  },
+                  {
+                      "id":  "services/orchestrator-go/internal/telemetry/elastic_exporter.go",
+                      "label":  "elastic_exporter.go",
+                      "path":  "services/orchestrator-go/internal/telemetry/elastic_exporter.go",
+                      "type":  "code",
+                      "community":  "C-08",
+                      "bytes":  8620
+                  },
+                  {
+                      "id":  "services/orchestrator-go/internal/telemetry/elastic_otel_test.go",
+                      "label":  "elastic_otel_test.go",
+                      "path":  "services/orchestrator-go/internal/telemetry/elastic_otel_test.go",
+                      "type":  "test",
+                      "community":  "C-08",
+                      "bytes":  5395
+                  },
+                  {
+                      "id":  "web/playwright.config.ts",
+                      "label":  "playwright.config.ts",
+                      "path":  "web/playwright.config.ts",
+                      "type":  "config",
+                      "community":  "C-03",
+                      "bytes":  882
+                  },
+                  {
+                      "id":  ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-01-PLAN.md",
+                      "label":  "07-01-PLAN.md",
+                      "path":  ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-01-PLAN.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  3480
+                  },
+                  {
+                      "id":  ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-01-SUMMARY.md",
+                      "label":  "07-01-SUMMARY.md",
+                      "path":  ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-01-SUMMARY.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  3920
+                  },
+                  {
+                      "id":  ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-EVAL-REVIEW.md",
+                      "label":  "07-EVAL-REVIEW.md",
+                      "path":  ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-EVAL-REVIEW.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  3760
+                  },
+                  {
+                      "id":  ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-VERIFICATION.md",
+                      "label":  "07-VERIFICATION.md",
+                      "path":  ".planning/phases/07-elastic-opentelemetry-apm-postman-collection-e2e-tests/07-VERIFICATION.md",
+                      "type":  "doc",
+                      "community":  "C-06",
+                      "bytes":  3810
                   }
               ],
     "edges":  [
@@ -1953,6 +2025,36 @@
                       "source":  "web/src/components/AgStudioBlotter.tsx",
                       "target":  "web/src/hooks/useAgStudioBlotter.ts",
                       "relation":  "delegates_ag_grid_copilot_and_presets_F07"
+                  },
+                  {
+                      "source":  "services/firewall-rs/src/main.rs",
+                      "target":  "services/firewall-rs/src/otel.rs",
+                      "relation":  "propagates_w3c_traceparent_and_otel_spans_F13"
+                  },
+                  {
+                      "source":  "services/firewall-rs/tests/redteam_suite.rs",
+                      "target":  "tests/redteam/prompt_injection_suite.json",
+                      "relation":  "executes_redteam_prompt_injection_benchmark"
+                  },
+                  {
+                      "source":  "services/orchestrator-go/internal/telemetry/elastic_otel.go",
+                      "target":  "services/orchestrator-go/internal/telemetry/elastic_exporter.go",
+                      "relation":  "exports_otlp_spans_and_threat_vectors_F13"
+                  },
+                  {
+                      "source":  "services/orchestrator-go/internal/handlers/api.go",
+                      "target":  "services/orchestrator-go/internal/telemetry/elastic_otel.go",
+                      "relation":  "records_checkout_trace_and_threat_embeddings_F13"
+                  },
+                  {
+                      "source":  "web/playwright.config.ts",
+                      "target":  "web/e2e/talos-3act-demo.spec.ts",
+                      "relation":  "executes_3act_judge_e2e_suite"
+                  },
+                  {
+                      "source":  ".github/workflows/deploy-render.yml",
+                      "target":  "postman/Talos-Sandbox-MCP.postman_collection.json",
+                      "relation":  "runs_newman_1click_smoke_suite"
                   }
               ]
 }

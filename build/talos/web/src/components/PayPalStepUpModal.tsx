@@ -7,6 +7,14 @@ import { usePayPalStepUp, UsePayPalStepUpOptions } from '../hooks/usePayPalStepU
 
 export type PayPalStepUpModalProps = UsePayPalStepUpOptions;
 
+const PAYPAL_BUTTON_STYLE = {
+  layout: 'horizontal' as const,
+  color: 'gold' as const,
+  shape: 'rect' as const,
+  label: 'pay' as const,
+  height: 35,
+};
+
 export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
   const {
     stepUp,
@@ -115,7 +123,7 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
               }}
             >
               <PayPalButtons
-                style={{ layout: 'horizontal', color: 'gold', shape: 'rect', label: 'pay', height: 35 }}
+                style={PAYPAL_BUTTON_STYLE}
                 createOrder={async () => createPayPalSandboxOrder()}
                 onApprove={async (data) => {
                   await handleApproveStepUp(data.orderID);

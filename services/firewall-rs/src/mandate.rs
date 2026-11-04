@@ -49,12 +49,13 @@ pub struct VerifyMandateRequest {
     #[serde(alias = "merchant_category", alias = "category")] pub requested_category: String,
     #[serde(alias = "spread_bps", alias = "channel3_spread_bps")] pub observed_spread_bps: Option<i64>,
     pub now_unix: Option<i64>, pub rfc9421_signature_input: Option<String>, pub rfc9421_signature: Option<String>,
+    pub traceparent: Option<String>,
 }
 
 #[rustfmt::skip]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VerifyMandateResponse {
-    pub valid: bool, pub step_up_required: bool, pub reason: String,
+    pub valid: bool, pub verified: bool, pub step_up_required: bool, pub reason: String,
     pub canonical_digest_hex: String, pub verification_latency_us: u64, pub latency_us: u64,
 }
 
@@ -182,7 +183,8 @@ pub fn verify_mandate_rules(req: &VerifyMandateRequest) -> VerifyMandateResponse
     let exp = m.effective_expires_unix();
     let finish = |valid: bool, step_up_required: bool, reason: &str| {
         let us = start.elapsed().as_micros().max(1) as u64;
-        VerifyMandateResponse { valid, step_up_required, reason: reason.to_string(), canonical_digest_hex: digest.clone(), verification_latency_us: us, latency_us: us }
+        let _ = crate::otel::record_mandate_verify_span(req.traceparent.as_deref(), &m.mandate_id, valid, "talos-kya-ed25519", req.observed_spread_bps.unwrap_or(0), us);
+        VerifyMandateResponse { valid, verified: valid, step_up_required, reason: reason.to_string(), canonical_digest_hex: digest.clone(), verification_latency_us: us, latency_us: us }
     };
     if exp > 0 && now > exp { return finish(false, false, "MANDATE_EXPIRED: mandate has expired before current UTC time"); }
     if !m.allowed_categories.is_empty() && !req.requested_category.is_empty() && !m.allowed_categories.iter().any(|c| c.eq_ignore_ascii_case(&req.requested_category)) {
@@ -199,7 +201,10 @@ pub fn verify_mandate_rules(req: &VerifyMandateRequest) -> VerifyMandateResponse
 pub fn verify_ed25519_mandate(req: &VerifyMandateRequest) -> VerifyMandateResponse {
     verify_mandate_rules(req)
 }
-pub async fn handle_verify_mandate(Json(req): Json<VerifyMandateRequest>) -> Json<VerifyMandateResponse> {
+pub async fn handle_verify_mandate(headers: axum::http::HeaderMap, Json(mut req): Json<VerifyMandateRequest>) -> Json<VerifyMandateResponse> {
+    if req.traceparent.is_none() {
+        req.traceparent = headers.get("traceparent").and_then(|v| v.to_str().ok()).map(str::to_string);
+    }
     Json(verify_mandate_rules(&req))
 }
 

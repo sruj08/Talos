@@ -191,10 +191,14 @@ func TestAPI06ToAPI15EndToEndEscrowLifecycle(t *testing.T) {
 		t.Fatalf("ws snapshot failed: %d %v", recWS.Code, outWS)
 	}
 
-	// API-01 & API-03 Proxy/Fallback routes for Postman Newman Smoke Suite
+	// API-01..API-04, API-15, API-16 & Telemetry routes for Postman Newman Smoke Suite
 	recSign, outSign := doJSONReq(t, router, http.MethodPost, "/v1/mandates/sign", "", map[string]any{"max_amount_cents": 30000})
-	if recSign.Code != http.StatusOK || outSign["status"] != "ACTIVE" {
+	if (recSign.Code != http.StatusOK && recSign.Code != http.StatusCreated) || outSign["status"] != "ACTIVE" {
 		t.Fatalf("proxy mandate sign failed: %d %v", recSign.Code, outSign)
+	}
+	recVer, outVer := doJSONReq(t, router, http.MethodPost, "/v1/mandates/verify", "", map[string]any{"mandate_id": "0192e8a0-0000-7000-8000-000000000101"})
+	if recVer.Code != http.StatusOK || outVer["verified"] != true {
+		t.Fatalf("proxy mandate verify failed: %d %v", recVer.Code, outVer)
 	}
 	recSan, outSan := doJSONReq(t, router, http.MethodPost, "/v1/firewall/sanitize-dom", "", map[string]any{
 		"merchant_url": "https://malicious-audio-outlet.example/sku/shure-sm7b",
@@ -202,5 +206,30 @@ func TestAPI06ToAPI15EndToEndEscrowLifecycle(t *testing.T) {
 	})
 	if recSan.Code != http.StatusOK || outSan["injection_detected"] != true {
 		t.Fatalf("proxy sanitize-dom failed: %d %v", recSan.Code, outSan)
+	}
+	recWhVer, outWhVer := doJSONReq(t, router, http.MethodPost, "/v1/firewall/verify-webhook", "", map[string]any{"transmission_id": "tx-1"})
+	if recWhVer.Code != http.StatusOK || outWhVer["verified"] != true {
+		t.Fatalf("proxy verify-webhook failed: %d %v", recWhVer.Code, outWhVer)
+	}
+	recAudit, outAudit := doJSONReq(t, router, http.MethodPost, "/api/v1/audit/verify-chain", "", map[string]any{"escrow_id": "esc-902-sm7b"})
+	if recAudit.Code != http.StatusOK || outAudit["chain_valid"] != true {
+		t.Fatalf("audit verify-chain failed: %d %v", recAudit.Code, outAudit)
+	}
+	recMCP, outMCP := doJSONReq(t, router, http.MethodPost, "/mcp", "", map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call"})
+	if recMCP.Code != http.StatusOK || outMCP["jsonrpc"] != "2.0" {
+		t.Fatalf("mcp bridge failed: %d %v", recMCP.Code, outMCP)
+	}
+	tpHeader := "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+	reqTP := httptest.NewRequest(http.MethodPost, "/api/v1/checkout/evaluate", bytes.NewBufferString(`{"sku_query":"Shure SM7B","amount_cents":24900,"max_amount_cents":30000,"max_spread_bps":1500}`))
+	reqTP.Header.Set("Content-Type", "application/json")
+	reqTP.Header.Set("traceparent", tpHeader)
+	recTP := httptest.NewRecorder()
+	router.ServeHTTP(recTP, reqTP)
+	if recTP.Code != http.StatusCreated || len(recTP.Header().Get("traceparent")) < 35 || recTP.Header().Get("traceparent")[3:35] != "4bf92f3577b34da6a3ce929d0e0e4736" {
+		t.Fatalf("expected trace_id 4bf92f3577b34da6a3ce929d0e0e4736 preserved in traceparent header, got %d %s", recTP.Code, recTP.Header().Get("traceparent"))
+	}
+	recTel, outTel := doJSONReq(t, router, http.MethodGet, "/api/v1/telemetry/traces", "", nil)
+	if recTel.Code != http.StatusOK || outTel["service"] != "talos-orchestrator-go" {
+		t.Fatalf("telemetry endpoint failed: %d %v", recTel.Code, outTel)
 	}
 }

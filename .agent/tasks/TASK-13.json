@@ -4,7 +4,7 @@
   "title": "Elastic Cloud OpenTelemetry APM + Vector Threat Index & Postman MCP Collection",
   "category": "observability-postman",
   "priority": 13,
-  "passes": false,
+  "passes": true,
   "human_gate": "GATE #5: Follow docs/09-integrations-and-guides/07-ELASTIC_OTEL_AND_VECTOR_GUIDE.md and 08-POSTMAN_MCP_AND_COLLECTION_GUIDE.md to set ELASTIC_OTLP_ENDPOINT and ELASTIC_API_KEY.",
   "skills": [
     "credentials",
