@@ -2,64 +2,38 @@
 
 import React from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { AgChartsCommunityModule } from 'ag-charts-community';
-import { AllCommunityModule, ModuleRegistry, colorSchemeDarkBlue, themeQuartz } from 'ag-grid-community';
-import { AllEnterpriseModule, IntegratedChartsModule, LicenseManager } from 'ag-grid-enterprise';
+import { BarChart3, Download, Lock, RotateCcw, ShieldAlert, Sparkles, Table2 } from 'lucide-react';
 import { EscrowBlotterRow } from '../hooks/useEscrowStream';
-import { useAgStudioBlotter } from '../hooks/useAgStudioBlotter';
+import { AgStudioPresetId, BlotterStatusTab, useAgStudioBlotter } from '../hooks/useAgStudioBlotter';
 import { ForensicDetailPanel } from './ForensicDetailPanel';
 import { formatUsdInr } from '../lib/phase6-events';
+import {
+  DEFAULT_COL_DEF,
+  GRID_SIDE_BAR,
+  GRID_STATUS_BAR,
+  ROW_GROUP_PANEL_SHOW,
+  getEscrowRowId,
+  initAgGridEnterprise,
+  talosDarkTheme,
+  talosLightTheme,
+} from '../lib/ag-grid-theme';
 
-const licenseProto = LicenseManager.prototype as unknown as {
-  validateLicense?: () => void; isDisplayWatermark?: () => boolean; __talosPatched?: boolean;
-};
-if (!licenseProto.__talosPatched && typeof licenseProto.validateLicense === 'function') {
-  const origValidate = licenseProto.validateLicense;
-  licenseProto.validateLicense = function (this: unknown) {
-    const prevErr = console.error;
-    console.error = (...args: unknown[]) => {
-      const m = String(args[0] ?? '');
-      if (m.includes('AG Grid') || m.includes('License Key') || m.includes('****') || m.includes('info@ag-grid.com')) return;
-      prevErr.apply(console, args);
-    };
-    try { origValidate.call(this); } finally { console.error = prevErr; }
-  };
-  licenseProto.isDisplayWatermark = () => false;
-  licenseProto.__talosPatched = true;
-}
+export { DEFAULT_COL_DEF, GRID_SIDE_BAR, GRID_STATUS_BAR, getEscrowRowId, initAgGridEnterprise, talosDarkTheme, talosLightTheme };
 
-export function initAgGridEnterprise(explicitKey?: string): boolean {
-  ModuleRegistry.registerModules([
-    AllCommunityModule,
-    AllEnterpriseModule,
-    IntegratedChartsModule.with(AgChartsCommunityModule),
-  ]);
-  const key = explicitKey ?? process.env.NEXT_PUBLIC_AG_GRID_LICENSE_KEY;
-  if (key && !key.startsWith('your_')) {
-    LicenseManager.setLicenseKey(key);
-    return true;
-  }
-  return false;
-}
-
-initAgGridEnterprise();
-
-export const talosDarkTheme = themeQuartz.withPart(colorSchemeDarkBlue).withParams({
-  backgroundColor: '#0F172A', foregroundColor: '#F8FAFC', headerBackgroundColor: '#0B0F19',
-  rowHoverColor: '#1E293B', borderColor: '#1E293B', accentColor: '#38BDF8',
-  fontFamily: 'Inter, system-ui, sans-serif', fontSize: 13,
-});
-
-export const DEFAULT_COL_DEF = { enableCellChangeFlash: true };
-export const getEscrowRowId = (params: { data: EscrowBlotterRow }) => params.data.escrow_id;
-export const GRID_STATUS_BAR = {
-  statusPanels: [
-    { statusPanel: 'agTotalAndFilteredRowCountComponent', align: 'left' },
-    { statusPanel: 'agFilteredRowCountComponent' },
-    { statusPanel: 'agAggregationComponent' },
-  ],
-};
-export const GRID_SIDE_BAR = { toolPanels: ['columns', 'filters'], defaultToolPanel: '' };
+const STATUS_TABS: BlotterStatusTab[] = ['ALL', 'BLOCKED', 'CLEARED', 'PENDING_HITL', 'PAYPAL_VOIDED'];
+const PRESET_BUTTONS: Array<{
+  id: AgStudioPresetId;
+  testId: string;
+  label: string;
+  activeClass: string;
+  Icon: typeof ShieldAlert;
+  iconClass: string;
+}> = [
+  { id: 'FRAUD_INJECTION_VIEW', testId: 'preset-fraud-injection', label: 'Fraud & Prompt-Injection View', activeClass: 'btn-sovereign-crimson', Icon: ShieldAlert, iconClass: 'text-ink-crimson' },
+  { id: 'ACTIVE_PAYPAL_ESCROWS', testId: 'preset-active-escrows', label: 'Active PayPal Sandbox Escrows', activeClass: 'btn-paypal-primary', Icon: Lock, iconClass: 'text-ink-paypal' },
+  { id: 'CHART_SAVED_VS_SETTLED', testId: 'preset-chart-saved-vs-settled', label: 'Chart: Saved Fraud vs Settled Volume', activeClass: 'btn-sovereign-emerald', Icon: BarChart3, iconClass: 'text-ink-emerald' },
+  { id: 'RESET_DEFAULT_BLOTTER', testId: 'preset-reset-blotter', label: 'Reset Default Blotter', activeClass: 'btn-sovereign-neutral', Icon: RotateCcw, iconClass: 'text-ink-secondary' },
+];
 
 export interface AgStudioBlotterProps {
   initialRows?: EscrowBlotterRow[];
@@ -68,99 +42,136 @@ export interface AgStudioBlotterProps {
 export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
   const {
     visibleRows, selectedRow, selectedEscrowId, setSelectedEscrowId, activePreset,
-    copilotQuery, setCopilotQuery, copilotStatus, showChartSummary, colDefs,
-    onGridReady, handlePresetClick, handleCopilotSubmit, updateRowState,
+    statusTab, setStatusTab, quickFilter, setQuickFilter, copilotQuery, setCopilotQuery,
+    copilotStatus, showChartSummary, colDefs, theme, onGridReady, handlePresetClick,
+    handleCopilotSubmit, handleExportCsv, updateRowState,
   } = useAgStudioBlotter(initialRows);
 
   return (
     <section
-      className="rounded-xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl space-y-3"
+      id="chapter-blotter"
+      className="sovereign-card p-6 space-y-5"
       data-testid="ag-studio-blotter"
-      aria-label="AG Grid Enterprise and AG Studio Live Escrow Blotter"
+      aria-label="Escrow Settlement Ledger"
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-slate-50">
-            3. AG Grid Enterprise &amp; AG Studio Live Escrow Blotter ($10,000 Sponsor Pool — F-08)
-          </h2>
-          <p className="text-xs text-slate-300 mt-0.5">
-            Streaming applyTransactionAsync updates, Master-Detail DOM Diff Forensics, and Embedded AG Studio AI Financial Copilot.
+          <h2 className="font-display text-xl font-medium text-ink">Escrow Settlement Ledger</h2>
+          <p data-subhead="true" className="text-xs text-ink-secondary mt-1">
+            Streaming AG Grid v33 ledger, Master-Detail forensics, and AG Studio Copilot
           </p>
         </div>
-        <span className="rounded border border-sky-500/40 bg-sky-500/15 px-2.5 py-1 font-mono text-[11px] text-sky-300">
-          AG Grid v33 Enterprise · Master-Detail + Integrated Charts
-        </span>
+        <div className="flex flex-wrap items-center gap-4 text-xs text-ink-secondary">
+          <span data-testid="blotter-group-summary" className="inline-flex items-center gap-2 font-medium">
+            <Table2 className="w-4 h-4 text-ink-paypal" strokeWidth={1.5} aria-hidden="true" />
+            <span>Grouped by firewall_verdict (AG Grid v33 Enterprise)</span>
+          </span>
+          <span data-testid="blotter-saved-fraud-kpi" className="inline-flex items-center gap-2 text-ink-emerald font-medium tabular-nums">
+            <span className="w-1.5 h-1.5 rounded-xs dot-emerald" aria-hidden="true" />
+            <span>Saved Fraud Volume: {formatUsdInr(48000)}</span>
+          </span>
+        </div>
       </div>
 
-      {/* AG Studio AI Financial Copilot Command Bar */}
-      <div className="rounded-lg border border-slate-800 bg-slate-950 p-3 space-y-2" data-testid="ag-studio-copilot-bar">
-        <form onSubmit={(e) => { e.preventDefault(); void handleCopilotSubmit(); }} className="flex flex-col sm:flex-row gap-2">
+      <div className="sovereign-subcard p-4 space-y-3" data-testid="ag-studio-copilot-bar">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            void handleCopilotSubmit();
+          }}
+          className="flex flex-col sm:flex-row gap-2.5"
+        >
           <input
             type="text"
             value={copilotQuery}
             onChange={(e) => setCopilotQuery(e.target.value)}
-            placeholder='Ask AG Studio Copilot: "Group by merchant risk and chart saved fraud vs settled PayPal volume"...'
+            placeholder="Ask AG Studio Copilot to group by merchant risk and chart saved fraud vs settled PayPal volume"
             data-testid="input-ag-studio-copilot"
-            className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-100"
+            className="sovereign-field flex-1 px-3.5 py-2.5 text-xs"
           />
-          <button type="submit" data-testid="btn-ag-studio-copilot-run" className="rounded-lg border border-sky-400/50 bg-sky-500/20 px-3.5 py-1.5 font-mono text-xs font-semibold text-sky-200 hover:bg-sky-500/30">
-            Run AG Studio Copilot
+          <button
+            type="submit"
+            data-testid="btn-ag-studio-copilot-run"
+            className="btn-paypal-primary min-h-[44px] inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium whitespace-nowrap active:scale-[0.96]"
+          >
+            <Sparkles className="w-4 h-4" strokeWidth={1.5} aria-hidden="true" />
+            <span>Run AG Studio Copilot</span>
           </button>
         </form>
 
-        <div className="flex flex-wrap items-center gap-2" data-testid="ag-studio-preset-pills">
-          <button
-            type="button"
-            onClick={() => handlePresetClick('FRAUD_INJECTION_VIEW')}
-            data-testid="preset-fraud-injection"
-            className={`rounded-lg border px-2.5 py-1 font-mono text-[11px] ${activePreset === 'FRAUD_INJECTION_VIEW' ? 'border-rose-400 bg-rose-500/25 text-rose-200' : 'border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800'}`}
-          >
-            🛡️ Fraud &amp; Prompt-Injection View
-          </button>
-          <button
-            type="button"
-            onClick={() => handlePresetClick('ACTIVE_PAYPAL_ESCROWS')}
-            data-testid="preset-active-escrows"
-            className={`rounded-lg border px-2.5 py-1 font-mono text-[11px] ${activePreset === 'ACTIVE_PAYPAL_ESCROWS' ? 'border-sky-400 bg-sky-500/25 text-sky-200' : 'border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800'}`}
-          >
-            💸 Active PayPal Sandbox Escrows
-          </button>
-          <button
-            type="button"
-            onClick={() => handlePresetClick('CHART_SAVED_VS_SETTLED')}
-            data-testid="preset-chart-saved-vs-settled"
-            className={`rounded-lg border px-2.5 py-1 font-mono text-[11px] ${activePreset === 'CHART_SAVED_VS_SETTLED' ? 'border-emerald-400 bg-emerald-500/25 text-emerald-200' : 'border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800'}`}
-          >
-            📊 Chart: Saved Fraud vs. Settled Volume
-          </button>
-          <button
-            type="button"
-            onClick={() => handlePresetClick('RESET_DEFAULT_BLOTTER')}
-            data-testid="preset-reset-blotter"
-            className="rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1 font-mono text-[11px] text-slate-300 hover:bg-slate-800"
-          >
-            🧹 Reset Default Blotter
-          </button>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2" data-testid="ag-studio-preset-pills">
+            {PRESET_BUTTONS.map(({ id, testId, label, activeClass, Icon, iconClass }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => handlePresetClick(id)}
+                data-testid={testId}
+                className={`min-h-[44px] inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium whitespace-nowrap active:scale-[0.96] ${
+                  activePreset === id && id !== 'RESET_DEFAULT_BLOTTER' ? activeClass : 'btn-sovereign-neutral text-ink-secondary'
+                }`}
+              >
+                <Icon className={`w-3.5 h-3.5 ${iconClass}`} strokeWidth={1.5} aria-hidden="true" />
+                <span>{label}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <input
+              type="search"
+              value={quickFilter}
+              onChange={(e) => setQuickFilter(e.target.value)}
+              placeholder="Filter rows"
+              aria-label="Filter escrow rows"
+              data-testid="blotter-quick-filter"
+              className="sovereign-field px-3 py-2 text-xs"
+            />
+            <button
+              type="button"
+              onClick={handleExportCsv}
+              data-testid="blotter-csv-export-btn"
+              className="btn-sovereign-neutral min-h-[44px] inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium whitespace-nowrap active:scale-[0.96]"
+            >
+              <Download className="w-3.5 h-3.5 text-ink-paypal" strokeWidth={1.5} aria-hidden="true" />
+              <span>Export CSV</span>
+            </button>
+          </div>
         </div>
 
-        <div data-testid="ag-studio-copilot-status" className="font-mono text-[11px] text-sky-300">
-          {copilotStatus}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-1.5" role="tablist" aria-label="Filter by escrow status">
+            {STATUS_TABS.map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                role="tab"
+                aria-selected={statusTab === tab}
+                onClick={() => setStatusTab(tab)}
+                data-testid={`blotter-status-tab-${tab}`}
+                className={`min-h-[36px] px-2.5 py-1 text-xs font-medium rounded-control whitespace-nowrap active:scale-[0.96] ${
+                  statusTab === tab ? 'tone-paypal' : 'btn-sovereign-neutral text-ink-secondary'
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+          <div data-testid="ag-studio-copilot-status" className="text-xs text-ink-paypal tabular-nums">
+            {copilotStatus}
+          </div>
         </div>
       </div>
 
-      {showChartSummary && (
-        <div
-          data-testid="ag-studio-integrated-chart-summary"
-          className="rounded-lg border border-emerald-500/40 bg-emerald-950/20 p-2.5 font-mono text-xs text-emerald-200"
-        >
-          AG Charts Enterprise Cross-Filter Chart Active: Saved Fraud Volume ({formatUsdInr(48000)}) vs. Settled PayPal Volume ({formatUsdInr(24900)}) grouped by Merchant Domain.
+      {showChartSummary ? (
+        <div data-testid="ag-studio-integrated-chart-summary" className="tone-emerald p-3.5 text-xs font-medium tabular-nums">
+          AG Charts Enterprise Cross-Filter Chart Active: Saved Fraud Volume ({formatUsdInr(48000)}) vs Settled PayPal Volume ({formatUsdInr(24900)}) grouped by Merchant Domain
         </div>
-      )}
+      ) : null}
 
-      {/* AG Grid v33 Enterprise Blotter Canvas */}
-      <div className="h-[340px] w-full rounded-lg border border-slate-800 overflow-hidden" data-testid="ag-grid-enterprise-canvas">
+      <div className="h-[340px] w-full sovereign-subcard overflow-hidden" data-testid="ag-grid-enterprise-canvas">
         <AgGridReact<EscrowBlotterRow>
-          theme={talosDarkTheme}
+          theme={theme === 'light' ? talosLightTheme : talosDarkTheme}
           rowData={visibleRows}
           columnDefs={colDefs}
           defaultColDef={DEFAULT_COL_DEF}
@@ -173,7 +184,7 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
           detailRowAutoHeight={true}
           detailCellRenderer={ForensicDetailPanel}
           groupDefaultExpanded={0}
-          rowGroupPanelShow="always"
+          rowGroupPanelShow={ROW_GROUP_PANEL_SHOW}
           cellSelection={true}
           enableCharts={true}
           statusBar={GRID_STATUS_BAR}
@@ -181,24 +192,38 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
         />
       </div>
 
-      {/* Accessible Institutional Row Strip + Master-Detail Forensic Inspector */}
       <div className="flex flex-wrap items-center gap-2 pt-1" data-testid="blotter-row-selector">
-        <span className="font-mono text-[11px] text-slate-400">Inspect Escrow Row Forensics:</span>
-        {visibleRows.map((row) => (
-          <button
-            key={row.escrow_id}
-            type="button"
-            onClick={() => setSelectedEscrowId(row.escrow_id)}
-            data-testid={`select-row-${row.escrow_id}`}
-            className={`rounded border px-2 py-1 font-mono text-[11px] ${
-              selectedEscrowId === row.escrow_id
-                ? 'border-sky-400 bg-sky-500/20 text-sky-200'
-                : 'border-slate-800 bg-slate-950 text-slate-300'
-            }`}
-          >
-            {row.escrow_id} · {row.merchant_domain} · {row.state} · {formatUsdInr(row.amount_cents)}
-          </button>
-        ))}
+        <span className="text-xs text-ink-muted">Inspect escrow row forensics:</span>
+        {visibleRows.map((row) => {
+          const isSelected = selectedEscrowId === row.escrow_id;
+          const dotClass =
+            row.state === 'BLOCKED_DOM_INJECTION' || row.state === 'PAYPAL_VOIDED'
+              ? 'dot-crimson'
+              : row.state === 'PAYPAL_CAPTURED'
+              ? 'dot-emerald'
+              : row.state === 'STEP_UP_REQUIRED'
+              ? 'dot-amber'
+              : 'dot-paypal';
+          return (
+            <button
+              key={row.escrow_id}
+              type="button"
+              onClick={() => setSelectedEscrowId(row.escrow_id)}
+              data-testid={`select-row-${row.escrow_id}`}
+              className={`min-h-[44px] inline-flex items-center gap-2 px-3 py-1.5 text-xs tabular-nums whitespace-nowrap active:scale-[0.96] ${
+                isSelected ? 'tone-paypal font-medium' : 'btn-sovereign-neutral text-ink-secondary'
+              }`}
+            >
+              <span className={`w-1.5 h-1.5 rounded-xs ${dotClass}`} aria-hidden="true" />
+              <span data-testid={`blotter-row-${row.escrow_id}`}>
+                {row.escrow_id} ({row.merchant_domain}): {row.state} ({formatUsdInr(row.amount_cents)})
+              </span>
+              <svg width="24" height="10" viewBox="0 0 24 10" className="shrink-0 text-ink-paypal" data-testid={`spread-sparkline-${row.escrow_id}`} aria-hidden="true">
+                <polyline fill="none" stroke="currentColor" strokeWidth="1.5" points={row.spread_bps > 1000 ? '1,9 8,8 16,3 23,1' : '1,7 8,5 16,6 23,5'} />
+              </svg>
+            </button>
+          );
+        })}
       </div>
 
       <ForensicDetailPanel

@@ -15,6 +15,7 @@ export interface UsePayPalStepUpOptions {
   escrowId?: string;
   amountUsd?: string;
   skuSummary?: string;
+  initialStatusState?: 'STEP_UP_REQUIRED' | 'PAYPAL_AUTHORIZED' | 'PAYPAL_VOIDED';
   onStepUpComplete?: (paypalOrderId: string, paypalAuthId: string) => void;
   onStepUpRejected?: (escrowId: string) => void;
 }
@@ -23,6 +24,7 @@ export function usePayPalStepUp({
   escrowId,
   amountUsd,
   skuSummary,
+  initialStatusState = 'STEP_UP_REQUIRED',
   onStepUpComplete,
   onStepUpRejected,
 }: UsePayPalStepUpOptions = {}) {
@@ -33,7 +35,7 @@ export function usePayPalStepUp({
     amountCents: amountUsd ? Math.round(Number(amountUsd) * 100) : DEFAULT_STEP_UP_REQUEST.amountCents,
   }));
   const [statusState, setStatusState] = useState<'STEP_UP_REQUIRED' | 'PAYPAL_AUTHORIZED' | 'PAYPAL_VOIDED'>(
-    'STEP_UP_REQUIRED'
+    initialStatusState
   );
   const [statusNote, setStatusNote] = useState<string>(
     'Paused: Order ($450.00) exceeds autonomous Ed25519 KYA Mandate Cap ($300.00). Awaiting Human Co-Sign.'

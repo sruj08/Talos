@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { CheckCircle2, Clock, ShieldAlert, Terminal } from 'lucide-react';
 import { usePoisonedStoreSim } from '../hooks/usePoisonedStoreSim';
 
 export function PoisonedStoreSim() {
@@ -15,39 +16,49 @@ export function PoisonedStoreSim() {
 
   return (
     <section
-      className="rounded-xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl"
+      id="chapter-arena"
+      className="sovereign-card p-6 space-y-5"
       data-testid="poisoned-store-sim"
       data-active-act={activeAct}
-      aria-label="3-Act Live Judge Scenario and Red-Team Merchant Storefront Simulator"
+      aria-label="Red-Team Interception Arena"
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
-        <div>
-          <h2 className="text-base font-semibold text-slate-50">
-            2. 3-Act Live Judge Scenario &amp; Red-Team Storefront Simulator (F-11)
+      <div className="space-y-1" data-testid="judge-scenario-toolbar">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-display text-xl font-medium text-ink">
+            Red-Team Interception Arena
           </h2>
-          <p className="text-xs text-slate-300 mt-0.5">
-            Trigger Act 1 (DOM Prompt-Injection Block), Act 2 (Channel3 + PayPal AUTHORIZE &rarr; CAPTURE), or Act 3 (Bryntum SLA Breach &rarr; PayPal VOID + $450 Step-Up).
-          </p>
+          <span className="inline-flex items-center gap-2 text-xs text-ink-secondary font-medium tabular-nums whitespace-nowrap">
+            <span className="w-1.5 h-1.5 rounded-xs dot-emerald" aria-hidden="true" />
+            <span>DeBERTa-v3 ONNX &lt;4ms</span>
+          </span>
         </div>
-        <span className="rounded border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 font-mono text-[11px] text-emerald-300">
-          KERNEL Sandbox: CONNECTED
-        </span>
+        <p data-subhead="true" className="text-xs text-ink-secondary">
+          Simulate poisoned merchant DOM injections, Channel3 verification, and SLA breach rollbacks
+        </p>
       </div>
 
-      <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2">
+      {/* Indus Cowork Expandable Flex Bento Scenario Cards */}
+      <div className="flex flex-col md:flex-row gap-3">
         <button
           type="button"
           disabled={running}
           onClick={() => void runAct1PoisonedAttack()}
           data-testid="btn-scenario-act1"
-          className={`min-h-[42px] rounded-lg border px-3 py-2 text-left text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 ${
+          className={`bento-drawer-transition whitespace-nowrap min-h-[44px] p-3.5 text-left text-xs rounded-inner active:scale-[0.96] ${
             activeAct === 'ACT_1'
-              ? 'border-rose-500 bg-rose-500/25 text-rose-100'
-              : 'border-slate-700 bg-slate-800/80 text-slate-200 hover:bg-slate-800'
+              ? 'flex-[1.45] btn-sovereign-crimson font-medium'
+              : 'flex-1 btn-sovereign-neutral text-ink'
           }`}
         >
-          <div className="font-mono text-[11px] text-rose-300">[Scenario A — Act 1]</div>
-          <div>Attack: Poisoned DOM ($480 Gouge) &rarr; Blocked &lt;4ms</div>
+          <span data-testid="trigger-act1-btn" className="block whitespace-normal">
+            <span className="flex items-center gap-2 text-ink-crimson font-medium whitespace-nowrap">
+              <ShieldAlert className="w-4 h-4 shrink-0" strokeWidth={1.5} aria-hidden="true" />
+              <span>Scenario A (Act 1)</span>
+            </span>
+            <span className="mt-1 block tabular-nums">
+              Attack: Poisoned DOM ($480 Gouge) &rarr; Blocked &lt;4ms
+            </span>
+          </span>
         </button>
 
         <button
@@ -55,14 +66,21 @@ export function PoisonedStoreSim() {
           disabled={running}
           onClick={() => void runAct2HappyPathCapture()}
           data-testid="btn-scenario-act2"
-          className={`min-h-[42px] rounded-lg border px-3 py-2 text-left text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 ${
+          className={`bento-drawer-transition whitespace-nowrap min-h-[44px] p-3.5 text-left text-xs rounded-inner active:scale-[0.96] ${
             activeAct === 'ACT_2'
-              ? 'border-emerald-500 bg-emerald-500/25 text-emerald-100'
-              : 'border-slate-700 bg-slate-800/80 text-slate-200 hover:bg-slate-800'
+              ? 'flex-[1.45] btn-sovereign-emerald font-medium'
+              : 'flex-1 btn-sovereign-neutral text-ink'
           }`}
         >
-          <div className="font-mono text-[11px] text-emerald-300">[Scenario B — Act 2]</div>
-          <div>Happy Path: $249 Channel3 &rarr; AUTHORIZE &rarr; CAPTURE</div>
+          <span data-testid="trigger-act2-btn" className="block whitespace-normal">
+            <span className="flex items-center gap-2 text-ink-emerald font-medium whitespace-nowrap">
+              <CheckCircle2 className="w-4 h-4 shrink-0" strokeWidth={1.5} aria-hidden="true" />
+              <span>Scenario B (Act 2)</span>
+            </span>
+            <span className="mt-1 block tabular-nums">
+              Happy Path: $249 Channel3 &rarr; AUTHORIZE &rarr; CAPTURE
+            </span>
+          </span>
         </button>
 
         <button
@@ -70,14 +88,21 @@ export function PoisonedStoreSim() {
           disabled={running}
           onClick={() => void runAct3SlaBreachAndStepUp()}
           data-testid="btn-scenario-act3"
-          className={`min-h-[42px] rounded-lg border px-3 py-2 text-left text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 ${
+          className={`bento-drawer-transition whitespace-nowrap min-h-[44px] p-3.5 text-left text-xs rounded-inner active:scale-[0.96] ${
             activeAct === 'ACT_3'
-              ? 'border-amber-500 bg-amber-500/25 text-amber-100'
-              : 'border-slate-700 bg-slate-800/80 text-slate-200 hover:bg-slate-800'
+              ? 'flex-[1.45] btn-sovereign-amber font-medium'
+              : 'flex-1 btn-sovereign-neutral text-ink'
           }`}
         >
-          <div className="font-mono text-[11px] text-amber-300">[Scenario C — Act 3]</div>
-          <div>SLA Breach: Bryntum Delay &rarr; PayPal VOID + $450 Step-Up</div>
+          <span data-testid="trigger-act3-btn" className="block whitespace-normal">
+            <span className="flex items-center gap-2 text-ink-amber font-medium whitespace-nowrap">
+              <Clock className="w-4 h-4 shrink-0" strokeWidth={1.5} aria-hidden="true" />
+              <span>Scenario C (Act 3)</span>
+            </span>
+            <span className="mt-1 block tabular-nums">
+              SLA Breach: Bryntum Delay &rarr; PayPal VOID + $450 Step-Up
+            </span>
+          </span>
         </button>
       </div>
 
@@ -85,23 +110,37 @@ export function PoisonedStoreSim() {
         role="status"
         aria-live="polite"
         data-testid="simulator-telemetry-card"
-        className="mt-3 rounded-lg border border-slate-800 bg-slate-950 p-3 font-mono text-xs"
+        className="sovereign-subcard p-4 space-y-3 text-xs"
       >
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="font-semibold text-slate-100">{telemetry.headline}</span>
-          <span className="rounded border border-slate-700 bg-slate-900 px-2 py-0.5 text-[11px] text-sky-300 tabular-nums">
-            Latency: {telemetry.latencyMs}ms · Risk: {telemetry.firewallRiskScore} · Spread: {telemetry.channel3SpreadBps} bps
-          </span>
-        </div>
-        <p className="mt-1 text-slate-300">{telemetry.detail}</p>
-        <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
-          <div className="rounded border border-rose-500/30 bg-rose-950/20 p-2 text-rose-200">
-            <div className="font-semibold text-rose-300">Raw Storefront DOM (Before lol_html):</div>
-            <code className="block mt-0.5 break-all">{telemetry.rawHtmlExcerpt}</code>
+        <div className="space-y-2" data-testid="scenario-active-banner">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="inline-flex items-center gap-2 font-medium text-ink">
+              <Terminal className="w-4 h-4 text-ink-paypal" strokeWidth={1.5} aria-hidden="true" />
+              <span>{telemetry.headline}</span>
+            </span>
+            <div className="text-xs text-ink-paypal tabular-nums font-medium inline-flex flex-wrap items-center gap-3">
+              <span>Latency: {telemetry.latencyMs}ms</span>
+              <span>Risk: {telemetry.firewallRiskScore}</span>
+              <span>Spread: {telemetry.channel3SpreadBps} bps</span>
+            </div>
           </div>
-          <div className="rounded border border-emerald-500/30 bg-emerald-950/20 p-2 text-emerald-200">
-            <div className="font-semibold text-emerald-300">Sanitized Agent DOM (After lol_html):</div>
-            <code className="block mt-0.5 break-all">{telemetry.sanitizedHtmlExcerpt}</code>
+          <p className="text-ink-secondary tabular-nums">{telemetry.detail}</p>
+        </div>
+
+        <div className="relative overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-3" data-testid="scenario-dom-diff">
+          <div
+            key={activeAct}
+            data-testid="dom-diff-laser-scanline"
+            className="laser-scanline-bar pointer-events-none absolute inset-x-0 top-0 h-1.5"
+            aria-hidden="true"
+          />
+          <div className="tone-crimson p-3 space-y-1">
+            <div className="font-medium text-ink-crimson">Raw Storefront DOM (Before lol_html):</div>
+            <code className="font-mono block text-[11px] break-all">{telemetry.rawHtmlExcerpt}</code>
+          </div>
+          <div className="tone-emerald p-3 space-y-1">
+            <div className="font-medium text-ink-emerald">Sanitized Agent DOM (After lol_html):</div>
+            <code className="font-mono block text-[11px] break-all">{telemetry.sanitizedHtmlExcerpt}</code>
           </div>
         </div>
       </div>

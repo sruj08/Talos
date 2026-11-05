@@ -74,6 +74,30 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
     const pom = new TalosCommandCenterPage(page);
     await pom.goto();
 
+    // Gate 5 Computed-Style Audit: Verify Sovereign Glass OKLCH, Typography, Radius & Tabular Nums
+    const computedAudit = await page.evaluate(() => {
+      const h1 = document.querySelector('h1');
+      const body = document.body;
+      const card = document.querySelector('.sovereign-card');
+      const kpiNum = document.querySelector('[data-testid="kpi-protected-gmv"] .tabular-nums');
+      const monoEl = document.querySelector('.font-mono');
+      return {
+        fxAttr: document.documentElement.getAttribute('data-fx'),
+        h1Font: h1 ? window.getComputedStyle(h1).fontFamily : '',
+        bodyFont: window.getComputedStyle(body).fontFamily,
+        bodyBg: window.getComputedStyle(body).backgroundColor,
+        cardRadius: card ? window.getComputedStyle(card).borderRadius : '',
+        kpiVariantNumeric: kpiNum ? window.getComputedStyle(kpiNum).fontVariantNumeric : '',
+        monoFont: monoEl ? window.getComputedStyle(monoEl).fontFamily : '',
+      };
+    });
+    expect(['high', 'static']).toContain(computedAudit.fxAttr);
+    expect(computedAudit.h1Font).toMatch(/Fraunces/i);
+    expect(computedAudit.bodyFont).toMatch(/Figtree/i);
+    expect(computedAudit.monoFont).toMatch(/DM Mono/i);
+    expect(computedAudit.cardRadius).toBe('16px');
+    expect(computedAudit.kpiVariantNumeric).toContain('tabular-nums');
+
     await pom.mandateBudgetInput.fill('300');
     await pom.signMandateBtn.click();
     await expect(pom.mandateSignatureHex).toHaveText(/^[0-9a-f]{128}$/i);
@@ -86,6 +110,11 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
 
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, 'act1-firewall-gouging-blocked.png'),
+      animations: 'disabled',
+    });
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, 'sovereign-glass-fullpage.png'),
+      fullPage: true,
       animations: 'disabled',
     });
   });
@@ -150,6 +179,55 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
         path: path.join(SCREENSHOT_DIR, 'act4-ag-studio-copilot-chart.png'),
         animations: 'disabled',
       });
+
+      // Verify blotter status tabs, quick filter, CSV export, and Part 5 data-testids
+      await expect(page.getByTestId('blotter-group-summary')).toBeVisible();
+      await expect(page.getByTestId('blotter-saved-fraud-kpi')).toBeVisible();
+      await expect(page.getByTestId('blotter-quick-filter')).toBeVisible();
+      await expect(page.getByTestId('blotter-csv-export-btn')).toBeVisible();
+      await page.getByTestId('blotter-status-tab-BLOCKED').click();
+      await expect(page.getByTestId('blotter-row-esc-901-trap')).toBeVisible();
+      await page.getByTestId('blotter-status-tab-ALL').click();
+
+      // Verify theme toggle (dark -> light -> dark), light-mode ink contrast, and AG Grid light theme re-theming
+      await page.getByTestId('theme-toggle-btn').click();
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+      await expect(page.getByTestId('ag-studio-integrated-chart-summary')).toBeVisible();
+      const lightAudit = await page.evaluate(() => {
+        const h1 = document.querySelector('h1');
+        const card = document.querySelector('.sovereign-card');
+        const agRoot = document.querySelector('.ag-root-wrapper');
+        return {
+          h1Color: h1 ? window.getComputedStyle(h1).color : '',
+          cardBg: card ? window.getComputedStyle(card).backgroundColor : '',
+          agBg: agRoot ? window.getComputedStyle(agRoot).backgroundColor : '',
+        };
+      });
+      expect(lightAudit.h1Color).not.toBe('rgb(248, 250, 252)');
+      expect(lightAudit.h1Color).not.toBe(lightAudit.cardBg);
+      expect(lightAudit.agBg).toBe('rgb(255, 255, 255)');
+      await page.screenshot({
+        path: path.join(SCREENSHOT_DIR, 'sovereign-glass-lightmode.png'),
+        animations: 'disabled',
+      });
+      await page.getByTestId('theme-toggle-btn').click();
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+
+      // Verify dedicated chapter routes & bottom story dock cross-route navigation
+      await page.goto('/mandates');
+      await expect(page.getByTestId('chapter-route-mandates')).toBeVisible();
+      await expect(page.getByTestId('mandate-studio')).toBeVisible();
+      await page.getByTestId('dock-chapter-chapter_2_arena').click();
+      await expect(page.getByTestId('chapter-route-simulator')).toBeVisible();
+      await expect(page.getByTestId('poisoned-store-sim')).toBeVisible();
+
+      await page.goto('/blotter');
+      await expect(page.getByTestId('chapter-route-blotter')).toBeVisible();
+      await expect(page.getByTestId('ag-studio-blotter')).toBeVisible();
+
+      await page.goto('/sla');
+      await expect(page.getByTestId('chapter-route-sla')).toBeVisible();
+      await expect(page.getByTestId('bryntum-sla-board')).toBeVisible();
     }
   );
 });

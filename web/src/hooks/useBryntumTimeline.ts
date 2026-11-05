@@ -28,10 +28,11 @@ export function useBryntumTimeline({
   const [liveStatusMsg, setLiveStatusMsg] = useState<string>(
     'Bryntum Scheduler Pro v6.1.4 Bound Two-Way to PayPal Sandbox Orders v2 AUTHORIZE & VOID.'
   );
-  const [syncedAgGridState, setSyncedAgGridState] = useState<Record<string, string>>({
-    'esc-902-sm7b': 'PAYPAL_AUTHORIZED',
-    'esc-903-scarlett': 'PAYPAL_AUTHORIZED',
-  });
+  const [syncedAgGridState, setSyncedAgGridState] = useState<Record<string, string>>(() =>
+    Object.fromEntries(
+      initialTasks.map((t) => [t.escrowId, t.escrowState === 'PAYPAL_VOIDED' ? 'VOIDED' : t.escrowState])
+    )
+  );
 
   const executeSlaBreachAndVoid = useCallback(
     async (task: SlaTaskRecord, elapsedHours = 54, triggeredBy = 'BRYNTUM_TIMELINE_DRAG_OR_BUTTON') => {

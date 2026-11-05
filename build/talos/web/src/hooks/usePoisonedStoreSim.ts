@@ -22,7 +22,7 @@ export interface ScenarioTelemetry {
   paypalState: string;
 }
 
-const SCENARIO_PRESETS: Record<JudgeActId, ScenarioTelemetry> = {
+export const SCENARIO_PRESETS: Record<JudgeActId, ScenarioTelemetry> = {
   ACT_1: {
     act: 'ACT_1',
     headline: 'Scenario A (Act 1): Attack — Poisoned DOM + 92.7% Price Gouging Blocked in 2.84ms',
@@ -40,7 +40,7 @@ const SCENARIO_PRESETS: Record<JudgeActId, ScenarioTelemetry> = {
     act: 'ACT_2',
     headline: 'Scenario B (Act 2): Happy Path — Verified $249 Channel3 -> PayPal AUTHORIZE -> Tracking DELIVERED -> Auto-CAPTURE',
     detail:
-      'Channel3 verified $249.00 (0 bps spread). APIMatic Go SDK locked 29-day PayPal AUTHORIZE (2A112233445566778). @paypal/agent-toolkit verified FEDEX #794892104852 DELIVERED -> Auto-CAPTURED (9CAP-2A112233).',
+      'Channel3 verified $249.00 (0 bps spread). APIMatic Go SDK locked 29-day PayPal AUTHORIZE (2A112233445566778). @paypal/agent-toolkit verified FEDEX #794892104852 DELIVERED -> AUTHORIZED -> CAPTURED / Auto-CAPTURED (9CAP-2A112233).',
     rawHtmlExcerpt:
       '<div class="product" data-channel3="verified"><h1>Shure SM7B Vocal Dynamic Microphone</h1><span class="price">$249.00</span></div>',
     sanitizedHtmlExcerpt:
