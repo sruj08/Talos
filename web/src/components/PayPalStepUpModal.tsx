@@ -14,7 +14,7 @@ const PAYPAL_BUTTON_STYLE = {
   color: 'gold' as const,
   shape: 'rect' as const,
   label: 'pay' as const,
-  height: 35,
+  height: 36,
 };
 
 export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
@@ -34,8 +34,8 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
   }, []);
 
   const overageCents = Math.max(0, stepUp.amountCents - stepUp.mandateCapCents);
-  const rawClientId = (process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '').trim();
-  const clientId = rawClientId && !rawClientId.startsWith('your_') ? rawClientId : 'sb';
+  const rawClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb';
+  const clientId = rawClientId.startsWith('your_') ? 'sb' : rawClientId;
   const dotClass =
     statusState === 'PAYPAL_AUTHORIZED'
       ? 'dot-emerald'
@@ -45,18 +45,21 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
 
   return (
     <section
-      className="sovereign-card p-6 space-y-5"
+      className="sovereign-card p-6 space-y-6"
       data-testid="paypal-step-up-modal"
       data-step-up-state={statusState}
       role="region"
       aria-label="Institutional Step-Up Co-Signing Authority"
     >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h2 className="font-display text-xl font-medium text-ink">
-            Institutional Step-Up Co-Signing Authority
-          </h2>
-          <p data-subhead="true" className="text-xs text-ink-secondary mt-1">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2.5">
+            <span className="font-mono text-xs text-ink-muted">05</span>
+            <h2 className="text-lg font-medium text-ink">
+              Institutional Step-Up Co-Signing Authority
+            </h2>
+          </div>
+          <p data-subhead="true" className="text-xs text-ink-secondary">
             Pauses over-budget agent checkouts and requires human PayPal Sandbox co-sign
           </p>
         </div>
@@ -70,31 +73,25 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
                 ? '[✖ REJECTED: PAYPAL_VOIDED]'
                 : '[⚡ STEP_UP_REQUIRED (> $300 CAP)]'
             }
-            className={`inline-flex items-center gap-2 text-xs font-medium tabular-nums ${
-              statusState === 'PAYPAL_AUTHORIZED'
-                ? 'text-ink-emerald'
-                : statusState === 'PAYPAL_VOIDED'
-                ? 'text-ink-crimson'
-                : 'text-ink-amber'
-            }`}
+            className="inline-flex items-center gap-2 font-mono text-xs text-ink-secondary tabular-nums"
           >
             <span className={`w-1.5 h-1.5 rounded-xs ${dotClass}`} aria-hidden="true" />
             <span>
               {statusState === 'PAYPAL_AUTHORIZED'
-                ? 'CO-SIGNED: PAYPAL_AUTHORIZED (PAYPAL-CAPTURE-904-STEPUP)'
+                ? '[✔ CO-SIGNED: PAYPAL_AUTHORIZED (PAYPAL-CAPTURE-904-STEPUP)]'
                 : statusState === 'PAYPAL_VOIDED'
-                ? 'REJECTED: PAYPAL_VOIDED'
-                : 'STEP_UP_REQUIRED (> $300 CAP)'}
+                ? '[✖ REJECTED: PAYPAL_VOIDED]'
+                : '[⚡ STEP_UP_REQUIRED (> $300 CAP)]'}
             </span>
           </span>
           <button
             type="button"
             onClick={() => setDrawerOpen((v) => !v)}
             data-testid="copilot-toggle-btn"
-            className="btn-sovereign-neutral min-h-[44px] inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium whitespace-nowrap active:scale-[0.96]"
+            className="btn-sovereign-neutral h-9 inline-flex items-center gap-2 px-3 py-2 text-xs font-medium whitespace-nowrap active:scale-[0.98]"
           >
             <span>Co-sign drawer</span>
-            <ChevronDown className="w-3.5 h-3.5" strokeWidth={1.5} aria-hidden="true" />
+            <ChevronDown className="w-4 h-4 text-ink-muted" strokeWidth={1.5} aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -104,18 +101,18 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
         className={`grid bento-drawer-transition ${drawerOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-90'}`}
       >
         <div className="overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
             <div
               data-testid="copilot-hitl-card"
-              className="sovereign-subcard p-4 space-y-2 text-xs text-ink-secondary tabular-nums"
+              className="sovereign-subcard p-4 space-y-2.5 text-xs text-ink-secondary tabular-nums"
             >
               <div>
                 <span className="text-ink-muted">Item &amp; merchant: </span>
-                <strong className="text-ink">{stepUp.skuSummary}</strong> ({stepUp.merchantName})
+                <strong className="text-ink font-medium">{stepUp.skuSummary}</strong> ({stepUp.merchantName})
               </div>
               <div>
                 <span className="text-ink-muted">Requested amount: </span>
-                <strong className="text-ink-amber">
+                <strong className="text-ink font-medium">
                   {hydrated ? (
                     <span className="inline-flex items-baseline gap-1">
                       <NumberFlow value={stepUp.amountCents / 100} format={{ style: 'currency', currency: 'USD' }} />
@@ -125,38 +122,37 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
                     formatUsdInr(stepUp.amountCents)
                   )}
                 </strong>{' '}
-                <span className="text-ink-crimson">
+                <span className="font-mono text-ink-muted">
                   [Mandate Cap: {formatUsdInr(stepUp.mandateCapCents)} (+{formatUsdInr(overageCents)} overage)]
                 </span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-ink-emerald" strokeWidth={1.5} aria-hidden="true" />
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-ink-muted" strokeWidth={1.5} aria-hidden="true" />
                 <span className="text-ink-muted">Firewall scan: </span>
-                <span className="text-ink-emerald">
+                <span className="font-mono text-ink-secondary">
                   PASSED ({stepUp.firewallRiskScore.toFixed(2)} risk, 0 hidden injections, {stepUp.firewallLatencyMs}ms)
                 </span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-ink-emerald" strokeWidth={1.5} aria-hidden="true" />
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-ink-muted" strokeWidth={1.5} aria-hidden="true" />
                 <span className="text-ink-muted">Channel3 check: </span>
-                <span className="text-ink-emerald">
+                <span className="font-mono text-ink-secondary">
                   VERIFIED FAIR PRICE ({formatUsdInr(stepUp.channel3MedianCents)} median, {stepUp.channel3SpreadBps} bps)
                 </span>
               </div>
-              <div role="status" aria-live="polite" data-testid="step-up-live-note" className="pt-1 text-ink-paypal">
+              <div role="status" aria-live="polite" data-testid="step-up-live-note" className="pt-1 font-mono text-ink-paypal">
                 {statusNote}
               </div>
             </div>
 
-            <div className="sovereign-subcard p-4 space-y-3" data-testid="copilot-action-wiring">
-              <div className="flex flex-wrap gap-2.5">
+            <div className="sovereign-subcard p-4 flex flex-col justify-between space-y-4" data-testid="copilot-action-wiring">
+              <div className="flex flex-wrap gap-3">
                 <button
                   type="button"
                   onClick={() => void handleApproveStepUp()}
                   data-testid="btn-step-up-cosign"
-                  className="btn-paypal-primary specular-sweep-btn relative overflow-hidden min-h-[44px] flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-medium tabular-nums whitespace-nowrap active:scale-[0.97]"
+                  className="btn-paypal-primary h-10 flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium tabular-nums whitespace-nowrap active:scale-[0.98]"
                 >
-                  <span className="specular-sweep-sheen" aria-hidden="true" />
                   <Lock className="w-4 h-4" strokeWidth={1.5} aria-hidden="true" />
                   <span data-testid="copilot-confirm-stepup-btn">
                     {statusState === 'PAYPAL_AUTHORIZED'
@@ -168,9 +164,9 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
                   type="button"
                   onClick={handleRejectStepUp}
                   data-testid="btn-step-up-reject"
-                  className="btn-sovereign-crimson min-h-[44px] inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 text-xs font-medium whitespace-nowrap active:scale-[0.96]"
+                  className="btn-sovereign-crimson h-10 inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium whitespace-nowrap active:scale-[0.98]"
                 >
-                  <XCircle className="w-4 h-4" strokeWidth={1.5} aria-hidden="true" />
+                  <XCircle className="w-4 h-4 text-ink-muted" strokeWidth={1.5} aria-hidden="true" />
                   <span>Reject &amp; Terminate Request</span>
                 </button>
               </div>

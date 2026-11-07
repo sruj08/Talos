@@ -3,9 +3,9 @@
 # ==============================================================================
 $ErrorActionPreference = "Stop"
 
-$RustFirewallUrl = if ($env:RUST_FIREWALL_URL) { $env:RUST_FIREWALL_URL.TrimEnd('/') } else { "http://localhost:8081" }
-$GoOrchestratorUrl = if ($env:GO_ORCHESTRATOR_URL) { $env:GO_ORCHESTRATOR_URL.TrimEnd('/') } else { "http://localhost:8080" }
-$WebConsoleUrl = if ($env:WEB_CONSOLE_URL) { $env:WEB_CONSOLE_URL.TrimEnd('/') } else { "http://localhost:3000" }
+$RustFirewallUrl = if ($env:RUST_FIREWALL_URL) { $env:RUST_FIREWALL_URL.TrimEnd('/') } else { "http://127.0.0.1:8081" }
+$GoOrchestratorUrl = if ($env:GO_ORCHESTRATOR_URL) { $env:GO_ORCHESTRATOR_URL.TrimEnd('/') } elseif ($env:NEXT_PUBLIC_ORCHESTRATOR_URL) { $env:NEXT_PUBLIC_ORCHESTRATOR_URL.TrimEnd('/') } else { "http://127.0.0.1:8082" }
+$WebConsoleUrl = if ($env:WEB_CONSOLE_URL) { $env:WEB_CONSOLE_URL.TrimEnd('/') } else { "http://127.0.0.1:3000" }
 $BlueprintFile = if ($env:BLUEPRINT_FILE) { $env:BLUEPRINT_FILE } else { "render.yaml" }
 $SkipWebHealthz = ($env:SKIP_WEB_HEALTHZ -eq "true")
 
@@ -76,7 +76,7 @@ try {
     }
     Write-Host "  [OK] talos-firewall-rs (/healthz): status=$($fwHealth.status) engine=$($fwHealth.engine)" -ForegroundColor Green
 
-    if (-not (Test-EndpointReady "$GoOrchestratorUrl/healthz") -and $GoOrchestratorUrl -match "localhost:8080|127\.0\.0\.1:8080") {
+    if (-not (Test-EndpointReady "$GoOrchestratorUrl/healthz") -and $GoOrchestratorUrl -match "localhost:(8080|8082)|127\.0\.0\.1:(8080|8082)") {
         $spawnedProcs += Start-Process -FilePath "go" -ArgumentList "run ./cmd/server" -WorkingDirectory (Join-Path $RepoRoot "services\orchestrator-go") -WindowStyle Hidden -PassThru
         for ($i = 0; $i -lt 35; $i++) {
             if (Test-EndpointReady "$GoOrchestratorUrl/healthz") { break }

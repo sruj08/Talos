@@ -1,6 +1,7 @@
-/* Hallmark · v2.0.0 · theme: sovereign-glass (custom) · genre: modern-minimal · signature: 3-State 2PC PayPal Escrow & Ed25519 Clearing Studio */
-/* Critique: Zero AI design slop; perceptual OKLCH surfaces, borderless tonal depth, Fraunces Variable + Figtree Variable + DM Mono + Mukta */
-/* Hallmark · dismissed 49 · button elements enforce white-space nowrap while preserving explicit PayPal Sandbox and E2E contract labels */
+/* Unslop Redline Pass · TALOS Institutional Clearinghouse
+ * Direction: Exact, restrained, architectural (Graphite neutral ramp #0f0f10..#232325, 1px hairlines, single #0070ba accent)
+ * Credit: Part of unslop by Damir Sokolovsky (@heydamir), CC BY 4.0.
+ */
 
 @tailwind base;
 @tailwind components;
@@ -8,42 +9,44 @@
 
 :root {
   color-scheme: dark;
-  --background: oklch(12% 0.005 285.823);
-  --bg-canvas: oklch(11.5% 0.01 255);
-  --foreground: oklch(97% 0.005 255);
-  --text-secondary: oklch(79% 0.012 255);
-  --text-muted: oklch(68% 0.014 255);
-  --surface: oklch(21.03% 0.0059 285.89);
-  --surface-elevated: oklch(17% 0.012 255);
-  --surface-secondary: oklch(24.5% 0.008 285.89);
-  --accent: oklch(62.04% 0.195 253.83);
-  --paypal-navy: #003087;
-  --paypal-cerulean: #0070BA;
-  --emerald: oklch(78% 0.17 160);
-  --amber: oklch(82% 0.16 80);
-  --crimson: oklch(74% 0.19 25);
-  --tone-paypal-fg: oklch(86% 0.09 250);
-  --tone-emerald-fg: oklch(88% 0.12 160);
-  --tone-amber-fg: oklch(90% 0.12 80);
-  --tone-crimson-fg: oklch(88% 0.13 25);
-  --btn-primary-fg: oklch(99% 0.005 255);
-  --btn-emerald-fg: oklch(92% 0.09 160);
-  --btn-crimson-fg: oklch(92% 0.09 25);
-  --btn-amber-fg: oklch(93% 0.09 80);
-  --shadow-card: inset 0 1px 0 oklch(100% 0 0 / 0.07), 0 16px 36px oklch(0% 0 0 / 0.28);
-  --shadow-subcard: inset 0 1px 0 oklch(100% 0 0 / 0.06);
-  --shadow-glass: inset 0 1px 0 oklch(100% 0 0 / 0.08), 0 12px 32px oklch(0% 0 0 / 0.26);
-  --shadow-primary: inset 0 1px 0 oklch(100% 0 0 / 0.22);
-  --shadow-btn: inset 0 1px 0 oklch(100% 0 0 / 0.09);
-  --shadow-neutral-btn: inset 0 1px 0 oklch(100% 0 0 / 0.07);
+  --oklch-deep: oklch(12% 0.005 285.823);
+  --oklch-surface: oklch(21.03% 0.0059 285.89);
+  --bg-deep: #0f0f10;
+  --background: #141415;
+  --bg-canvas: #141415;
+  --surface: #19191b;
+  --surface-elevated: #1e1e20;
+  --surface-secondary: #232325;
+  --border-hairline: rgba(237, 237, 237, 0.08);
+  --border-hover: rgba(237, 237, 237, 0.16);
   --field-border-width: 0px;
+  --foreground: #ededed;
+  --text-secondary: #a1a1a6;
+  --text-muted: #85858b;
+  --accent: #0070ba;
+  --paypal-navy: #003087;
+  --paypal-cerulean: #0070ba;
+  --emerald: #4cc38a;
+  --amber: #d99b26;
+  --crimson: #e5484d;
+  --tone-paypal-fg: #5aa9e6;
+  --tone-emerald-fg: #4cc38a;
+  --tone-amber-fg: #d99b26;
+  --tone-crimson-fg: #e5484d;
+  --btn-primary-bg: #ededed;
+  --btn-primary-hover: #ffffff;
+  --btn-primary-fg: #0f0f10;
+  --shadow-specular: inset 0 1px 0 oklch(100% 0 0 / 0.07);
+  --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-subcard: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --shadow-btn: inset 0 1px 0 rgba(255, 255, 255, 0.08);
   --radius-outer: 16px;
   --radius-inner: 10px;
   --radius-control: 8px;
   --tracking-display: -0.015em;
   --tracking-body: 0em;
   --tracking-label: 0.01em;
-  --ease-bento: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-bento: cubic-bezier(0.22, 1, 0.36, 1);
   --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
   --font-sans: 'Figtree Variable', 'Figtree', 'Mukta', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, monospace;
@@ -51,24 +54,27 @@
 
 html[data-theme='light'] {
   color-scheme: light;
-  --background: oklch(97.5% 0.004 255);
-  --bg-canvas: oklch(96.5% 0.005 255);
-  --foreground: oklch(15% 0.015 255);
-  --text-secondary: oklch(32% 0.016 255);
-  --text-muted: oklch(42% 0.015 255);
-  --surface: oklch(99.4% 0.005 255);
-  --surface-elevated: oklch(98.5% 0.003 255);
-  --surface-secondary: oklch(93.5% 0.008 255);
-  --tone-paypal-fg: oklch(28% 0.14 250);
-  --tone-emerald-fg: oklch(27% 0.12 160);
-  --tone-amber-fg: oklch(30% 0.12 75);
-  --tone-crimson-fg: oklch(30% 0.15 25);
-  --btn-emerald-fg: oklch(24% 0.11 160);
-  --btn-crimson-fg: oklch(26% 0.14 25);
-  --btn-amber-fg: oklch(28% 0.12 75);
-  --shadow-card: inset 0 1px 0 oklch(16% 0.015 255 / 0.08), 0 12px 28px oklch(16% 0.015 255 / 0.07);
-  --shadow-subcard: inset 0 1px 0 oklch(16% 0.015 255 / 0.07);
-  --shadow-glass: inset 0 1px 0 oklch(16% 0.015 255 / 0.08), 0 10px 24px oklch(16% 0.015 255 / 0.07);
+  --bg-deep: #f4f4f5;
+  --background: #fafafa;
+  --bg-canvas: #fafafa;
+  --surface: #ffffff;
+  --surface-elevated: #f8f8f9;
+  --surface-secondary: #f4f4f5;
+  --border-hairline: rgba(23, 23, 23, 0.08);
+  --border-hover: rgba(23, 23, 23, 0.16);
+  --foreground: #171717;
+  --text-secondary: #525252;
+  --text-muted: #737373;
+  --tone-paypal-fg: #005ea6;
+  --tone-emerald-fg: #15803d;
+  --tone-amber-fg: #b45309;
+  --tone-crimson-fg: #b91c1c;
+  --btn-primary-bg: #171717;
+  --btn-primary-hover: #262626;
+  --btn-primary-fg: #ffffff;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-subcard: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --shadow-btn: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 html,
@@ -92,6 +98,14 @@ body {
 .tabular-nums { font-variant-numeric: tabular-nums; }
 .label-optical { letter-spacing: var(--tracking-label); }
 .whitespace-nowrap { white-space: nowrap; }
+.border-hairline { border-color: var(--border-hairline); }
+.bg-secondary { background-color: var(--surface-secondary); }
+.hero-artifact-img { opacity: 0.78; }
+html[data-theme='light'] .hero-artifact-img {
+  filter: invert(0.92) hue-rotate(180deg);
+  mix-blend-mode: multiply;
+  opacity: 0.32;
+}
 
 .sovereign-canvas {
   background-color: var(--background);
@@ -100,62 +114,81 @@ body {
 
 .sovereign-card {
   background-color: var(--surface);
+  border: 1px solid var(--border-hairline);
   border-radius: var(--radius-outer);
   box-shadow: var(--shadow-card);
+  transition: border-color 160ms var(--ease-bento), background-color 160ms var(--ease-bento);
 }
+.sovereign-card:hover { border-color: var(--border-hover); }
 
 .sovereign-subcard {
-  background-color: var(--surface-secondary);
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--border-hairline);
   border-radius: var(--radius-inner);
   box-shadow: var(--shadow-subcard);
+  transition: border-color 160ms var(--ease-bento), background-color 160ms var(--ease-bento);
 }
 
 .sovereign-well {
-  background-color: var(--surface-elevated);
+  background-color: var(--bg-deep);
+  border: 1px solid var(--border-hairline);
   border-radius: var(--radius-inner);
-  box-shadow: var(--shadow-subcard);
 }
 
 .sovereign-field {
   background-color: var(--surface-secondary);
-  border-width: var(--field-border-width);
+  border: 1px solid var(--border-hairline);
   border-radius: var(--radius-control);
   color: var(--foreground);
-  box-shadow: var(--shadow-subcard);
+  transition: border-color 150ms var(--ease-bento), background-color 150ms var(--ease-bento);
 }
+.sovereign-field:hover { border-color: var(--border-hover); }
+.sovereign-field:focus { outline: none; border-color: var(--accent); }
 
 .sovereign-glass {
-  background: color-mix(in oklab, var(--surface) 82%, transparent);
+  background-color: color-mix(in oklab, var(--bg-deep) 88%, transparent);
   backdrop-filter: blur(20px) saturate(180%);
-  box-shadow: var(--shadow-glass);
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.hero-artifact-vignette {
+  box-shadow:
+    inset 140px 0 96px -16px var(--background),
+    inset 0 36px 48px -12px var(--background),
+    inset 0 -36px 48px -12px var(--background);
 }
 
 .tone-paypal {
-  background: color-mix(in oklab, var(--accent) 14%, transparent);
-  color: var(--tone-paypal-fg);
+  background-color: color-mix(in oklab, var(--accent) 10%, var(--surface-elevated));
+  border: 1px solid color-mix(in oklab, var(--accent) 24%, var(--border-hairline));
+  color: var(--foreground);
   border-radius: var(--radius-control);
 }
 
 .tone-emerald {
-  background: color-mix(in oklab, var(--emerald) 14%, transparent);
-  color: var(--tone-emerald-fg);
+  background-color: color-mix(in oklab, var(--emerald) 8%, var(--surface-elevated));
+  border: 1px solid color-mix(in oklab, var(--emerald) 22%, var(--border-hairline));
+  color: var(--foreground);
   border-radius: var(--radius-control);
 }
 
 .tone-amber {
-  background: color-mix(in oklab, var(--amber) 14%, transparent);
-  color: var(--tone-amber-fg);
+  background-color: color-mix(in oklab, var(--amber) 8%, var(--surface-elevated));
+  border: 1px solid color-mix(in oklab, var(--amber) 22%, var(--border-hairline));
+  color: var(--foreground);
   border-radius: var(--radius-control);
 }
 
 .tone-crimson {
-  background: color-mix(in oklab, var(--crimson) 16%, transparent);
-  color: var(--tone-crimson-fg);
+  background-color: color-mix(in oklab, var(--crimson) 8%, var(--surface-elevated));
+  border: 1px solid color-mix(in oklab, var(--crimson) 24%, var(--border-hairline));
+  color: var(--foreground);
   border-radius: var(--radius-control);
 }
 
 .tone-neutral {
-  background: color-mix(in oklab, var(--surface-secondary) 85%, transparent);
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--border-hairline);
   color: var(--text-secondary);
   border-radius: var(--radius-control);
 }
@@ -167,78 +200,34 @@ body {
 .bar-track { background-color: var(--surface-secondary); }
 
 .btn-paypal-primary {
-  background-color: var(--paypal-cerulean);
+  background-color: var(--btn-primary-bg);
   color: var(--btn-primary-fg);
+  border: 1px solid transparent;
   border-radius: var(--radius-control);
-  box-shadow: var(--shadow-primary);
-  transition: transform 120ms var(--ease-bento), background-color 150ms ease;
+  box-shadow: var(--shadow-btn);
+  transition: transform 150ms var(--ease-bento), background-color 150ms var(--ease-bento), opacity 150ms var(--ease-bento);
 }
-.btn-paypal-primary:hover { background-color: var(--paypal-navy); }
+.btn-paypal-primary:hover { background-color: var(--btn-primary-hover); }
 
-.specular-sweep-sheen {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 36%;
-  background-color: color-mix(in oklab, var(--btn-primary-fg) 24%, transparent);
-  box-shadow: 0 0 12px color-mix(in oklab, var(--btn-primary-fg) 32%, transparent);
-  transform: translateX(-160%) skewX(-20deg);
-  transition: transform 550ms var(--ease-bento);
-  pointer-events: none;
-}
-.specular-sweep-btn:hover .specular-sweep-sheen,
-.specular-sweep-btn:active .specular-sweep-sheen {
-  transform: translateX(340%) skewX(-20deg);
-}
+.specular-sweep-sheen { display: none; }
 
 @keyframes talos-scanline-sweep {
-  0% { transform: translateY(-100%); opacity: 0.85; }
-  80% { opacity: 0.55; }
-  100% { transform: translateY(420%); opacity: 0; }
+  0% { transform: translateY(0%); opacity: 0.5; }
+  100% { transform: translateY(360%); opacity: 0; }
 }
 .laser-scanline-bar {
-  background-color: color-mix(in oklab, var(--accent) 42%, transparent);
-  box-shadow: 0 0 14px color-mix(in oklab, var(--accent) 62%, transparent);
-  animation: talos-scanline-sweep 850ms var(--ease-bento) 1 forwards;
+  background-color: var(--border-hover);
+  animation: talos-scanline-sweep 480ms var(--ease-bento) 1 forwards;
 }
 
-.btn-sovereign-emerald {
-  background: color-mix(in oklab, var(--emerald) 22%, var(--surface-secondary));
-  color: var(--btn-emerald-fg);
-  border-radius: var(--radius-control);
-  box-shadow: var(--shadow-btn);
-  transition: transform 120ms var(--ease-bento), background-color 150ms ease;
+.btn-sovereign-emerald, .btn-sovereign-crimson, .btn-sovereign-amber, .btn-sovereign-neutral {
+  background-color: var(--surface-secondary); color: var(--foreground);
+  border: 1px solid var(--border-hairline); border-radius: var(--radius-control); box-shadow: var(--shadow-btn);
+  transition: transform 150ms var(--ease-bento), background-color 150ms var(--ease-bento), border-color 150ms var(--ease-bento);
 }
-.btn-sovereign-crimson {
-  background: color-mix(in oklab, var(--crimson) 22%, var(--surface-secondary));
-  color: var(--btn-crimson-fg);
-  border-radius: var(--radius-control);
-  box-shadow: var(--shadow-btn);
-  transition: transform 120ms var(--ease-bento), background-color 150ms ease;
-}
-.btn-sovereign-amber {
-  background: color-mix(in oklab, var(--amber) 22%, var(--surface-secondary));
-  color: var(--btn-amber-fg);
-  border-radius: var(--radius-control);
-  box-shadow: var(--shadow-btn);
-  transition: transform 120ms var(--ease-bento), background-color 150ms ease;
-}
-.btn-sovereign-neutral {
-  background-color: var(--surface-secondary);
-  color: var(--foreground);
-  border-radius: var(--radius-control);
-  box-shadow: var(--shadow-neutral-btn);
-  transition: transform 120ms var(--ease-bento), background-color 150ms ease;
-}
-.bento-drawer-transition {
-  transition: grid-template-rows 450ms var(--ease-bento), flex-grow 650ms var(--ease-bento), opacity 300ms ease;
-}
+.btn-sovereign-neutral:hover { border-color: var(--border-hover); background-color: color-mix(in oklab, var(--foreground) 5%, var(--surface-secondary)); }
+.btn-sovereign-emerald:hover { border-color: color-mix(in oklab, var(--emerald) 45%, var(--border-hairline)); background-color: color-mix(in oklab, var(--emerald) 10%, var(--surface-secondary)); }
+.btn-sovereign-crimson:hover { border-color: color-mix(in oklab, var(--crimson) 45%, var(--border-hairline)); background-color: color-mix(in oklab, var(--crimson) 10%, var(--surface-secondary)); }
+.btn-sovereign-amber:hover { border-color: color-mix(in oklab, var(--amber) 45%, var(--border-hairline)); background-color: color-mix(in oklab, var(--amber) 10%, var(--surface-secondary)); }
+.bento-drawer-transition { transition: grid-template-rows 380ms var(--ease-bento), opacity 240ms var(--ease-bento), border-color 160ms var(--ease-bento), background-color 160ms var(--ease-bento); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .bento-drawer-transition, .btn-paypal-primary, .btn-sovereign-emerald,
-  .btn-sovereign-crimson, .btn-sovereign-amber, .btn-sovereign-neutral, .specular-sweep-sheen {
-    transition: opacity 150ms ease;
-    transform: none !important;
-  }
-  .laser-scanline-bar { animation: none !important; opacity: 0; }
-}

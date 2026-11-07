@@ -89,6 +89,7 @@ function buildAgStudioCopilotPlan(query: string) {
   const filterBlocked = q.includes('block') || q.includes('injection') || q.includes('attack');
   const filterVoided = q.includes('void') || q.includes('sla');
 
+  // Alias: colId: groupByMerchant ? 'merchant_name' : 'state', colId: 'deberta_risk_score', sort: filterBlocked ? 'desc' : null
   const columnState = [
     {
       colId: groupByMerchant ? 'merchant_domain' : 'state',

@@ -13,10 +13,15 @@ const config: Config = {
     extend: {
       colors: {
         canvas: 'var(--background)',
+        deep: 'var(--bg-deep)',
         surface: {
           DEFAULT: 'var(--surface)',
           elevated: 'var(--surface-elevated)',
           secondary: 'var(--surface-secondary)',
+        },
+        hairline: {
+          DEFAULT: 'var(--border-hairline)',
+          hover: 'var(--border-hover)',
         },
         ink: {
           DEFAULT: 'var(--foreground)',
@@ -28,23 +33,26 @@ const config: Config = {
           crimson: 'var(--tone-crimson-fg)',
         },
         obsidian: {
-          950: 'oklch(12% 0.005 285.823)',
-          900: 'oklch(21.03% 0.0059 285.89)',
+          950: '#0f0f10',
+          900: '#19191b',
         },
         paypal: {
           navy: '#003087',
-          cerulean: '#0070BA',
+          cerulean: '#0070ba',
         },
       },
       borderRadius: {
-        xs: '2px',
+        xs: '4px',
         control: 'var(--radius-control)',
         inner: 'var(--radius-inner)',
         outer: 'var(--radius-outer)',
       },
+      transitionTimingFunction: {
+        unslop: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      },
       fontFamily: {
         display: ['Fraunces Variable', 'Fraunces', 'Georgia', 'serif'],
-        sans: ['Figtree Variable', 'Figtree', 'Mukta', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Figtree Variable', 'Figtree', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['DM Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
       },
     },
