@@ -1,6 +1,6 @@
 // Demo personas for investor / judge 1-click PayPal Sandbox onboarding
 
-export type DemoPersonaId = 'investor' | 'cfo' | 'security';
+export type DemoPersonaId = 'procurement' | 'builder' | 'cfo';
 export type AgentRuntimeId = 'claude-37' | 'openai-operator' | 'custom-mcp';
 
 export interface DemoPersona {
@@ -28,36 +28,36 @@ export interface AuthSession {
 
 export const DEMO_PERSONAS: DemoPersona[] = [
   {
-    id: 'investor',
-    title: 'Investor / VC Pitch Mode',
-    name: 'Jordan Blake',
-    role: 'Partner · Clearwater Ventures',
-    email: 'jordan.blake@clearwater.vc',
-    summary: 'Opens the guided 60-second storyline with CFO unit economics highlighted.',
-    routeAfterLogin: '/story',
-    highlight: 'CFO economics + live simulation',
+    id: 'procurement',
+    title: 'Procurement Head',
+    name: 'Meera Kapoor',
+    role: 'Head of Procurement, Halden Audio Group',
+    email: 'meera.kapoor@halden.example',
+    summary: 'Sets the agent allowance, then watches it buy studio gear inside the rules.',
+    routeAfterLogin: '/mandates',
+    highlight: 'Allowance rules and live buying',
+    defaultAllowanceUsd: 300,
+  },
+  {
+    id: 'builder',
+    title: 'Indie AI Builder',
+    name: 'Tomas Reyes',
+    role: 'Builds shopping agents on MCP',
+    email: 'tomas.reyes@agentlab.example',
+    summary: 'Opens the live simulator to throw prompt injections and price traps at the agent.',
+    routeAfterLogin: '/simulator',
+    highlight: 'Simulator, hazards and X-Ray',
     defaultAllowanceUsd: 300,
   },
   {
     id: 'cfo',
-    title: 'Enterprise CFO',
-    name: 'Alex Rivera',
-    role: 'CFO · Acme Studio',
-    email: 'alex.rivera@acme.studio',
-    summary: 'Preloads the $300 allowance and live PayPal Escrow blotter.',
-    routeAfterLogin: '/command-center',
-    highlight: '$300 allowance + escrow blotter',
-    defaultAllowanceUsd: 300,
-  },
-  {
-    id: 'security',
-    title: 'Security Architect',
-    name: 'Dr. Priya Nair',
-    role: 'Principal Security Architect',
-    email: 'priya.nair@acme.studio',
-    summary: 'Preloads the Red-Team simulator with technical proof drawers ready.',
-    routeAfterLogin: '/simulator',
-    highlight: 'Red-Team simulator + proof drawers',
+    title: 'CFO Auditor',
+    name: 'Grace Okafor',
+    role: 'CFO, Halden Audio Group',
+    email: 'grace.okafor@halden.example',
+    summary: 'Lands in the escrow ledger to audit every hold, capture, refund and blocked attack.',
+    routeAfterLogin: '/blotter',
+    highlight: 'Escrow ledger and AI copilot',
     defaultAllowanceUsd: 300,
   },
 ];
@@ -98,7 +98,7 @@ export function buildPersonaSession(persona: DemoPersona): AuthSession {
     displayName: persona.name,
     email: persona.email,
     workspace: persona.role,
-    agentRuntime: persona.id === 'security' ? 'custom-mcp' : 'claude-37',
+    agentRuntime: persona.id === 'builder' ? 'custom-mcp' : 'claude-37',
     allowanceUsd: persona.defaultAllowanceUsd,
     oauthState: 'connected',
   };

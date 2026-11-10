@@ -25,8 +25,8 @@ export function PayPalAuthPortal({ mode }: PayPalAuthPortalProps) {
     completeOAuthHandshake,
     updateAuthSession,
   } = useTalosClearing();
-  const [email, setEmail] = useState('alex.rivera@acme.studio');
-  const [workspace, setWorkspace] = useState('Acme Studio · PayPal Sandbox');
+  const [email, setEmail] = useState('meera.kapoor@halden.example');
+  const [workspace, setWorkspace] = useState('Halden Audio Group, PayPal Sandbox');
   const [agentRuntime, setAgentRuntime] = useState<AgentRuntimeId>('claude-37');
   const [allowanceUsd, setAllowanceUsd] = useState(300);
   const [handshaking, setHandshaking] = useState(false);
@@ -77,7 +77,7 @@ export function PayPalAuthPortal({ mode }: PayPalAuthPortalProps) {
               className="paypal-feature-card text-left space-y-3 active:scale-[0.99] transition-[transform,opacity] duration-150"
             >
               <span className="w-10 h-10 icon-medallion-paypal" aria-hidden="true">
-                {persona.id === 'security' ? (
+                {persona.id === 'builder' ? (
                   <KeyRound className="w-5 h-5" strokeWidth={1.75} />
                 ) : persona.id === 'cfo' ? (
                   <Wallet className="w-5 h-5" strokeWidth={1.75} />
@@ -133,7 +133,7 @@ export function PayPalAuthPortal({ mode }: PayPalAuthPortalProps) {
               type="text"
               value={workspace}
               onChange={(e) => setWorkspace(e.target.value)}
-              placeholder="Acme Studio · PayPal Sandbox"
+              placeholder="Halden Audio Group, PayPal Sandbox"
             />
           </label>
 

@@ -4,6 +4,8 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import TalosLandingPage from '../app/page';
+import BlotterChapterPage from '../app/blotter/page';
+import SlaChapterPage from '../app/sla/page';
 import { FragmentSpatialHero3D } from '../components/FragmentSpatialHero3D';
 import { PayPalStepUpModal } from '../components/PayPalStepUpModal';
 import { PoisonedStoreSim } from '../components/PoisonedStoreSim';
@@ -43,17 +45,20 @@ describe('TALOS Investor Storyline — Tier 1 Feature Coverage Part B (F-08 thro
     expect(stepUpHtml).toContain('Approve with PayPal');
   });
 
-  it('F-11 (R2.4): presents Interactive Scene 3 "The CFO Dashboard (Where the Money Lives)" with revenue model bar, blotter, and SLA timeline', () => {
+  it('F-11 (R2.4): presents the PayPal business model on / and routes CFO tooling to /blotter and /sla', () => {
     const landingHtml = renderToStaticMarkup(<TalosLandingPage />);
+    const blotterHtml = renderToStaticMarkup(<BlotterChapterPage />);
+    const slaHtml = renderToStaticMarkup(<SlaChapterPage />);
 
-    expect(landingHtml).toContain('data-testid="storyline-scene-3-cfo"');
-    expect(landingHtml).toContain('The CFO Dashboard (Where the Money Lives)');
-    expect(landingHtml).toContain('data-testid="cfo-paypal-revenue-bar"');
-    expect(landingHtml).toContain('How PayPal Makes Money · Escrow Float');
-    expect(landingHtml).toContain('Verified Agentic Checkout Take-Rate');
-    expect(landingHtml).toContain('$0 Manual Dispute Operations Cost');
-    expect(landingHtml).toContain('data-testid="ag-studio-blotter"');
-    expect(landingHtml).toContain('data-testid="bryntum-sla-board"');
+    expect(landingHtml).toContain('data-testid="investor-business-pitch-strip"');
+    expect(landingHtml).toContain('Why PayPal and enterprises win');
+    expect(landingHtml).toContain('Escrow float yield');
+    expect(landingHtml).toContain('Unlocked agentic spend');
+    expect(landingHtml).toContain('Manual dispute overhead');
+    expect(blotterHtml).toContain('data-testid="chapter-route-blotter"');
+    expect(blotterHtml).toContain('data-testid="ag-studio-blotter"');
+    expect(slaHtml).toContain('data-testid="chapter-route-sla"');
+    expect(slaHtml).toContain('data-testid="bryntum-sla-board"');
   });
 
   it('F-12, F-13, F-14 (R3): enforces Colour Psychology tokens, Gradient tokens, Typography scale, and Design System documentation', () => {

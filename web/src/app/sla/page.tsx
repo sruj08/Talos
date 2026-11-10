@@ -1,14 +1,9 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, UserCheck } from 'lucide-react';
+import { AppShell } from '../../components/shell/AppShell';
+import { LastRunBanner } from '../../components/shell/LastRunBanner';
 import { BryntumSlaBoard } from '../../components/BryntumSlaBoard';
-import {
-  SovereignStoryChapterDock,
-  SovereignTopNavBar,
-} from '../../components/SovereignHeaderAndDock';
-import { WorkspaceTabRail } from '../../components/WorkspaceTabRail';
 import { useTalosClearing } from '../../context/TalosClearingContext';
 
 export default function SlaChapterPage() {
@@ -18,34 +13,15 @@ export default function SlaChapterPage() {
   }, [setWorkspaceTab]);
 
   return (
-    <div className="min-h-screen sovereign-canvas flex flex-col justify-between" data-testid="chapter-route-sla">
-      <SovereignTopNavBar />
-      <main className="mx-auto max-w-[1360px] w-full px-4 sm:px-6 py-8 pb-16 space-y-6 flex-1">
-        <WorkspaceTabRail />
-        <div id="chapter-sla">
-          <BryntumSlaBoard />
-        </div>
-        <div className="paypal-feature-card flex flex-wrap items-center justify-between gap-4">
-          <Link
-            href="/blotter"
-            data-testid="sla-prev-page-btn"
-            className="btn-paypal-secondary inline-flex items-center gap-2 px-5 py-2.5 text-xs font-bold"
-          >
-            <ArrowLeft className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
-            <span>Previous Page: Escrow Ledger</span>
-          </Link>
-          <Link
-            href="/step-up"
-            data-testid="sla-next-page-btn"
-            className="btn-paypal-primary inline-flex items-center gap-2 px-6 py-2.5 text-xs font-bold"
-          >
-            <UserCheck className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
-            <span>Next Page: Step-Up Co-Sign</span>
-            <ArrowRight className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
-          </Link>
-        </div>
-      </main>
-      <SovereignStoryChapterDock />
-    </div>
+    <AppShell
+      testId="chapter-route-sla"
+      title="Delivery SLA and auto-refund"
+      subtitle="29-day PayPal holds against 48-hour carrier deadlines. Push a shipment past its deadline and the refund fires."
+    >
+      <LastRunBanner focus="sla" />
+      <div id="chapter-sla">
+        <BryntumSlaBoard />
+      </div>
+    </AppShell>
   );
 }

@@ -208,12 +208,12 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
               type="button"
               onClick={() => { setSelectedEscrowId(row.escrow_id); setProofDrawerOpen(true); }}
               data-testid={`select-row-${row.escrow_id}`}
-              className={`h-9 inline-flex items-center gap-2 px-3 py-2 text-xs tabular-nums rounded-control whitespace-nowrap active:scale-[0.98] ${
+              className={`h-9 max-w-full overflow-hidden inline-flex items-center gap-2 px-3 py-2 text-xs tabular-nums rounded-control whitespace-nowrap active:scale-[0.98] ${
                 isSelected ? 'tone-paypal text-ink font-medium' : 'btn-sovereign-neutral text-ink-secondary'
               }`}
             >
               <span className={`w-1.5 h-1.5 rounded-xs ${dotClass}`} aria-hidden="true" />
-              <span data-testid={`blotter-row-${row.escrow_id}`} className="font-mono">
+              <span data-testid={`blotter-row-${row.escrow_id}`} className="font-mono truncate min-w-0">
                 {row.escrow_id} ({row.merchant_domain}): {row.state} ({formatUsdInr(row.amount_cents)})
               </span>
               <svg width="16" height="8" viewBox="0 0 24 10" className="sr-only" data-testid={`spread-sparkline-${row.escrow_id}`} aria-hidden="true">

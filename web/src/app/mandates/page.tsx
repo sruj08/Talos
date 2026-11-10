@@ -1,51 +1,33 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, ShieldAlert } from 'lucide-react';
+import { AppShell } from '../../components/shell/AppShell';
 import { MandateStudio } from '../../components/MandateStudio';
-import {
-  SovereignStoryChapterDock,
-  SovereignTopNavBar,
-} from '../../components/SovereignHeaderAndDock';
-import { WorkspaceTabRail } from '../../components/WorkspaceTabRail';
+import { AllowanceCardPreview } from '../../components/mandate/AllowanceCardPreview';
 import { useTalosClearing } from '../../context/TalosClearingContext';
+import { useSimulatorRun } from '../../context/SimulatorRunContext';
 
 export default function MandatesChapterPage() {
   const { setWorkspaceTab } = useTalosClearing();
+  const { setAllowance } = useSimulatorRun();
   React.useEffect(() => {
     setWorkspaceTab('ALLOWANCE');
   }, [setWorkspaceTab]);
 
   return (
-    <div className="min-h-screen sovereign-canvas flex flex-col justify-between" data-testid="chapter-route-mandates">
-      <SovereignTopNavBar />
-      <main className="mx-auto max-w-[1360px] w-full px-4 sm:px-6 py-8 pb-16 space-y-6 flex-1">
-        <WorkspaceTabRail />
+    <AppShell
+      testId="chapter-route-mandates"
+      title="Spending allowance"
+      subtitle="Set the rules your agent can never break: budget, fair-price spread, categories and delivery deadline."
+    >
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] gap-6 items-start">
         <div id="chapter-mandates">
-          <MandateStudio />
+          <MandateStudio onMandateSigned={(m) => setAllowance(m.max_amount_cents / 100)} />
         </div>
-        <div className="paypal-feature-card flex flex-wrap items-center justify-between gap-4">
-          <Link
-            href="/story"
-            data-testid="mandates-prev-page-btn"
-            className="btn-paypal-secondary inline-flex items-center gap-2 px-5 py-2.5 text-xs font-bold"
-          >
-            <ArrowLeft className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
-            <span>Previous Page: Storyline</span>
-          </Link>
-          <Link
-            href="/simulator"
-            data-testid="mandates-next-page-btn"
-            className="btn-paypal-primary inline-flex items-center gap-2 px-6 py-2.5 text-xs font-bold"
-          >
-            <ShieldAlert className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
-            <span>Next Page: Red-Team Arena</span>
-            <ArrowRight className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
-          </Link>
+        <div className="xl:sticky xl:top-20">
+          <AllowanceCardPreview />
         </div>
-      </main>
-      <SovereignStoryChapterDock />
-    </div>
+      </div>
+    </AppShell>
   );
 }

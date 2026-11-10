@@ -88,7 +88,7 @@ export function SideBySideAgentComparison({
               data-testid="toggle-prompt-injection"
               aria-pressed={params.injectHiddenPrompt}
               onClick={togglePromptInjection}
-              className={`h-8 inline-flex items-center gap-1.5 px-3 text-xs font-bold rounded-pill transition-colors whitespace-nowrap ${
+              className={`min-h-8 max-w-full inline-flex items-center gap-1.5 px-3 text-xs font-bold rounded-pill transition-colors text-left ${
                 params.injectHiddenPrompt ? 'tone-crimson text-ink' : 'btn-sovereign-neutral text-ink-secondary'
               }`}
             >

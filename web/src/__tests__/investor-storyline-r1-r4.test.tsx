@@ -65,12 +65,14 @@ describe('TALOS Investor Storyline — Tier 1 Feature Coverage Part A (F-01 thro
     expect(heroHtml).toContain('+$231.00 Saved / Order');
   });
 
-  it('F-03 (R1.3): surfaces SideBySideAgentComparison directly in Scene 2 of the main landing page flow', () => {
+  it('F-03 (R1.3): surfaces the unprotected vs protected comparison on the landing page and in the arena', () => {
     const landingHtml = renderToStaticMarkup(<TalosLandingPage />);
     const comparisonHtml = renderToStaticMarkup(<SideBySideAgentComparison />);
 
-    expect(landingHtml).toContain('data-testid="storyline-scene-2-shop"');
-    expect(landingHtml).toContain('data-testid="side-by-side-agent-comparison"');
+    expect(landingHtml).toContain('data-testid="landing-lane-unprotected"');
+    expect(landingHtml).toContain('data-testid="landing-lane-protected"');
+    expect(landingHtml).toContain('Unprotected agent');
+    expect(landingHtml).toContain('TALOS + PayPal agent');
     expect(comparisonHtml).toContain('Left: Normal AI Agent (Unprotected)');
     expect(comparisonHtml).toContain('Loses $480');
     expect(comparisonHtml).toContain('Right: TALOS + PayPal Agent (Protected)');
@@ -147,12 +149,12 @@ describe('TALOS Investor Storyline — Tier 1 Feature Coverage Part A (F-01 thro
     expect(planContent).toContain('The CFO Dashboard (Where the Money Lives)');
   });
 
-  it('F-07 (R2.2): presents Interactive Scene 1 as "Step 1: Give Your AI a Spending Allowance ($300 Max)" in plain English', () => {
+  it('F-07 (R2.2): presents the allowance pillar on / and the full studio as "Step 1: Give Your AI a Spending Allowance ($300 Max)" in plain English', () => {
     const landingHtml = renderToStaticMarkup(<TalosLandingPage />);
     const mandateHtml = renderToStaticMarkup(<MandateStudio />);
 
-    expect(landingHtml).toContain('data-testid="storyline-scene-1-rules"');
-    expect(landingHtml).toContain('Step 1: Give Your AI a Spending Allowance ($300 Max)');
+    expect(landingHtml).toContain('Cryptographic spending allowance');
+    expect(landingHtml).toContain('$300');
     expect(mandateHtml).toContain('Step 1: Give Your AI a Spending Allowance ($300 Max)');
     expect(mandateHtml).toContain('Lock $300 Spending Allowance');
     expect(DEFAULT_MANDATE_VALUES.maxAmountCents).toBe(30000);

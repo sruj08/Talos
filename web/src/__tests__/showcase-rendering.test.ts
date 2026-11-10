@@ -176,20 +176,21 @@ describe('TALOS Showcase Property-Based & Rendering Suite — Properties 4..5 (R
       const landingHtml = renderToStaticMarkup(React.createElement(TalosLandingPage));
       expect(landingHtml).toContain('data-testid="talos-landing-page"');
       expect(landingHtml).toContain('data-testid="startup-landing-hero"');
-      expect(landingHtml).toContain('data-testid="fragment-spatial-hero-3d"');
+      expect(landingHtml).toContain('data-testid="hero-agent-preview"');
       expect(landingHtml).toContain('data-testid="investor-business-pitch-strip"');
-      expect(landingHtml).toContain('data-testid="storyline-scene-1-rules"');
-      expect(landingHtml).toContain('data-testid="storyline-scene-2-shop"');
-      expect(landingHtml).toContain('data-testid="side-by-side-agent-comparison"');
-      expect(landingHtml).toContain('data-testid="storyline-scene-3-cfo"');
-      expect(landingHtml).toContain('data-testid="ag-studio-blotter"');
-      expect(landingHtml).toContain('data-testid="bryntum-sla-board"');
+      expect(landingHtml).toContain('data-testid="landing-scenario-preview"');
+      expect(landingHtml).toContain('data-testid="talos-pillar-1"');
+      expect(landingHtml).toContain('data-testid="talos-pillar-4"');
+      expect(landingHtml).toContain('data-testid="landing-integrations"');
+      expect(landingHtml).toContain('data-testid="landing-launch-banner"');
+      expect(landingHtml).not.toContain('data-testid="ag-studio-blotter"');
       expect(landingHtml).not.toContain('data-testid="kpi-header-bar"');
 
       const pageHtml = renderToStaticMarkup(React.createElement(TALOSCommandCenterPage));
       expect(pageHtml).toContain('data-testid="sovereign-telemetry-header"');
       expect(pageHtml).toContain('data-testid="kpi-header-bar"');
       expect(pageHtml).toContain('data-testid="side-by-side-agent-comparison"');
+      expect(pageHtml).toContain('data-testid="operator-suite"');
       expect(pageHtml).not.toContain('data-testid="startup-landing-hero"');
     });
   });

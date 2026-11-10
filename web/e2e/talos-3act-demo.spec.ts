@@ -178,20 +178,22 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
       await expect(page.getByTestId('blotter-row-esc-901-trap')).toBeVisible();
       await page.getByTestId('blotter-status-tab-ALL').click();
 
-      // Verify theme toggle (default light -> dark -> light)
-      await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+      // Verify theme toggle round-trips (product workspace defaults to the high-contrast dark theme)
+      const html = page.locator('html');
+      const initialTheme = (await html.getAttribute('data-theme')) === 'light' ? 'light' : 'dark';
+      const flipped = initialTheme === 'light' ? 'dark' : 'light';
       await page.getByTestId('theme-toggle-btn').click();
-      await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+      await expect(html).toHaveAttribute('data-theme', flipped);
       await page.getByTestId('theme-toggle-btn').click();
-      await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+      await expect(html).toHaveAttribute('data-theme', initialTheme);
 
       // Verify dedicated chapter routes & bottom story dock cross-route navigation
       await page.goto('/mandates');
       await expect(page.getByTestId('chapter-route-mandates')).toBeVisible();
       await expect(page.getByTestId('mandate-studio')).toBeVisible();
-      await page.getByTestId('dock-chapter-chapter_2_arena').click();
+      await page.getByTestId('app-nav-simulator').click();
       await expect(page.getByTestId('chapter-route-simulator')).toBeVisible();
-      await expect(page.getByTestId('poisoned-store-sim')).toBeVisible();
+      await expect(page.getByTestId('live-agent-simulator')).toBeVisible();
 
       await page.goto('/blotter');
       await expect(page.getByTestId('chapter-route-blotter')).toBeVisible();
@@ -204,42 +206,6 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
       await page.goto('/step-up');
       await expect(page.getByTestId('chapter-route-step-up')).toBeVisible();
       await expect(page.getByTestId('paypal-step-up-modal')).toBeVisible();
-    }
-  );
-
-  test(
-    'Act 5: 4-Stage Investor Storyline on Landing Page (/) & Multi-Page Navigation',
-    { tag: ['@critical', '@e2e', '@showcase'] },
-    async ({ page }) => {
-      await page.goto('/');
-      await expect(page.getByTestId('talos-landing-page')).toBeVisible();
-
-      const hero = page.getByTestId('startup-landing-hero');
-      await expect(hero).toBeVisible();
-      await expect(hero).toContainText('Your AI Agent Has Your Wallet. TALOS Makes Sure It Never Gets Scammed.');
-      await expect(page.getByTestId('landing-try-demo-cta')).toContainText('Watch Live 60-Second Simulation');
-      await expect(page.getByTestId('investor-business-pitch-strip')).toBeVisible();
-      await expect(page.getByTestId('fragment-spatial-hero-3d')).toBeVisible();
-
-      // Verify Scene 1, Scene 2 (Side-by-Side Comparison + 3 Scenarios), and Scene 3 (CFO Dashboard) on /
-      await expect(page.getByTestId('storyline-scene-1-rules')).toContainText('Step 1: Give Your AI a Spending Allowance ($300 Max)');
-      await expect(page.getByTestId('storyline-scene-2-shop')).toContainText('Watch the AI Shop (3 Real-World Scenarios)');
-      await expect(page.getByTestId('side-by-side-agent-comparison')).toBeVisible();
-      await expect(page.getByTestId('storyline-scene-3-cfo')).toContainText('The CFO Dashboard (Where the Money Lives)');
-      await expect(page.getByTestId('ag-studio-blotter')).toBeVisible();
-      await expect(page.getByTestId('bryntum-sla-board')).toBeVisible();
-
-      // Verify On-Demand Technical Proof Drawer opens when clicked
-      await expect(page.getByTestId('mandate-technical-proof-drawer')).toHaveAttribute('data-proof-open', 'false');
-      await page.getByTestId('btn-mandate-technical-proof').click();
-      await expect(page.getByTestId('mandate-technical-proof-drawer')).toHaveAttribute('data-proof-open', 'true');
-
-      // Trigger Scenario 3 on / and verify cross-page state persistence when jumping to /sla
-      await page.getByTestId('btn-scenario-act3').click();
-      await page.getByTestId('btn-jump-to-ledger').click();
-      await expect(page).toHaveURL(/\/sla$/);
-      await expect(page.getByTestId('bryntum-badge-esc-903-scarlett')).toContainText('PAYPAL_VOIDED');
-      await expect(page.getByTestId('downstream-phase-esc-903-scarlett')).toContainText('LOCKED IN CRIMSON');
     }
   );
 });

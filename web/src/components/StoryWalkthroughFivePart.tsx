@@ -178,7 +178,7 @@ export function StoryWalkthroughFivePart({ onSimulateStage }: StoryWalkthroughFi
               type="button"
               data-testid="story-stage-simulate-btn"
               onClick={() => triggerLiveStageAction(activeStage)}
-              className="btn-paypal-primary h-11 inline-flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-bold whitespace-nowrap"
+              className="btn-paypal-primary min-h-11 max-w-full inline-flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-bold text-left sm:whitespace-nowrap"
             >
               <Play className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
               <span>{activeStage.ctaLabel}</span>
