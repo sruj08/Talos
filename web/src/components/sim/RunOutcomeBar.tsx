@@ -27,7 +27,7 @@ export function RunOutcomeBar({ outcome }: { outcome: RunOutcome }) {
       initial={reduce ? false : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: 'spring', bounce: 0, duration: 0.45 }}
-      className={`tx-card p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6 ${protectedRun ? 'shadow-[inset_4px_0_0_0_#0A7A3D]' : 'shadow-[inset_4px_0_0_0_#D9360B]'}`}
+      className={`tx-card p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6`}
       data-testid="sim-run-outcome"
       data-outcome-kind={outcome.kind}
       aria-live="polite"

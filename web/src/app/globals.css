@@ -131,11 +131,8 @@ html[data-theme='dark'] {
     line-height: 1.1;
     font-weight: 600;
   }
-  code, pre, .font-mono, .tabular-nums {
-    font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0em;
-  }
+  code, pre, .font-mono { font-family: var(--font-mono); letter-spacing: 0em; }
+  code, pre, .font-mono, .tabular-nums { font-variant-numeric: tabular-nums; }
 }
 
 /* Explicit ink utilities — never leave text on undefined Tailwind colors */
@@ -173,10 +170,10 @@ html[data-theme='dark'] {
 .sovereign-field:focus-visible, .paypal-input:focus-visible { outline: none; border-color: #0070E0; box-shadow: 0 0 0 2px rgba(0, 112, 224, 0.25); }
 .sovereign-pill { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 6px 12px; border-radius: var(--radius-md); background: var(--surface-well); border: 1px solid var(--border); color: var(--text-secondary); font-size: 12px; font-weight: 500; }
 
-.tone-paypal { background-color: var(--surface-well); border-radius: var(--radius-md); border: 0; padding: 20px 22px 20px 26px; box-shadow: inset 6px 0 0 0 #0070E0; }
-.tone-emerald { background-color: var(--surface-well); border-radius: var(--radius-md); border: 0; padding: 20px 22px 20px 26px; box-shadow: inset 6px 0 0 0 #0A7A3D; }
-.tone-crimson { background-color: var(--surface-well); border-radius: var(--radius-md); border: 0; padding: 20px 22px 20px 26px; box-shadow: inset 6px 0 0 0 #D9360B; }
-.tone-amber { background-color: var(--surface-well); border-radius: var(--radius-md); border: 0; padding: 20px 22px 20px 26px; box-shadow: inset 6px 0 0 0 #FFB600; }
+.tone-paypal { background-color: rgba(0, 112, 224, 0.06); border-radius: var(--radius-md); border: 0; padding: 16px 20px; box-shadow: none; }
+.tone-emerald { background-color: rgba(10, 122, 61, 0.07); border-radius: var(--radius-md); border: 0; padding: 16px 20px; box-shadow: none; }
+.tone-crimson { background-color: rgba(217, 54, 11, 0.06); border-radius: var(--radius-md); border: 0; padding: 16px 20px; box-shadow: none; }
+.tone-amber { background-color: rgba(255, 182, 0, 0.12); border-radius: var(--radius-md); border: 0; padding: 16px 20px; box-shadow: none; }
 
 .dot-paypal { background-color: #0070E0; }
 .dot-emerald { background-color: #0A7A3D; }

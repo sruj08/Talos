@@ -60,7 +60,7 @@ export function MandateStudio({ initialValues = DEFAULT_MANDATE_VALUES, onMandat
             </span>
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-xs text-ink-paypal font-bold">Scene 01 · Set the Rules</span>
+                <span className="text-xs text-ink-paypal font-bold">Scene 01 · Set the Rules</span>
               </div>
               <h2 className="paypal-title-sm text-ink">Step 1: Give Your AI a Spending Allowance ($300 Max)</h2>
               <p data-subhead="true" className="paypal-caption text-ink-secondary">
@@ -70,7 +70,7 @@ export function MandateStudio({ initialValues = DEFAULT_MANDATE_VALUES, onMandat
           </div>
           <span
             data-testid="mandate-status-badge"
-            className="inline-flex items-center gap-2 font-mono text-xs text-ink-secondary tabular-nums whitespace-nowrap px-3.5 py-1.5 rounded-pill sovereign-subcard"
+            className="inline-flex items-center gap-2 text-xs text-ink-secondary tabular-nums whitespace-nowrap px-3.5 py-1.5 rounded-pill sovereign-subcard"
           >
             <span className="w-1.5 h-1.5 rounded-xs dot-emerald" aria-hidden="true" />
             <span>{signedMandate.status}</span>
@@ -191,10 +191,10 @@ export function MandateStudio({ initialValues = DEFAULT_MANDATE_VALUES, onMandat
         >
           <div className="flex items-center justify-between pb-1">
             <div>
-              <div className="font-mono text-xs text-ink font-bold">Mandate Clearing Studio · Ed25519 Hardware KYA Seal</div>
+              <div className="text-xs text-ink font-bold">Mandate Clearing Studio · Ed25519 Hardware KYA Seal</div>
               <div className="font-mono text-xs text-ink-muted">Key ID: kya-agent-talos-01</div>
             </div>
-            <span className="font-mono text-xs text-ink-paypal font-bold tabular-nums">
+            <span className="text-xs text-ink-paypal font-bold tabular-nums">
               CAP {formatUsdInr(signedMandate.max_amount_cents)}
             </span>
           </div>

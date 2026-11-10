@@ -35,7 +35,7 @@ export function SovereignTopTelemetryBar() {
           </div>
 
           <div
-            className="sovereign-subcard px-4 py-2.5 flex flex-wrap items-center gap-3 text-xs font-mono rounded-pill"
+            className="sovereign-subcard px-4 py-2.5 flex flex-wrap items-center gap-3 text-xs rounded-pill"
             data-testid="paypal-2pc-pipeline-bar"
           >
             <span className="text-ink-muted">PayPal 2PC Pipeline:</span>
@@ -62,7 +62,7 @@ export function SovereignTopTelemetryBar() {
               <span className="w-12 h-12 icon-medallion-paypal" aria-hidden="true">
                 <ShieldCheck className="w-6 h-6" strokeWidth={1.6} />
               </span>
-              <span className="font-mono text-xs text-ink-emerald tabular-nums">+14% vs 30d</span>
+              <span className="text-xs text-ink-emerald tabular-nums">+14% vs 30d</span>
             </div>
             <div className="space-y-1">
               <div className="paypal-label text-ink-secondary">Protected GMV</div>
@@ -70,7 +70,7 @@ export function SovereignTopTelemetryBar() {
                 {hydrated ? (
                   <span className="inline-flex items-baseline gap-2">
                     <NumberFlow value={kpiMetrics.protectedGmvCents / 100} format={{ style: 'currency', currency: 'USD' }} />
-                    <span className="text-xs font-mono text-ink-muted">({kpiMetrics.protectedGmvUsd.split('(')[1] || '₹20,93,280)'}</span>
+                    <span className="text-xs text-ink-muted">({kpiMetrics.protectedGmvUsd.split('(')[1] || '₹20,93,280)'}</span>
                   </span>
                 ) : (
                   kpiMetrics.protectedGmvUsd
@@ -85,7 +85,7 @@ export function SovereignTopTelemetryBar() {
               <span className="w-12 h-12 icon-medallion-crimson" aria-hidden="true">
                 <ShieldAlert className="w-6 h-6" strokeWidth={1.6} />
               </span>
-              <span className="font-mono text-xs text-ink-secondary tabular-nums">100% recall</span>
+              <span className="text-xs text-ink-secondary tabular-nums">100% recall</span>
             </div>
             <div className="space-y-1">
               <div className="paypal-label text-ink-secondary">Blocked Prompt Injections</div>
@@ -108,7 +108,7 @@ export function SovereignTopTelemetryBar() {
               <span className="w-12 h-12 icon-medallion-emerald" aria-hidden="true">
                 <Scale className="w-6 h-6" strokeWidth={1.6} />
               </span>
-              <span className="font-mono text-xs text-ink-secondary tabular-nums">-380 bps</span>
+              <span className="text-xs text-ink-secondary tabular-nums">-380 bps</span>
             </div>
             <div className="space-y-1">
               <div className="paypal-label text-ink-secondary">Channel3 Savings</div>
@@ -116,7 +116,7 @@ export function SovereignTopTelemetryBar() {
                 {hydrated ? (
                   <span className="inline-flex items-baseline gap-2">
                     <NumberFlow value={kpiMetrics.channel3SavingsCents / 100} format={{ style: 'currency', currency: 'USD' }} />
-                    <span className="text-xs font-mono text-ink-muted">({kpiMetrics.channel3SavingsUsd.split('(')[1] || '₹3,46,080)'}</span>
+                    <span className="text-xs text-ink-muted">({kpiMetrics.channel3SavingsUsd.split('(')[1] || '₹3,46,080)'}</span>
                   </span>
                 ) : (
                   kpiMetrics.channel3SavingsUsd
@@ -131,7 +131,7 @@ export function SovereignTopTelemetryBar() {
               <span className="w-12 h-12 icon-medallion-amber" aria-hidden="true">
                 <Lock className="w-6 h-6" strokeWidth={1.6} />
               </span>
-              <span className="font-mono text-xs text-ink-secondary tabular-nums">29d honor</span>
+              <span className="text-xs text-ink-secondary tabular-nums">29d honor</span>
             </div>
             <div className="space-y-1">
               <div className="paypal-label text-ink-secondary">Active PayPal Authorizations</div>

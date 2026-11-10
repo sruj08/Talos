@@ -58,7 +58,7 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
           </span>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs text-ink-amber font-bold">Human Step-Up Guardrail</span>
+              <span className="text-xs text-ink-amber font-bold">Human Step-Up Guardrail</span>
             </div>
             <h2 className="paypal-title-sm text-ink">
               Approve with PayPal ($450 Big Order Step-Up)
@@ -78,7 +78,7 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
                 ? '[✖ REJECTED: PAYPAL_VOIDED]'
                 : '[⚡ STEP_UP_REQUIRED (> $300 CAP)]'
             }
-            className="inline-flex items-center gap-2 font-mono text-xs text-ink-secondary tabular-nums px-3.5 py-1.5 rounded-pill sovereign-subcard"
+            className="inline-flex items-center gap-2 text-xs text-ink-secondary tabular-nums px-3.5 py-1.5 rounded-pill sovereign-subcard"
           >
             <span className={`w-1.5 h-1.5 rounded-xs ${dotClass}`} aria-hidden="true" />
             <span>
@@ -141,25 +141,25 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
                     formatUsdInr(stepUp.amountCents)
                   )}
                 </strong>{' '}
-                <span className="font-mono text-ink-muted">
+                <span className="text-ink-muted">
                   [Allowance Cap: {formatUsdInr(stepUp.mandateCapCents)} (+{formatUsdInr(overageCents)} overage)]
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-ink-emerald" strokeWidth={1.75} aria-hidden="true" />
                 <span className="text-ink-muted">Firewall scan: </span>
-                <span className="font-mono text-ink-secondary">
+                <span className="text-ink-secondary">
                   PASSED ({stepUp.firewallRiskScore.toFixed(2)} risk, 0 hidden injections, {stepUp.firewallLatencyMs}ms)
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-ink-emerald" strokeWidth={1.75} aria-hidden="true" />
                 <span className="text-ink-muted">Fair-price check: </span>
-                <span className="font-mono text-ink-secondary">
+                <span className="text-ink-secondary">
                   VERIFIED FAIR PRICE ({formatUsdInr(stepUp.channel3MedianCents)} median, {stepUp.channel3SpreadBps} bps)
                 </span>
               </div>
-              <div role="status" aria-live="polite" data-testid="step-up-live-note" className="pt-1 font-mono text-ink-paypal font-bold">
+              <div role="status" aria-live="polite" data-testid="step-up-live-note" className="pt-1 text-ink-paypal font-bold">
                 {statusNote}
               </div>
             </div>
@@ -170,7 +170,7 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
                   type="button"
                   onClick={() => void handleApproveStepUp()}
                   data-testid="btn-step-up-cosign"
-                  className="btn-checkout-yellow h-11 flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold tabular-nums whitespace-nowrap active:scale-[0.98]"
+                  className="btn-checkout-yellow min-h-11 w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold tabular-nums text-center active:scale-[0.98]"
                 >
                   <Lock className="w-4 h-4" strokeWidth={2} aria-hidden="true" />
                   <span data-testid="copilot-confirm-stepup-btn">

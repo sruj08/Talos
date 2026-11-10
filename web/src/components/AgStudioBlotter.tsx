@@ -51,7 +51,7 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
           </span>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs text-ink-paypal font-bold">Scene 03 · Live Transaction Table</span>
+              <span className="text-xs text-ink-paypal font-bold">Scene 03 · Live Transaction Table</span>
             </div>
             <h2 className="paypal-title-sm text-ink">Escrow Settlement Ledger</h2>
             <p data-subhead="true" className="paypal-caption text-ink-secondary">
@@ -60,11 +60,11 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3 text-xs text-ink-secondary">
-          <span data-testid="blotter-group-summary" className="inline-flex items-center gap-2 font-mono text-ink-muted px-3 py-1.5 rounded-pill sovereign-subcard">
+          <span data-testid="blotter-group-summary" className="inline-flex items-center gap-2 text-ink-muted px-3 py-1.5 rounded-pill sovereign-subcard">
             <Table2 className="w-4 h-4 text-ink-muted" strokeWidth={1.5} aria-hidden="true" />
             <span>Grouped by firewall_verdict (AG Grid v33 Enterprise)</span>
           </span>
-          <span data-testid="blotter-saved-fraud-kpi" className="inline-flex items-center gap-2 font-mono text-ink-secondary tabular-nums px-3 py-1.5 rounded-pill tone-emerald">
+          <span data-testid="blotter-saved-fraud-kpi" className="inline-flex items-center gap-2 text-ink-secondary tabular-nums px-3 py-1.5 rounded-pill tone-emerald">
             <span className="w-1.5 h-1.5 rounded-xs dot-emerald" aria-hidden="true" />
             <span>Saved Fraud Volume: {formatUsdInr(48000)}</span>
           </span>
@@ -155,18 +155,18 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
                   statusTab === tab ? 'tone-paypal text-ink font-bold' : 'text-ink-muted hover:text-ink-secondary'
                 }`}
               >
-                <span className="font-mono">{tab}</span>
+                <span>{tab}</span>
               </button>
             ))}
           </div>
-          <div data-testid="ag-studio-copilot-status" className="font-mono text-xs text-ink-muted tabular-nums">
+          <div data-testid="ag-studio-copilot-status" className="text-xs text-ink-muted tabular-nums">
             {copilotStatus}
           </div>
         </div>
       </div>
 
       {showChartSummary ? (
-        <div data-testid="ag-studio-integrated-chart-summary" className="tone-emerald p-4 text-xs font-mono tabular-nums">
+        <div data-testid="ag-studio-integrated-chart-summary" className="tone-emerald p-4 text-xs tabular-nums">
           AG Charts Enterprise Cross-Filter Chart Active: Saved Fraud Volume ({formatUsdInr(48000)}) vs Settled PayPal Volume ({formatUsdInr(24900)}) grouped by Merchant Domain
         </div>
       ) : null}
@@ -195,7 +195,7 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
       </div>
 
       <div className="flex flex-wrap items-center gap-2" data-testid="blotter-row-selector">
-        <span className="font-mono text-xs text-ink-muted">Click any order to inspect its technical proof:</span>
+        <span className="text-xs text-ink-muted">Click any order to inspect its technical proof:</span>
         {visibleRows.map((row) => {
           const isSelected = selectedEscrowId === row.escrow_id;
           const dotClass =

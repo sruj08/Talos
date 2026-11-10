@@ -1,51 +1,45 @@
-/* Uniform left-rail cards + Animate UI chrome */
-.paypal-feature-card, .sovereign-card, .paypal-pricing-card {
-  background-color: var(--surface-well);
-  border-radius: var(--radius-md);
-  border: 0;
-  padding: 20px 22px 20px 26px;
-  box-shadow: inset 6px 0 0 0 var(--rail-accent, #0070E0);
+/* PayPal flat containers (paypal.design.md): white feature cards with a 1px hairline,
+   soft grey wells for anything nested. No accent rails; colour is reserved for state. */
+.paypal-feature-card, .sovereign-card, .paypal-pricing-card, .rail-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: none;
 }
+.rail-card { display: flex; flex-direction: column; gap: 12px; min-height: 100%; }
 .paypal-checkout-module {
-  background-color: var(--surface-well);
-  border-radius: var(--radius-md);
-  border: 0;
-  padding: 20px 22px 20px 26px;
-  box-shadow: inset 6px 0 0 0 #FFC439, 0 2px 12px rgba(0, 20, 53, 0.12);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 20, 53, 0.12);
 }
 .sovereign-subcard {
   background-color: var(--surface-well);
-  border-radius: var(--radius-md);
   border: 0;
-  box-shadow: inset 6px 0 0 0 var(--rail-accent, #0070E0);
+  border-radius: var(--radius-md);
+  box-shadow: none;
 }
 .sovereign-well, .paypal-code-block {
   background-color: var(--surface-well);
-  border-radius: var(--radius-md);
   border: 0;
-  padding: 16px 20px 16px 26px;
-  font-family: var(--font-mono);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
   font-size: 14px;
   line-height: 1.55;
   color: var(--foreground);
-  box-shadow: inset 6px 0 0 0 var(--rail-accent, #0070E0);
+  box-shadow: none;
 }
-.rail-card {
+/* A card inside a card becomes a quiet well instead of another bordered box. */
+:is(.paypal-feature-card, .sovereign-card, .rail-card, .paypal-checkout-module, .paypal-pricing-card)
+  :is(.paypal-feature-card, .sovereign-card, .rail-card, .paypal-pricing-card) {
   background-color: var(--surface-well);
-  border: 0;
+  border-color: transparent;
   border-radius: var(--radius-md);
-  padding: 20px 22px 20px 26px;
-  box-shadow: inset 6px 0 0 0 var(--rail-accent, #0070E0);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-height: 100%;
+  padding: 20px;
 }
-.rail-card--crimson { --rail-accent: #D9360B; }
-.rail-card--paypal { --rail-accent: #0070E0; }
-.rail-card--emerald { --rail-accent: #0A7A3D; }
-.rail-card--amber { --rail-accent: #FFB600; }
-.rail-card--obsidian { --rail-accent: #003087; }
+.rail-card--crimson, .rail-card--paypal, .rail-card--emerald, .rail-card--amber, .rail-card--obsidian { --rail-accent: transparent; }
 .animate-tooltip {
   background-color: #001435;
   color: #F8FAFC;
@@ -88,7 +82,6 @@
   border: 0;
   border-radius: var(--radius-md);
   padding: 0;
-  box-shadow: inset 6px 0 0 0 var(--rail-accent, #0070E0);
   margin: 0 0 10px;
   overflow: hidden;
 }

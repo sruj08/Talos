@@ -38,7 +38,7 @@ export function PoisonedStoreSim() {
             </span>
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-xs text-ink-crimson font-bold">Scene 02 · Live Store Simulation</span>
+                <span className="text-xs text-ink-crimson font-bold">Scene 02 · Live Store Simulation</span>
               </div>
               <h2 className="paypal-title-sm text-ink">Watch the AI Shop (3 Real-World Scenarios)</h2>
               <p data-subhead="true" className="paypal-caption text-ink-secondary">
@@ -46,7 +46,7 @@ export function PoisonedStoreSim() {
               </p>
             </div>
           </div>
-          <span className="inline-flex items-center gap-2 font-mono text-xs text-ink-secondary tabular-nums whitespace-nowrap px-3.5 py-1.5 rounded-pill sovereign-subcard">
+          <span className="inline-flex items-center gap-2 text-xs text-ink-secondary tabular-nums whitespace-nowrap px-3.5 py-1.5 rounded-pill sovereign-subcard">
             <span className="w-1.5 h-1.5 rounded-xs dot-emerald" aria-hidden="true" />
             <span>Saves $231 · 2.84ms Shield</span>
           </span>
@@ -70,7 +70,7 @@ export function PoisonedStoreSim() {
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-ink">Shure SM7B Vocal Dynamic Microphone</span>
-                <span className="font-mono text-xs text-ink-muted">SKU #SM7B-PRO</span>
+                <span className="text-xs text-ink-muted">SKU #SM7B-PRO</span>
               </div>
               <div className="text-xs text-ink-secondary">
                 Click any scenario below to watch the CFO Dashboard update live
@@ -80,11 +80,11 @@ export function PoisonedStoreSim() {
           <div className="flex flex-wrap items-center gap-3 text-xs tabular-nums">
             <div className="tone-crimson px-3.5 py-2 rounded-lg">
               <div className="text-xs text-ink-secondary">Scam Store Ask</div>
-              <div className="font-mono text-sm font-bold text-ink-crimson">$480.00 Trap</div>
+              <div className="text-sm font-bold text-ink-crimson">$480.00 Trap</div>
             </div>
             <div className="tone-emerald px-3.5 py-2 rounded-lg">
               <div className="text-xs text-ink-secondary">Verified Store Price</div>
-              <div className="font-mono text-sm font-bold text-ink-emerald">$249.00 (Saves $231)</div>
+              <div className="text-sm font-bold text-ink-emerald">$249.00 (Saves $231)</div>
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@ export function PoisonedStoreSim() {
               <span className="block text-ink-secondary tabular-nums leading-relaxed">
                 Normal AI loses $480 vs. TALOS blocks the hidden trick and buys for $249 (saves $231)
               </span>
-              <span className="block font-mono text-xs text-ink-muted">Scenario A (Act 1) · Blocked in 2.84ms</span>
+              <span className="block text-xs text-ink-muted">Scenario A (Act 1) · Blocked in 2.84ms</span>
             </span>
           </button>
 
@@ -143,7 +143,7 @@ export function PoisonedStoreSim() {
               <span className="block text-ink-secondary tabular-nums leading-relaxed">
                 PayPal holds $249 safely until FedEx delivers the box, then pays the seller
               </span>
-              <span className="block font-mono text-xs text-ink-muted">Scenario B (Act 2) · FedEx Verified</span>
+              <span className="block text-xs text-ink-muted">Scenario B (Act 2) · FedEx Verified</span>
             </span>
           </button>
 
@@ -169,7 +169,7 @@ export function PoisonedStoreSim() {
               <span className="block text-ink-secondary tabular-nums leading-relaxed">
                 PayPal auto-refunds a late shipment in 0 seconds &amp; pauses a $450 item for Approve with PayPal
               </span>
-              <span className="block font-mono text-xs text-ink-muted">Scenario C (Act 3) · 0s Refund + Co-Sign</span>
+              <span className="block text-xs text-ink-muted">Scenario C (Act 3) · 0s Refund + Co-Sign</span>
             </span>
           </button>
         </div>
@@ -209,7 +209,7 @@ export function PoisonedStoreSim() {
           buttonTestId="btn-arena-technical-proof"
         >
           <div className="space-y-3">
-            <div className="font-mono text-xs text-ink-secondary tabular-nums flex flex-wrap items-center justify-between gap-3">
+            <div className="text-xs text-ink-secondary tabular-nums flex flex-wrap items-center justify-between gap-3">
               <span>Red-Team Interception Arena · DeBERTa-v3 ONNX &lt;4ms</span>
               <span>Latency: {telemetry.latencyMs}ms · Risk: {telemetry.firewallRiskScore} · Spread: {telemetry.channel3SpreadBps} bps</span>
             </div>

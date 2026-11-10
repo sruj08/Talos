@@ -201,7 +201,7 @@ export function GuidedDemoBanner() {
                     <span className={`w-11 h-11 ${medallion}`} aria-hidden="true">
                       <Icon className="w-5 h-5" strokeWidth={1.75} />
                     </span>
-                    <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-ink-secondary">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] text-ink-secondary">
                       <span className={`w-1.5 h-1.5 rounded-xs ${spec.dotClass}`} aria-hidden="true" />
                       <span>{spec.badge}</span>
                     </span>
@@ -237,7 +237,7 @@ export function GuidedDemoBanner() {
             <div className="font-bold text-sm text-ink">{currentSpec.outcomeBanner}</div>
             <div className="text-ink-secondary">{currentSpec.whatToLookAt}</div>
           </div>
-          <span className="font-mono text-xs text-ink-muted tabular-nums shrink-0">
+          <span className="text-xs text-ink-muted tabular-nums shrink-0">
             Active Step: {activeDemoStep} / 4
           </span>
         </div>

@@ -96,7 +96,7 @@ export function FragmentSpatialHero3D(
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <span className="sovereign-pill">Interactive 3D clearinghouse stage</span>
-        <span className="font-mono tabular-nums text-xs font-medium text-ink-emerald">
+        <span className="tabular-nums text-xs font-medium text-ink-emerald">
           {simPlaying ? '60s Live Simulation Active' : activeCue.metric}
         </span>
       </div>
@@ -122,7 +122,7 @@ export function FragmentSpatialHero3D(
               <ShieldAlert className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               <span>Scam Trap Blocked</span>
             </div>
-            <p className="mt-2 font-mono tabular-nums text-sm font-medium text-ink">$480.00 Rejected</p>
+            <p className="mt-2 tabular-nums text-sm font-medium text-ink">$480.00 Rejected</p>
             <p className="mt-1 text-xs text-ink-secondary">Normal AI loses $480 to hidden web text</p>
           </div>
 
@@ -131,7 +131,7 @@ export function FragmentSpatialHero3D(
               <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               <span>TALOS 3D Shield</span>
             </div>
-            <p className="mt-2 font-mono tabular-nums text-sm font-medium text-ink">2.84ms Clean Scan</p>
+            <p className="mt-2 tabular-nums text-sm font-medium text-ink">2.84ms Clean Scan</p>
             <p className="mt-1 text-xs text-ink-secondary">Enforces $300 allowance & fair market price</p>
           </div>
 
@@ -140,7 +140,7 @@ export function FragmentSpatialHero3D(
               <Lock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               <span>PayPal Escrow Vault</span>
             </div>
-            <p className="mt-2 font-mono tabular-nums text-sm font-medium text-ink">$249.00 Held (+$231 Saved)</p>
+            <p className="mt-2 tabular-nums text-sm font-medium text-ink">$249.00 Held (+$231 Saved)</p>
             <p className="mt-1 text-xs text-ink-secondary">Paid to seller only after FedEx delivery</p>
           </div>
         </div>

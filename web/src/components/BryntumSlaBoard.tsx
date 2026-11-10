@@ -34,9 +34,9 @@ export function BryntumSlaBoard(props: BryntumSlaBoardProps = {}) {
           </span>
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="font-mono text-xs text-ink-amber font-bold">04</span>
+              <span className="text-xs text-ink-amber font-bold">04</span>
               <h2 className="paypal-title-sm text-ink">Delivery SLA Timeline</h2>
-              <span className="inline-flex items-center gap-2 font-mono text-xs text-ink-muted">
+              <span className="inline-flex items-center gap-2 text-xs text-ink-muted">
                 <CalendarClock className="w-4 h-4 text-ink-muted" strokeWidth={1.5} aria-hidden="true" />
                 <span>MCP: https://mcp.bryntum.com/mcp</span>
               </span>
@@ -71,7 +71,7 @@ export function BryntumSlaBoard(props: BryntumSlaBoardProps = {}) {
         className="sovereign-subcard px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-ink-secondary tabular-nums"
       >
         <span>{liveStatusMsg}</span>
-        <span className="font-mono text-ink-muted" data-testid="bryntum-ag-sync-pill">
+        <span className="text-ink-muted" data-testid="bryntum-ag-sync-pill">
           AG Grid Sync: {Object.entries(syncedAgGridState).map(([k, v]) => `${k}=${v}`).join(' | ')}
         </span>
       </div>
@@ -114,17 +114,17 @@ export function BryntumSlaBoard(props: BryntumSlaBoardProps = {}) {
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-3">
                       <span className="font-medium text-sm text-ink">{task.skuTitle}</span>
-                      <span className="font-mono text-xs text-ink-secondary tabular-nums">{formatUsdInr(task.amountCents)}</span>
+                      <span className="text-xs text-ink-secondary tabular-nums">{formatUsdInr(task.amountCents)}</span>
                       <span
                         data-testid={`bryntum-badge-${task.escrowId}`}
                         data-status-code={badgeText}
-                        className="inline-flex items-center gap-2 font-mono text-xs text-ink-secondary"
+                        className="inline-flex items-center gap-2 text-xs text-ink-secondary"
                       >
                         <span className={`w-1.5 h-1.5 rounded-xs ${dotClass}`} aria-hidden="true" />
                         <span data-testid={`sla-void-status-${task.escrowId}`}>{badgeText}</span>
                       </span>
                     </div>
-                    <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-ink-muted tabular-nums">
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-ink-muted tabular-nums">
                       <span>Vendor: {task.vendorName}</span>
                       <span>Order: {task.paypalOrderId}</span>
                       <span>Auth: {task.paypalAuthId}</span>
@@ -173,7 +173,7 @@ export function BryntumSlaBoard(props: BryntumSlaBoardProps = {}) {
                   <div className="font-medium text-ink">
                     29-Day PayPal Authorization Honor Period ({task.authHonorHours}h Honor / {task.authExpiryDays}d Max)
                   </div>
-                  <div className="font-mono text-[11px] text-ink-muted">
+                  <div className="text-[11px] text-ink-muted">
                     Hold ID: {task.paypalAuthId} (Ed25519 KYA Locked)
                   </div>
                 </div>
@@ -213,7 +213,7 @@ export function BryntumSlaBoard(props: BryntumSlaBoardProps = {}) {
                 >
                   <div className="text-ink-secondary">Dependency (EndToStart): {task.downstreamPhase}</div>
                   <div
-                    className="font-mono text-[11px] font-medium text-ink"
+                    className="text-[11px] font-medium text-ink"
                     data-testid={`sla-breach-badge-${task.escrowId}`}
                     data-breach-code={breachText}
                   >

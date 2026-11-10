@@ -102,7 +102,7 @@ export function StoryWalkthroughFivePart({ onSimulateStage }: StoryWalkthroughFi
             <ArrowLeft className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
             <span>Previous Stage</span>
           </button>
-          <span className="font-mono text-xs text-ink-secondary tabular-nums px-2">
+          <span className="text-xs text-ink-secondary tabular-nums px-2">
             Stage 0{activeStageNumber} of 05
           </span>
           <button
@@ -138,7 +138,7 @@ export function StoryWalkthroughFivePart({ onSimulateStage }: StoryWalkthroughFi
                 <span className={`w-12 h-12 ${stage.medallionClass}`} aria-hidden="true">
                   <StageIcon className="w-6 h-6" strokeWidth={1.75} />
                 </span>
-                <span className="inline-flex items-center gap-1.5 font-mono text-xs text-ink-secondary tabular-nums">
+                <span className="inline-flex items-center gap-1.5 text-xs text-ink-secondary tabular-nums">
                   <span className={`w-1.5 h-1.5 rounded-xs ${stage.dotClass}`} aria-hidden="true" />
                   <span>0{stage.stageNumber}</span>
                 </span>
@@ -164,7 +164,7 @@ export function StoryWalkthroughFivePart({ onSimulateStage }: StoryWalkthroughFi
                 <ActiveStageIcon className="w-6 h-6" strokeWidth={1.75} />
               </span>
               <div className="flex flex-col gap-0.5">
-                <div className="inline-flex items-center gap-2 font-mono text-xs text-ink-secondary">
+                <div className="inline-flex items-center gap-2 text-xs text-ink-secondary">
                   <span className={`w-1.5 h-1.5 rounded-xs ${activeStage.dotClass}`} aria-hidden="true" />
                   <span>{activeStage.badge}</span>
                   <span>·</span>
@@ -216,7 +216,7 @@ export function StoryWalkthroughFivePart({ onSimulateStage }: StoryWalkthroughFi
                 </span>
                 <span>Wallet Outcome</span>
               </div>
-              <p className="font-mono text-ink tabular-nums leading-relaxed">
+              <p className="text-ink tabular-nums leading-relaxed">
                 {activeStage.financialConsequence}
               </p>
             </div>
@@ -231,7 +231,7 @@ export function StoryWalkthroughFivePart({ onSimulateStage }: StoryWalkthroughFi
               alt="TALOS Security Gate inspecting storefront card, PayPal Escrow Vault Sphere, and Verified Delivery Parcel"
               className="w-full h-full object-cover object-center hero-artifact-img"
             />
-            <div className="absolute inset-x-3 bottom-3 sovereign-glass px-3.5 py-2.5 rounded-pill flex items-center justify-between gap-2 text-xs font-mono tabular-nums">
+            <div className="absolute inset-x-3 bottom-3 sovereign-glass px-3.5 py-2.5 rounded-pill flex items-center justify-between gap-2 text-xs tabular-nums">
               <span className="text-ink font-bold">{activeStage.shortLabel}</span>
               <span className="text-ink-paypal">{activeStage.financialConsequence.split('·')[0]}</span>
             </div>

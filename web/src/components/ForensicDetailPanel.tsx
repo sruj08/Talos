@@ -39,7 +39,7 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
         <div className="text-xs font-medium text-ink">
           Master-Detail Forensic Drawer — Rust lol_html Sanitization Diff, Channel3 Spread &amp; PayPal 2PC Controls
         </div>
-        <div className="flex flex-wrap items-center gap-4 font-mono text-[11px] text-ink-muted">
+        <div className="flex flex-wrap items-center gap-4 text-[11px] text-ink-muted">
           <span>SDK Layer: APIMatic Go SDK v1.1.0 + Context Plugin Verified</span>
           <span className="inline-flex items-center gap-1.5 text-ink-secondary">
             <span className="w-1.5 h-1.5 rounded-xs dot-emerald" aria-hidden="true" />
@@ -61,16 +61,16 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
                 <div className="font-medium text-ink">Rust lol_html + DeBERTa-v3 ONNX Diff</div>
               </div>
             </div>
-            <span className="font-mono text-[11px] text-ink-muted tabular-nums whitespace-nowrap">
+            <span className="text-[11px] text-ink-muted tabular-nums whitespace-nowrap">
               Scan: {row.scan_latency_ms}ms (&lt;4ms)
             </span>
           </div>
           <div className="tone-crimson p-3 space-y-1 text-[11px]">
-            <div className="font-mono text-[11px] text-ink-secondary">Raw poisoned merchant HTML</div>
+            <div className="text-[11px] text-ink-secondary">Raw poisoned merchant HTML</div>
             <code className="font-mono block text-ink-muted break-all leading-relaxed">{row.raw_poisoned_html}</code>
           </div>
           <div className="tone-emerald p-3 space-y-1 text-[11px]">
-            <div className="font-mono text-[11px] text-ink-secondary">Sanitized HTML</div>
+            <div className="text-[11px] text-ink-secondary">Sanitized HTML</div>
             <code className="font-mono block text-ink break-all leading-relaxed">{row.sanitized_html}</code>
           </div>
           <div className="font-mono text-[11px] text-ink-muted break-all space-y-1 pt-1">
@@ -100,7 +100,7 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
                   <div className="font-medium text-ink">Channel3 Cross-Merchant Price Spread</div>
                 </div>
               </div>
-              <span className="font-mono text-[11px] text-ink-secondary tabular-nums whitespace-nowrap">
+              <span className="text-[11px] text-ink-secondary tabular-nums whitespace-nowrap">
                 +{row.spread_bps} bps (+9277 bps Peak)
               </span>
             </div>
@@ -109,7 +109,7 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
               <div className="space-y-1.5">
                 <div className="flex justify-between text-ink-secondary">
                   <span>Attempted Merchant Ask</span>
-                  <span className="font-mono text-ink">{formatUsdInr(Math.round(row.attempted_price_usd * 100))}</span>
+                  <span className="text-ink">{formatUsdInr(Math.round(row.attempted_price_usd * 100))}</span>
                 </div>
                 <div className="h-2.5 w-full rounded-xs bar-track overflow-hidden">
                   <div
@@ -123,7 +123,7 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
               <div className="space-y-1.5">
                 <div className="flex justify-between text-ink-secondary">
                   <span>Channel3 Market Median</span>
-                  <span className="font-mono text-ink-secondary">{formatUsdInr(Math.round(row.channel3_median_usd * 100))}</span>
+                  <span className="text-ink-secondary">{formatUsdInr(Math.round(row.channel3_median_usd * 100))}</span>
                 </div>
                 <div className="h-2.5 w-full rounded-xs bar-track overflow-hidden">
                   <div className={`h-full rounded-xs bg-ink-muted/50 ${getBarWidthClass(row.channel3_median_usd)}`} />
@@ -133,7 +133,7 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
               <div className="space-y-1.5">
                 <div className="flex justify-between text-ink-secondary">
                   <span>Rerouted Verified ({row.rerouted_merchant})</span>
-                  <span className="font-mono text-ink-paypal">{formatUsdInr(Math.round(row.rerouted_price_usd * 100))}</span>
+                  <span className="text-ink-paypal">{formatUsdInr(Math.round(row.rerouted_price_usd * 100))}</span>
                 </div>
                 <div className="h-2.5 w-full rounded-xs bar-track overflow-hidden">
                   <div className={`h-full rounded-xs dot-paypal ${getBarWidthClass(row.rerouted_price_usd)}`} />
@@ -142,7 +142,7 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-t border-hairline pt-2 font-mono text-[11px] text-ink-muted tabular-nums">
+          <div className="flex items-center justify-between border-t border-hairline pt-2 text-[11px] text-ink-muted tabular-nums">
             <span>$0</span>
             <span>$150</span>
             <span>$300 CAP</span>
@@ -167,7 +167,7 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
                   <div className="font-medium text-ink">PayPal Sandbox 2PC Escrow Console</div>
                 </div>
               </div>
-              <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-ink-secondary whitespace-nowrap">
+              <span className="inline-flex items-center gap-1.5 text-[11px] text-ink-secondary whitespace-nowrap">
                 <span className="w-1.5 h-1.5 rounded-xs dot-emerald" aria-hidden="true" />
                 <span>Sandbox mode live</span>
               </span>
@@ -227,7 +227,7 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
               </button>
             </div>
             {actionBanner ? (
-              <div data-testid="forensic-action-banner" className="tone-paypal p-2.5 font-mono text-xs tabular-nums">
+              <div data-testid="forensic-action-banner" className="tone-paypal p-2.5 text-xs tabular-nums">
                 {actionBanner}
               </div>
             ) : null}

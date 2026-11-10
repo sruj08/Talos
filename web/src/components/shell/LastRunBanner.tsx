@@ -36,7 +36,7 @@ export function LastRunBanner({ focus }: { focus: 'ledger' | 'sla' | 'approval' 
 
   return (
     <div
-      className={`tx-card px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-sm ${lastRun.mode === 'PROTECTED' ? 'shadow-[inset_4px_0_0_0_#0A7A3D]' : 'shadow-[inset_4px_0_0_0_#D9360B]'}`}
+      className={`tx-card px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-sm`}
       data-testid="last-run-banner"
       data-has-run="true"
     >

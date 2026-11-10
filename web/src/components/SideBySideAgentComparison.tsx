@@ -73,7 +73,7 @@ export function SideBySideAgentComparison({
             </span>
             <span>Side-by-Side Simulator: Unprotected AI Agent vs. TALOS-Protected AI Agent</span>
           </div>
-          <span className="font-mono text-[11px] text-ink-muted tabular-nums">
+          <span className="text-[11px] text-ink-muted tabular-nums">
             Live Manipulation Lab · Toggle Attack Vectors Below
           </span>
         </div>
@@ -149,9 +149,9 @@ export function SideBySideAgentComparison({
                 </span>
                 <span>Left: Normal AI Agent (Unprotected)</span>
               </span>
-              <span className="font-mono text-xs text-ink-secondary">Loses $480</span>
+              <span className="text-xs text-ink-secondary">Loses $480</span>
             </div>
-            <div className="font-mono text-xs text-ink tabular-nums">{unprotected.verdictBadge}</div>
+            <div className="text-xs text-ink tabular-nums">{unprotected.verdictBadge}</div>
             <p className="text-xs text-ink-secondary leading-relaxed tabular-nums">
               {unprotected.hijacked
                 ? 'Normal AI gets tricked and loses $480: it reads hidden webpage instructions, ignores your $300 allowance, and pays the $480 scam price.'
@@ -160,7 +160,7 @@ export function SideBySideAgentComparison({
                 : 'Sends money immediately at checkout without checking fair store prices or holding funds until FedEx delivery.'}
             </p>
           </div>
-          <div className="sovereign-well p-2.5 font-mono text-xs text-ink tabular-nums flex items-center justify-between gap-2">
+          <div className="sovereign-well p-2.5 text-xs text-ink tabular-nums flex items-center justify-between gap-2">
             <span>Wallet Consequence:</span>
             <span className="text-ink-crimson font-bold">{unprotected.summary}</span>
           </div>
@@ -178,11 +178,11 @@ export function SideBySideAgentComparison({
                 </span>
                 <span>Right: TALOS + PayPal Agent (Protected)</span>
               </span>
-              <span className="font-mono text-xs text-ink-secondary tabular-nums">
+              <span className="text-xs text-ink-secondary tabular-nums">
                 Saves $231 ({talosProtected.latencyMs}ms)
               </span>
             </div>
-            <div className="font-mono text-xs text-ink tabular-nums">{talosProtected.verdictBadge}</div>
+            <div className="text-xs text-ink tabular-nums">{talosProtected.verdictBadge}</div>
             <p className="text-xs text-ink-secondary leading-relaxed tabular-nums">
               {talosProtected.injectionDetected || talosProtected.priceGougeBlocked
                 ? `TALOS blocks the trick in ${talosProtected.latencyMs}ms and buys it for $${talosProtected.protectedSpendUsd.toFixed(0)} from a verified store—saving $${talosProtected.savedUsd.toFixed(0)} inside PayPal escrow.`
@@ -191,7 +191,7 @@ export function SideBySideAgentComparison({
                 : `Checks your $300 allowance and holds $${talosProtected.protectedSpendUsd.toFixed(0)} safely in PayPal escrow until FedEx delivers the box.`}
             </p>
           </div>
-          <div className="sovereign-well p-2.5 font-mono text-xs text-ink tabular-nums flex items-center justify-between gap-2">
+          <div className="sovereign-well p-2.5 text-xs text-ink tabular-nums flex items-center justify-between gap-2">
             <span>Protected Outcome:</span>
             <span className="text-ink-emerald font-bold">{talosProtected.summary}</span>
           </div>
@@ -201,13 +201,13 @@ export function SideBySideAgentComparison({
       <div data-testid="ai-internal-pipeline" className="sovereign-well p-3 flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <span className="font-medium text-ink">Real-Time Internal AI Decision Pipeline (Step-by-Step Comparison)</span>
-          <span className="font-mono text-[11px] text-ink-muted tabular-nums">Active Shield: {talosProtected.interceptionLayer}</span>
+          <span className="text-[11px] text-ink-muted tabular-nums">Active Shield: {talosProtected.interceptionLayer}</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
           {pipelineSteps.map((step) => (
             <div key={step.stepNumber} data-testid={`pipeline-step-${step.stepNumber}`} className="sovereign-subcard p-2.5 flex flex-col justify-between gap-1.5">
-              <div className="flex items-center justify-between gap-1 font-mono text-[10px] text-ink-muted tabular-nums">
+              <div className="flex items-center justify-between gap-1 text-[10px] text-ink-muted tabular-nums">
                 <span>Step 0{step.stepNumber}</span>
                 <span>{step.latencyLabel}</span>
               </div>

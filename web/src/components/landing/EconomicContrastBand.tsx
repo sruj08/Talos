@@ -34,7 +34,7 @@ export function EconomicContrastBand() {
           <span className="text-sm font-semibold text-ink-muted">vs</span>
         </div>
 
-        <motion.div className="tx-card p-6 sm:p-8 space-y-4 md:rounded-l-none shadow-[inset_0_4px_0_0_#0A7A3D]" {...reveal(0.12)}>
+        <motion.div className="tx-card p-6 sm:p-8 space-y-4 md:rounded-l-none" {...reveal(0.12)}>
           <div className="flex items-center gap-2 text-sm font-medium text-ink-secondary">
             <Landmark className="h-4 w-4 text-ink-emerald" strokeWidth={1.75} aria-hidden="true" />
             TALOS + PayPal protected buyer

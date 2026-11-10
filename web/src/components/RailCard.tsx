@@ -35,7 +35,7 @@ export function RailCard({
       {eyebrow ? <span className="paypal-label text-ink-muted">{eyebrow}</span> : null}
       {title ? <h2 className="paypal-title-sm text-ink">{title}</h2> : null}
       {children}
-      {metric ? <div className="font-mono text-sm font-medium text-ink tabular-nums">{metric}</div> : null}
+      {metric ? <div className="text-sm font-medium text-ink tabular-nums">{metric}</div> : null}
     </div>
   );
 }
