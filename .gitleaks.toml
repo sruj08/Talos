@@ -4,10 +4,11 @@ title = "TALOS Gitleaks Configuration"
 useDefault = true
 
 [allowlist]
-description = "Allow RFC 6455 Section 4.1 sample WebSocket handshake nonce in unit test history and ignore build artifacts"
+description = "Allow RFC 6455 sample WebSocket nonce, the repeating-pattern Postman sandbox signature placeholder, and ignore build artifacts"
 regexTarget = "line"
 regexes = [
   '''Sec-WebSocket-Key:.*dGhlIHNhbXBsZSBub25j[Z]Q==''',
+  '''"key":\s*"ED25519_SIGNATURE",\s*"value":\s*"(?:b1){64}"''',
 ]
 paths = [
   '''(^|/)\.gitleaks\.toml$''',
