@@ -108,14 +108,29 @@ describe('Part 5 Contract Preservation — console-f01-f12 (F-01 through F-12 & 
     expect(forensicHtml).toContain('forensic-detail-panel');
   });
 
-  it('renders the pure Landing Page (/) with only main tagline and storyline, zero numbers, and dedicated multi-page routes', () => {
+  it('renders the 4-Stage Investor Storyline on the Landing Page (/) with the 5-Second Hook, Scene 1..3, View Technical Proof drawers, and dedicated multi-page routes', () => {
     const landingHtml = renderToStaticMarkup(<TalosLandingPage />);
     expect(landingHtml).toContain('data-testid="talos-landing-page"');
-    expect(landingHtml).toContain('TALOS: Stop AI Shopping Agents From Being Hijacked or Overcharged');
+    expect(landingHtml).toContain('Your AI Agent Has Your Wallet. TALOS Makes Sure It Never Gets Scammed.');
+    expect(landingHtml).toContain('Watch Live 60-Second Simulation');
+    expect(landingHtml).toContain('data-testid="investor-business-pitch-strip"');
+    expect(landingHtml).toContain('data-testid="fragment-spatial-hero-3d"');
+    expect(landingHtml).toContain('data-testid="storyline-scene-1-rules"');
+    expect(landingHtml).toContain('Step 1: Give Your AI a Spending Allowance ($300 Max)');
+    expect(landingHtml).toContain('data-testid="storyline-scene-2-shop"');
+    expect(landingHtml).toContain('Watch the AI Shop (3 Real-World Scenarios)');
+    expect(landingHtml).toContain('data-testid="side-by-side-agent-comparison"');
+    expect(landingHtml).toContain('Scenario 1: The Scam Store ($480 Trap)');
+    expect(landingHtml).toContain('Scenario 2: The Honest Store ($249 Verified)');
+    expect(landingHtml).toContain('Scenario 3: The Late Delivery');
+    expect(landingHtml).toContain('Approve with PayPal');
+    expect(landingHtml).toContain('data-testid="storyline-scene-3-cfo"');
+    expect(landingHtml).toContain('The CFO Dashboard (Where the Money Lives)');
+    expect(landingHtml).toContain('How PayPal Makes Money');
+    expect(landingHtml).toContain('data-testid="ag-studio-blotter"');
+    expect(landingHtml).toContain('data-testid="bryntum-sla-board"');
+    expect(landingHtml).toContain('View Technical Proof');
     expect(landingHtml).not.toContain('data-testid="kpi-header-bar"');
-    expect(landingHtml).not.toContain('data-testid="ag-studio-blotter"');
-    const landingVisibleText = landingHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-    expect(landingVisibleText).not.toMatch(/\d/);
 
     const storyHtml = renderToStaticMarkup(<StorylineWalkthroughPage />);
     expect(storyHtml).toContain('data-testid="chapter-route-story"');

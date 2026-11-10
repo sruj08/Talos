@@ -127,7 +127,7 @@ export function useMandateStudio(
   const [categoriesInput, setCategoriesInput] = useState<string>(initialValues.allowedCategories.join(', '));
   const [signedMandate, setSignedMandate] = useState<SignedKyaMandate>(DEFAULT_SIGNED_MANDATE);
   const [signing, setSigning] = useState<boolean>(false);
-  const [sealExpanded, setSealExpanded] = useState<boolean>(true);
+  const [sealExpanded, setSealExpanded] = useState<boolean>(false);
 
   const handleSignSubmit = useCallback(
     async (e: React.FormEvent) => {

@@ -106,7 +106,7 @@ export function SideBySideAgentComparison({
               }`}
             >
               <span className={`w-1.5 h-1.5 rounded-xs ${talosProtected.priceGougeBlocked ? 'dot-amber' : 'dot-emerald'}`} aria-hidden="true" />
-              <span>Store Price: ${params.merchantAskUsd.toFixed(0)} vs ${params.fairMarketMedianUsd.toFixed(0)} Fair ({talosProtected.spreadBps} bps)</span>
+              <span>Store Price: ${params.merchantAskUsd.toFixed(0)} Trap vs ${params.fairMarketMedianUsd.toFixed(0)} Fair</span>
             </button>
 
             <button
@@ -119,7 +119,7 @@ export function SideBySideAgentComparison({
               }`}
             >
               <span className={`w-1.5 h-1.5 rounded-xs ${talosProtected.slaAutoVoided ? 'dot-crimson' : 'dot-paypal'}`} aria-hidden="true" />
-              <span>Carrier Delivery: {params.carrierHoursElapsed}h / {params.slaDeadlineHours}h SLA</span>
+              <span>Carrier Delivery: {params.carrierHoursElapsed}h / {params.slaDeadlineHours}h Rule</span>
             </button>
           </div>
 
@@ -131,7 +131,7 @@ export function SideBySideAgentComparison({
             className="btn-paypal-primary h-8 inline-flex items-center gap-1.5 px-3 text-xs font-medium whitespace-nowrap active:scale-[0.98]"
           >
             <Play className="w-3.5 h-3.5" strokeWidth={1.5} aria-hidden="true" />
-            <span>Run Live Pipeline Comparison</span>
+            <span>Run Side-by-Side Comparison</span>
           </button>
         </div>
       </div>
@@ -143,26 +143,26 @@ export function SideBySideAgentComparison({
         >
           <div data-testid="unprotected-ai-column" className="flex flex-col gap-2.5">
             <div className="flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-2.5 font-medium text-ink">
+              <span className="inline-flex items-center gap-2.5 font-bold text-ink">
                 <span className="w-10 h-10 rounded-control icon-medallion-crimson inline-flex items-center justify-center shrink-0">
                   <AlertTriangle className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
                 </span>
-                <span>Unprotected AI Shopping Agent</span>
+                <span>Left: Normal AI Agent (Unprotected)</span>
               </span>
-              <span className="font-mono text-[10px] text-ink-secondary">Standard Wallet Access</span>
+              <span className="font-mono text-xs text-ink-secondary">Loses $480</span>
             </div>
-            <div className="font-mono text-[11px] text-ink tabular-nums">{unprotected.verdictBadge}</div>
-            <p className="text-[11px] text-ink-secondary leading-relaxed">
+            <div className="font-mono text-xs text-ink tabular-nums">{unprotected.verdictBadge}</div>
+            <p className="text-xs text-ink-secondary leading-relaxed tabular-nums">
               {unprotected.hijacked
-                ? 'Ingests hidden SYSTEM OVERRIDE in raw HTML, ignores the $300 user budget cap, and immediately pays the gouged store price.'
+                ? 'Normal AI gets tricked and loses $480: it reads hidden webpage instructions, ignores your $300 allowance, and pays the $480 scam price.'
                 : talosProtected.slaAutoVoided
-                ? 'Captures payment upfront at checkout with no delivery SLA bond—leaving funds stuck when the carrier misses the 48h deadline.'
-                : 'Executes immediate payment capture without hardware KYA verification or Channel3 cross-merchant price protection.'}
+                ? 'Pays upfront with no delivery guarantee—leaving your money stuck when the shipment arrives late (56h > 48h).'
+                : 'Sends money immediately at checkout without checking fair store prices or holding funds until FedEx delivery.'}
             </p>
           </div>
-          <div className="sovereign-well p-2.5 font-mono text-[11px] text-ink tabular-nums flex items-center justify-between gap-2">
+          <div className="sovereign-well p-2.5 font-mono text-xs text-ink tabular-nums flex items-center justify-between gap-2">
             <span>Wallet Consequence:</span>
-            <span className="text-ink-crimson font-medium">{unprotected.summary}</span>
+            <span className="text-ink-crimson font-bold">{unprotected.summary}</span>
           </div>
         </div>
 
@@ -172,28 +172,28 @@ export function SideBySideAgentComparison({
         >
           <div data-testid="talos-protected-ai-column" className="flex flex-col gap-2.5">
             <div className="flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-2.5 font-medium text-ink">
+              <span className="inline-flex items-center gap-2.5 font-bold text-ink">
                 <span className="w-10 h-10 rounded-control icon-medallion-emerald inline-flex items-center justify-center shrink-0">
                   <ShieldCheck className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
                 </span>
-                <span>TALOS-Protected AI Shopping Agent</span>
+                <span>Right: TALOS + PayPal Agent (Protected)</span>
               </span>
-              <span className="font-mono text-[10px] text-ink-secondary tabular-nums">
-                {talosProtected.latencyMs}ms Intercept
+              <span className="font-mono text-xs text-ink-secondary tabular-nums">
+                Saves $231 ({talosProtected.latencyMs}ms)
               </span>
             </div>
-            <div className="font-mono text-[11px] text-ink tabular-nums">{talosProtected.verdictBadge}</div>
-            <p className="text-[11px] text-ink-secondary leading-relaxed">
+            <div className="font-mono text-xs text-ink tabular-nums">{talosProtected.verdictBadge}</div>
+            <p className="text-xs text-ink-secondary leading-relaxed tabular-nums">
               {talosProtected.injectionDetected || talosProtected.priceGougeBlocked
-                ? `Strips hidden prompt injection in ${talosProtected.latencyMs}ms, blocks +${talosProtected.spreadBps} bps gouging via Channel3, and reroutes to verified $${talosProtected.protectedSpendUsd.toFixed(2)} PayPal escrow.`
+                ? `TALOS blocks the trick in ${talosProtected.latencyMs}ms and buys it for $${talosProtected.protectedSpendUsd.toFixed(0)} from a verified store—saving $${talosProtected.savedUsd.toFixed(0)} inside PayPal escrow.`
                 : talosProtected.slaAutoVoided
-                ? 'Detects 56h > 48h carrier SLA breach on Bryntum timeline and triggers an instant 0-second PayPal authorizationsVoid refund.'
-                : `Verifies Ed25519 KYA Mandate and locks $${talosProtected.protectedSpendUsd.toFixed(2)} in reversible PayPal AUTHORIZE escrow until delivery.`}
+                ? 'Detects the late 56h shipment (> 48h rule), automatically refunds $219 in 0 seconds, and pauses the $450 order for Approve with PayPal.'
+                : `Checks your $300 allowance and holds $${talosProtected.protectedSpendUsd.toFixed(0)} safely in PayPal escrow until FedEx delivers the box.`}
             </p>
           </div>
-          <div className="sovereign-well p-2.5 font-mono text-[11px] text-ink tabular-nums flex items-center justify-between gap-2">
+          <div className="sovereign-well p-2.5 font-mono text-xs text-ink tabular-nums flex items-center justify-between gap-2">
             <span>Protected Outcome:</span>
-            <span className="text-ink-emerald font-medium">{talosProtected.summary}</span>
+            <span className="text-ink-emerald font-bold">{talosProtected.summary}</span>
           </div>
         </div>
       </div>

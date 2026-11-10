@@ -1,12 +1,13 @@
 'use client';
 
 // AG Studio & AG Grid Enterprise v33 Blotter — streams real-time row deltas via gridApi.applyTransactionAsync
-import React from 'react';
+import React, { useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { BarChart3, Download, Lock, RotateCcw, ShieldAlert, SlidersHorizontal, Table2 } from 'lucide-react';
 import { EscrowBlotterRow } from '../hooks/useEscrowStream';
 import { AgStudioPresetId, BlotterStatusTab, useAgStudioBlotter } from '../hooks/useAgStudioBlotter';
 import { ForensicDetailPanel } from './ForensicDetailPanel';
+import { TechnicalProofDrawer } from './TechnicalProofDrawer';
 import { formatUsdInr } from '../lib/phase6-events';
 import {
   DEFAULT_COL_DEF, GRID_SIDE_BAR, GRID_STATUS_BAR, ROW_GROUP_PANEL_SHOW,
@@ -17,10 +18,10 @@ export { DEFAULT_COL_DEF, GRID_SIDE_BAR, GRID_STATUS_BAR, getEscrowRowId, initAg
 
 const STATUS_TABS: BlotterStatusTab[] = ['ALL', 'BLOCKED', 'CLEARED', 'PENDING_HITL', 'PAYPAL_VOIDED'];
 const PRESET_BUTTONS: Array<{ id: AgStudioPresetId; testId: string; label: string; Icon: typeof ShieldAlert }> = [
-  { id: 'FRAUD_INJECTION_VIEW', testId: 'preset-fraud-injection', label: 'Fraud & Prompt-Injection View', Icon: ShieldAlert },
-  { id: 'ACTIVE_PAYPAL_ESCROWS', testId: 'preset-active-escrows', label: 'Active PayPal Sandbox Escrows', Icon: Lock },
-  { id: 'CHART_SAVED_VS_SETTLED', testId: 'preset-chart-saved-vs-settled', label: 'Chart: Saved Fraud vs Settled Volume', Icon: BarChart3 },
-  { id: 'RESET_DEFAULT_BLOTTER', testId: 'preset-reset-blotter', label: 'Reset Default Blotter', Icon: RotateCcw },
+  { id: 'FRAUD_INJECTION_VIEW', testId: 'preset-fraud-injection', label: 'Blocked Scam & Trap View', Icon: ShieldAlert },
+  { id: 'ACTIVE_PAYPAL_ESCROWS', testId: 'preset-active-escrows', label: 'Active PayPal Escrow Holds', Icon: Lock },
+  { id: 'CHART_SAVED_VS_SETTLED', testId: 'preset-chart-saved-vs-settled', label: 'Chart: Money Saved vs Paid Out', Icon: BarChart3 },
+  { id: 'RESET_DEFAULT_BLOTTER', testId: 'preset-reset-blotter', label: 'Reset All Transactions', Icon: RotateCcw },
 ];
 
 export interface AgStudioBlotterProps {
@@ -34,6 +35,7 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
     copilotStatus, showChartSummary, colDefs, theme, onGridReady, handlePresetClick,
     handleCopilotSubmit, handleExportCsv, updateRowState,
   } = useAgStudioBlotter(initialRows);
+  const [proofDrawerOpen, setProofDrawerOpen] = useState<boolean>(false);
 
   return (
     <section
@@ -49,11 +51,11 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
           </span>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs text-ink-paypal font-bold">03</span>
-              <h2 className="paypal-title-sm text-ink">Escrow Settlement Ledger</h2>
+              <span className="font-mono text-xs text-ink-paypal font-bold">Scene 03 · Live Transaction Table</span>
             </div>
+            <h2 className="paypal-title-sm text-ink">Escrow Settlement Ledger</h2>
             <p data-subhead="true" className="paypal-caption text-ink-secondary">
-              Streaming AG Grid v33 ledger, Master-Detail forensics, and AG Studio Copilot
+              Live PayPal escrow holds, blocked scam attempts, and carrier payout status
             </p>
           </div>
         </div>
@@ -72,10 +74,10 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
       <div data-testid="blotter-judge-legend" className="sovereign-well px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-ink-secondary">
         <span className="font-bold text-ink">How to Read This Ledger:</span>
         <div className="flex flex-wrap items-center gap-4">
-          <span className="inline-flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-xs dot-crimson" aria-hidden="true" /><span>Crimson = Blocked Scam / Voided</span></span>
+          <span className="inline-flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-xs dot-crimson" aria-hidden="true" /><span>Crimson = Blocked Scam / Auto-Refunded</span></span>
           <span className="inline-flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-xs dot-paypal" aria-hidden="true" /><span>Blue = Held Safely in PayPal Escrow</span></span>
           <span className="inline-flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-xs dot-emerald" aria-hidden="true" /><span>Emerald = Delivered &amp; Paid</span></span>
-          <span className="inline-flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-xs dot-amber" aria-hidden="true" /><span>Amber = Waiting for Human Approval</span></span>
+          <span className="inline-flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-xs dot-amber" aria-hidden="true" /><span>Amber = Paused for Approve with PayPal</span></span>
         </div>
       </div>
 
@@ -85,7 +87,7 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
             type="text"
             value={copilotQuery}
             onChange={(e) => setCopilotQuery(e.target.value)}
-            placeholder="Filter or group ledger by merchant risk, spread bps, or PayPal 2PC state"
+            placeholder="Ask in plain English: show blocked scam orders or compare money saved vs settled volume"
             data-testid="input-ag-studio-copilot"
             className="paypal-input h-10 flex-1 px-3 py-2 text-xs"
           />
@@ -193,7 +195,7 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
       </div>
 
       <div className="flex flex-wrap items-center gap-2" data-testid="blotter-row-selector">
-        <span className="font-mono text-xs text-ink-muted">Click any order to inspect its forensic proof below:</span>
+        <span className="font-mono text-xs text-ink-muted">Click any order to inspect its technical proof:</span>
         {visibleRows.map((row) => {
           const isSelected = selectedEscrowId === row.escrow_id;
           const dotClass =
@@ -204,7 +206,7 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
             <button
               key={row.escrow_id}
               type="button"
-              onClick={() => setSelectedEscrowId(row.escrow_id)}
+              onClick={() => { setSelectedEscrowId(row.escrow_id); setProofDrawerOpen(true); }}
               data-testid={`select-row-${row.escrow_id}`}
               className={`h-9 inline-flex items-center gap-2 px-3 py-2 text-xs tabular-nums rounded-control whitespace-nowrap active:scale-[0.98] ${
                 isSelected ? 'tone-paypal text-ink font-medium' : 'btn-sovereign-neutral text-ink-secondary'
@@ -222,14 +224,20 @@ export function AgStudioBlotter({ initialRows }: AgStudioBlotterProps = {}) {
         })}
       </div>
 
-      <ForensicDetailPanel
-        data={selectedRow}
-        onActionCompleted={(res) => {
-          updateRowState(res.escrow_id, res.new_state, {
-            paypal_capture_id: res.paypal_capture_id ?? selectedRow?.paypal_capture_id ?? null,
-          });
-        }}
-      />
+      <TechnicalProofDrawer
+        title="Escrow Settlement Ledger & Delivery SLA Timeline · Cryptographic & Firewall Proof"
+        buttonLabel="View Technical Proof"
+        summaryBadge="128-hex Ed25519 · RFC 9421 · 9277 bps · lol_html + DeBERTa-v3 ONNX"
+        open={proofDrawerOpen}
+        onToggle={setProofDrawerOpen}
+        testId="blotter-technical-proof-drawer"
+        buttonTestId="btn-blotter-technical-proof"
+      >
+        <ForensicDetailPanel
+          data={selectedRow}
+          onActionCompleted={(res) => updateRowState(res.escrow_id, res.new_state, { paypal_capture_id: res.paypal_capture_id ?? selectedRow?.paypal_capture_id ?? null })}
+        />
+      </TechnicalProofDrawer>
     </section>
   );
 }

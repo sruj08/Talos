@@ -1,0 +1,95 @@
+/* SAP Analysis × PayPal enterprise shell — quiet chrome, flat bands, one acting blue */
+:root,
+html[data-theme='light'] {
+  --text-secondary: #475e75;
+  --text-muted: #687173;
+  --tone-paypal-fg: #003087;
+  --tone-emerald-fg: #0A7A3D;
+  --tone-amber-fg: #B45309;
+  --tone-crimson-fg: #D9360B;
+  --bg-deep: #FAF8F5;
+  --surface-secondary: #F5F6F7;
+  --border-hairline: #DADDE1;
+  --border-hover: #B7BDC2;
+  --enterprise-chrome: #F5F6F7;
+  --enterprise-band: #EAECEE;
+  --enterprise-band-blue: #EBF8FF;
+  --enterprise-ink: #000000;
+  --enterprise-ink-lead: #3C3C3C;
+  --enterprise-ink-body: #223548;
+  --enterprise-ink-nav: #545454;
+  --enterprise-primary: #0057D2;
+  --enterprise-primary-deep: #0040B0;
+  --enterprise-navy: #022879;
+}
+
+html[data-theme='dark'] {
+  --background: #07080D;
+  --foreground: #F8FAFC;
+  --surface: #0F1420;
+  --surface-elevated: #151C2C;
+  --surface-well: #0B1018;
+  --surface-footer: #07080D;
+  --default: #0F1420;
+  --default-foreground: #F8FAFC;
+  --ink-body: #E8EDF5;
+  --muted: #94A3B8;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --tone-paypal-fg: #38BDF8;
+  --tone-emerald-fg: #34D399;
+  --tone-amber-fg: #FBBF24;
+  --tone-crimson-fg: #F87171;
+  --bg-deep: #07080D;
+  --surface-secondary: #0F1420;
+  --border-hairline: rgba(255, 255, 255, 0.12);
+  --border-hover: rgba(255, 255, 255, 0.28);
+  --enterprise-chrome: #0F1420;
+  --enterprise-band: #151C2C;
+  --enterprise-band-blue: #0B1C33;
+  --enterprise-ink: #FFFFFF;
+  --enterprise-ink-lead: #E2E8F0;
+  --enterprise-ink-body: #CBD5E1;
+  --enterprise-ink-nav: #94A3B8;
+  --enterprise-primary: #0070E0;
+  --enterprise-primary-deep: #003087;
+  --enterprise-navy: #001435;
+}
+
+.enterprise-band-chrome {
+  background-color: var(--enterprise-chrome);
+  color: var(--enterprise-ink-body);
+  border-radius: 0;
+}
+.enterprise-band-blue {
+  background-color: var(--enterprise-band-blue);
+  color: var(--enterprise-ink-body);
+  border-radius: 0;
+}
+.enterprise-band-footer {
+  background-color: var(--enterprise-band);
+  color: var(--enterprise-ink-nav);
+}
+.enterprise-product-tab-rail {
+  background-color: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+}
+.visual-plate-mask {
+  mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+}
+.fragment-stage-obsidian {
+  background-image: var(--gradient-obsidian-stage);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.paypal-display-hero {
+  font-family: var(--font-display);
+  font-size: clamp(2.15rem, 3.6vw + 0.5rem, 3.4rem);
+  font-weight: 700;
+  line-height: 1.07;
+  letter-spacing: -0.03em;
+}

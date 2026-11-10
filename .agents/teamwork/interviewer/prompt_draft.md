@@ -1,47 +1,69 @@
-Build a capability showcase for the TALOS frontend (`web/`): wrap the existing operator interface in a startup-grade product landing page, a 5-part visual storytelling walkthrough, a side-by-side "Unprotected AI vs. TALOS-Protected AI" interactive manipulation simulator connected to the live backend pipeline, and a property-based plus browser/component test implementation, strictly without changing any existing backend logic.
+Design a comprehensive implementation plan and investor-grade landing page and interactive storyline experience for TALOS (`web`), reviewed with `/war-room-council` and inspired by `https://www.fragment.im/`, so that anyone pitching, testing, or simulating the product experiences a sleek, jargon-free flow with fluid animations, 3D elements, and generated visuals.
 
-Working directory: d:\Hackathons\PayPal\Talos
-Integrity mode: development
+Working directory: g:\PAYPAL
+Integrity mode: demo
+The team must NOT: copy code from existing open-source projects for core logic; run external scripts or delegate execution to other tools.
 
-Reference skills to use:
-- `agent-browser`: `C:\Users\Harshad\.gemini\config\skills\agent-browser\SKILL.md`
-- `ralph-loop`: `C:\Users\Harshad\.gemini\config\skills\ralph-loop\SKILL.md`
-- `unslop`: `C:\Users\Harshad\.gemini\config\skills\unslop\SKILL.md`
-- `shadcn`: `C:\Users\Harshad\.gemini\config\skills\shadcn\SKILL.md`
-- `gsd-plan-phase`: `C:\Users\Harshad\.gemini\config\skills\gsd-plan-phase\SKILL.md`
+Reference material:
+- Visual & motion inspiration: https://www.fragment.im/
+- Referenced skills:
+  - `/war-room-council` (`C:\Users\satav\.gemini\config\skills\war-room-council\SKILL.md`)
+  - `/animate-motion-transfer` (`C:\Users\satav\.gemini\config\skills\animate-motion-transfer\SKILL.md`)
+  - `/apple-design` (`C:\Users\satav\.gemini\config\skills\apple-design\SKILL.md`)
+  - `/heroui-react` (`C:\Users\satav\.gemini\config\skills\heroui-react\SKILL.md`)
+  - `/ui-ux-pro-max` (`C:\Users\satav\.gemini\config\skills\ui-ux-pro-max\SKILL.md`)
+  - `/generative_ui` (`C:\Users\satav\.gemini\antigravity\builtin\skills\generative_ui\SKILL.md`)
+  - `/ai-video-studio` (`C:\Users\satav\.gemini\config\skills\ai-video-studio\SKILL.md`)
+  - `/unslop` (`C:\Users\satav\.gemini\config\skills\unslop\SKILL.md`)
+  - `/hallmark` (`C:\Users\satav\.gemini\config\skills\hallmark\SKILL.md`)
+- Existing workspace environment (`g:\PAYPAL`):
+  - Next.js 15 Web Console (`web`) on `http://localhost:3000`
+  - Go 2PC Orchestrator (`services/orchestrator-go`) on `http://127.0.0.1:8080`
+  - Rust Firewall (`services/firewall-rs`) on `http://127.0.0.1:8081`
+  - PostgreSQL 16 (`localhost:5432`) and Valkey 7.2 (`localhost:6379`)
 
 ## Requirements
 
-### R1. Startup Landing Page and 5-Part Storytelling Walkthrough
-Build a professional startup/product landing page as the primary entry view in `web/src/app/page.tsx`, with smooth switching into the interactive simulator and existing operator dashboard views. It must include a clear explanation of what TALOS does, the problem it solves (autonomous AI shopping agents with wallet access exposed to hidden prompt-injection webpage traps, price gouging/fake stores, and irreversible payment capture), why the problem matters, how TALOS works (KYA Mandate permission slip, <4ms DOM Firewall webpage X-ray, Channel3 Fair-Price Oracle, and reversible PayPal Escrow Hold `AUTHORIZE` -> Tracking -> `CAPTURE`/`VOID`), key features and benefits, and a prominent Try Demo / Experience the Product button. Present the concept through a 5-part real-world storytelling scenario understandable to non-technical users: (1) what is happening in the real world, (2) what problem the user faces, (3) how the problem can be exploited, (4) how TALOS identifies or prevents it, and (5) what happens after TALOS intervenes.
+### R1. War-Room Council Storyline Discussion & Implementation Plan
+Discuss the investor-pitch storyline flow with `/war-room-council` to determine what to build and produce a comprehensive implementation plan so that anyone can easily try, test, and simulate TALOS. The design and plan must directly resolve the 4 investor-pitch issues on the current first screen:
+1. **Eliminate Decision Overload (21 Buttons on Screen 1)**: Replace the competing 8 top-bar tabs (`SovereignStoryDock.tsx`) and 13 mode/hero/card buttons (`StartupProductHero.tsx`) with a clear, guided entry point.
+2. **Business Language Instead of Engineer Jargon**: Frame the first-screen pitch around *"Problem -> Live Demo -> How Much Money It Saves -> How PayPal Makes Money"* rather than leading with raw architecture terms (*"Sovereign Clearinghouse"*, *"Cryptographic Agent Mandate"*, *"Red-Team Interception Arena"*, *"Market Fair-Price Oracle"*, *"SLA Forensics"*).
+3. **Surface the "Aha!" Moment Directly in the Main Flow**: Bring the Side-by-Side Comparison (`SideBySideAgentComparison.tsx` — left side: Normal AI gets tricked and loses $480; right side: TALOS blocks the trick and buys it for $249) directly into the landing page storyline instead of hiding it behind `/simulator`.
+4. **Move Raw Technical Guts Behind On-Demand Proof**: Place raw technical telemetry (`128-hex Ed25519 signatures`, `RFC 9421 headers`, `9277 bps`, and `lol_html + DeBERTa-v3 ONNX`) inside a clean *"View Technical Proof"* drawer rather than displaying them alongside consumer story copy at second 0.
 
-### R2. Interactive Product Demonstration & AI-Agent Manipulation Simulator
-Build an interactive, scenario-based product demonstration and side-by-side "Unprotected AI vs. TALOS-Protected AI" simulator (enhancing `PoisonedStoreSim.tsx`) where users perform actions, observe internal processing in real time, understand consequences, and see how the system responds. Visually and interactively demonstrate how an AI agent normally makes decisions, introduce scenarios with malicious or misleading inputs (hidden website prompt injection, price gouging, fake stores), show how an unprotected AI agent gets tricked into unauthorized or overpriced irreversible payments, show how TALOS detects and handles each scenario, and compare the normal/unprotected and TALOS-protected outcomes side by side.
+### R2. Four-Stage Investor Storyline Flow & Interactive Scenarios
+Structure the landing page and interactive simulation around the 4-stage investor storyline:
+1. **Above the Fold — The 5-Second Hook (Zero Jargon)**:
+   - Headline: *"Your AI Agent Has Your Wallet. TALOS Makes Sure It Never Gets Scammed."*
+   - One primary CTA button: **"Watch Live 60-Second Simulation ->"**
+2. **Interactive Scene 1 — "Set the Rules" (Plain English)**:
+   - Present *"Step 1: Give Your AI a Spending Allowance ($300 Max)"* instead of *"Mandate Clearing Studio (`Ed25519`)"*.
+3. **Interactive Scene 2 — "Watch the AI Shop (3 Real-World Scenarios)"**:
+   - **Scenario 1: The Scam Store ($480 Trap)** — Watch Normal AI lose $480 vs. TALOS block the hidden trick and save $231 (purchasing for $249).
+   - **Scenario 2: The Honest Store ($249 Verified)** — Watch PayPal hold the $249 safely until FedEx delivers the box, then pay the seller.
+   - **Scenario 3: The Late Delivery & Big Order ($450)** — Watch PayPal automatically refund a late shipment in 0 seconds, and pause a $450 item so a human can click **Approve with PayPal**.
+4. **Interactive Scene 3 — "The CFO Dashboard (Where the Money Lives)"**:
+   - Smoothly present the Live Transaction Table (`AgStudioBlotter.tsx`) and Delivery Timeline (`BryntumSlaBoard.tsx`) as the direct result of what the user clicked, with the *"View Technical Proof"* drawer accessible for deep technical inspection.
 
-### R3. Live Backend Pipeline Integration & Strict Zero-Backend-Change Constraint
-Connect the frontend interactive simulator and live visualizations to the existing backend functionality and frontend pipeline components (`API-01`..`API-16`, `MandateStudio.tsx`, `AgStudioBlotter.tsx`, `BryntumSlaBoard.tsx`, `PayPalStepUpModal.tsx`, `useEscrowStream.ts`), adding frontend-side simulations and visualizations where needed. Strictly do not modify any backend logic, APIs, business logic, or architecture in `firewall-rs` (Rust) or `orchestrator-go` (Go); the existing backend must remain completely unchanged.
+### R3. UI/UX Engineering, Colour Psychology & Design System
+Act as a UI/UX engineer and colour psychologist to decide the colour scheme, gradients, distinctive typography, generous spacing, and iconography using `https://www.fragment.im/` as inspiration and applying `/apple-design`, `/heroui-react`, `/ui-ux-pro-max`, `/generative_ui`, `/unslop`, and `/hallmark` so the interface looks sleek, intentional, and free of generic AI-generated visual clichés.
 
-### R4. Property Test Suite, Browser Verification, and Requested Skills
-Create and properly implement a property-based test suite alongside component/integration and browser tests covering the frontend simulator scenarios, state transitions, and UI flows. Use all five requested skills in executing the work: `gsd-plan-phase` for phase planning, `shadcn` for UI components, `unslop` to ensure a designed startup interface free of AI-generated UI tells, `ralph-loop` for disciplined iterative implementation with test gates, and `agent-browser` for end-to-end interactive browser verification.
+### R4. Animations, 3D Elements & Visual Media Pipeline
+Incorporate fluid animations, 3D visual elements, motion inspired by `https://www.fragment.im/` and `/animate-motion-transfer`, and visual/video assets generated via `/ai-video-studio` so that the landing page and simulation scenarios feel cohesive, interactive, and competition-winning.
 
 ## Verification Resources
 
-Use the existing tests, scripts, and project setup in `d:\Hackathons\PayPal\Talos` and `d:\Hackathons\PayPal\Talos\web`.
+- Existing repository docs and architecture maps in `g:\PAYPAL`: `CLAUDE.md`, `MAP.md`, `docs/08-project/PHASE_WISE_EXECUTION_AND_SKILL_PLAYBOOK.md`, and `.planning/graphs/GRAPH_REPORT.md`
+- Existing web console components in `g:\PAYPAL\web`: `SovereignStoryDock.tsx`, `StartupProductHero.tsx`, `SideBySideAgentComparison.tsx`, `AgStudioBlotter.tsx`, and `BryntumSlaBoard.tsx`
+- Visual and motion reference: `https://www.fragment.im/`
 
 ## Acceptance Criteria
 
-### Landing Page & Storytelling Experience
-- [ ] `web/src/app/page.tsx` opens into a startup-grade landing page presenting what TALOS does, the problem, why it matters, how the solution works, key features/benefits, and a prominent CTA button that transitions smoothly into the interactive simulator and operator dashboard views.
-- [ ] The 5-part real-world storytelling walkthrough visually walks through all five stages ((1) real-world context, (2) user problem, (3) exploitation mechanism, (4) TALOS detection/prevention, and (5) post-intervention outcome) in plain, non-technical language.
+### Storyline & War-Room Council Strategy
+- [ ] Delivers a complete implementation plan informed by `/war-room-council` covering the investor storyline flow, component architecture, visual/animation pipeline, and execution steps across all requested skills.
+- [ ] Addresses all 4 investor critique points: (1) replacing the 21 competing buttons/tabs on Screen 1 (`SovereignStoryDock.tsx` + `StartupProductHero.tsx`) with a single guided entry flow, (2) replacing raw backend jargon on the initial view with plain business language, (3) integrating `SideBySideAgentComparison.tsx` directly into the main storyline flow, and (4) encapsulating `128-hex Ed25519 signatures`, `RFC 9421 headers`, `9277 bps`, and `lol_html + DeBERTa-v3 ONNX` inside a *"View Technical Proof"* drawer.
+- [ ] Covers all 4 investor storyline stages: the Above-the-Fold 5-Second Hook (*"Your AI Agent Has Your Wallet. TALOS Makes Sure It Never Gets Scammed."* + *"Watch Live 60-Second Simulation ->"*), Scene 1 (*"Step 1: Give Your AI a Spending Allowance ($300 Max)"*), Scene 2 (all 3 scenarios: $480 Scam Store vs. $249 saving $231, $249 Honest Store FedEx escrow release, and 0-second late-delivery refund + $450 **Approve with PayPal** human step-up), and Scene 3 (CFO Dashboard showing `AgStudioBlotter.tsx` and `BryntumSlaBoard.tsx`).
 
-### Interactive AI-Agent Manipulation Simulator & Live Pipeline
-- [ ] The interactive demonstration (`PoisonedStoreSim.tsx` and connected views) lets users trigger realistic scenarios (hidden prompt injection, price gouging/fake stores, irreversible vs. escrow-protected checkout) and compares the unprotected AI outcome against the TALOS-protected outcome side by side.
-- [ ] Simulator and operator interactions connect to the existing backend pipeline and components (`API-01`..`API-16`, `MandateStudio.tsx`, `AgStudioBlotter.tsx`, `BryntumSlaBoard.tsx`, `PayPalStepUpModal.tsx`, `useEscrowStream.ts`) and display live visual feedback as scenarios execute.
-
-### Property Tests, Build, and Browser Verification
-- [ ] The property-based test suite and frontend unit/component tests execute and pass with zero failures.
-- [ ] The frontend production build and typecheck in `web/` succeed with zero errors.
-- [ ] Interactive verification via `agent-browser` confirms the landing page, 5-part storytelling flow, side-by-side manipulation simulator, and operator dashboard switch and operate cleanly without runtime or console errors.
-
-### Strict Backend Immutability
-- [ ] `git status` and `git diff` confirm zero modifications to any backend files (`firewall-rs/`, `orchestrator-go/`, or backend API definitions).
+### UI/UX, Colour Psychology, Animations & Visuals
+- [ ] Specifies and applies a documented colour psychology rationale, palette, gradient tokens, typography scale, spacing system, iconography (`/heroui-react`, `/apple-design`, `/ui-ux-pro-max`), 3D elements, motion choreography inspired by `https://www.fragment.im/` (`/animate-motion-transfer`), and `/ai-video-studio` visual assets, adhering to `/unslop` and `/hallmark` guidelines.
+- [ ] Any new or modified frontend code in `g:\PAYPAL\web` compiles cleanly and passes existing build/type checks so that the storyline and simulation can be tested end-to-end.

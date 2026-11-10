@@ -18,14 +18,14 @@ export default function StorylineWalkthroughPage() {
       <SovereignTopNavBar />
 
       <main className="mx-auto max-w-[1360px] w-full px-4 sm:px-6 py-8 flex-1 space-y-8">
-        <div className="paypal-hero-band flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div className="paypal-hero-band fragment-stage-obsidian flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="space-y-2 max-w-[68ch]">
-            <span className="paypal-label text-accent">Interactive Clearinghouse Storyline</span>
+            <span className="paypal-label text-accent">Cinema storyline theater</span>
             <h1 className="paypal-headline-lg text-ink">
               From Autonomous Delegation to Reversible PayPal Settlement
             </h1>
             <p className="paypal-body text-ink-secondary">
-              Step through all five stages of an autonomous AI purchase—or click any module button to open its dedicated live workspace page.
+              Five stages with live triggers: lock the $300 allowance, block the $480 trap, hold PayPal escrow, auto-void late delivery, and co-sign big orders.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3 shrink-0">

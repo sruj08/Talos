@@ -103,3 +103,31 @@ flowchart TB
 | **Russian-Doll Box Clutter** | Nested borders (`>2` levels) collapse visual hierarchy into a grid of grey boxes. | **Max 2 Container Levels**: Never nest a bordered well inside a subcard inside a card. Use open canvas space, `48px` icon medallions, and subtle hairlines. |
 | **Micro-Typography Fatigue** | Walls of `10px–11px` prose prevent 3-second judge comprehension. | **Visual-First Hierarchy**: Primary headlines use `Fraunces` (`32px–48px`), body copy uses readable `14px–16px` (`text-sm`/`text-base`), and every card is led by a `44px–56px` visual icon medallion. |
 | **PayPal / Sponsor API Timeout (`R-01`)** | Live demo stalls if external sandbox endpoints exceed `2.8s`. | **Deterministic Replay Fallback**: Automatically falls back to signed local Sandbox state (`<15ms`) with zero UI layout shift. |
+
+---
+
+## 9. 4-Stage Investor Storyline & `fragment.im` Spatial Architecture (v3.0 — War-Room Council)
+
+To ensure any investor, judge, or executive can understand, test, and simulate TALOS in under 60 seconds without decision overload or engineer jargon (see [`WAR_ROOM_COUNCIL_STORYLINE_AND_IMPLEMENTATION_PLAN.md`](../08-project/WAR_ROOM_COUNCIL_STORYLINE_AND_IMPLEMENTATION_PLAN.md)), the root landing route (`/`, `web/src/app/page.tsx`) is structured around a guided **4-Stage Investor Storyline**:
+
+### 9.1 Stage 0: Above-the-Fold 5-Second Hook (`StartupProductHero.tsx` + `FragmentSpatialHero3D.tsx`)
+- **Single Guided Entry Point**: Replaces the previous 21 competing Screen-1 buttons with a quiet 4-stage storyline header and **one primary CTA button**: **"Watch Live 60-Second Simulation ->"** (`data-testid="landing-try-demo-cta"`).
+- **Zero-Jargon Headline**: *"Your AI Agent Has Your Wallet. TALOS Makes Sure It Never Gets Scammed."*
+- **Business Value Strip (`data-testid="investor-business-pitch-strip"`)**: Frames *Problem $\rightarrow$ Live Demo $\rightarrow$ How Much Money It Saves ($231/tx) $\rightarrow$ How PayPal Makes Money*.
+- **Interactive 3D Spatial Centerpiece (`FragmentSpatialHero3D.tsx` + `public/assets/talos-fragment-shield-3d.svg`)**: Implements `https://www.fragment.im/`-inspired pointer-driven 3D perspective tilt (`rotateX`/`rotateY`) and three `translateZ` depth shards (Layer 1: Hostile `$480` Scam Trap Intercepted; Layer 2: TALOS Geometric Shield `2.84ms`; Layer 3: PayPal Escrow Vault `$249` Verified / `+$231` Saved) with a 4-stage interactive simulation cue bar.
+
+### 9.2 Interactive Scene 1: "Set the Rules" (`MandateStudio.tsx`)
+- **Plain-English Framing**: Led by **"Step 1: Give Your AI a Spending Allowance ($300 Max)"** (`data-testid="storyline-scene-1-rules"`), allowing 1-click preset selection and `$300` allowance locking.
+- **Progressive Cryptographic Proof**: Sets `sealExpanded = false` by default and encapsulates the `128-hex Ed25519` signature and `RFC 9421` headers inside `<TechnicalProofDrawer />`.
+
+### 9.3 Interactive Scene 2: "Watch the AI Shop — 3 Real-World Scenarios" (`PoisonedStoreSim.tsx` + `SideBySideAgentComparison.tsx` + `PayPalStepUpModal.tsx`)
+- **Surfaced "Aha!" Moment**: Mounts `SideBySideAgentComparison.tsx` directly in Scene 2 on `/` (`data-testid="storyline-scene-2-shop"`) with synchronized `/animate-motion-transfer` dual-branch trajectory:
+  - **Scenario 1: The Scam Store ($480 Trap)** — Normal AI loses `$480` vs. TALOS blocks the hidden trick in `2.84ms` and buys for `$249` (**saving `$231`**).
+  - **Scenario 2: The Honest Store ($249 Verified)** — PayPal holds `$249` safely in escrow (`PAYPAL_AUTHORIZED`) until FedEx (`#794892104852`) delivers at `26h <= 48h`, then releases payment (`PAYPAL_CAPTURED`) to the seller.
+  - **Scenario 3: The Late Delivery & Big Order ($450)** — PayPal automatically refunds a late `$219` shipment (`56h > 48h` SLA) in **`0 seconds`** (`PAYPAL_VOIDED`), and pauses a `$450` order (`+$150` over the `$300` allowance) so a human can click **Approve with PayPal** (`PayPalStepUpModal.tsx`).
+- **On-Demand DOM Forensics**: Encapsulates `lol_html + DeBERTa-v3 ONNX` stripped HTML diffs and `9277 bps` telemetry inside `<TechnicalProofDrawer />`.
+
+### 9.4 Interactive Scene 3: "The CFO Dashboard (Where the Money Lives)" (`AgStudioBlotter.tsx` + `BryntumSlaBoard.tsx` + `TechnicalProofDrawer.tsx`)
+- **PayPal Unit Economics Strip (`data-testid="paypal-revenue-model-strip"`)**: Explicitly displays *How PayPal Makes Money* (Verified Agentic Take-Rate + 29-Day/48h Escrow Float + `$0` Dispute Ops Cost).
+- **Live Transaction Table & Delivery Timeline**: Connects `AgStudioBlotter.tsx` and `BryntumSlaBoard.tsx` in real time to Scene 1 & 2 clicks, with `ForensicDetailPanel.tsx` accessible on demand inside `<TechnicalProofDrawer />`.
+

@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none" role="img" aria-label="TALOS 3D Spatial Fragment Shield intercepting $480 scam DOM packet in 2.84ms and locking $249 verified order in PayPal Escrow saving $231">
+  <defs>
+    <linearGradient id="obsidianCanvas" x1="0" y1="0" x2="960" y2="540" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#07080D" />
+      <stop offset="50%" stop-color="#0F1420" />
+      <stop offset="100%" stop-color="#07080D" />
+    </linearGradient>
+    <linearGradient id="crimsonShard" x1="80" y1="120" x2="320" y2="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EF4444" stop-opacity="0.34" />
+      <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.12" />
+    </linearGradient>
+    <linearGradient id="talosShieldPlane" x1="360" y1="70" x2="600" y2="460" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.38" />
+      <stop offset="50%" stop-color="#0070E0" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#003087" stop-opacity="0.14" />
+    </linearGradient>
+    <linearGradient id="emeraldVault" x1="630" y1="110" x2="880" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.36" />
+      <stop offset="100%" stop-color="#064E3B" stop-opacity="0.16" />
+    </linearGradient>
+    <linearGradient id="goldCore" x1="700" y1="200" x2="840" y2="330" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFC439" stop-opacity="0.88" />
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0.42" />
+    </linearGradient>
+  </defs>
+
+  <!-- Obsidian Spatial Stage Background -->
+  <rect width="960" height="540" rx="20" fill="url(#obsidianCanvas)" />
+
+  <!-- Isometric Perspective Grid Floor -->
+  <g stroke="#1E293B" stroke-width="1" opacity="0.65">
+    <line x1="60" y1="450" x2="900" y2="450" />
+    <line x1="110" y1="410" x2="850" y2="410" />
+    <line x1="160" y1="370" x2="800" y2="370" />
+    <line x1="180" y1="490" x2="340" y2="350" />
+    <line x1="340" y1="490" x2="440" y2="350" />
+    <line x1="480" y1="490" x2="480" y2="350" />
+    <line x1="620" y1="490" x2="520" y2="350" />
+    <line x1="780" y1="490" x2="620" y2="350" />
+  </g>
+
+  <!-- LAYER 1 (Left): Hostile Fragmented DOM Shards ($480 Scam Trap) -->
+  <g id="layer-1-hostile-shards">
+    <polygon points="85,180 235,130 270,235 120,285" fill="url(#crimsonShard)" stroke="#EF4444" stroke-width="1.5" />
+    <polygon points="130,305 265,260 295,355 155,395" fill="url(#crimsonShard)" stroke="#F87171" stroke-width="1.25" stroke-dasharray="5 4" />
+    <polygon points="65,260 115,235 130,285 80,305" fill="#EF4444" fill-opacity="0.22" stroke="#EF4444" stroke-width="1" />
+
+    <!-- Trajectory Vector In -->
+    <path d="M 275 245 L 385 245" stroke="#EF4444" stroke-width="2.5" stroke-dasharray="6 6" />
+    <circle cx="385" cy="245" r="6" fill="#EF4444" />
+
+    <!-- Layer 1 Callout Card -->
+    <rect x="76" y="74" width="218" height="64" rx="10" fill="#0F1420" stroke="#EF4444" stroke-opacity="0.55" />
+    <text x="92" y="100" fill="#F87171" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600">Hostile Scam Store Trap</text>
+    <text x="92" y="122" fill="#F8FAFC" font-family="JetBrains Mono, monospace" font-size="14" font-weight="600">$480.00 hidden override</text>
+  </g>
+
+  <!-- LAYER 2 (Center): Crystalline Isometric 3D TALOS Geometric Shield (2.84ms) -->
+  <g id="layer-2-talos-3d-shield">
+    <!-- Back Isometric Prism Plane -->
+    <polygon points="480,68 604,142 604,348 480,422 356,348 356,142" fill="url(#talosShieldPlane)" stroke="#38BDF8" stroke-width="2" />
+    <!-- Inner Machined Facets -->
+    <polygon points="480,98 576,156 576,334 480,392 384,334 384,156" fill="#0F1420" fill-opacity="0.58" stroke="#0070E0" stroke-width="1.5" />
+    <line x1="480" y1="68" x2="480" y2="422" stroke="#38BDF8" stroke-opacity="0.45" stroke-width="1.2" />
+    <line x1="356" y1="142" x2="604" y2="348" stroke="#38BDF8" stroke-opacity="0.35" stroke-width="1" />
+    <line x1="604" y1="142" x2="356" y2="348" stroke="#38BDF8" stroke-opacity="0.35" stroke-width="1" />
+
+    <!-- Central Shield Core Hexagon -->
+    <polygon points="480,178 536,211 536,279 480,312 424,279 424,211" fill="#003087" fill-opacity="0.78" stroke="#38BDF8" stroke-width="2" />
+    <text x="480" y="240" text-anchor="middle" fill="#F8FAFC" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600">TALOS SHIELD</text>
+    <text x="480" y="263" text-anchor="middle" fill="#38BDF8" font-family="JetBrains Mono, monospace" font-size="15" font-weight="600">2.84ms BLOCK</text>
+
+    <!-- Layer 2 Callout Pill -->
+    <rect x="372" y="438" width="216" height="44" rx="10" fill="#0F1420" stroke="#38BDF8" stroke-opacity="0.55" />
+    <text x="480" y="465" text-anchor="middle" fill="#E2E8F0" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="500">Rule Locked: $300 Max Cap</text>
+  </g>
+
+  <!-- LAYER 3 (Right): Crystallized PayPal Escrow Vault ($249 Verified / +$231 Saved) -->
+  <g id="layer-3-paypal-escrow-vault">
+    <!-- Verified Trajectory Vector Out -->
+    <path d="M 598 245 L 668 245" stroke="#10B981" stroke-width="3" />
+    <circle cx="668" cy="245" r="6" fill="#10B981" />
+
+    <!-- Isometric 3D Escrow Vault Cube -->
+    <polygon points="775,124 890,184 890,326 775,386 660,326 660,184" fill="url(#emeraldVault)" stroke="#10B981" stroke-width="2" />
+    <polygon points="775,124 890,184 775,244 660,184" fill="#10B981" fill-opacity="0.22" stroke="#34D399" stroke-width="1.25" />
+    <line x1="775" y1="244" x2="775" y2="386" stroke="#34D399" stroke-width="1.5" />
+
+    <!-- Inner PayPal Gold Escrow Seal -->
+    <rect x="708" y="220" width="134" height="72" rx="10" fill="#07080D" fill-opacity="0.88" stroke="url(#goldCore)" stroke-width="1.75" />
+    <text x="775" y="248" text-anchor="middle" fill="#FFC439" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600">PayPal Escrow Vault</text>
+    <text x="775" y="274" text-anchor="middle" fill="#34D399" font-family="JetBrains Mono, monospace" font-size="16" font-weight="600">$249.00 Held</text>
+
+    <!-- Savings Callout Card -->
+    <rect x="662" y="64" width="226" height="52" rx="10" fill="#0F1420" stroke="#10B981" stroke-opacity="0.7" />
+    <text x="775" y="87" text-anchor="middle" fill="#34D399" font-family="JetBrains Mono, monospace" font-size="15" font-weight="600">+$231.00 Saved Instantly</text>
+    <text x="775" y="106" text-anchor="middle" fill="#94A3B8" font-family="Inter, system-ui, sans-serif" font-size="12">Released when FedEx delivers (48h)</text>
+  </g>
+</svg>

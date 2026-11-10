@@ -1,67 +1,76 @@
-# TALOS Phase 1–6 — Automated E2E Test Readiness Report (`TEST_READY.md`)
+# TEST_READY: TALOS Investor Storyline & Clearinghouse (`R1`–`R4`, `F-01`–`F-16`)
 
-## 1. Executive Summary & How to Run
+## 1. Test Execution Command & Latest Run Results
 
-The automated 4-tier opaque-box End-to-End (E2E) verification suite for TALOS Phases 1 through 6 (`TASK-01` through `TASK-12`, Features `F1` through `F15`) is complete, modular (`< 250` lines per script), and ready for verification.
-
-### Test Runner Command
+Run the full typecheck and 4-Tier Vitest suite from `g:\PAYPAL\web`:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File g:\PAYPAL\tests\e2e_phase1_6\run_e2e.ps1
+Set-Location g:\PAYPAL\web
+npm run lint
+npm test
 ```
 
-- **Exit Code Contract**: Exits with `0` when all `176` test cases pass (`0` failures); exits with `1` and lists every failing test ID if any assertion fails.
-- **Zero Secret Leaks**: Uses `Import-TalosDotEnvSafe` (`lib_assert.ps1`) to load and verify `.env` credentials (`PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_WEBHOOK_ID`, `APIMATIC_API_KEY`, `NEXT_PUBLIC_AG_GRID_LICENSE_KEY`, `BRYNTUM_MCP_URL`, `CHANNEL3_API_KEY`, `KERNEL_API_KEY`) in memory without printing, echoing, or logging any secret value.
-- **Git Immutability Check**: Verifies `git rev-parse HEAD` remains unchanged before and after execution.
+### Verified Execution Output
+
+```text
+> talos-console-web@0.1.0 lint
+> tsc --noEmit
+(exit code 0)
+
+> talos-console-web@0.1.0 test
+> vitest run --passWithNoTests
+
+ RUN  v3.2.7 G:/PAYPAL/web
+
+ ✓ src/app/api/healthz/route.spec.ts (3 tests) 14ms
+ ✓ src/__tests__/anti-slop-20-gate.test.ts (20 tests) 228ms
+ ✓ src/__tests__/showcase-properties.test.ts (6 tests) 213ms
+ ✓ src/components/BryntumSlaBoard.spec.tsx (4 tests) 113ms
+ ✓ src/components/AgStudioBlotter.spec.tsx (6 tests) 115ms
+ ✓ src/__tests__/investor-storyline-r1-r4.test.tsx (38 tests) 803ms
+ ✓ src/components/GuidedDemoBanner.spec.tsx (3 tests) 238ms
+ ✓ src/components/MandateStudio.spec.tsx (7 tests) 227ms
+ ✓ src/__tests__/showcase-rendering.test.ts (4 tests) 392ms
+ ✓ src/__tests__/console-f01-f12.test.tsx (4 tests) 602ms
+ ✓ src/components/Phase6Integration.spec.tsx (6 tests) 115ms
+
+ Test Files  11 passed (11)
+      Tests  101 passed (101)
+   Duration  24.33s
+(exit code 0)
+```
 
 ---
 
-## 2. Coverage Counts Per Tier
+## 2. Tier 1–4 Coverage Summary Table
 
-| Verification Tier | Requirement Threshold | Implemented Test Cases | Status | Script Files |
-|---|---:|---:|---|---|
-| **Tier 1 — Feature Coverage (Happy Path)** | `>= 75` (`>= 5` / feature × 15) | **75** (`5` / feature × 15) | **READY (75/75 PASS)** | `tier1_f1_f5.ps1`, `tier1_f6_f10.ps1`, `tier1_f11_f15.ps1` |
-| **Tier 2 — Boundary & Corner Cases** | `>= 75` (`>= 5` / feature × 15) | **75** (`5` / feature × 15) | **READY (75/75 PASS)** | `tier2_f1_f5.ps1`, `tier2_f6_f10.ps1`, `tier2_f11_f15.ps1` |
-| **Tier 3 — Cross-Feature Pairwise Combinations** | `>= 15` | **16** (`T3-01`..`T3-16`) | **READY (16/16 PASS)** | `tier3_pairwise.ps1` |
-| **Tier 4 — Real-World Application Scenarios** | `>= 8` | **10** (`T4-S1`..`T4-S10`) | **READY (10/10 PASS)** | `tier4_scenarios.ps1` |
-| **TOTAL** | **`>= 173`** | **`176`** | **176 / 176 PASS** | `run_e2e.ps1` + 10 modular scripts |
-
----
-
-## 3. Feature Checklist Table (`F1`–`F15` across `TASK-01`–`TASK-12`)
-
-| Feature ID | Task ID | Feature Name | Tier 1 Tests (Happy Path) | Tier 2 Tests (Boundaries) | Tier 3 Pairwise Tests | Tier 4 E2E Scenarios | Status |
-|---|---|---|---|---|---|---|---|
-| **F1** | `TASK-01` | MIT License, Docker Compose (`postgres:16-alpine`, `valkey:7.2-alpine`) & Graphify Gate | `T1-F1-01`..`T1-F1-05` (5) | `T2-F1-01`..`T2-F1-05` (5) | `T3-01`, `T3-15` | `T4-S9` | **PASS** |
-| **F2** | `TASK-02` | PostgreSQL 16 9-Table Relational Ledger (`E-01`..`E-09`) & SHA-256 Hash Chain | `T1-F2-01`..`T1-F2-05` (5) | `T2-F2-01`..`T2-F2-05` (5) | `T3-01`, `T3-02`, `T3-08` | `T4-S2`, `T4-S5` | **PASS** |
-| **F3** | `TASK-02` | Redis/Valkey 24h `PayPal-Request-Id` Idempotency Lock (`E-10`, `SET NX EX 86400`) | `T1-F3-01`..`T1-F3-05` (5) | `T2-F3-01`..`T2-F3-05` (5) | `T3-02`, `T3-06` | `T4-S2`, `T4-S3` | **PASS** |
-| **F4** | `TASK-03` | Rust Ed25519 KYA Mandate Signer & Verifier + RFC 9421 (`API-01`, `API-02`) | `T1-F4-01`..`T1-F4-05` (5) | `T2-F4-01`..`T2-F4-05` (5) | `T3-03`, `T3-04`, `T3-11` | `T4-S1`, `T4-S4` | **PASS** |
-| **F5** | `TASK-03` | Rust PayPal Webhook CRC32 & Signature Verifier (`API-04`) | `T1-F5-01`..`T1-F5-05` (5) | `T2-F5-01`..`T2-F5-05` (5) | `T3-05`, `T3-10` | `T4-S2`, `T4-S3` | **PASS** |
-| **F6** | `TASK-04` | Streaming `lol_html` + DeBERTa-v3 ONNX (`M-01`) DOM Sanitizer (`API-03`, `<4ms`) | `T1-F6-01`..`T1-F6-05` (5) | `T2-F6-01`..`T2-F6-05` (5) | `T3-03`, `T3-07`, `T3-12` | `T4-S1` | **PASS** |
-| **F7** | `TASK-04` | Official Rust MCP Server (`F-03`, `/mcp` JSON-RPC 2.0 & `--mcp-stdio`) | `T1-F7-01`..`T1-F7-05` (5) | `T2-F7-01`..`T2-F7-05` (5) | `T3-04`, `T3-16` | `T4-S1`, `T4-S2` | **PASS** |
-| **F8** | `TASK-05` | Strongly-Typed APIMatic Go PayPal Sandbox SDK (`sdk/paypal-go-apimatic`) | `T1-F8-01`..`T1-F8-05` (5) | `T2-F8-01`..`T2-F8-05` (5) | `T3-06`, `T3-09`, `T3-14` | `T4-S2`, `T4-S6`, `T4-S10` | **PASS** |
-| **F9** | `TASK-06` | Go 2PC Escrow State Machine (`AUTHORIZE` / `CAPTURE` / `VOID`) | `T1-F9-01`..`T1-F9-05` (5) | `T2-F9-01`..`T2-F9-05` (5) | `T3-06`, `T3-08`, `T3-10`, `T3-13` | `T4-S2`, `T4-S3`, `T4-S4`, `T4-S10` | **PASS** |
-| **F10** | `TASK-07` | Channel3 Fair-Market Price Oracle (`API-06`) & KERNEL Cloud Browser (`F-11`) | `T1-F10-01`..`T1-F10-05` (5) | `T2-F10-01`..`T2-F10-05` (5) | `T3-07`, `T3-09` | `T4-S1`, `T4-S2`, `T4-S7`, `T4-S10` | **PASS** |
-| **F11** | `TASK-08` | Unified Checkout (`API-05`), Tracking v1 (`API-08`), Disputes v1 (`API-11`), Blotter/Timeline & WS Hub (`API-12`..`API-15`) | `T1-F11-01`..`T1-F11-05` (5) | `T2-F11-01`..`T2-F11-05` (5) | `T3-05`, `T3-08`, `T3-13` | `T4-S2`, `T4-S3`, `T4-S5` | **PASS** |
-| **F12** | `TASK-09` | Next.js 15 Obsidian Shell, `MandateStudio.tsx` & `useEscrowStream.ts` | `T1-F12-01`..`T1-F12-05` (5) | `T2-F12-01`..`T2-F12-05` (5) | `T3-11`, `T3-12` | `T4-S1`..`T4-S4` | **PASS** |
-| **F13** | `TASK-10` | `AgStudioBlotter.tsx` & `ForensicDetailPanel.tsx` (`F-08` AG Grid v33 + AI Copilot) | `T1-F13-01`..`T1-F13-05` (5) | `T2-F13-01`..`T2-F13-05` (5) | `T3-12`, `T3-14` | `T4-S8` | **PASS** |
-| **F14** | `TASK-11` | `BryntumSlaBoard.tsx` Two-Way Payment-Reactive Timeline (`F-07`, `API-13`) | `T1-F14-01`..`T1-F14-05` (5) | `T2-F14-01`..`T2-F14-05` (5) | `T3-13`, `T3-15` | `T4-S2`, `T4-S3` | **PASS** |
-| **F15** | `TASK-12` | `PayPalStepUpModal.tsx`, `PoisonedStoreSim.tsx` & `/api/mcp/paypal-bridge` | `T1-F15-01`..`T1-F15-05` (5) | `T2-F15-01`..`T2-F15-05` (5) | `T3-14`, `T3-16` | `T4-S1`..`T4-S4` | **PASS** |
+| Tier | Methodology | Test File(s) | Tests Count | Status |
+| :--- | :--- | :--- | :---: | :---: |
+| **Tier 1 — Feature Coverage** | Category-Partition across `R1.1`–`R1.4`, `R2.1`–`R2.4`, `R3`, `R4` (`F-01`–`F-16`) | `src/__tests__/investor-storyline-r1-r4.test.tsx`, `src/__tests__/console-f01-f12.test.tsx` | 13 | ✅ PASS (`13/13`) |
+| **Tier 2 — Boundary & Corner Cases** | Boundary Value Analysis (BVA) on `$300` allowance cap, `1500 bps` spread, `48h` SLA cutoff, `128-hex` Ed25519 seals, `<= 12` word subheads, `<= 250` line files | `src/__tests__/investor-storyline-r1-r4.test.tsx`, `src/__tests__/anti-slop-20-gate.test.ts`, `src/__tests__/showcase-properties.test.ts` | 41 | ✅ PASS (`41/41`) |
+| **Tier 3 — Cross-Feature Combinations** | Pairwise combinations (`injectHiddenPrompt` × `merchantAskUsd` × `carrierHoursElapsed`), controlled/uncontrolled `TechnicalProofDrawer` states, property-based state transitions | `src/__tests__/investor-storyline-r1-r4.test.tsx`, `src/__tests__/showcase-rendering.test.ts` | 13 | ✅ PASS (`13/13`) |
+| **Tier 4 — Real-World Application Scenarios** | End-to-End Investor Storyline Walkthroughs (Act 1 Scam Store `$480` vs `$249` saving `$231`, Act 2 Honest Store `$249` FedEx capture, Act 3 `0s` refund + `$450` **Approve with PayPal** step-up, Scene 3 CFO Ledger audit) | `src/__tests__/investor-storyline-r1-r4.test.tsx`, `src/components/*.spec.tsx`, `src/app/api/healthz/route.spec.ts` | 34 | ✅ PASS (`34/34`) |
+| **Total** | **All 4 Tiers + 20 Anti-Slop Quality Gates** | **11 Test Suites** | **101** | **✅ 100% PASS (`101/101`)** |
 
 ---
 
-## 4. Test Script Modular Line-Count Audit (`< 250` Lines Constraint)
+## 3. Feature Checklist (`F-01`–`F-16`)
 
-| File Path | Line Count | Limit | Status |
-|---|---:|---:|---|
-| `tests/e2e_phase1_6/run_e2e.ps1` | 112 | `< 250` | **COMPLIANT** |
-| `tests/e2e_phase1_6/lib_assert.ps1` | 178 | `< 250` | **COMPLIANT** |
-| `tests/e2e_phase1_6/lib_contracts.ps1` | 180 | `< 250` | **COMPLIANT** |
-| `tests/e2e_phase1_6/tier1_f1_f5.ps1` | 162 | `< 250` | **COMPLIANT** |
-| `tests/e2e_phase1_6/tier1_f6_f10.ps1` | 151 | `< 250` | **COMPLIANT** |
-| `tests/e2e_phase1_6/tier1_f11_f15.ps1` | 130 | `< 250` | **COMPLIANT** |
-| `tests/e2e_phase1_6/tier2_f1_f5.ps1` | 168 | `< 250` | **COMPLIANT** |
-| `tests/e2e_phase1_6/tier2_f6_f10.ps1` | 142 | `< 250` | **COMPLIANT** |
-| `tests/e2e_phase1_6/tier2_f11_f15.ps1` | 118 | `< 250` | **COMPLIANT** |
-| `tests/e2e_phase1_6/tier3_pairwise.ps1` | 122 | `< 250` | **COMPLIANT** |
-| `tests/e2e_phase1_6/tier4_scenarios.ps1` | 144 | `< 250` | **COMPLIANT** |
+| Feature ID | Feature Description | Requirement | Primary Verification Test(s) | Status |
+| :--- | :--- | :--- | :--- | :---: |
+| **F-01** | Eliminate 21 Competing Buttons on Screen 1 | `R1.1` | `investor-storyline-r1-r4.test.tsx` (`F-01 & F-06`) | ✅ VERIFIED |
+| **F-02** | Business Language Reframing (*Problem -> Live Demo -> How Much Money It Saves -> How PayPal Makes Money*) | `R1.2` | `investor-storyline-r1-r4.test.tsx` (`F-02`) | ✅ VERIFIED |
+| **F-03** | Surface Side-by-Side Comparison (`SideBySideAgentComparison.tsx`) Directly in Main Flow | `R1.3` | `investor-storyline-r1-r4.test.tsx` (`F-03`) | ✅ VERIFIED |
+| **F-04** | On-Demand `"View Technical Proof"` Drawer (`TechnicalProofDrawer.tsx`, `data-proof-open="false"` at second 0) | `R1.4` | `investor-storyline-r1-r4.test.tsx` (`F-04`, Tier 3 Drawer Sync) | ✅ VERIFIED |
+| **F-05** | War-Room Council Storyline Discussion & Implementation Plan (`WAR_ROOM_COUNCIL_STORYLINE_AND_IMPLEMENTATION_PLAN.md`) | `R1` | `investor-storyline-r1-r4.test.tsx` (`F-05`) | ✅ VERIFIED |
+| **F-06** | Stage 0: Above-the-Fold 5-Second Hook (*"Your AI Agent Has Your Wallet. TALOS Makes Sure It Never Gets Scammed."* + *"Watch Live 60-Second Simulation ->"*) | `R2.1` | `investor-storyline-r1-r4.test.tsx` (`F-01 & F-06`), `console-f01-f12.test.tsx` | ✅ VERIFIED |
+| **F-07** | Interactive Scene 1: `"Step 1: Give Your AI a Spending Allowance ($300 Max)"` (`MandateStudio.tsx`) | `R2.2` | `investor-storyline-r1-r4.test.tsx` (`F-07`, Tier 2 Allowance BVA), `MandateStudio.spec.tsx` | ✅ VERIFIED |
+| **F-08** | Interactive Scene 2, Scenario 1: `"The Scam Store ($480 Trap)"` (Normal AI loses `$480` vs TALOS buys for `$249`, saving `$231`) | `R2.3` | `investor-storyline-r1-r4.test.tsx` (`F-08`, Tier 4 `T4-S1`) | ✅ VERIFIED |
+| **F-09** | Interactive Scene 2, Scenario 2: `"The Honest Store ($249 Verified)"` (FedEx `#794892104852` delivery releases `$249` PayPal Escrow) | `R2.3` | `investor-storyline-r1-r4.test.tsx` (`F-09`, Tier 4 `T4-S2`) | ✅ VERIFIED |
+| **F-10** | Interactive Scene 2, Scenario 3: `"The Late Delivery & Big Order ($450)"` (`0-second` auto-refund + **Approve with PayPal** human step-up) | `R2.3` | `investor-storyline-r1-r4.test.tsx` (`F-10`, Tier 4 `T4-S3`), `Phase6Integration.spec.tsx` | ✅ VERIFIED |
+| **F-11** | Interactive Scene 3: `"The CFO Dashboard (Where the Money Lives)"` (`AgStudioBlotter.tsx`, `BryntumSlaBoard.tsx`, `cfo-paypal-revenue-bar`) | `R2.4` | `investor-storyline-r1-r4.test.tsx` (`F-11`, Tier 4 `T4-S4`), `AgStudioBlotter.spec.tsx`, `BryntumSlaBoard.spec.tsx` | ✅ VERIFIED |
+| **F-12** | Colour Psychology, Gradient Tokens & Design System (`globals.css`, `DESIGN_SYSTEM.md`, `UI_SPEC.md`) | `R3` | `investor-storyline-r1-r4.test.tsx` (`F-12, F-13, F-14`), `anti-slop-20-gate.test.ts` (Gates 7, 8, 19) | ✅ VERIFIED |
+| **F-13** | Typography, Tabular Numerals & Anti-Slop Compliance (`<= 250` lines per source file, `<= 12` words per subhead) | `R3` | `investor-storyline-r1-r4.test.tsx` (Tier 2 BVA), `anti-slop-20-gate.test.ts` (Gates 1–20) | ✅ VERIFIED |
+| **F-14** | HeroUI v3 & Apple Spatial Consistency (`min-height: 44px`, `cubic-bezier(0.22, 1, 0.36, 1)`, two-channel status pills) | `R3` | `investor-storyline-r1-r4.test.tsx` (`F-12, F-13, F-14`), `anti-slop-20-gate.test.ts` (Gates 1, 16) | ✅ VERIFIED |
+| **F-15** | `fragment.im`-Inspired 3D Elements & Motion Choreography (`FragmentSpatialHero3D.tsx` + 5-step dual-branch pipeline) | `R4` | `investor-storyline-r1-r4.test.tsx` (`F-15 & F-16`), `showcase-rendering.test.ts` | ✅ VERIFIED |
+| **F-16** | `/ai-video-studio` Visual Media Assets (`talos-fragment-shield-3d.svg` + PNG plates) & 4-Tier E2E Test Suite | `R4` | `investor-storyline-r1-r4.test.tsx` (`F-15 & F-16`, Tiers 1–4) | ✅ VERIFIED |

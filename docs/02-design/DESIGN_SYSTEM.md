@@ -109,3 +109,27 @@ flowchart LR
   - Bad: `"Oops! Looks like that website tried a sneaky trick on your AI buddy!"`
 - **Every Action Label States Its Exact Financial Consequence**:
   - Buttons read: `"Authorize $249.00 PayPal Escrow"`, `"Capture $249.00 (Tracking Verified)"`, `"Void Authorization & Release $219.00"`, `"Submit Dispute Evidence Bundle"`.
+
+---
+
+## 7. War-Room Council & `fragment.im` Investor Storyline Evolution (v2.0)
+
+Reviewed with `/war-room-council` and inspired by `https://www.fragment.im/`, `/apple-design`, `/heroui-react` v3, `/ui-ux-pro-max`, `/generative_ui`, `/unslop`, and `/hallmark` (see [`WAR_ROOM_COUNCIL_STORYLINE_AND_IMPLEMENTATION_PLAN.md`](../08-project/WAR_ROOM_COUNCIL_STORYLINE_AND_IMPLEMENTATION_PLAN.md)):
+
+### 7.1 Colour Psychology & Institutional Palette (`globals.css`)
+- **Obsidian Vault Precision (`#07080D` canvas, `#0F1420` surface-1, `#151C2C` surface-2) & Daylight Institutional Parchment (`#FAF8F5` canvas, `#FFFFFF` card)**: Conveys sovereign clearinghouse permanence, zero visual clutter, and AAA numerical contrast (`>= 7:1`).
+- **PayPal Institutional Blue (`#003087` deep / `#0070E0` primary / `oklch(0.56 0.19 255)`)**: Reserved strictly (`< 5%` viewport area) for primary interactive guidance (`"Watch Live 60-Second Simulation ->"`) and active non-custodial escrow holds (`PAYPAL_AUTHORIZED`).
+- **Verified Value Emerald (`#0A7A3D` light / `#10B981` dark / `oklch(0.69 0.17 162)`)**: Signals verified fair pricing (`$249`), released FedEx delivery escrow (`PAYPAL_CAPTURED`), and net capital saved (`+$231`).
+- **Escrow Hold & Human Vigilance Gold/Amber (`#FFB600` / `#F59E0B` / `#FFC439` PayPal Gold)**: Signals active 48h delivery countdowns and human-in-the-loop **Approve with PayPal** step-up co-signing (`$450 > $300` allowance).
+- **Threat Interception Crimson (`#D9360B` / `#EF4444` / `oklch(0.63 0.21 25)`)**: Signals blocked `$480` scam traps, stripped DOM prompt injections, and `0-second` automatic SLA breach refunds (`PAYPAL_VOIDED`).
+
+### 7.2 Architectural Surface & Specular Gradient Tokens
+Defined exclusively in `web/src/app/globals.css` `:root` (zero inline `linear-gradient(` or `bg-gradient-to-*` in `.tsx` components):
+- `--gradient-obsidian-stage`: Subtle top-lit obsidian depth for storyline stage containers.
+- `--gradient-paypal-vault`: Institutional PayPal Blue-to-Obsidian sheen for the 3D spatial shield (`FragmentSpatialHero3D.tsx`) and escrow vault cards.
+- `--gradient-specular-border`: Razor-sharp `1px` top-lit border highlight (`rgba(255, 255, 255, 0.12)`).
+
+### 7.3 Anti-Slop & Progressive Disclosure Guardrails
+- **Zero-Jargon Screen 1**: Single primary CTA (`"Watch Live 60-Second Simulation ->"`), `>= 12px` (`text-xs`) minimum font size floor, sentence-case UI badges (zero `uppercase tracking-widest`), and `tabular-nums` on 100% of currency, latency, and SLA metrics.
+- **On-Demand `"View Technical Proof"` Drawer (`TechnicalProofDrawer.tsx`)**: Raw `128-hex Ed25519 signatures`, `RFC 9421 headers`, `9277 bps` spreads, and `lol_html + DeBERTa-v3 ONNX` DOM diffs are encapsulated inside an on-demand CSS Grid drawer (`grid-rows-[0fr]` closed at second 0 $\rightarrow$ `grid-rows-[1fr]` open on click) so they remain mounted in SSR markup while keeping the executive storyline clean.
+

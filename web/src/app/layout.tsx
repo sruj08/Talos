@@ -1,5 +1,7 @@
 import React from 'react';
 import './globals.css';
+import './rail-system.css';
+import './enterprise-shell.css';
 import { TalosClearingProvider } from '../context/TalosClearingContext';
 
 export const metadata = {
@@ -12,7 +14,7 @@ const PREPAINT_FX_SCRIPT = `(function(){try{var d=document.documentElement;var r
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-theme="light" data-fx="high" suppressHydrationWarning>
+    <html lang="en" data-theme="dark" className="dark" data-fx="high" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: PREPAINT_FX_SCRIPT }} />
       </head>

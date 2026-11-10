@@ -42,31 +42,66 @@ export interface StoryStageSpec {
   medallionClass: 'icon-medallion-paypal' | 'icon-medallion-emerald' | 'icon-medallion-amber' | 'icon-medallion-crimson';
 }
 
+export const INVESTOR_BUSINESS_PITCH_STRIP = [
+  {
+    id: 'pitch-problem',
+    stepBadge: '01 · The Problem',
+    title: 'Problem: Blind AI Checkout',
+    summary: 'Normal AI gets tricked into paying $480 by hidden webpage instructions while standard checkout is irreversible.',
+    metric: '-$480.00 Scam Risk',
+    toneClass: 'tone-crimson',
+  },
+  {
+    id: 'pitch-live-demo',
+    stepBadge: '02 · Live Demo',
+    title: 'Live Demo: 60-Second Store Sim',
+    summary: 'Test 3 real-world shopping scenarios side-by-side: Scam Store ($480), Honest Store ($249), and Late Delivery ($450).',
+    metric: '2.84ms Intercept',
+    toneClass: 'tone-paypal',
+  },
+  {
+    id: 'pitch-money-saved',
+    stepBadge: '03 · Buyer ROI',
+    title: 'How Much Money It Saves',
+    summary: 'Saves $231 per intercepted order ($249 verified price vs $480 trap) plus 0-second automatic late-delivery refunds.',
+    metric: '+$231.00 Saved / Order',
+    toneClass: 'tone-emerald',
+  },
+  {
+    id: 'pitch-paypal-revenue',
+    stepBadge: '04 · PayPal Monetization',
+    title: 'How PayPal Makes Money',
+    summary: 'Escrow float yield on 29-day holds + verified agentic checkout take-rate + $0 manual dispute operations cost.',
+    metric: '29d Float + Take-Rate',
+    toneClass: 'tone-amber',
+  },
+] as const;
+
 export const STARTUP_PRODUCT_POSITIONING = {
-  eyebrow: 'Sovereign Clearinghouse for Autonomous AI Commerce',
-  headline: 'Stop AI Shopping Agents From Being Hijacked or Overcharged',
-  subhead: 'Cryptographic spending limits, webpage X-ray sanitization, and reversible PayPal escrow holds',
+  eyebrow: 'PayPal Agentic Commerce Protection',
+  headline: 'Your AI Agent Has Your Wallet. TALOS Makes Sure It Never Gets Scammed.',
+  subhead: 'Set a spending limit, block hidden traps, and pay on delivery.',
   whatTalosDoes:
-    'TALOS sits between your AI shopping agent, untrusted online stores, and your PayPal wallet—stripping hidden webpage traps in under 4ms, blocking price gouging, and holding money in reversible PayPal escrow until delivery.',
+    'TALOS sits between your AI shopping agent, untrusted online stores, and your PayPal wallet—blocking $480 hidden traps in 2.84ms, saving $231 per order, and holding money in reversible PayPal escrow until delivery.',
   theProblem:
-    'AI agents read raw webpage HTML blindly while standard checkout is irreversible—allowing a single poisoned store page to hijack the AI and drain your wallet.',
+    'Normal AI gets tricked into paying $480 because it reads hidden webpage instructions blindly while standard checkout cannot be reversed.',
   whyItMatters:
-    '51% of web traffic is now automated, yet 78% of CFOs block AI purchasing because standard payment rails cannot stop prompt injection or claw back undelivered orders.',
+    'Saves $231 per intercepted order with 0-second late-delivery refunds, while PayPal earns escrow float on 29-day holds, verified agentic checkout take-rate, and $0 dispute ops cost.',
   keyBenefits: [
     {
       id: 'benefit-zero-fraud',
-      label: '$0 Unauthorized Spend',
-      detail: 'Strips hidden HTML prompt traps in 2.84ms before the AI reads the page.',
+      label: '$0 Scam Loss',
+      detail: 'Blocks hidden webpage traps in 2.84ms before the AI agent can be tricked.',
     },
     {
       id: 'benefit-fair-price',
-      label: '$231 Instant Gouge Savings',
-      detail: 'Benchmarks 100M+ SKUs via Channel3 to block +92.7% price markups.',
+      label: '$231 Saved Per Order',
+      detail: 'Blocks $480 price markups and buys from a verified seller for $249.',
     },
     {
       id: 'benefit-reversible-escrow',
-      label: '0s Automatic SLA Refund',
-      detail: 'Holds funds in PayPal AUTHORIZE escrow and auto-voids if delivery is late.',
+      label: '0s Late-Delivery Refund',
+      detail: 'PayPal holds funds safely until FedEx delivers, or refunds automatically if late.',
     },
   ],
 } as const;
@@ -74,44 +109,44 @@ export const STARTUP_PRODUCT_POSITIONING = {
 export const TALOS_FOUR_PILLARS: TalosPillarSpec[] = [
   {
     id: 'talos-pillar-1',
-    numberBadge: 'Pillar 01',
-    title: 'Know-Your-Agent (KYA) Permission Slip',
-    metricBadge: 'Ed25519 <1ms',
+    numberBadge: 'Stage 01',
+    title: 'Step 1: $300 Spending Allowance',
+    metricBadge: '$300 Max Cap',
     plainExplanation:
-      'Sign a tamper-proof permission slip locking your AI agent to a $300 budget cap, 15% max markup, and 48h delivery deadline.',
+      'Give your AI agent a plain-English $300 spending limit, fair-price check, and 48-hour delivery rule before it shops.',
     technicalProof: 'RFC 9421 + Ed25519 Hardware Key',
     dotClass: 'dot-paypal',
     medallionClass: 'icon-medallion-paypal',
   },
   {
     id: 'talos-pillar-2',
-    numberBadge: 'Pillar 02',
-    title: 'DOM Firewall Webpage X-Ray',
-    metricBadge: 'Rust 2.84ms',
+    numberBadge: 'Stage 02',
+    title: 'Step 2: Hidden Trap Blocker',
+    metricBadge: '2.84ms Shield',
     plainExplanation:
-      'Streams every merchant webpage through a Rust X-ray that strips invisible display:none text and hidden HTML override traps.',
+      'Scans every store page to strip invisible text traps so a scam store cannot trick your AI into paying $480.',
     technicalProof: 'lol_html + DeBERTa-v3 ONNX',
     dotClass: 'dot-emerald',
     medallionClass: 'icon-medallion-emerald',
   },
   {
     id: 'talos-pillar-3',
-    numberBadge: 'Pillar 03',
-    title: 'Channel3 Fair-Price Oracle',
-    metricBadge: '100M+ SKUs',
+    numberBadge: 'Stage 03',
+    title: 'Step 3: Fair-Price Comparison',
+    metricBadge: 'Saves $231',
     plainExplanation:
-      'Checks every product against market medians—blocking a $480 gouge for a $249 microphone and rerouting to a verified seller.',
+      'Compares prices across verified stores—blocking a $480 markup and purchasing the genuine microphone for $249.',
     technicalProof: 'Channel3 Spread Guard (<1,500 bps)',
     dotClass: 'dot-amber',
     medallionClass: 'icon-medallion-amber',
   },
   {
     id: 'talos-pillar-4',
-    numberBadge: 'Pillar 04',
-    title: 'Reversible PayPal 2PC Escrow',
-    metricBadge: 'Hold -> Capture / Void',
+    numberBadge: 'Stage 04',
+    title: 'Step 4: Pay-on-Delivery Escrow',
+    metricBadge: '0s Auto-Refund',
     plainExplanation:
-      'Places a reversible 29-day PayPal AUTHORIZE hold that only captures funds on carrier delivery—or refunds in 0s if late.',
+      'PayPal holds the $249 safely until FedEx confirms delivery, refunds late shipments in 0 seconds, and pauses $450 orders for human approval.',
     technicalProof: 'PayPal Orders v2 + Tracking v1',
     dotClass: 'dot-paypal',
     medallionClass: 'icon-medallion-paypal',

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ChevronDown, Clock, DollarSign, KeyRound, ShieldCheck, Tag, TrendingUp } from 'lucide-react';
+import { Clock, DollarSign, KeyRound, ShieldCheck, Tag, TrendingUp } from 'lucide-react';
 import { formatUsdInr } from '../lib/phase6-events';
 import {
   DEFAULT_MANDATE_VALUES,
@@ -12,6 +12,7 @@ import {
   signKyaMandateRequest,
   useMandateStudio,
 } from '../hooks/useMandateStudio';
+import { TechnicalProofDrawer } from './TechnicalProofDrawer';
 
 export {
   DEFAULT_MANDATE_VALUES,
@@ -49,21 +50,21 @@ export function MandateStudio({ initialValues = DEFAULT_MANDATE_VALUES, onMandat
       className="paypal-feature-card p-6 sm:p-7 space-y-6 h-full flex flex-col justify-between"
       data-testid="mandate-studio"
       data-mandate-status={signedMandate.status}
-      aria-label="Mandate Clearing Studio"
+      aria-label="Step 1: Give Your AI a Spending Allowance ($300 Max)"
     >
       <div className="space-y-6">
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <span className="w-12 h-12 rounded-lg icon-medallion-paypal inline-flex items-center justify-center shrink-0">
               <KeyRound className="w-6 h-6" strokeWidth={1.75} aria-hidden="true" />
             </span>
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-xs text-ink-paypal font-bold">01</span>
-                <h2 className="paypal-title-sm text-ink">Mandate Clearing Studio</h2>
+                <span className="font-mono text-xs text-ink-paypal font-bold">Scene 01 · Set the Rules</span>
               </div>
+              <h2 className="paypal-title-sm text-ink">Step 1: Give Your AI a Spending Allowance ($300 Max)</h2>
               <p data-subhead="true" className="paypal-caption text-ink-secondary">
-                Issue Ed25519 cryptographic spending limits, Channel3 spread caps, and delivery SLAs
+                Lock a $300 spending cap, fair-price check, and 48-hour delivery rule
               </p>
             </div>
           </div>
@@ -80,8 +81,8 @@ export function MandateStudio({ initialValues = DEFAULT_MANDATE_VALUES, onMandat
           data-testid="mandate-judge-explainer"
           className="tone-paypal p-3.5 rounded-lg text-xs text-ink-secondary leading-relaxed"
         >
-          <strong className="text-ink font-bold">Why This Matters (Step 1): </strong>
-          Before the AI agent shops, the human CFO sets hard spending rules that the AI cannot override.
+          <strong className="text-ink font-bold">Plain-English Rulebook: </strong>
+          Before your AI agent visits any online store, you set a hard $300.00 spending limit, block price markups over 15%, and require 48-hour carrier delivery.
         </div>
 
         <form
@@ -92,7 +93,7 @@ export function MandateStudio({ initialValues = DEFAULT_MANDATE_VALUES, onMandat
           <label className="sovereign-subcard p-4 block space-y-2" data-testid="mandate-budget-input">
             <span className="flex items-center gap-2 text-xs font-bold text-ink tabular-nums">
               <DollarSign className="w-4 h-4 text-ink-paypal shrink-0" strokeWidth={1.75} aria-hidden="true" />
-              <span>Autonomous budget ceiling ({formatUsdInr(signedMandate.max_amount_cents)})</span>
+              <span>AI Spending Allowance ({formatUsdInr(signedMandate.max_amount_cents)})</span>
             </span>
             <input
               type="number"
@@ -102,7 +103,7 @@ export function MandateStudio({ initialValues = DEFAULT_MANDATE_VALUES, onMandat
               data-testid="input-mandate-budget"
               className="paypal-input h-11 w-full text-xs tabular-nums"
             />
-            <span className="block text-[11px] text-ink-muted">$300 max per order without human approval</span>
+            <span className="block text-xs text-ink-muted">$300 max per order without human approval</span>
           </label>
           <label className="sovereign-subcard p-4 block space-y-2" data-testid="mandate-spread-input">
             <span className="flex items-center gap-2 text-xs font-bold text-ink tabular-nums">
@@ -118,7 +119,7 @@ export function MandateStudio({ initialValues = DEFAULT_MANDATE_VALUES, onMandat
               data-testid="input-mandate-spread"
               className="paypal-input h-11 w-full text-xs tabular-nums"
             />
-            <span className="block text-[11px] text-ink-muted">Max markup allowed above fair market price</span>
+            <span className="block text-xs text-ink-muted">Max markup allowed above fair market price</span>
           </label>
           <label className="sovereign-subcard p-4 block space-y-2" data-testid="mandate-sla-input">
             <span className="flex items-center gap-2 text-xs font-bold text-ink tabular-nums">
@@ -134,12 +135,12 @@ export function MandateStudio({ initialValues = DEFAULT_MANDATE_VALUES, onMandat
               data-testid="input-mandate-sla"
               className="paypal-input h-11 w-full text-xs tabular-nums"
             />
-            <span className="block text-[11px] text-ink-muted">Auto-refund if carrier does not deliver in 48 hours</span>
+            <span className="block text-xs text-ink-muted">Auto-refund if carrier does not deliver in 48 hours</span>
           </label>
           <label className="sovereign-subcard p-4 block space-y-2">
             <span className="flex items-center gap-2 text-xs font-bold text-ink">
               <Tag className="w-4 h-4 text-ink-paypal shrink-0" strokeWidth={1.75} aria-hidden="true" />
-              <span>Allowed merchant categories</span>
+              <span>Allowed store categories</span>
             </span>
             <input
               type="text"
@@ -148,33 +149,25 @@ export function MandateStudio({ initialValues = DEFAULT_MANDATE_VALUES, onMandat
               data-testid="input-mandate-categories"
               className="paypal-input h-11 w-full text-xs"
             />
-            <span className="block text-[11px] text-ink-muted">Restricts AI agent to verified store categories</span>
+            <span className="block text-xs text-ink-muted">Restricts AI agent to verified store categories</span>
           </label>
 
           <div className="sm:col-span-2 flex flex-wrap items-center justify-between gap-3 pt-2">
             <div className="flex items-center gap-2 text-xs text-ink-secondary">
               <KeyRound className="w-4 h-4 text-ink-muted" strokeWidth={1.75} aria-hidden="true" />
-              <span className="text-ink-muted">Mandate UUID</span>
+              <span className="text-ink-muted">Allowance Rule ID</span>
               <code className="font-mono text-ink-secondary">{signedMandate.mandate_id}</code>
             </div>
             <div className="flex items-center gap-2.5">
               <button
-                type="button"
-                onClick={() => setSealExpanded((v) => !v)}
-                className="btn-paypal-secondary h-10 inline-flex items-center gap-2 px-4 py-2 text-xs font-bold whitespace-nowrap"
-              >
-                <span>Cryptographic seal</span>
-                <ChevronDown className="w-4 h-4 text-ink-muted" strokeWidth={1.75} aria-hidden="true" />
-              </button>
-              <button
                 type="submit"
                 disabled={signing}
                 data-testid="btn-sign-mandate"
-                className="btn-paypal-primary h-10 inline-flex items-center gap-2 px-5 py-2 text-xs font-bold whitespace-nowrap"
+                className="btn-paypal-primary h-10 inline-flex items-center gap-2 px-5 py-2 text-xs font-bold whitespace-nowrap active:scale-[0.98]"
               >
                 <ShieldCheck className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
                 <span data-testid="sign-mandate-btn">
-                  {signing ? 'Signing Ed25519...' : 'Sign Ed25519 KYA Mandate'}
+                  {signing ? 'Locking $300 Allowance...' : 'Lock $300 Spending Allowance'}
                 </span>
               </button>
             </div>
@@ -182,59 +175,52 @@ export function MandateStudio({ initialValues = DEFAULT_MANDATE_VALUES, onMandat
         </form>
       </div>
 
-      {/* Tactile Ed25519 Hardware Instrument Moment */}
-      <div
-        className={`grid bento-drawer-transition ${sealExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-90'}`}
+      {/* On-Demand View Technical Proof Drawer (hides 128-hex Ed25519 & RFC 9421 at second 0) */}
+      <TechnicalProofDrawer
+        title="Mandate Clearing Studio · Ed25519 & RFC 9421 Cryptographic Proof"
+        buttonLabel="View Technical Proof"
+        summaryBadge="128-hex Ed25519 + RFC 9421"
+        open={sealExpanded}
+        onToggle={setSealExpanded}
+        testId="mandate-technical-proof-drawer"
+        buttonTestId="btn-mandate-technical-proof"
       >
-        <div className="overflow-hidden">
-          <div
-            data-testid="mandate-crypto-proof"
-            className="paypal-code-block p-4 space-y-3 text-xs text-ink-secondary"
-          >
-            <div className="flex items-center justify-between pb-1">
-              <div className="flex items-center gap-3">
-                <span
-                  aria-hidden="true"
-                  className="inline-grid grid-cols-2 gap-0.5 p-1 rounded-sm sovereign-subcard w-7 h-5"
-                >
-                  <span className="rounded-[1px] bar-track" />
-                  <span className="rounded-[1px] bar-track" />
-                  <span className="rounded-[1px] bar-track" />
-                  <span className="rounded-[1px] bar-track" />
-                </span>
-                <div>
-                  <div className="font-mono text-[11px] text-ink font-bold">ED25519 HARDWARE KYA SEAL</div>
-                  <div className="font-mono text-[11px] text-ink-muted">Key ID: kya-agent-talos-01</div>
-                </div>
-              </div>
-              <span className="font-mono text-[11px] text-ink-paypal font-bold tabular-nums">
-                CAP {formatUsdInr(signedMandate.max_amount_cents)}
-              </span>
+        <div
+          data-testid="mandate-crypto-proof"
+          className="paypal-code-block p-4 space-y-3 text-xs text-ink-secondary"
+        >
+          <div className="flex items-center justify-between pb-1">
+            <div>
+              <div className="font-mono text-xs text-ink font-bold">Mandate Clearing Studio · Ed25519 Hardware KYA Seal</div>
+              <div className="font-mono text-xs text-ink-muted">Key ID: kya-agent-talos-01</div>
             </div>
+            <span className="font-mono text-xs text-ink-paypal font-bold tabular-nums">
+              CAP {formatUsdInr(signedMandate.max_amount_cents)}
+            </span>
+          </div>
 
-            <div className="space-y-1.5 font-mono text-[11px]">
-              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                <span className="text-ink-muted shrink-0">Ed25519 public key</span>
-                <code data-testid="mandate-pubkey-hex" className="text-ink-secondary break-all">
-                  {signedMandate.ed25519_pubkey_hex}
-                </code>
-              </div>
-              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                <span className="text-ink-muted shrink-0">Signature (128-hex)</span>
-                <code data-testid="mandate-signature-hex" className="text-ink break-all">
-                  <span data-testid="mandate-signature-hash">{signedMandate.ed25519_signature_hex}</span>
-                </code>
-              </div>
-              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                <span className="text-ink-muted shrink-0">RFC 9421 input</span>
-                <code data-testid="mandate-rfc9421-header" className="text-ink-muted break-all">
-                  {signedMandate.rfc9421_signature_input}
-                </code>
-              </div>
+          <div className="space-y-1.5 font-mono text-xs">
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+              <span className="text-ink-muted shrink-0">Ed25519 public key</span>
+              <code data-testid="mandate-pubkey-hex" className="text-ink-secondary break-all">
+                {signedMandate.ed25519_pubkey_hex}
+              </code>
+            </div>
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+              <span className="text-ink-muted shrink-0">Signature (128-hex)</span>
+              <code data-testid="mandate-signature-hex" className="text-ink break-all">
+                <span data-testid="mandate-signature-hash">{signedMandate.ed25519_signature_hex}</span>
+              </code>
+            </div>
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+              <span className="text-ink-muted shrink-0">RFC 9421 input</span>
+              <code data-testid="mandate-rfc9421-header" className="text-ink-muted break-all">
+                {signedMandate.rfc9421_signature_input}
+              </code>
             </div>
           </div>
         </div>
-      </div>
+      </TechnicalProofDrawer>
     </section>
   );
 }

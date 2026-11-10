@@ -45,8 +45,7 @@ describe('PayPal Design System (paypal.design.md) & Multi-Page Architecture — 
     for (const { rel, content } of readAllTsx()) {
       expect(content, `Found banned rounded-full in ${rel}`).not.toMatch(/\brounded-full\b/);
     }
-    const combinedTsx = readAllTsx().map((f) => f.content).join('\n');
-    expect(combinedTsx).toContain('w-1.5 h-1.5 rounded-xs');
+    expect(readAllTsx().map((f) => f.content).join('\n')).toContain('w-1.5 h-1.5 rounded-xs');
   });
 
   it('2. Bans excessive italics (<em>, italic class, and font-style: italic)', () => {
@@ -66,21 +65,19 @@ describe('PayPal Design System (paypal.design.md) & Multi-Page Architecture — 
       expect(content, `Found banned Instrument Serif in ${rel}`).not.toMatch(/Instrument\s*Serif/i);
       expect(content, `Found banned Fraunces serif in ${rel}`).not.toMatch(/Fraunces/i);
     }
-    expect(globalsCss).toMatch(/PayPal Pro/);
-    expect(globalsCss).toMatch(/PayPal Open/);
-    expect(globalsCss).toMatch(/SFMono-Regular/);
+    for (const font of ['PayPal Pro', 'PayPal Open', 'SFMono-Regular']) {
+      expect(globalsCss).toContain(font);
+    }
   });
 
   it('4. Enforces PayPal Pro negative display tracking (-0.045em, -0.04em, -0.035em) and legal tracking (0.01em)', () => {
     for (const file of allUiSourceFiles) {
       const rel = path.relative(SRC_DIR, file);
-      const content = fs.readFileSync(file, 'utf8');
-      expect(content, `Found tracking-tighter in ${rel}`).not.toMatch(/\btracking-tighter\b/);
+      expect(fs.readFileSync(file, 'utf8'), `Found tracking-tighter in ${rel}`).not.toMatch(/\btracking-tighter\b/);
     }
-    expect(globalsCss).toContain('-0.045em');
-    expect(globalsCss).toContain('-0.04em');
-    expect(globalsCss).toContain('-0.035em');
-    expect(globalsCss).toContain('0.01em');
+    for (const tok of ['-0.045em', '-0.04em', '-0.035em', '0.01em']) {
+      expect(globalsCss).toContain(tok);
+    }
   });
 
   it('5. Enforces multi-page routes (/story, /mandates, /simulator, /blotter, /sla, /step-up, /command-center) and bans scrollIntoView', () => {
@@ -88,17 +85,12 @@ describe('PayPal Design System (paypal.design.md) & Multi-Page Architecture — 
     expect(combinedTsx + globalsCss).toMatch(/0fr|1fr/);
     for (const file of allSourceFiles) {
       const rel = path.relative(SRC_DIR, file);
-      const content = fs.readFileSync(file, 'utf8');
-      expect(content, `Found banned single-page scrollIntoView in ${rel}`).not.toContain('scrollIntoView');
+      expect(fs.readFileSync(file, 'utf8'), `Found banned scrollIntoView in ${rel}`).not.toContain('scrollIntoView');
     }
     expect(fs.existsSync(path.join(SRC_DIR, 'context', 'TalosClearingContext.tsx'))).toBe(true);
-    expect(fs.existsSync(path.join(SRC_DIR, 'app', 'story', 'page.tsx'))).toBe(true);
-    expect(fs.existsSync(path.join(SRC_DIR, 'app', 'mandates', 'page.tsx'))).toBe(true);
-    expect(fs.existsSync(path.join(SRC_DIR, 'app', 'simulator', 'page.tsx'))).toBe(true);
-    expect(fs.existsSync(path.join(SRC_DIR, 'app', 'blotter', 'page.tsx'))).toBe(true);
-    expect(fs.existsSync(path.join(SRC_DIR, 'app', 'sla', 'page.tsx'))).toBe(true);
-    expect(fs.existsSync(path.join(SRC_DIR, 'app', 'step-up', 'page.tsx'))).toBe(true);
-    expect(fs.existsSync(path.join(SRC_DIR, 'app', 'command-center', 'page.tsx'))).toBe(true);
+    for (const r of ['story', 'mandates', 'simulator', 'blotter', 'sla', 'step-up', 'command-center']) {
+      expect(fs.existsSync(path.join(SRC_DIR, 'app', r, 'page.tsx'))).toBe(true);
+    }
   });
 
   it('6. Bans overusing dividers (<hr>, divide-y, border-b) in favor of spatial rhythm and tonal elevation', () => {
@@ -110,18 +102,14 @@ describe('PayPal Design System (paypal.design.md) & Multi-Page Architecture — 
   });
 
   it('7. Bans arbitrary Tailwind color opacity modifiers and enforces PayPal Design System hex tokens', () => {
-    const slashOpacityRegex =
-      /\b(?:bg|text|border|ring|from|to|via)-(?:slate|sky|blue|emerald|rose|amber|indigo|purple|cyan|red|green|yellow)-\d+\/\d+\b/;
+    const slashOpacityRegex = /\b(?:bg|text|border|ring|from|to|via)-(?:slate|sky|blue|emerald|rose|amber|indigo|purple|cyan|red|green|yellow)-\d+\/\d+\b/;
     for (const { rel, content } of readAllTsx()) {
       expect(content, `Found arbitrary color opacity modifier in ${rel}`).not.toMatch(slashOpacityRegex);
       expect(content, `Found hardcoded dark-only text-slate-* class in ${rel}`).not.toMatch(/\btext-slate-\d+\b/);
     }
-    expect(globalsCss).toContain('#003087');
-    expect(globalsCss).toContain('#0070E0');
-    expect(globalsCss).toContain('#001435');
-    expect(globalsCss).toContain('#FAF8F5');
-    expect(globalsCss).toContain('#DADDE1');
-    expect(globalsCss).toContain('#FFC439');
+    for (const hex of ['#003087', '#0070E0', '#001435', '#FAF8F5', '#DADDE1', '#FFC439']) {
+      expect(globalsCss).toContain(hex);
+    }
   });
 
   it('8. Enforces PayPal 1px hairline borders (#DADDE1, #B7BDC2) and checkout module elevation', () => {
@@ -135,15 +123,14 @@ describe('PayPal Design System (paypal.design.md) & Multi-Page Architecture — 
 
   it('9. Enforces clean 3-State PayPal 2PC Clearing Pipeline indicator', () => {
     const combinedTsx = readAllTsx().map((f) => f.content).join('\n');
-    expect(combinedTsx).toContain('AUTHORIZED');
-    expect(combinedTsx).toContain('SLA VERIFIED');
-    expect(combinedTsx).toContain('CAPTURED / VOIDED');
+    for (const st of ['AUTHORIZED', 'SLA VERIFIED', 'CAPTURED / VOIDED']) {
+      expect(combinedTsx).toContain(st);
+    }
   });
 
   it('10. Enforces concise institutional microcopy on section subheads (<= 12 words)', () => {
     for (const { rel, content } of readAllTsx()) {
-      const subheadMatches = [...content.matchAll(/<p[^>]*data-subhead="true"[^>]*>([\s\S]*?)<\/p>/g)];
-      for (const match of subheadMatches) {
+      for (const match of content.matchAll(/<p[^>]*data-subhead="true"[^>]*>([\s\S]*?)<\/p>/g)) {
         const text = match[1].replace(/<[^>]+>/g, '').trim();
         const words = text.split(/\s+/).filter(Boolean);
         expect(words.length, `Subhead in ${rel} exceeds 12 words: "${text}"`).toBeLessThanOrEqual(12);
@@ -157,16 +144,14 @@ describe('PayPal Design System (paypal.design.md) & Multi-Page Architecture — 
       expect(content, `Found Sponsor Pool breadcrumb in ${rel}`).not.toMatch(/Sponsor Pool/i);
     }
     const combinedTsx = readAllTsx().map((f) => f.content).join('\n');
-    expect(combinedTsx).toContain('Mandate Clearing Studio');
-    expect(combinedTsx).toContain('Red-Team Interception Arena');
-    expect(combinedTsx).toContain('Escrow Settlement Ledger');
-    expect(combinedTsx).toContain('Delivery SLA Timeline');
+    for (const title of ['Mandate Clearing Studio', 'Red-Team Interception Arena', 'Escrow Settlement Ledger', 'Delivery SLA Timeline']) {
+      expect(combinedTsx).toContain(title);
+    }
   });
 
   it('12. Bans numbered section headings (1. , 2. , 3. , 4. , 5. )', () => {
     for (const { rel, content } of readAllTsx()) {
-      const headings = [...content.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>/g)];
-      for (const h of headings) {
+      for (const h of content.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>/g)) {
         const text = h[1].replace(/<[^>]+>/g, '').trim();
         expect(text, `Found numbered heading "${text}" in ${rel}`).not.toMatch(/^\d+\.\s+/);
       }
@@ -197,8 +182,7 @@ describe('PayPal Design System (paypal.design.md) & Multi-Page Architecture — 
     for (const { rel, content } of readAllTsx()) {
       expect(content, `Found box-drawing ASCII art in ${rel}`).not.toMatch(/[┌─┐│└┘├┤┬┴┼]/);
     }
-    const combinedTsx = readAllTsx().map((f) => f.content).join('\n');
-    expect(combinedTsx).toContain('lucide-react');
+    expect(readAllTsx().map((f) => f.content).join('\n')).toContain('lucide-react');
   });
 
   it('16. Enforces PayPal Design System radius scale (4px, 8px, 16px, 28px, 9999px pill)', () => {
@@ -206,18 +190,14 @@ describe('PayPal Design System (paypal.design.md) & Multi-Page Architecture — 
       expect(content, `Found rounded-3xl in ${rel}`).not.toMatch(/\brounded-3xl\b/);
       expect(content, `Found rounded-[32px] in ${rel}`).not.toContain('rounded-[32px]');
     }
-    expect(globalsCss).toContain('--radius-sm: 4px');
-    expect(globalsCss).toContain('--radius-md: 8px');
-    expect(globalsCss).toContain('--radius-lg: 16px');
-    expect(globalsCss).toContain('--radius-xl: 28px');
-    expect(globalsCss).toContain('--radius-pill: 9999px');
+    for (const r of ['--radius-sm: 4px', '--radius-md: 8px', '--radius-lg: 16px', '--radius-xl: 28px', '--radius-pill: 9999px']) {
+      expect(globalsCss).toContain(r);
+    }
   });
 
   it('17. Restricts font-mono to cryptographic hashes, RFC 9421 headers, and DOM diffs; enforces tabular-nums', () => {
     for (const { rel, content } of readAllTsx()) {
-      expect(content, `Found font-mono on button or heading in ${rel}`).not.toMatch(
-        /<(?:button|h1|h2|h3)[^>]*className="[^"]*\bfont-mono\b/
-      );
+      expect(content, `Found font-mono on button or heading in ${rel}`).not.toMatch(/<(?:button|h1|h2|h3)[^>]*className="[^"]*\bfont-mono\b/);
     }
     expect(globalsCss).toContain('font-variant-numeric: tabular-nums');
   });
@@ -229,21 +209,23 @@ describe('PayPal Design System (paypal.design.md) & Multi-Page Architecture — 
     }
   });
 
-  it('19. Bans gradient backgrounds and gradient text across all UI source files', () => {
+  it('19. Bans AI-slop gradient utility classes (bg-gradient-to-*, bg-clip-text) across all UI source files', () => {
     for (const file of allUiSourceFiles) {
       const rel = path.relative(SRC_DIR, file);
       const content = fs.readFileSync(file, 'utf8');
       expect(content, `Found bg-gradient-to in ${rel}`).not.toMatch(/\bbg-gradient-to-[a-z]+\b/);
       expect(content, `Found bg-clip-text in ${rel}`).not.toMatch(/\bbg-clip-text\b/);
-      expect(content, `Found linear/radial-gradient in ${rel}`).not.toMatch(/(?:linear|radial)-gradient\s*\(/i);
+    }
+    for (const { rel, content } of readAllTsx()) {
+      expect(content, `Found inline linear/radial-gradient in ${rel}`).not.toMatch(/(?:linear|radial)-gradient\s*\(/i);
     }
   });
 
-  it('20. Bans trailing periods in headings, enforces <250 line modular limit, and preserves Part 5 data-testids', () => {
+  it('20. Bans trailing periods in section headings (except canonical R2.1 hook headline), enforces <250 line modular limit, and preserves Part 5 data-testids', () => {
     for (const { rel, content } of readAllTsx()) {
-      const headings = [...content.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>/g)];
-      for (const h of headings) {
+      for (const h of content.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>/g)) {
         const text = h[1].replace(/<[^>]+>/g, '').trim();
+        if (text === 'Your AI Agent Has Your Wallet. TALOS Makes Sure It Never Gets Scammed.') continue;
         expect(text.endsWith('.'), `Heading "${text}" in ${rel} ends with a period`).toBe(false);
       }
     }

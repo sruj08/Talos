@@ -4,6 +4,12 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import { usePathname } from 'next/navigation';
 import { EscrowBlotterRow, KpiMetricsSummary, useEscrowStream } from '../hooks/useEscrowStream';
 import { EscrowLifecycleState } from '../lib/phase6-events';
+import {
+  AuthSession,
+  DemoPersona,
+  EMPTY_AUTH_SESSION,
+  buildPersonaSession,
+} from '../lib/auth-personas';
 
 export type StoryChapterId =
   | 'OVERVIEW'
@@ -19,6 +25,13 @@ export type FxTier = 'high' | 'static';
 export type InstitutionalTheme = 'light' | 'dark';
 export type DemoViewMode = 'COMMAND_CENTER' | 'STEP_GUIDE';
 export type DemoStepNumber = 1 | 2 | 3 | 4;
+export type WorkspaceTabId =
+  | 'ALL'
+  | 'ALLOWANCE'
+  | 'SIMULATOR'
+  | 'BLOTTER'
+  | 'SLA'
+  | 'STEP_UP';
 
 export interface TalosClearingContextValue {
   connected: boolean;
@@ -31,9 +44,16 @@ export interface TalosClearingContextValue {
   setDemoViewMode: (mode: DemoViewMode) => void;
   activeDemoStep: DemoStepNumber;
   setActiveDemoStep: (step: DemoStepNumber) => void;
+  workspaceTab: WorkspaceTabId;
+  setWorkspaceTab: (tab: WorkspaceTabId) => void;
   fxTier: FxTier;
   theme: InstitutionalTheme;
   toggleTheme: () => void;
+  authSession: AuthSession;
+  signInWithPersona: (persona: DemoPersona) => void;
+  completeOAuthHandshake: (email: string, workspace: string) => void;
+  updateAuthSession: (patch: Partial<AuthSession>) => void;
+  signOut: () => void;
   updateRowState: (escrowId: string, newState: EscrowLifecycleState, patch?: Partial<EscrowBlotterRow>) => void;
   resetRows: () => void;
 }
@@ -59,14 +79,14 @@ export function TalosClearingProvider({ children }: { children: React.ReactNode 
   const [activeChapter, setActiveChapter] = useState<StoryChapterId>('OVERVIEW');
   const [demoViewMode, setDemoViewMode] = useState<DemoViewMode>('COMMAND_CENTER');
   const [activeDemoStep, setActiveDemoStep] = useState<DemoStepNumber>(1);
+  const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTabId>('ALL');
   const [fxTier, setFxTier] = useState<FxTier>('high');
-  const [theme, setTheme] = useState<InstitutionalTheme>('light');
+  const [theme, setTheme] = useState<InstitutionalTheme>('dark');
+  const [authSession, setAuthSession] = useState<AuthSession>(EMPTY_AUTH_SESSION);
 
   useEffect(() => {
     const mapped = resolveChapterFromPath(pathname);
-    if (mapped) {
-      setActiveChapter(mapped);
-    }
+    if (mapped) setActiveChapter(mapped);
   }, [pathname]);
 
   useEffect(() => {
@@ -90,6 +110,28 @@ export function TalosClearingProvider({ children }: { children: React.ReactNode 
     });
   }, []);
 
+  const signInWithPersona = useCallback((persona: DemoPersona) => {
+    setAuthSession(buildPersonaSession(persona));
+  }, []);
+
+  const completeOAuthHandshake = useCallback((email: string, workspace: string) => {
+    setAuthSession((prev) => ({
+      ...prev,
+      authenticated: true,
+      email,
+      workspace: workspace || prev.workspace || 'PayPal Sandbox Workspace',
+      displayName: prev.displayName || email.split('@')[0] || 'PayPal Operator',
+      oauthState: 'connected',
+      allowanceUsd: prev.allowanceUsd || 300,
+    }));
+  }, []);
+
+  const updateAuthSession = useCallback((patch: Partial<AuthSession>) => {
+    setAuthSession((prev) => ({ ...prev, ...patch }));
+  }, []);
+
+  const signOut = useCallback(() => setAuthSession(EMPTY_AUTH_SESSION), []);
+
   const value = useMemo<TalosClearingContextValue>(
     () => ({
       connected: stream.connected,
@@ -102,13 +144,34 @@ export function TalosClearingProvider({ children }: { children: React.ReactNode 
       setDemoViewMode,
       activeDemoStep,
       setActiveDemoStep,
+      workspaceTab,
+      setWorkspaceTab,
       fxTier,
       theme,
       toggleTheme,
+      authSession,
+      signInWithPersona,
+      completeOAuthHandshake,
+      updateAuthSession,
+      signOut,
       updateRowState: stream.updateRowState,
       resetRows: stream.resetRows,
     }),
-    [activeChapter, activeDemoStep, demoViewMode, fxTier, stream, theme, toggleTheme]
+    [
+      activeChapter,
+      activeDemoStep,
+      authSession,
+      completeOAuthHandshake,
+      demoViewMode,
+      fxTier,
+      signInWithPersona,
+      signOut,
+      stream,
+      theme,
+      toggleTheme,
+      updateAuthSession,
+      workspaceTab,
+    ]
   );
 
   return <TalosClearingContext.Provider value={value}>{children}</TalosClearingContext.Provider>;
@@ -120,7 +183,9 @@ export function useTalosClearing(): TalosClearingContextValue {
   const [activeChapter, setActiveChapter] = useState<StoryChapterId>('OVERVIEW');
   const [demoViewMode, setDemoViewMode] = useState<DemoViewMode>('COMMAND_CENTER');
   const [activeDemoStep, setActiveDemoStep] = useState<DemoStepNumber>(1);
-  const [theme, setTheme] = useState<InstitutionalTheme>('light');
+  const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTabId>('ALL');
+  const [theme, setTheme] = useState<InstitutionalTheme>('dark');
+  const [authSession, setAuthSession] = useState<AuthSession>(EMPTY_AUTH_SESSION);
 
   if (ctx) return ctx;
 
@@ -135,11 +200,25 @@ export function useTalosClearing(): TalosClearingContextValue {
     setDemoViewMode,
     activeDemoStep,
     setActiveDemoStep,
+    workspaceTab,
+    setWorkspaceTab,
     fxTier: 'high',
     theme,
     toggleTheme: () => setTheme((p) => (p === 'light' ? 'dark' : 'light')),
+    authSession,
+    signInWithPersona: (persona) => setAuthSession(buildPersonaSession(persona)),
+    completeOAuthHandshake: (email, workspace) =>
+      setAuthSession((prev) => ({
+        ...prev,
+        authenticated: true,
+        email,
+        workspace,
+        displayName: email.split('@')[0] || 'PayPal Operator',
+        oauthState: 'connected',
+      })),
+    updateAuthSession: (patch) => setAuthSession((prev) => ({ ...prev, ...patch })),
+    signOut: () => setAuthSession(EMPTY_AUTH_SESSION),
     updateRowState: fallback.updateRowState,
     resetRows: fallback.resetRows,
   };
 }
-

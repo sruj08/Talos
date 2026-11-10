@@ -4,7 +4,7 @@
 $ErrorActionPreference = "Stop"
 
 $RustFirewallUrl = if ($env:RUST_FIREWALL_URL) { $env:RUST_FIREWALL_URL.TrimEnd('/') } else { "http://127.0.0.1:8081" }
-$GoOrchestratorUrl = if ($env:GO_ORCHESTRATOR_URL) { $env:GO_ORCHESTRATOR_URL.TrimEnd('/') } elseif ($env:NEXT_PUBLIC_ORCHESTRATOR_URL) { $env:NEXT_PUBLIC_ORCHESTRATOR_URL.TrimEnd('/') } else { "http://127.0.0.1:8082" }
+$GoOrchestratorUrl = if ($env:GO_ORCHESTRATOR_URL) { $env:GO_ORCHESTRATOR_URL.TrimEnd('/') } elseif ($env:NEXT_PUBLIC_ORCHESTRATOR_URL) { $env:NEXT_PUBLIC_ORCHESTRATOR_URL.TrimEnd('/') } else { "http://127.0.0.1:8080" }
 $WebConsoleUrl = if ($env:WEB_CONSOLE_URL) { $env:WEB_CONSOLE_URL.TrimEnd('/') } else { "http://127.0.0.1:3000" }
 $BlueprintFile = if ($env:BLUEPRINT_FILE) { $env:BLUEPRINT_FILE } else { "render.yaml" }
 $SkipWebHealthz = ($env:SKIP_WEB_HEALTHZ -eq "true")

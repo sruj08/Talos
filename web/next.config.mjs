@@ -10,7 +10,7 @@ const firewallBaseUrl = (
 const orchestratorBaseUrl = (
   process.env.ORCHESTRATOR_GO_URL ||
   process.env.NEXT_PUBLIC_ORCHESTRATOR_URL ||
-  'http://127.0.0.1:8082'
+  'http://127.0.0.1:8080'
 )
   .replace('://localhost:', '://127.0.0.1:')
   .replace(/\/+$/, '');

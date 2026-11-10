@@ -208,7 +208,7 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
   );
 
   test(
-    'Act 5: Pure Landing Page (/) Storyline & Multi-Page Button Navigation',
+    'Act 5: 4-Stage Investor Storyline on Landing Page (/) & Multi-Page Navigation',
     { tag: ['@critical', '@e2e', '@showcase'] },
     async ({ page }) => {
       await page.goto('/');
@@ -216,33 +216,25 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
 
       const hero = page.getByTestId('startup-landing-hero');
       await expect(hero).toBeVisible();
-      await expect(hero).toContainText('Stop AI Shopping Agents From Being Hijacked or Overcharged');
-      await expect(page.getByTestId('talos-pillar-1')).toBeVisible();
-      await expect(page.getByTestId('talos-pillar-4')).toBeVisible();
+      await expect(hero).toContainText('Your AI Agent Has Your Wallet. TALOS Makes Sure It Never Gets Scammed.');
+      await expect(page.getByTestId('landing-try-demo-cta')).toContainText('Watch Live 60-Second Simulation');
+      await expect(page.getByTestId('investor-business-pitch-strip')).toBeVisible();
+      await expect(page.getByTestId('fragment-spatial-hero-3d')).toBeVisible();
 
-      // Verify Landing Page (/) has zero numbers in visible text and no unrelated modules
-      await expect(page.getByTestId('kpi-header-bar')).toHaveCount(0);
-      await expect(page.getByTestId('ag-studio-blotter')).toHaveCount(0);
-      const bodyText = await page.locator('body').innerText();
-      expect(bodyText).not.toMatch(/\d/);
-
-      // Clicking Explore Full Storyline opens /story
-      await page.getByTestId('cta-story-walkthrough-btn').click();
-      await expect(page).toHaveURL(/\/story$/);
-      await expect(page.getByTestId('chapter-route-story')).toBeVisible();
-      await expect(page.getByTestId('storytelling-walkthrough-5part')).toBeVisible();
-
-      // Clicking Back to Landing returns to /
-      await page.getByTestId('story-back-home-btn').click();
-      await expect(page).toHaveURL(/\/$/);
-
-      // Clicking Launch Interactive Simulator opens /simulator
-      await page.getByTestId('landing-try-demo-cta').click();
-      await expect(page).toHaveURL(/\/simulator$/);
-      await expect(page.getByTestId('chapter-route-simulator')).toBeVisible();
+      // Verify Scene 1, Scene 2 (Side-by-Side Comparison + 3 Scenarios), and Scene 3 (CFO Dashboard) on /
+      await expect(page.getByTestId('storyline-scene-1-rules')).toContainText('Step 1: Give Your AI a Spending Allowance ($300 Max)');
+      await expect(page.getByTestId('storyline-scene-2-shop')).toContainText('Watch the AI Shop (3 Real-World Scenarios)');
       await expect(page.getByTestId('side-by-side-agent-comparison')).toBeVisible();
+      await expect(page.getByTestId('storyline-scene-3-cfo')).toContainText('The CFO Dashboard (Where the Money Lives)');
+      await expect(page.getByTestId('ag-studio-blotter')).toBeVisible();
+      await expect(page.getByTestId('bryntum-sla-board')).toBeVisible();
 
-      // Trigger Act 3 on /simulator, then click Jump to Ledger (/sla) and verify cross-page state persistence
+      // Verify On-Demand Technical Proof Drawer opens when clicked
+      await expect(page.getByTestId('mandate-technical-proof-drawer')).toHaveAttribute('data-proof-open', 'false');
+      await page.getByTestId('btn-mandate-technical-proof').click();
+      await expect(page.getByTestId('mandate-technical-proof-drawer')).toHaveAttribute('data-proof-open', 'true');
+
+      // Trigger Scenario 3 on / and verify cross-page state persistence when jumping to /sla
       await page.getByTestId('btn-scenario-act3').click();
       await page.getByTestId('btn-jump-to-ledger').click();
       await expect(page).toHaveURL(/\/sla$/);

@@ -58,11 +58,11 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
           </span>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs text-ink-amber font-bold">05</span>
-              <h2 className="paypal-title-sm text-ink">
-                Institutional Step-Up Co-Signing Authority
-              </h2>
+              <span className="font-mono text-xs text-ink-amber font-bold">Human Step-Up Guardrail</span>
             </div>
+            <h2 className="paypal-title-sm text-ink">
+              Approve with PayPal ($450 Big Order Step-Up)
+            </h2>
             <p data-subhead="true" className="paypal-caption text-ink-secondary">
               Pauses over-budget agent checkouts and requires human PayPal Sandbox co-sign
             </p>
@@ -105,8 +105,8 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
         data-testid="stepup-judge-explainer"
         className="tone-amber p-3.5 rounded-lg text-xs text-ink-secondary leading-relaxed"
       >
-        <strong className="text-ink font-bold">Why is this paused? (Step 4): </strong>
-        The AI wants to buy $450 Studio Monitors, which is $150 over its $300 autonomous limit. Click Co-Sign to approve.
+        <strong className="text-ink font-bold">Why is this paused? (Scenario 3 · $450 Order): </strong>
+        The AI wants to buy $450 Studio Monitors, which is $150 over its $300 spending allowance. Click Approve with PayPal to authorize.
       </div>
 
       <div
@@ -124,7 +124,7 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
                   <Speaker className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
                 </span>
                 <div>
-                  <span className="text-ink-muted block text-[11px]">Item &amp; merchant: </span>
+                  <span className="text-ink-muted block text-xs">Item &amp; merchant: </span>
                   <strong className="text-ink font-bold text-sm">{stepUp.skuSummary}</strong>{' '}
                   <span className="text-ink-secondary">({stepUp.merchantName})</span>
                 </div>
@@ -142,7 +142,7 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
                   )}
                 </strong>{' '}
                 <span className="font-mono text-ink-muted">
-                  [Mandate Cap: {formatUsdInr(stepUp.mandateCapCents)} (+{formatUsdInr(overageCents)} overage)]
+                  [Allowance Cap: {formatUsdInr(stepUp.mandateCapCents)} (+{formatUsdInr(overageCents)} overage)]
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -154,7 +154,7 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-ink-emerald" strokeWidth={1.75} aria-hidden="true" />
-                <span className="text-ink-muted">Channel3 check: </span>
+                <span className="text-ink-muted">Fair-price check: </span>
                 <span className="font-mono text-ink-secondary">
                   VERIFIED FAIR PRICE ({formatUsdInr(stepUp.channel3MedianCents)} median, {stepUp.channel3SpreadBps} bps)
                 </span>
@@ -170,13 +170,13 @@ export function PayPalStepUpModal(props: PayPalStepUpModalProps = {}) {
                   type="button"
                   onClick={() => void handleApproveStepUp()}
                   data-testid="btn-step-up-cosign"
-                  className="btn-checkout-yellow h-11 flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold tabular-nums whitespace-nowrap"
+                  className="btn-checkout-yellow h-11 flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold tabular-nums whitespace-nowrap active:scale-[0.98]"
                 >
                   <Lock className="w-4 h-4" strokeWidth={2} aria-hidden="true" />
                   <span data-testid="copilot-confirm-stepup-btn">
                     {statusState === 'PAYPAL_AUTHORIZED'
-                      ? 'CO-SIGNED · PAYPAL_AUTHORIZED ($450.00)'
-                      : `Co-Sign & Authorize ${formatUsdInr(stepUp.amountCents)} (PayPal Sandbox)`}
+                      ? 'Approve with PayPal · CO-SIGNED · PAYPAL_AUTHORIZED ($450.00)'
+                      : `Approve with PayPal · Co-Sign & Authorize ${formatUsdInr(stepUp.amountCents)} (PayPal Sandbox)`}
                   </span>
                 </button>
                 <button

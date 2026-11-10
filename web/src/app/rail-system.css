@@ -1,0 +1,126 @@
+/* Uniform left-rail cards + Animate UI chrome */
+.paypal-feature-card, .sovereign-card, .paypal-pricing-card {
+  background-color: var(--surface-well);
+  border-radius: var(--radius-md);
+  border: 0;
+  padding: 20px 22px 20px 26px;
+  box-shadow: inset 6px 0 0 0 var(--rail-accent, #0070E0);
+}
+.paypal-checkout-module {
+  background-color: var(--surface-well);
+  border-radius: var(--radius-md);
+  border: 0;
+  padding: 20px 22px 20px 26px;
+  box-shadow: inset 6px 0 0 0 #FFC439, 0 2px 12px rgba(0, 20, 53, 0.12);
+}
+.sovereign-subcard {
+  background-color: var(--surface-well);
+  border-radius: var(--radius-md);
+  border: 0;
+  box-shadow: inset 6px 0 0 0 var(--rail-accent, #0070E0);
+}
+.sovereign-well, .paypal-code-block {
+  background-color: var(--surface-well);
+  border-radius: var(--radius-md);
+  border: 0;
+  padding: 16px 20px 16px 26px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--foreground);
+  box-shadow: inset 6px 0 0 0 var(--rail-accent, #0070E0);
+}
+.rail-card {
+  background-color: var(--surface-well);
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 20px 22px 20px 26px;
+  box-shadow: inset 6px 0 0 0 var(--rail-accent, #0070E0);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 100%;
+}
+.rail-card--crimson { --rail-accent: #D9360B; }
+.rail-card--paypal { --rail-accent: #0070E0; }
+.rail-card--emerald { --rail-accent: #0A7A3D; }
+.rail-card--amber { --rail-accent: #FFB600; }
+.rail-card--obsidian { --rail-accent: #003087; }
+.animate-tooltip {
+  background-color: #001435;
+  color: #F8FAFC;
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  max-width: 28ch;
+  box-shadow: 0 8px 24px rgba(0, 20, 53, 0.35);
+}
+.animate-tabs-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: var(--surface-well);
+  border: 0;
+  border-radius: var(--radius-md);
+}
+.animate-tabs-trigger {
+  position: relative;
+  z-index: 1;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+}
+.animate-tabs-trigger[data-state='active'] { color: var(--foreground); font-weight: 600; }
+.animate-tabs-highlight { background: var(--surface); border-radius: var(--radius-md); }
+.animate-accordion-item {
+  background: var(--surface-well);
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 0;
+  box-shadow: inset 6px 0 0 0 var(--rail-accent, #0070E0);
+  margin: 0 0 10px;
+  overflow: hidden;
+}
+.animate-accordion-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px 16px 22px;
+  border: 0;
+  background: transparent;
+  color: var(--foreground);
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+}
+.animate-accordion-panel { padding: 0 18px 18px 22px; color: var(--ink-body); }
+.scroll-progress-rail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  height: 3px;
+  background: transparent;
+  pointer-events: none;
+}
+.scroll-progress-rail > span, .scroll-progress-bar {
+  display: block;
+  height: 100%;
+  transform-origin: left center;
+  background: #0070E0;
+}
