@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { BarChart3, CheckCircle2, FileWarning, RotateCcw, ShieldCheck } from 'lucide-react';
+import { BarChart3, CheckCircle2, FileWarning, Lock, RotateCcw, ShieldCheck } from 'lucide-react';
 import { EscrowBlotterRow, SEEDED_ESCROW_ROWS } from '../hooks/useEscrowStream';
 import { formatUsdInr } from '../lib/phase6-events';
 import {
@@ -40,9 +40,7 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
           Master-Detail Forensic Drawer — Rust lol_html Sanitization Diff, Channel3 Spread &amp; PayPal 2PC Controls
         </div>
         <div className="flex flex-wrap items-center gap-4 font-mono text-[11px] text-ink-muted">
-          <span>
-            SDK Layer: APIMatic Go SDK v1.1.0 + Context Plugin Verified
-          </span>
+          <span>SDK Layer: APIMatic Go SDK v1.1.0 + Context Plugin Verified</span>
           <span className="inline-flex items-center gap-1.5 text-ink-secondary">
             <span className="w-1.5 h-1.5 rounded-xs dot-emerald" aria-hidden="true" />
             <span>APIMatic Schema Validated (0 Hallucinations)</span>
@@ -53,11 +51,16 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Column 1: Rust lol_html + DeBERTa-v3 ONNX DOM Sanitizer Diff */}
         <div className="sovereign-well p-4 space-y-3" data-testid="forensic-card-dom-diff">
-          <div className="flex items-center justify-between gap-2">
-            <span className="inline-flex items-center gap-2 font-medium text-ink">
-              <ShieldCheck className="w-4 h-4 text-ink-muted" strokeWidth={1.5} aria-hidden="true" />
-              <span>Rust lol_html + DeBERTa-v3 ONNX Diff</span>
-            </span>
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-3">
+              <span className="w-10 h-10 rounded-control icon-medallion-crimson inline-flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
+              </span>
+              <div className="space-y-0.5">
+                <div className="text-[11px] font-medium text-ink-paypal">1. What the Hacker Hid vs. What the AI Saw</div>
+                <div className="font-medium text-ink">Rust lol_html + DeBERTa-v3 ONNX Diff</div>
+              </div>
+            </div>
             <span className="font-mono text-[11px] text-ink-muted tabular-nums whitespace-nowrap">
               Scan: {row.scan_latency_ms}ms (&lt;4ms)
             </span>
@@ -84,14 +87,19 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
           </div>
         </div>
 
-        {/* Column 2: Channel3 Cross-Merchant Price Bar Chart (Rich Chart Moment) */}
+        {/* Column 2: Channel3 Cross-Merchant Price Bar Chart */}
         <div className="sovereign-well p-4 flex flex-col justify-between space-y-4" data-testid="forensic-card-channel3">
           <div className="space-y-4">
-            <div className="flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-2 font-medium text-ink">
-                <BarChart3 className="w-4 h-4 text-ink-muted" strokeWidth={1.5} aria-hidden="true" />
-                <span>Channel3 Cross-Merchant Price Spread</span>
-              </span>
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-3">
+                <span className="w-10 h-10 rounded-control icon-medallion-paypal inline-flex items-center justify-center shrink-0">
+                  <BarChart3 className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
+                </span>
+                <div className="space-y-0.5">
+                  <div className="text-[11px] font-medium text-ink-paypal">2. Scammer Price vs. Fair Market Price</div>
+                  <div className="font-medium text-ink">Channel3 Cross-Merchant Price Spread</div>
+                </div>
+              </div>
               <span className="font-mono text-[11px] text-ink-secondary tabular-nums whitespace-nowrap">
                 +{row.spread_bps} bps (+9277 bps Peak)
               </span>
@@ -134,7 +142,6 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
             </div>
           </div>
 
-          {/* Muted Monospace Chart Grid Axis */}
           <div className="flex items-center justify-between border-t border-hairline pt-2 font-mono text-[11px] text-ink-muted tabular-nums">
             <span>$0</span>
             <span>$150</span>
@@ -150,8 +157,16 @@ export function ForensicDetailPanel({ data, onActionCompleted }: ForensicDetailP
           data-sandbox-mode="SANDBOX_MODE: LIVE"
         >
           <div className="space-y-3">
-            <div className="flex items-center justify-between gap-2">
-              <span className="font-medium text-ink">PayPal Sandbox 2PC Escrow Console</span>
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-3">
+                <span className="w-10 h-10 rounded-control icon-medallion-emerald inline-flex items-center justify-center shrink-0">
+                  <Lock className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
+                </span>
+                <div className="space-y-0.5">
+                  <div className="text-[11px] font-medium text-ink-paypal">3. Live PayPal Sandbox Escrow Controls</div>
+                  <div className="font-medium text-ink">PayPal Sandbox 2PC Escrow Console</div>
+                </div>
+              </div>
               <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-ink-secondary whitespace-nowrap">
                 <span className="w-1.5 h-1.5 rounded-xs dot-emerald" aria-hidden="true" />
                 <span>Sandbox mode live</span>

@@ -12,12 +12,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        primary: '#003087',
+        accent: {
+          DEFAULT: '#0070E0',
+          hover: '#005EA6',
+          pressed: '#001C64',
+        },
         canvas: 'var(--background)',
         deep: 'var(--bg-deep)',
         surface: {
           DEFAULT: 'var(--surface)',
+          alt: '#FAF8F5',
           elevated: 'var(--surface-elevated)',
           secondary: 'var(--surface-secondary)',
+        },
+        border: {
+          DEFAULT: '#DADDE1',
+          strong: '#B7BDC2',
         },
         hairline: {
           DEFAULT: 'var(--border-hairline)',
@@ -25,6 +36,7 @@ const config: Config = {
         },
         ink: {
           DEFAULT: 'var(--foreground)',
+          body: '#2C2E2F',
           secondary: 'var(--text-secondary)',
           muted: 'var(--text-muted)',
           paypal: 'var(--tone-paypal-fg)',
@@ -32,28 +44,61 @@ const config: Config = {
           amber: 'var(--tone-amber-fg)',
           crimson: 'var(--tone-crimson-fg)',
         },
-        obsidian: {
-          950: '#0f0f10',
-          900: '#19191b',
-        },
         paypal: {
+          primary: '#003087',
+          accent: '#0070E0',
+          hover: '#005EA6',
+          pressed: '#001C64',
+          ink: '#001435',
+          body: '#2C2E2F',
+          muted: '#687173',
+          surfaceAlt: '#FAF8F5',
+          border: '#DADDE1',
+          borderStrong: '#B7BDC2',
+          success: '#0A7A3D',
+          warning: '#FFB600',
+          error: '#D9360B',
+          darkBlue: '#003087',
+          middleBlue: '#0070E0',
+          rightBlue: '#009CDE',
+          deepNavy: '#001C64',
+          slateNavy: '#001435',
+          venmoBlue: '#008CFF',
+          payLaterGold: '#FFD140',
+          checkoutYellow: '#FFC439',
+          codeCanvas: '#F6F8FA',
+          footerBg: '#F7F9FA',
           navy: '#003087',
-          cerulean: '#0070ba',
+          cerulean: '#0070E0',
         },
       },
       borderRadius: {
         xs: '4px',
+        sm: '4px',
+        md: '8px',
+        lg: '16px',
+        xl: '28px',
+        pill: '9999px',
         control: 'var(--radius-control)',
         inner: 'var(--radius-inner)',
         outer: 'var(--radius-outer)',
+      },
+      spacing: {
+        xs: '4px',
+        sm: '8px',
+        md: '16px',
+        lg: '24px',
+        xl: '40px',
+        '2xl': '64px',
+        section: '96px',
       },
       transitionTimingFunction: {
         unslop: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
       fontFamily: {
-        display: ['Fraunces Variable', 'Fraunces', 'Georgia', 'serif'],
-        sans: ['Figtree Variable', 'Figtree', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        mono: ['DM Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
+        display: ['"PayPal Pro"', '"PayPal Open"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        sans: ['"PayPal Pro"', '"PayPal Open"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        mono: ['SFMono-Regular', 'Consolas', '"Liberation Mono"', 'Menlo', 'monospace'],
       },
     },
   },
@@ -61,3 +106,4 @@ const config: Config = {
 };
 
 export default config;
+

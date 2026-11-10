@@ -40,7 +40,7 @@ function readAllTsx(): Array<{ file: string; rel: string; content: string }> {
 const globalsCssPath = path.join(SRC_DIR, 'app', 'globals.css');
 const globalsCss = fs.existsSync(globalsCssPath) ? fs.readFileSync(globalsCssPath, 'utf8') : '';
 
-describe('Operation Sovereign Glass — 20 AI Design Slop Indicators & Contract Gate', () => {
+describe('PayPal Design System (paypal.design.md) & Multi-Page Architecture — 20 Quality Gates', () => {
   it('1. Bans rounded-full status pills and enforces 6px semantic status dots (w-1.5 h-1.5 rounded-xs)', () => {
     for (const { rel, content } of readAllTsx()) {
       expect(content, `Found banned rounded-full in ${rel}`).not.toMatch(/\brounded-full\b/);
@@ -59,38 +59,46 @@ describe('Operation Sovereign Glass — 20 AI Design Slop Indicators & Contract 
     }
   });
 
-  it('3. Bans Instrument Serif and enforces Fraunces Variable, Figtree Variable, DM Mono, and Mukta', () => {
+  it('3. Bans serif fonts (Instrument Serif, Fraunces) and enforces PayPal Pro, PayPal Open, and SFMono-Regular', () => {
     for (const file of allSourceFiles) {
       const rel = path.relative(SRC_DIR, file);
       const content = fs.readFileSync(file, 'utf8');
       expect(content, `Found banned Instrument Serif in ${rel}`).not.toMatch(/Instrument\s*Serif/i);
+      expect(content, `Found banned Fraunces serif in ${rel}`).not.toMatch(/Fraunces/i);
     }
-    expect(globalsCss).toMatch(/Fraunces/);
-    expect(globalsCss).toMatch(/Figtree/);
-    expect(globalsCss).toMatch(/DM Mono/);
-    expect(globalsCss).toMatch(/Mukta/);
+    expect(globalsCss).toMatch(/PayPal Pro/);
+    expect(globalsCss).toMatch(/PayPal Open/);
+    expect(globalsCss).toMatch(/SFMono-Regular/);
   });
 
-  it('4. Bans crushed negative kerning (-0.04em, -0.05em, tracking-tighter) and enforces optical tracking', () => {
+  it('4. Enforces PayPal Pro negative display tracking (-0.045em, -0.04em, -0.035em) and legal tracking (0.01em)', () => {
     for (const file of allUiSourceFiles) {
       const rel = path.relative(SRC_DIR, file);
       const content = fs.readFileSync(file, 'utf8');
       expect(content, `Found tracking-tighter in ${rel}`).not.toMatch(/\btracking-tighter\b/);
-      expect(content, `Found crushed negative tracking in ${rel}`).not.toMatch(/-0\.0[4-9]em/);
     }
-    expect(globalsCss).toContain('-0.015em');
+    expect(globalsCss).toContain('-0.045em');
+    expect(globalsCss).toContain('-0.04em');
+    expect(globalsCss).toContain('-0.035em');
     expect(globalsCss).toContain('0.01em');
   });
 
-  it('5. Enforces progressive 0fr -> 1fr disclosure drawers, HeroUI v3, and multi-chapter story flowline routes', () => {
+  it('5. Enforces multi-page routes (/story, /mandates, /simulator, /blotter, /sla, /step-up, /command-center) and bans scrollIntoView', () => {
     const combinedTsx = readAllTsx().map((f) => f.content).join('\n');
     expect(combinedTsx + globalsCss).toMatch(/0fr|1fr/);
-    expect(combinedTsx).toContain('@heroui/react');
+    for (const file of allSourceFiles) {
+      const rel = path.relative(SRC_DIR, file);
+      const content = fs.readFileSync(file, 'utf8');
+      expect(content, `Found banned single-page scrollIntoView in ${rel}`).not.toContain('scrollIntoView');
+    }
     expect(fs.existsSync(path.join(SRC_DIR, 'context', 'TalosClearingContext.tsx'))).toBe(true);
+    expect(fs.existsSync(path.join(SRC_DIR, 'app', 'story', 'page.tsx'))).toBe(true);
     expect(fs.existsSync(path.join(SRC_DIR, 'app', 'mandates', 'page.tsx'))).toBe(true);
     expect(fs.existsSync(path.join(SRC_DIR, 'app', 'simulator', 'page.tsx'))).toBe(true);
     expect(fs.existsSync(path.join(SRC_DIR, 'app', 'blotter', 'page.tsx'))).toBe(true);
     expect(fs.existsSync(path.join(SRC_DIR, 'app', 'sla', 'page.tsx'))).toBe(true);
+    expect(fs.existsSync(path.join(SRC_DIR, 'app', 'step-up', 'page.tsx'))).toBe(true);
+    expect(fs.existsSync(path.join(SRC_DIR, 'app', 'command-center', 'page.tsx'))).toBe(true);
   });
 
   it('6. Bans overusing dividers (<hr>, divide-y, border-b) in favor of spatial rhythm and tonal elevation', () => {
@@ -101,25 +109,28 @@ describe('Operation Sovereign Glass — 20 AI Design Slop Indicators & Contract 
     }
   });
 
-  it('7. Bans arbitrary Tailwind color opacity modifiers and hardcoded slate text classes; enforces OKLCH + color-mix tokens', () => {
+  it('7. Bans arbitrary Tailwind color opacity modifiers and enforces PayPal Design System hex tokens', () => {
     const slashOpacityRegex =
       /\b(?:bg|text|border|ring|from|to|via)-(?:slate|sky|blue|emerald|rose|amber|indigo|purple|cyan|red|green|yellow)-\d+\/\d+\b/;
     for (const { rel, content } of readAllTsx()) {
       expect(content, `Found arbitrary color opacity modifier in ${rel}`).not.toMatch(slashOpacityRegex);
       expect(content, `Found hardcoded dark-only text-slate-* class in ${rel}`).not.toMatch(/\btext-slate-\d+\b/);
     }
-    expect(globalsCss).toContain('oklch(12% 0.005 285.823)');
-    expect(globalsCss).toContain('oklch(21.03% 0.0059 285.89)');
-    expect(globalsCss).toContain('color-mix(in oklab');
+    expect(globalsCss).toContain('#003087');
+    expect(globalsCss).toContain('#0070E0');
+    expect(globalsCss).toContain('#001435');
+    expect(globalsCss).toContain('#FAF8F5');
+    expect(globalsCss).toContain('#DADDE1');
+    expect(globalsCss).toContain('#FFC439');
   });
 
-  it('8. Bans 1px solid card border boxes and enforces borderless tonal layering with top specular inset', () => {
+  it('8. Enforces PayPal 1px hairline borders (#DADDE1, #B7BDC2) and checkout module elevation', () => {
     for (const { rel, content } of readAllTsx()) {
       expect(content, `Found border-slate-800 in ${rel}`).not.toMatch(/\bborder-slate-800\b/);
       expect(content, `Found border-slate-700 in ${rel}`).not.toMatch(/\bborder-slate-700\b/);
     }
-    expect(globalsCss).toContain('--field-border-width: 0px');
-    expect(globalsCss).toContain('inset 0 1px 0 oklch(100% 0 0 / 0.07)');
+    expect(globalsCss).toContain('--field-border-width: 1px');
+    expect(globalsCss).toContain('0 2px 12px rgba(0, 20, 53, 0.12)');
   });
 
   it('9. Enforces clean 3-State PayPal 2PC Clearing Pipeline indicator', () => {
@@ -171,13 +182,15 @@ describe('Operation Sovereign Glass — 20 AI Design Slop Indicators & Contract 
     }
   });
 
-  it('14. Bans SVG feTurbulence dithering/noise and enforces smooth optical backdrop blur', () => {
+  it('14. Bans SVG feTurbulence dithering/noise and glassmorphism blur in favor of solid PayPal surfaces', () => {
     for (const file of allUiSourceFiles) {
       const rel = path.relative(SRC_DIR, file);
       const content = fs.readFileSync(file, 'utf8');
       expect(content, `Found feTurbulence in ${rel}`).not.toMatch(/feTurbulence/i);
+      expect(content, `Found glassmorphism backdrop-filter in ${rel}`).not.toMatch(/backdrop-filter:\s*blur/i);
     }
-    expect(globalsCss).toContain('backdrop-filter: blur(20px) saturate(180%)');
+    expect(globalsCss).toContain('.paypal-nav-shell');
+    expect(globalsCss).toContain('.paypal-hero-band');
   });
 
   it('15. Bans ASCII art / box-drawing characters and enforces lucide-react vector icons', () => {
@@ -188,17 +201,19 @@ describe('Operation Sovereign Glass — 20 AI Design Slop Indicators & Contract 
     expect(combinedTsx).toContain('lucide-react');
   });
 
-  it('16. Bans squircle bubble cards (rounded-3xl, rounded-[32px]) and enforces concentric radius tokens', () => {
+  it('16. Enforces PayPal Design System radius scale (4px, 8px, 16px, 28px, 9999px pill)', () => {
     for (const { rel, content } of readAllTsx()) {
       expect(content, `Found rounded-3xl in ${rel}`).not.toMatch(/\brounded-3xl\b/);
       expect(content, `Found rounded-[32px] in ${rel}`).not.toContain('rounded-[32px]');
     }
-    expect(globalsCss).toContain('--radius-outer: 16px');
-    expect(globalsCss).toContain('--radius-inner: 10px');
-    expect(globalsCss).toContain('--radius-control: 8px');
+    expect(globalsCss).toContain('--radius-sm: 4px');
+    expect(globalsCss).toContain('--radius-md: 8px');
+    expect(globalsCss).toContain('--radius-lg: 16px');
+    expect(globalsCss).toContain('--radius-xl: 28px');
+    expect(globalsCss).toContain('--radius-pill: 9999px');
   });
 
-  it('17. Restricts DM Mono (font-mono) to cryptographic hashes, RFC 9421 headers, and DOM diffs; enforces tabular-nums', () => {
+  it('17. Restricts font-mono to cryptographic hashes, RFC 9421 headers, and DOM diffs; enforces tabular-nums', () => {
     for (const { rel, content } of readAllTsx()) {
       expect(content, `Found font-mono on button or heading in ${rel}`).not.toMatch(
         /<(?:button|h1|h2|h3)[^>]*className="[^"]*\bfont-mono\b/

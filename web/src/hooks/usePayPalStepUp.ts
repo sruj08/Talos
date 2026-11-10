@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { useTalosClearing } from '../context/TalosClearingContext';
 import {
   DEFAULT_STEP_UP_REQUEST,
   StepUpOrderRequest,
@@ -24,21 +25,35 @@ export function usePayPalStepUp({
   escrowId,
   amountUsd,
   skuSummary,
-  initialStatusState = 'STEP_UP_REQUIRED',
+  initialStatusState,
   onStepUpComplete,
   onStepUpRejected,
 }: UsePayPalStepUpOptions = {}) {
+  const { rows } = useTalosClearing();
+  const targetEscrowId = escrowId || DEFAULT_STEP_UP_REQUEST.escrowId;
+  const matchingRow = rows.find((r) => r.escrow_id === targetEscrowId);
+  const derivedInitialStatus: 'STEP_UP_REQUIRED' | 'PAYPAL_AUTHORIZED' | 'PAYPAL_VOIDED' =
+    initialStatusState ??
+    (matchingRow?.state === 'PAYPAL_AUTHORIZED'
+      ? 'PAYPAL_AUTHORIZED'
+      : matchingRow?.state === 'PAYPAL_VOIDED'
+      ? 'PAYPAL_VOIDED'
+      : 'STEP_UP_REQUIRED');
+
   const [stepUp, setStepUp] = useState<StepUpOrderRequest>(() => ({
     ...DEFAULT_STEP_UP_REQUEST,
-    escrowId: escrowId || DEFAULT_STEP_UP_REQUEST.escrowId,
+    escrowId: targetEscrowId,
     skuSummary: skuSummary || DEFAULT_STEP_UP_REQUEST.skuSummary,
     amountCents: amountUsd ? Math.round(Number(amountUsd) * 100) : DEFAULT_STEP_UP_REQUEST.amountCents,
+    approved: derivedInitialStatus === 'PAYPAL_AUTHORIZED',
   }));
   const [statusState, setStatusState] = useState<'STEP_UP_REQUIRED' | 'PAYPAL_AUTHORIZED' | 'PAYPAL_VOIDED'>(
-    initialStatusState
+    derivedInitialStatus
   );
   const [statusNote, setStatusNote] = useState<string>(
-    'Paused: Order ($450.00) exceeds autonomous Ed25519 KYA Mandate Cap ($300.00). Awaiting Human Co-Sign.'
+    derivedInitialStatus === 'PAYPAL_AUTHORIZED'
+      ? `Co-Signed! 29-Day PayPal Sandbox AUTHORIZE Hold Locked (Order: ${DEFAULT_STEP_UP_REQUEST.paypalOrderId}).`
+      : 'Paused: Order ($450.00) exceeds autonomous Ed25519 KYA Mandate Cap ($300.00). Awaiting Human Co-Sign.'
   );
 
   const createPayPalSandboxOrder = useCallback(async (): Promise<string> => {

@@ -13,7 +13,7 @@ import {
   computeKpiMetrics,
   normalizeEscrowState,
 } from '../hooks/useEscrowStream';
-import TALOSCommandCenterPage from '../app/page';
+import TALOSCommandCenterPage from '../app/command-center/page';
 
 describe('Phase 5 Micro-Chunk 5.1 (TASK-09): MandateStudio, useEscrowStream & 4-KPI Header Bar', () => {
   beforeEach(() => {

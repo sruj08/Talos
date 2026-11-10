@@ -1,233 +1,181 @@
-/* Unslop Redline Pass · TALOS Institutional Clearinghouse
- * Direction: Exact, restrained, architectural (Graphite neutral ramp #0f0f10..#232325, 1px hairlines, single #0070ba accent)
- * Credit: Part of unslop by Damir Sokolovsky (@heydamir), CC BY 4.0.
- */
-
+/* PayPal Design System (paypal.design.md) — TALOS Agentic Clearinghouse */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
-  --oklch-deep: oklch(12% 0.005 285.823);
-  --oklch-surface: oklch(21.03% 0.0059 285.89);
-  --bg-deep: #0f0f10;
-  --background: #141415;
-  --bg-canvas: #141415;
-  --surface: #19191b;
-  --surface-elevated: #1e1e20;
-  --surface-secondary: #232325;
-  --border-hairline: rgba(237, 237, 237, 0.08);
-  --border-hover: rgba(237, 237, 237, 0.16);
-  --field-border-width: 0px;
-  --foreground: #ededed;
-  --text-secondary: #a1a1a6;
-  --text-muted: #85858b;
-  --accent: #0070ba;
-  --paypal-navy: #003087;
-  --paypal-cerulean: #0070ba;
-  --emerald: #4cc38a;
-  --amber: #d99b26;
-  --crimson: #e5484d;
-  --tone-paypal-fg: #5aa9e6;
-  --tone-emerald-fg: #4cc38a;
-  --tone-amber-fg: #d99b26;
-  --tone-crimson-fg: #e5484d;
-  --btn-primary-bg: #ededed;
-  --btn-primary-hover: #ffffff;
-  --btn-primary-fg: #0f0f10;
-  --shadow-specular: inset 0 1px 0 oklch(100% 0 0 / 0.07);
-  --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  --shadow-subcard: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  --shadow-btn: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --radius-outer: 16px;
-  --radius-inner: 10px;
-  --radius-control: 8px;
-  --tracking-display: -0.015em;
-  --tracking-body: 0em;
-  --tracking-label: 0.01em;
-  --ease-bento: cubic-bezier(0.22, 1, 0.36, 1);
-  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
-  --font-sans: 'Figtree Variable', 'Figtree', 'Mukta', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, monospace;
-}
-
+:root,
 html[data-theme='light'] {
   color-scheme: light;
-  --bg-deep: #f4f4f5;
-  --background: #fafafa;
-  --bg-canvas: #fafafa;
-  --surface: #ffffff;
-  --surface-elevated: #f8f8f9;
-  --surface-secondary: #f4f4f5;
-  --border-hairline: rgba(23, 23, 23, 0.08);
-  --border-hover: rgba(23, 23, 23, 0.16);
-  --foreground: #171717;
-  --text-secondary: #525252;
-  --text-muted: #737373;
-  --tone-paypal-fg: #005ea6;
-  --tone-emerald-fg: #15803d;
-  --tone-amber-fg: #b45309;
-  --tone-crimson-fg: #b91c1c;
-  --btn-primary-bg: #171717;
-  --btn-primary-hover: #262626;
-  --btn-primary-fg: #ffffff;
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-subcard: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  --shadow-btn: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --background: #FFFFFF;
+  --foreground: #001435;
+  --surface: #FFFFFF;
+  --surface-elevated: #FAF8F5;
+  --surface-well: #F6F8FA;
+  --surface-footer: #F7F9FA;
+  --default: #FAF8F5;
+  --default-foreground: #001435;
+  --primary: #003087;
+  --primary-foreground: #FFFFFF;
+  --secondary: #FAF8F5;
+  --secondary-foreground: #001435;
+  --accent: #0070E0;
+  --accent-hover: #005EA6;
+  --accent-pressed: #001C64;
+  --accent-foreground: #FFFFFF;
+  --ink-body: #2C2E2F;
+  --muted: #687173;
+  --border: #DADDE1;
+  --border-strong: #B7BDC2;
+  --divider: #DADDE1;
+  --focus: #0070E0;
+  --success: #0A7A3D;
+  --warning: #FFB600;
+  --danger: #D9360B;
+  --paypal-dark-blue: #003087;
+  --paypal-middle-blue: #0070E0;
+  --paypal-right-blue: #009CDE;
+  --paypal-deep-navy: #001C64;
+  --paypal-slate-navy: #001435;
+  --paypal-venmo-blue: #008CFF;
+  --paypal-paylater-gold: #FFD140;
+  --paypal-checkout-yellow: #FFC439;
+  --field-background: #FFFFFF;
+  --field-foreground: #001435;
+  --field-placeholder: #687173;
+  --field-border: #B7BDC2;
+  --field-border-width: 1px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 28px;
+  --radius-pill: 9999px;
+  --radius-outer: 16px;
+  --radius-inner: 8px;
+  --radius-control: 8px;
+  --font-sans: 'PayPal Pro', 'PayPal Open', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'PayPal Pro', 'PayPal Open', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --font-devanagari: 'PayPal Open', 'Helvetica Neue', Arial, sans-serif;
+  --ease-bento: cubic-bezier(0.2, 0, 0, 1);
 }
 
-html,
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  letter-spacing: var(--tracking-body);
-  overflow-x: clip;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --background: #001435;
+  --foreground: #FFFFFF;
+  --surface: #001C64;
+  --surface-elevated: #003087;
+  --surface-well: #001435;
+  --surface-footer: #001435;
+  --default: #001C64;
+  --default-foreground: #FFFFFF;
+  --primary: #0070E0;
+  --primary-foreground: #FFFFFF;
+  --secondary: #003087;
+  --secondary-foreground: #FFFFFF;
+  --accent: #009CDE;
+  --accent-hover: #0070E0;
+  --accent-pressed: #003087;
+  --accent-foreground: #FFFFFF;
+  --ink-body: #FAF8F5;
+  --muted: #B7BDC2;
+  --border: rgba(255, 255, 255, 0.18);
+  --border-strong: rgba(255, 255, 255, 0.34);
+  --divider: rgba(255, 255, 255, 0.18);
+  --focus: #009CDE;
+  --success: #0A7A3D;
+  --warning: #FFB600;
+  --danger: #D9360B;
+  --field-background: #001435;
+  --field-foreground: #FFFFFF;
+  --field-placeholder: #B7BDC2;
+  --field-border: rgba(255, 255, 255, 0.28);
+  --field-border-width: 1px;
 }
 
-.font-display {
-  font-family: var(--font-display);
-  letter-spacing: var(--tracking-display);
-  font-optical-sizing: auto;
-  font-variation-settings: 'opsz' 72, 'SOFT' 0, 'WONK' 0;
+@layer base {
+  html, body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    color: var(--foreground);
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    font-weight: 700;
+  }
+  code, pre, .font-mono, .tabular-nums {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0em;
+  }
 }
 
-.tabular-nums { font-variant-numeric: tabular-nums; }
-.label-optical { letter-spacing: var(--tracking-label); }
-.whitespace-nowrap { white-space: nowrap; }
-.border-hairline { border-color: var(--border-hairline); }
-.bg-secondary { background-color: var(--surface-secondary); }
-.hero-artifact-img { opacity: 0.78; }
-html[data-theme='light'] .hero-artifact-img {
-  filter: invert(0.92) hue-rotate(180deg);
-  mix-blend-mode: multiply;
-  opacity: 0.32;
-}
+/* PayPal Typography Scale (paypal.design.md) */
+.paypal-display { font-family: var(--font-display); font-size: clamp(2.75rem, 5vw, 4.75rem); font-weight: 700; line-height: 0.95; letter-spacing: -0.045em; }
+.paypal-hero { font-family: var(--font-display); font-size: clamp(2.5rem, 4.5vw, 4rem); font-weight: 700; line-height: 1.0; letter-spacing: -0.04em; }
+.paypal-headline-lg { font-family: var(--font-display); font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 700; line-height: 1.08; letter-spacing: -0.035em; }
+.paypal-title-lg { font-family: var(--font-display); font-size: clamp(1.5rem, 2.5vw, 2.25rem); font-weight: 700; line-height: 1.14; letter-spacing: -0.025em; }
+.paypal-title-md { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; line-height: 1.2; letter-spacing: -0.018em; }
+.paypal-title-sm { font-family: var(--font-display); font-size: 1.375rem; font-weight: 700; line-height: 1.27; letter-spacing: -0.01em; }
+.paypal-body { font-family: var(--font-sans); font-size: 1.125rem; font-weight: 400; line-height: 1.5; letter-spacing: 0em; color: var(--ink-body); }
+.paypal-body-sm { font-family: var(--font-sans); font-size: 1rem; font-weight: 400; line-height: 1.5; letter-spacing: 0em; color: var(--ink-body); }
+.paypal-label { font-family: var(--font-sans); font-size: 0.875rem; font-weight: 700; line-height: 1.25; letter-spacing: 0.005em; }
+.paypal-caption { font-family: var(--font-sans); font-size: 0.875rem; font-weight: 400; line-height: 1.45; letter-spacing: 0em; }
+.paypal-legal { font-family: var(--font-sans); font-size: 0.75rem; font-weight: 400; line-height: 1.45; letter-spacing: 0.01em; color: var(--muted); }
+.paypal-pricing-display { font-family: var(--font-display); font-size: clamp(2.25rem, 4vw, 3.5rem); font-weight: 700; line-height: 0.95; letter-spacing: -0.045em; font-variant-numeric: tabular-nums; }
 
-.sovereign-canvas {
-  background-color: var(--background);
-  color: var(--foreground);
-}
+/* PayPal Surfaces & Modules (paypal.design.md) */
+.sovereign-canvas { background-color: var(--background); color: var(--foreground); }
+.paypal-hero-band { background-color: var(--surface-elevated); border-radius: var(--radius-xl); padding: 48px 36px; border: 1px solid var(--border); }
+@media (min-width: 768px) { .paypal-hero-band { padding: 72px 64px; } }
+.paypal-feature-card, .sovereign-card { background-color: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 28px; transition: border-color 150ms var(--ease-bento), box-shadow 150ms var(--ease-bento); }
+.paypal-pricing-card { background-color: var(--surface); border-radius: var(--radius-xl); border: 1px solid var(--border); padding: 32px; }
+.paypal-checkout-module { background-color: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 24px; box-shadow: 0 2px 12px rgba(0, 20, 53, 0.12); }
+.sovereign-subcard { background-color: var(--surface-elevated); border-radius: var(--radius-md); border: 1px solid var(--border); }
+.sovereign-well, .paypal-code-block { background-color: var(--surface-well); border-radius: var(--radius-md); border: 1px solid var(--border); padding: 16px 20px; font-family: var(--font-mono); font-size: 14px; line-height: 1.55; }
+.sovereign-glass, .paypal-nav-shell { background-color: var(--surface); color: var(--foreground); border-bottom: 1px solid var(--border); }
+.paypal-footer { background-color: var(--surface-footer); color: var(--ink-body); border-top: 1px solid var(--border); padding: 48px 48px; }
+.sovereign-field, .paypal-input { background-color: var(--field-background); color: var(--field-foreground); border: 1px solid var(--field-border); border-radius: var(--radius-md); padding: 14px 16px; font-size: 16px; line-height: 1.5; transition: border-color 150ms var(--ease-bento), box-shadow 150ms var(--ease-bento); }
+.sovereign-field:focus-visible, .paypal-input:focus-visible { outline: none; border-color: #0070E0; box-shadow: 0 0 0 2px rgba(0, 112, 224, 0.25); }
 
-.sovereign-card {
-  background-color: var(--surface);
-  border: 1px solid var(--border-hairline);
-  border-radius: var(--radius-outer);
-  box-shadow: var(--shadow-card);
-  transition: border-color 160ms var(--ease-bento), background-color 160ms var(--ease-bento);
-}
-.sovereign-card:hover { border-color: var(--border-hover); }
+/* Semantic Tonal Containers */
+.tone-paypal { background-color: var(--surface-elevated); border-radius: var(--radius-lg); border: 1px solid #0070E0; }
+.tone-emerald { background-color: var(--surface-elevated); border-radius: var(--radius-lg); border: 1px solid #0A7A3D; }
+.tone-crimson { background-color: var(--surface-elevated); border-radius: var(--radius-lg); border: 1px solid #D9360B; }
+.tone-amber { background-color: var(--surface-elevated); border-radius: var(--radius-lg); border: 1px solid #FFB600; }
 
-.sovereign-subcard {
-  background-color: var(--surface-elevated);
-  border: 1px solid var(--border-hairline);
-  border-radius: var(--radius-inner);
-  box-shadow: var(--shadow-subcard);
-  transition: border-color 160ms var(--ease-bento), background-color 160ms var(--ease-bento);
-}
+/* Semantic Dots & Icon Medallions */
+.dot-paypal { background-color: #0070E0; }
+.dot-emerald { background-color: #0A7A3D; }
+.dot-crimson { background-color: #D9360B; }
+.dot-amber { background-color: #FFB600; }
+.bar-track { background-color: var(--border); }
+.icon-medallion-paypal { background-color: var(--surface-elevated); color: #003087; border: 1px solid var(--border); border-radius: var(--radius-md); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.icon-medallion-emerald { background-color: var(--surface-elevated); color: #0A7A3D; border: 1px solid var(--border); border-radius: var(--radius-md); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.icon-medallion-crimson { background-color: var(--surface-elevated); color: #D9360B; border: 1px solid var(--border); border-radius: var(--radius-md); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.icon-medallion-amber { background-color: var(--surface-elevated); color: #001435; border: 1px solid #FFB600; border-radius: var(--radius-md); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.hero-artifact-img { background-color: var(--surface-well); border-radius: var(--radius-lg); border: 1px solid var(--border); }
 
-.sovereign-well {
-  background-color: var(--bg-deep);
-  border: 1px solid var(--border-hairline);
-  border-radius: var(--radius-inner);
-}
-
-.sovereign-field {
-  background-color: var(--surface-secondary);
-  border: 1px solid var(--border-hairline);
-  border-radius: var(--radius-control);
-  color: var(--foreground);
-  transition: border-color 150ms var(--ease-bento), background-color 150ms var(--ease-bento);
-}
-.sovereign-field:hover { border-color: var(--border-hover); }
-.sovereign-field:focus { outline: none; border-color: var(--accent); }
-
-.sovereign-glass {
-  background-color: color-mix(in oklab, var(--bg-deep) 88%, transparent);
-  backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid var(--border-hairline);
-}
-
-.hero-artifact-vignette {
-  box-shadow:
-    inset 140px 0 96px -16px var(--background),
-    inset 0 36px 48px -12px var(--background),
-    inset 0 -36px 48px -12px var(--background);
-}
-
-.tone-paypal {
-  background-color: color-mix(in oklab, var(--accent) 10%, var(--surface-elevated));
-  border: 1px solid color-mix(in oklab, var(--accent) 24%, var(--border-hairline));
-  color: var(--foreground);
-  border-radius: var(--radius-control);
-}
-
-.tone-emerald {
-  background-color: color-mix(in oklab, var(--emerald) 8%, var(--surface-elevated));
-  border: 1px solid color-mix(in oklab, var(--emerald) 22%, var(--border-hairline));
-  color: var(--foreground);
-  border-radius: var(--radius-control);
-}
-
-.tone-amber {
-  background-color: color-mix(in oklab, var(--amber) 8%, var(--surface-elevated));
-  border: 1px solid color-mix(in oklab, var(--amber) 22%, var(--border-hairline));
-  color: var(--foreground);
-  border-radius: var(--radius-control);
-}
-
-.tone-crimson {
-  background-color: color-mix(in oklab, var(--crimson) 8%, var(--surface-elevated));
-  border: 1px solid color-mix(in oklab, var(--crimson) 24%, var(--border-hairline));
-  color: var(--foreground);
-  border-radius: var(--radius-control);
-}
-
-.tone-neutral {
-  background-color: var(--surface-secondary);
-  border: 1px solid var(--border-hairline);
-  color: var(--text-secondary);
-  border-radius: var(--radius-control);
-}
-
-.dot-paypal { background-color: var(--accent); }
-.dot-emerald { background-color: var(--emerald); }
-.dot-amber { background-color: var(--amber); }
-.dot-crimson { background-color: var(--crimson); }
-.bar-track { background-color: var(--surface-secondary); }
-
-.btn-paypal-primary {
-  background-color: var(--btn-primary-bg);
-  color: var(--btn-primary-fg);
-  border: 1px solid transparent;
-  border-radius: var(--radius-control);
-  box-shadow: var(--shadow-btn);
-  transition: transform 150ms var(--ease-bento), background-color 150ms var(--ease-bento), opacity 150ms var(--ease-bento);
-}
-.btn-paypal-primary:hover { background-color: var(--btn-primary-hover); }
-
-.specular-sweep-sheen { display: none; }
-
-@keyframes talos-scanline-sweep {
-  0% { transform: translateY(0%); opacity: 0.5; }
-  100% { transform: translateY(360%); opacity: 0; }
-}
-.laser-scanline-bar {
-  background-color: var(--border-hover);
-  animation: talos-scanline-sweep 480ms var(--ease-bento) 1 forwards;
-}
-
-.btn-sovereign-emerald, .btn-sovereign-crimson, .btn-sovereign-amber, .btn-sovereign-neutral {
-  background-color: var(--surface-secondary); color: var(--foreground);
-  border: 1px solid var(--border-hairline); border-radius: var(--radius-control); box-shadow: var(--shadow-btn);
-  transition: transform 150ms var(--ease-bento), background-color 150ms var(--ease-bento), border-color 150ms var(--ease-bento);
-}
-.btn-sovereign-neutral:hover { border-color: var(--border-hover); background-color: color-mix(in oklab, var(--foreground) 5%, var(--surface-secondary)); }
-.btn-sovereign-emerald:hover { border-color: color-mix(in oklab, var(--emerald) 45%, var(--border-hairline)); background-color: color-mix(in oklab, var(--emerald) 10%, var(--surface-secondary)); }
-.btn-sovereign-crimson:hover { border-color: color-mix(in oklab, var(--crimson) 45%, var(--border-hairline)); background-color: color-mix(in oklab, var(--crimson) 10%, var(--surface-secondary)); }
-.btn-sovereign-amber:hover { border-color: color-mix(in oklab, var(--amber) 45%, var(--border-hairline)); background-color: color-mix(in oklab, var(--amber) 10%, var(--surface-secondary)); }
-.bento-drawer-transition { transition: grid-template-rows 380ms var(--ease-bento), opacity 240ms var(--ease-bento), border-color 160ms var(--ease-bento), background-color 160ms var(--ease-bento); }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* PayPal Pill-Shaped Commerce CTAs (paypal.design.md) */
+.btn-paypal-primary { background-color: #003087; color: #FFFFFF; border: 1px solid #003087; border-radius: var(--radius-pill); font-family: var(--font-sans); font-size: 16px; font-weight: 700; line-height: 1.25; letter-spacing: 0em; padding: 14px 28px; min-height: 44px; transition: background-color 150ms var(--ease-bento), border-color 150ms var(--ease-bento); }
+.btn-paypal-primary:hover { background-color: #0070E0; border-color: #0070E0; }
+.btn-paypal-primary:active { background-color: #001C64; border-color: #001C64; }
+.btn-paypal-secondary, .btn-sovereign-neutral, .btn-sovereign-emerald, .btn-sovereign-crimson, .btn-sovereign-amber { background-color: var(--surface); color: #003087; border: 1px solid #003087; border-radius: var(--radius-pill); font-family: var(--font-sans); font-size: 16px; font-weight: 700; line-height: 1.25; letter-spacing: 0em; padding: 13px 27px; min-height: 44px; transition: background-color 150ms var(--ease-bento), border-color 150ms var(--ease-bento), color 150ms var(--ease-bento); }
+.btn-paypal-secondary:hover, .btn-sovereign-neutral:hover { background-color: var(--surface-elevated); border-color: #005EA6; color: #005EA6; }
+.btn-sovereign-emerald { color: #0A7A3D; border-color: #0A7A3D; }
+.btn-sovereign-crimson { color: #D9360B; border-color: #D9360B; }
+.btn-sovereign-amber { color: #001435; border-color: #FFB600; }
+.btn-checkout-yellow { background-color: #FFC439; color: #001435; border: 1px solid #FFC439; border-radius: var(--radius-pill); font-family: var(--font-sans); font-size: 16px; font-weight: 700; line-height: 1.25; letter-spacing: 0em; padding: 14px 28px; min-height: 44px; }
+.paypal-tab-pill { background-color: var(--surface-elevated); color: var(--foreground); border-radius: var(--radius-pill); padding: 8px 16px; font-size: 14px; font-weight: 700; }
+.paypal-tab-pill-active { background-color: #003087; color: #FFFFFF; border-radius: var(--radius-pill); padding: 8px 16px; font-size: 14px; font-weight: 700; }
+.bento-drawer-transition { transition: grid-template-rows 300ms var(--ease-bento), opacity 200ms var(--ease-bento); }
+:focus-visible { outline: 2px solid #0070E0; outline-offset: 2px; }

@@ -54,24 +54,24 @@ export function initAgGridEnterprise(explicitKey?: string): boolean {
 initAgGridEnterprise();
 
 export const talosDarkTheme = themeQuartz.withPart(colorSchemeDark).withParams({
-  backgroundColor: '#19191b',
-  foregroundColor: '#ededed',
-  headerBackgroundColor: '#141415',
-  rowHoverColor: '#232325',
-  borderColor: 'rgba(237, 237, 237, 0.08)',
-  accentColor: '#0070ba',
-  fontFamily: 'Figtree Variable, Figtree, system-ui, sans-serif',
+  backgroundColor: '#001435',
+  foregroundColor: '#FFFFFF',
+  headerBackgroundColor: '#001C64',
+  rowHoverColor: '#003087',
+  borderColor: 'rgba(255, 255, 255, 0.14)',
+  accentColor: '#0070E0',
+  fontFamily: 'PayPal Pro, PayPal Open, Helvetica Neue, Arial, sans-serif',
   fontSize: 13,
 });
 
 export const talosLightTheme = themeQuartz.withParams({
   backgroundColor: '#FFFFFF',
-  foregroundColor: '#171717',
-  headerBackgroundColor: '#f4f4f5',
-  rowHoverColor: '#fafafa',
-  borderColor: 'rgba(23, 23, 23, 0.08)',
-  accentColor: '#0070ba',
-  fontFamily: 'Figtree Variable, Figtree, system-ui, sans-serif',
+  foregroundColor: '#001435',
+  headerBackgroundColor: '#FAF8F5',
+  rowHoverColor: '#F7F9FA',
+  borderColor: '#DADDE1',
+  accentColor: '#0070E0',
+  fontFamily: 'PayPal Pro, PayPal Open, Helvetica Neue, Arial, sans-serif',
   fontSize: 13,
 });
 

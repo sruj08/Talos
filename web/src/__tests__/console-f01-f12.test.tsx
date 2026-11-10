@@ -1,7 +1,10 @@
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import TALOSCommandCenterPage from '../app/page';
+import TalosLandingPage from '../app/page';
+import TALOSCommandCenterPage from '../app/command-center/page';
+import StorylineWalkthroughPage from '../app/story/page';
+import StepUpChapterPage from '../app/step-up/page';
 import { KyaMandateForm } from '../components/mandate/KyaMandateForm';
 import { AgStudioBlotter } from '../components/blotter/AgStudioBlotter';
 import { JudgeScenarioToolbar } from '../components/JudgeScenarioToolbar';
@@ -103,5 +106,23 @@ describe('Part 5 Contract Preservation — console-f01-f12 (F-01 through F-12 & 
     expect(blotterHtml).toContain('Escrow Settlement Ledger');
     expect(blotterHtml).toContain('spread-sparkline-esc-901-trap');
     expect(forensicHtml).toContain('forensic-detail-panel');
+  });
+
+  it('renders the pure Landing Page (/) with only main tagline and storyline, zero numbers, and dedicated multi-page routes', () => {
+    const landingHtml = renderToStaticMarkup(<TalosLandingPage />);
+    expect(landingHtml).toContain('data-testid="talos-landing-page"');
+    expect(landingHtml).toContain('TALOS: Stop AI Shopping Agents From Being Hijacked or Overcharged');
+    expect(landingHtml).not.toContain('data-testid="kpi-header-bar"');
+    expect(landingHtml).not.toContain('data-testid="ag-studio-blotter"');
+    const landingVisibleText = landingHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    expect(landingVisibleText).not.toMatch(/\d/);
+
+    const storyHtml = renderToStaticMarkup(<StorylineWalkthroughPage />);
+    expect(storyHtml).toContain('data-testid="chapter-route-story"');
+    expect(storyHtml).toContain('data-testid="storytelling-walkthrough-5part"');
+
+    const stepUpHtml = renderToStaticMarkup(<StepUpChapterPage />);
+    expect(stepUpHtml).toContain('data-testid="chapter-route-step-up"');
+    expect(stepUpHtml).toContain('data-testid="paypal-step-up-modal"');
   });
 });

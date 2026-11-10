@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { useTalosClearing } from '../context/TalosClearingContext';
 import {
   INITIAL_SLA_TASKS,
   SlaTaskRecord,
@@ -19,18 +20,30 @@ export interface UseBryntumTimelineOptions {
 }
 
 export function useBryntumTimeline({
-  initialTasks = INITIAL_SLA_TASKS,
+  initialTasks,
   onVoidEscrow,
   onCaptureEscrow,
 }: UseBryntumTimelineOptions = {}) {
-  const [tasks, setTasks] = useState<SlaTaskRecord[]>(initialTasks);
+  const { rows } = useTalosClearing();
+  const resolvedInitialTasks = initialTasks ?? INITIAL_SLA_TASKS.map((t) => {
+    const row = rows.find((r) => r.escrow_id === t.escrowId);
+    if (!row) return t;
+    if (row.state === 'PAYPAL_VOIDED') {
+      return { ...t, escrowState: 'PAYPAL_VOIDED' as const, percentDone: 100, slaHoursElapsed: Math.max(t.slaHoursElapsed, t.slaDeadlineHours + 8), downstreamLocked: true };
+    }
+    if (row.state === 'PAYPAL_CAPTURED') {
+      return { ...t, escrowState: 'PAYPAL_CAPTURED' as const, percentDone: 100, downstreamLocked: false, paypalCaptureId: row.paypal_capture_id || t.paypalCaptureId };
+    }
+    return t;
+  });
+  const [tasks, setTasks] = useState<SlaTaskRecord[]>(resolvedInitialTasks);
   const [zoomScale, setZoomScale] = useState<'HOURS_48' | 'DAYS_29'>('HOURS_48');
   const [liveStatusMsg, setLiveStatusMsg] = useState<string>(
     'Bryntum Scheduler Pro v6.1.4 Bound Two-Way to PayPal Sandbox Orders v2 AUTHORIZE & VOID.'
   );
   const [syncedAgGridState, setSyncedAgGridState] = useState<Record<string, string>>(() =>
     Object.fromEntries(
-      initialTasks.map((t) => [t.escrowId, t.escrowState === 'PAYPAL_VOIDED' ? 'VOIDED' : t.escrowState])
+      resolvedInitialTasks.map((t) => [t.escrowId, t.escrowState === 'PAYPAL_VOIDED' ? 'VOIDED' : t.escrowState])
     )
   );
 
@@ -139,13 +152,7 @@ export function useBryntumTimeline({
           paypal_capture_id: captureId,
           amount_cents: task.amountCents,
         },
-        bryntum_task_delta: {
-          id: task.id,
-          escrowId: task.escrowId,
-          escrowState: 'PAYPAL_CAPTURED',
-          percentDone: 100,
-          downstreamLocked: false,
-        },
+        bryntum_task_delta: { id: task.id, escrowId: task.escrowId, escrowState: 'PAYPAL_CAPTURED', percentDone: 100, downstreamLocked: false },
       });
       onCaptureEscrow?.(task.escrowId, captureId);
     },
@@ -227,14 +234,7 @@ export function useBryntumTimeline({
   }, []);
 
   return {
-    tasks,
-    setTasks,
-    zoomScale,
-    setZoomScale,
-    liveStatusMsg,
-    syncedAgGridState,
-    executeSlaBreachAndVoid,
-    executeCarrierDeliveredCapture,
-    handleRerouteChannel3,
+    tasks, setTasks, zoomScale, setZoomScale, liveStatusMsg, syncedAgGridState,
+    executeSlaBreachAndVoid, executeCarrierDeliveredCapture, handleRerouteChannel3,
   };
 }

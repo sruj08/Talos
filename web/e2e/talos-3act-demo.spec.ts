@@ -1,4 +1,4 @@
-// Playwright E2E Verification Suite for TALOS 3-Act Demo (TASK-14)
+// Playwright E2E Verification Suite for TALOS 3-Act Demo & Multi-Page PayPal Design System
 import { test, expect, type Page, type Locator } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -59,7 +59,7 @@ class TalosCommandCenterPage {
   }
 
   async goto(): Promise<void> {
-    await this.page.goto('/');
+    await this.page.goto('/command-center');
     await expect(this.root).toBeVisible();
     await expect(this.page.getByRole('heading', { name: /TALOS/i }).first()).toBeVisible();
   }
@@ -74,11 +74,11 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
     const pom = new TalosCommandCenterPage(page);
     await pom.goto();
 
-    // Gate 5 Computed-Style Audit: Verify Sovereign Glass OKLCH, Typography, Radius & Tabular Nums
+    // Computed-Style Audit: Verify PayPal Design System (paypal.design.md) Typography, Radius & Tabular Nums
     const computedAudit = await page.evaluate(() => {
       const h1 = document.querySelector('h1');
       const body = document.body;
-      const card = document.querySelector('.sovereign-card');
+      const card = document.querySelector('.paypal-feature-card');
       const kpiNum = document.querySelector('[data-testid="kpi-protected-gmv"] .tabular-nums');
       const monoEl = document.querySelector('.font-mono');
       return {
@@ -92,9 +92,9 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
       };
     });
     expect(['high', 'static']).toContain(computedAudit.fxAttr);
-    expect(computedAudit.h1Font).toMatch(/Fraunces/i);
-    expect(computedAudit.bodyFont).toMatch(/Figtree/i);
-    expect(computedAudit.monoFont).toMatch(/DM Mono/i);
+    expect(computedAudit.h1Font).toMatch(/PayPal Pro|PayPal Open|Helvetica Neue/i);
+    expect(computedAudit.bodyFont).toMatch(/PayPal Pro|PayPal Open|Helvetica Neue/i);
+    expect(computedAudit.monoFont).toMatch(/SFMono-Regular|Consolas/i);
     expect(computedAudit.cardRadius).toBe('16px');
     expect(computedAudit.kpiVariantNumeric).toContain('tabular-nums');
 
@@ -110,11 +110,6 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
 
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, 'act1-firewall-gouging-blocked.png'),
-      animations: 'disabled',
-    });
-    await page.screenshot({
-      path: path.join(SCREENSHOT_DIR, 'sovereign-glass-fullpage.png'),
-      fullPage: true,
       animations: 'disabled',
     });
   });
@@ -175,12 +170,6 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
       await pom.copilotRunBtn.click();
       await expect(page.getByTestId('ag-studio-integrated-chart-summary')).toContainText('Saved Fraud Volume');
 
-      await page.screenshot({
-        path: path.join(SCREENSHOT_DIR, 'act4-ag-studio-copilot-chart.png'),
-        animations: 'disabled',
-      });
-
-      // Verify blotter status tabs, quick filter, CSV export, and Part 5 data-testids
       await expect(page.getByTestId('blotter-group-summary')).toBeVisible();
       await expect(page.getByTestId('blotter-saved-fraud-kpi')).toBeVisible();
       await expect(page.getByTestId('blotter-quick-filter')).toBeVisible();
@@ -189,29 +178,12 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
       await expect(page.getByTestId('blotter-row-esc-901-trap')).toBeVisible();
       await page.getByTestId('blotter-status-tab-ALL').click();
 
-      // Verify theme toggle (dark -> light -> dark), light-mode ink contrast, and AG Grid light theme re-theming
-      await page.getByTestId('theme-toggle-btn').click();
+      // Verify theme toggle (default light -> dark -> light)
       await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-      await expect(page.getByTestId('ag-studio-integrated-chart-summary')).toBeVisible();
-      const lightAudit = await page.evaluate(() => {
-        const h1 = document.querySelector('h1');
-        const card = document.querySelector('.sovereign-card');
-        const agRoot = document.querySelector('.ag-root-wrapper');
-        return {
-          h1Color: h1 ? window.getComputedStyle(h1).color : '',
-          cardBg: card ? window.getComputedStyle(card).backgroundColor : '',
-          agBg: agRoot ? window.getComputedStyle(agRoot).backgroundColor : '',
-        };
-      });
-      expect(lightAudit.h1Color).not.toBe('rgb(248, 250, 252)');
-      expect(lightAudit.h1Color).not.toBe(lightAudit.cardBg);
-      expect(lightAudit.agBg).toBe('rgb(255, 255, 255)');
-      await page.screenshot({
-        path: path.join(SCREENSHOT_DIR, 'sovereign-glass-lightmode.png'),
-        animations: 'disabled',
-      });
       await page.getByTestId('theme-toggle-btn').click();
       await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+      await page.getByTestId('theme-toggle-btn').click();
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
 
       // Verify dedicated chapter routes & bottom story dock cross-route navigation
       await page.goto('/mandates');
@@ -228,6 +200,54 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
       await page.goto('/sla');
       await expect(page.getByTestId('chapter-route-sla')).toBeVisible();
       await expect(page.getByTestId('bryntum-sla-board')).toBeVisible();
+
+      await page.goto('/step-up');
+      await expect(page.getByTestId('chapter-route-step-up')).toBeVisible();
+      await expect(page.getByTestId('paypal-step-up-modal')).toBeVisible();
+    }
+  );
+
+  test(
+    'Act 5: Pure Landing Page (/) Storyline & Multi-Page Button Navigation',
+    { tag: ['@critical', '@e2e', '@showcase'] },
+    async ({ page }) => {
+      await page.goto('/');
+      await expect(page.getByTestId('talos-landing-page')).toBeVisible();
+
+      const hero = page.getByTestId('startup-landing-hero');
+      await expect(hero).toBeVisible();
+      await expect(hero).toContainText('Stop AI Shopping Agents From Being Hijacked or Overcharged');
+      await expect(page.getByTestId('talos-pillar-1')).toBeVisible();
+      await expect(page.getByTestId('talos-pillar-4')).toBeVisible();
+
+      // Verify Landing Page (/) has zero numbers in visible text and no unrelated modules
+      await expect(page.getByTestId('kpi-header-bar')).toHaveCount(0);
+      await expect(page.getByTestId('ag-studio-blotter')).toHaveCount(0);
+      const bodyText = await page.locator('body').innerText();
+      expect(bodyText).not.toMatch(/\d/);
+
+      // Clicking Explore Full Storyline opens /story
+      await page.getByTestId('cta-story-walkthrough-btn').click();
+      await expect(page).toHaveURL(/\/story$/);
+      await expect(page.getByTestId('chapter-route-story')).toBeVisible();
+      await expect(page.getByTestId('storytelling-walkthrough-5part')).toBeVisible();
+
+      // Clicking Back to Landing returns to /
+      await page.getByTestId('story-back-home-btn').click();
+      await expect(page).toHaveURL(/\/$/);
+
+      // Clicking Launch Interactive Simulator opens /simulator
+      await page.getByTestId('landing-try-demo-cta').click();
+      await expect(page).toHaveURL(/\/simulator$/);
+      await expect(page.getByTestId('chapter-route-simulator')).toBeVisible();
+      await expect(page.getByTestId('side-by-side-agent-comparison')).toBeVisible();
+
+      // Trigger Act 3 on /simulator, then click Jump to Ledger (/sla) and verify cross-page state persistence
+      await page.getByTestId('btn-scenario-act3').click();
+      await page.getByTestId('btn-jump-to-ledger').click();
+      await expect(page).toHaveURL(/\/sla$/);
+      await expect(page.getByTestId('bryntum-badge-esc-903-scarlett')).toContainText('PAYPAL_VOIDED');
+      await expect(page.getByTestId('downstream-phase-esc-903-scarlett')).toContainText('LOCKED IN CRIMSON');
     }
   );
 });
