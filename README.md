@@ -119,11 +119,13 @@ One rule: **never give a language model direct `CAPTURE` authority over money.**
 | **3. Fair-price radar** | Merchant ask vs Channel3 median: $480 vs $249 is +9,277 bps, above the 1,500 bps cap, so checkout reroutes to the verified seller | live API |
 | **4. Reversible escrow** | PayPal `AUTHORIZE` hold; `CAPTURE` only on confirmed delivery, `VOID` on a missed SLA, human step-up above the cap | PayPal Sandbox |
 
-$$
+```math
 \Delta_{\text{bps}} = \left\lfloor \frac{480 - 249}{249} \times 10^4 \right\rfloor = 9{,}277 > 1{,}500 \implies \text{REROUTE}
-\qquad
-\mathcal{S}(t) = \begin{cases} \texttt{CAPTURE} & \text{delivered} \land t \le T_{\text{SLA}} \\ \texttt{VOID} & t > T_{\text{SLA}} \\ \texttt{STEP\_UP} & P > C_{\text{mandate}} \end{cases}
-$$
+```
+
+```math
+S(t) = \begin{cases} \text{CAPTURE} & \text{delivered and } t \le T_{\text{SLA}} \\ \text{VOID} & t > T_{\text{SLA}} \\ \text{STEP-UP} & P > C_{\text{mandate}} \end{cases}
+```
 
 ---
 
