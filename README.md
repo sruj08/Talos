@@ -1,4 +1,10 @@
-<h1 align="center">TALOS</h1>
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="web/public/assets/talos-logo-dark.webp" />
+    <img src="web/public/assets/talos-logo-light.webp" alt="TALOS logo" width="64" height="64" align="absmiddle" />
+  </picture>
+  TALOS
+</h1>
 
 <p align="center"><b>Zero-trust firewall and reversible PayPal escrow referee for AI agents that shop with real money.</b></p>
 
