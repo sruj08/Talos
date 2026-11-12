@@ -82,10 +82,10 @@ function Invoke-TalosTier2F11ToF15 {
 
     # --- F14 Boundary & Corner Cases (TASK-11 BryntumSlaBoard Two-Way Timeline) ---
     Test-TalosCase -Tier 'Tier2' -Id 'T2-F14-01' -Feature 'F14' -Description 'Exact 48h SLA boundary (nextHours <= task.slaDeadlineHours) updates hours without triggering PayPal VOID' -Check {
-        return ($bsText -match 'if \(nextHours > task\.slaDeadlineHours\)' -and $bsText -match 'slaHoursElapsed:\s*nextHours')
+        return ($bsText -match 'if \((nextHours|clamped) > task\.slaDeadlineHours\)' -and $bsText -match 'slaHoursElapsed:\s*(nextHours|clamped)')
     }
     Test-TalosCase -Tier 'Tier2' -Id 'T2-F14-02' -Feature 'F14' -Description 'Over-48h SLA boundary (nextHours > task.slaDeadlineHours) triggers executeSlaBreachAndVoid' -Check {
-        return ($bsText -match "executeSlaBreachAndVoid\(task,\s*nextHours,\s*'BRYNTUM_SLA_BAR_DRAGGED_PAST_DEADLINE'\)")
+        return ($bsText -match "executeSlaBreachAndVoid\(task,\s*(nextHours|clamped),\s*'BRYNTUM_SLA_BAR_DRAGGED_PAST_DEADLINE'\)")
     }
     Test-TalosCase -Tier 'Tier2' -Id 'T2-F14-03' -Feature 'F14' -Description 'executeSlaBreachAndVoid short-circuits if task.escrowState is already PAYPAL_VOIDED' -Check {
         return ($ubText -match "if \(task\.escrowState === 'PAYPAL_VOIDED'\) return;")

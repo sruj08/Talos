@@ -34,11 +34,16 @@ services:
   - type: web
     name: talos-orchestrator-go
     runtime: go
-    rootDir: services/orchestrator-go
+    # Built from the repo root (no rootDir): go.mod replaces the APIMatic SDK with
+    # ../../sdk/paypal-go-apimatic, and Render hides files outside a service's rootDir.
     plan: starter
     region: oregon
-    buildCommand: go build -tags netgo -ldflags '-s -w' -o bin/orchestrator ./cmd/server
-    startCommand: ./bin/orchestrator
+    buildFilter:
+      paths:
+        - services/orchestrator-go/**
+        - sdk/paypal-go-apimatic/**
+    buildCommand: cd services/orchestrator-go && go build -tags netgo -ldflags '-s -w' -o bin/orchestrator ./cmd/server
+    startCommand: ./services/orchestrator-go/bin/orchestrator
     healthCheckPath: /healthz
     envVars:
       - key: PORT

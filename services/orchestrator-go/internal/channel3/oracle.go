@@ -78,7 +78,7 @@ func NewOracleClient(baseURL, apiKey string, httpClient *http.Client) *OracleCli
 	}
 	baseURL = strings.TrimRight(strings.TrimSpace(baseURL), "/")
 	if httpClient == nil {
-		httpClient = &http.Client{Timeout: 8000 * time.Millisecond}
+		httpClient = &http.Client{Timeout: 2500 * time.Millisecond}
 	}
 	return &OracleClient{BaseURL: baseURL, APIKey: strings.TrimSpace(apiKey), HTTPClient: httpClient}
 }

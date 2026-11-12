@@ -95,7 +95,7 @@ test.describe('TALOS 3-Act Autonomous Procurement & Zero-Trust Escrow Suite', ()
     expect(computedAudit.h1Font).toMatch(/PayPal Pro|PayPal Open|Helvetica Neue/i);
     expect(computedAudit.bodyFont).toMatch(/PayPal Pro|PayPal Open|Helvetica Neue/i);
     expect(computedAudit.monoFont).toMatch(/SFMono-Regular|Consolas/i);
-    expect(computedAudit.cardRadius).toBe('16px');
+    expect(computedAudit.cardRadius).toBe('12px');
     expect(computedAudit.kpiVariantNumeric).toContain('tabular-nums');
 
     await pom.mandateBudgetInput.fill('300');

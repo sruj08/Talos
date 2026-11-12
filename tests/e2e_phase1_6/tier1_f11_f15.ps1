@@ -40,8 +40,8 @@ function Invoke-TalosTier1F11ToF15 {
     }
 
     # --- F12: Next.js 15 Obsidian Shell, MandateStudio.tsx & useEscrowStream.ts (TASK-09) ---
-    Test-TalosCase -Tier 'Tier1' -Id 'T1-F12-01' -Feature 'F12' -Description 'web/src/app/page.tsx mounts MandateStudio, PoisonedStoreSim, AgStudioBlotter, BryntumSlaBoard, and PayPalStepUpModal' -Check {
-        $pg = Get-Content (Join-Path $Global:TalosRepoRoot 'web\src\app\page.tsx') -Raw
+    Test-TalosCase -Tier 'Tier1' -Id 'T1-F12-01' -Feature 'F12' -Description 'Command Center operator suite mounts MandateStudio, PoisonedStoreSim, AgStudioBlotter, BryntumSlaBoard, and PayPalStepUpModal' -Check {
+        $pg = Get-Content (Join-Path $Global:TalosRepoRoot 'web\src\components\command\OperatorSuite.tsx') -Raw
         return ($pg -match 'MandateStudio' -and $pg -match 'PoisonedStoreSim' -and $pg -match 'AgStudioBlotter' -and $pg -match 'BryntumSlaBoard' -and $pg -match 'PayPalStepUpModal')
     }
     Test-TalosCase -Tier 'Tier1' -Id 'T1-F12-02' -Feature 'F12' -Description 'MandateStudio.tsx renders data-testid="mandate-studio" and Ed25519 KYA Mandate controls' -Check {
