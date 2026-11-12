@@ -9,60 +9,75 @@
   <img src="https://img.shields.io/badge/Next.js_15-React_19_Console-334155?style=flat-square&labelColor=0B0F19&logo=nextdotjs&logoColor=white" alt="Next.js 15" />
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/AG_Grid_Enterprise_v33-Live_Escrow_Ledger-C2410C?style=flat-square&labelColor=0B0F19" alt="AG Grid Enterprise" />
+  <img src="https://img.shields.io/badge/AI_Agents-MCP_Server_%2B_PayPal_Agent_Toolkit-6D28D9?style=flat-square&labelColor=0B0F19" alt="AI agents and MCP" />
   <img src="https://img.shields.io/badge/APIMatic-Typed_Go_PayPal_SDK-1D4ED8?style=flat-square&labelColor=0B0F19&logo=openapiinitiative&logoColor=white" alt="APIMatic" />
+  <img src="https://img.shields.io/badge/Postman-16--Request_Collection-B45309?style=flat-square&labelColor=0B0F19&logo=postman&logoColor=white" alt="Postman" />
+  <img src="https://img.shields.io/badge/Render-Live_5--Resource_Blueprint-0F766E?style=flat-square&labelColor=0B0F19&logo=render&logoColor=white" alt="Render" />
+</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/AG_Grid_Enterprise_v33-Live_Escrow_Ledger-C2410C?style=flat-square&labelColor=0B0F19" alt="AG Grid Enterprise" />
   <img src="https://img.shields.io/badge/Bryntum-SLA_Timeline_%C2%B7_MCP-047857?style=flat-square&labelColor=0B0F19" alt="Bryntum" />
   <img src="https://img.shields.io/badge/Channel3-Fair--Price_Oracle-4338CA?style=flat-square&labelColor=0B0F19" alt="Channel3" />
-</p>
-<p align="center">
-  <img src="https://img.shields.io/badge/Render-5--Resource_Blueprint-0F766E?style=flat-square&labelColor=0B0F19&logo=render&logoColor=white" alt="Render Blueprint" />
-  <img src="https://img.shields.io/badge/Elastic-OpenTelemetry_%2B_Threat_Index-0369A1?style=flat-square&labelColor=0B0F19&logo=elastic&logoColor=white" alt="Elastic" />
-  <img src="https://img.shields.io/badge/Postman-16--Request_Collection-B45309?style=flat-square&labelColor=0B0F19&logo=postman&logoColor=white" alt="Postman" />
+  <img src="https://img.shields.io/badge/Elastic-OpenTelemetry-0369A1?style=flat-square&labelColor=0B0F19&logo=elastic&logoColor=white" alt="Elastic" />
   <img src="https://img.shields.io/badge/E2E-176%2F176_passing-15803D?style=flat-square&labelColor=0B0F19" alt="E2E 176/176" />
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-334155?style=flat-square&labelColor=0B0F19&logo=opensourceinitiative&logoColor=white" alt="MIT License" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT_(OSI)-334155?style=flat-square&labelColor=0B0F19&logo=opensourceinitiative&logoColor=white" alt="MIT License" /></a>
 </p>
 
 <p align="center">
-  <a href="#quickstart">Quickstart</a> ·
-  <a href="#architecture">Architecture</a> ·
-  <a href="#verification">Verification</a> ·
-  <a href="postman/Talos-Sandbox-MCP.postman_collection.json">Postman collection</a> ·
-  <a href="https://render.com/deploy?repo=https://github.com/sruj08/Talos">Deploy to Render</a> ·
-  <a href="docs/00-overview/PROJECT_BRIEF.md">Project brief</a>
+  <a href="https://talos-console-web.onrender.com"><b>Live demo</b></a> ·
+  <a href="#setup">Setup</a> ·
+  <a href="#how-we-use-paypal">How we use PayPal</a> ·
+  <a href="#how-we-use-ai">How we use AI</a> ·
+  <a href="#sponsor-integrations-and-tools">Sponsor integrations</a> ·
+  <a href="#screenshots">Screenshots</a>
 </p>
 
-> **Executive summary (in plain English):**
-> When an autonomous AI agent shops online, one hidden line of text on a merchant page can trick it into paying the
-> wrong seller, paying too much, or paying for goods that never arrive, and a normal `CAPTURE` makes that permanent.
-> **TALOS** sits between the agent and **PayPal**. It strips hidden prompt-injection payloads from merchant HTML in
-> **under 3 ms**, checks every price against a **Channel3** fair-market median, and places money in a reversible
-> **PayPal `Orders v2` `AUTHORIZE` hold**. Funds are captured only after carrier tracking confirms delivery, and the
-> hold is **voided automatically** if the delivery SLA is breached. Carts above the signed budget wait for a human
-> co-sign.
+> **In plain English:** when an AI agent shops online, one hidden line of text on a merchant page can trick it into
+> paying the wrong seller, paying too much, or paying for goods that never arrive, and a normal `CAPTURE` makes that
+> permanent. **TALOS** sits between the agent and **PayPal**. It strips hidden prompt-injection payloads from merchant
+> HTML in **under 3 ms**, checks every price against a **Channel3** fair-market median, and places money in a
+> reversible **PayPal `Orders v2` `AUTHORIZE` hold**. Funds are captured only after carrier tracking confirms
+> delivery, the hold is **voided automatically** if the delivery SLA is breached, and carts above the signed budget
+> wait for a human co-sign.
+
+<p align="center">
+  <a href="https://talos-console-web.onrender.com"><img src="docs/project-screenshots/01%20-%20Zero-Trust%20KYA%20Firewall%20and%20Reversible%20PayPal%202PC%20Escrow%20Hero.png" alt="TALOS landing page" width="900" /></a>
+</p>
+
+---
+
+## Submission checklist
+
+| Requirement | Where |
+| :--- | :--- |
+| Public repository | [`github.com/sruj08/Talos`](https://github.com/sruj08/Talos) |
+| Approved OSI license | [MIT License](LICENSE) |
+| Setup instructions | [Setup](#setup): local run, environment keys, and the Render deploy |
+| How we use PayPal | [How we use PayPal](#how-we-use-paypal) |
+| How we use AI | [How we use AI](#how-we-use-ai) |
+| Other tools and sponsor integrations | [Sponsor integrations and tools](#sponsor-integrations-and-tools): APIMatic, Postman, Render, AG Grid, Bryntum, Channel3, KERNEL, Elastic |
+| Running deployment | [talos-console-web.onrender.com](https://talos-console-web.onrender.com) (free tier: the first request after idle can take about a minute) |
 
 ---
 
 ## Contents
 
-- [Inspiration](#inspiration)
-- [What it does](#what-it-does)
+- [The problem](#the-problem)
+- [What TALOS does](#what-talos-does)
+- [How we use PayPal](#how-we-use-paypal)
+- [How we use AI](#how-we-use-ai)
+- [Sponsor integrations and tools](#sponsor-integrations-and-tools)
+- [Screenshots](#screenshots)
 - [Architecture](#architecture)
-- [How we built it](#how-we-built-it)
-- [Repository layout](#repository-layout)
-- [Quickstart](#quickstart)
+- [Setup](#setup)
 - [Verification](#verification)
 - [Security model](#security-model)
-- [Compliance design notes](#compliance-design-notes)
-- [Business model](#business-model)
-- [Challenges we ran into](#challenges-we-ran-into)
-- [Accomplishments](#accomplishments)
-- [What we learned](#what-we-learned)
-- [What's next](#whats-next)
-- [Documentation](#documentation)
+- [Challenges, accomplishments and what's next](#challenges-we-ran-into)
+- [Repository layout and docs](#repository-layout)
 
 ---
 
-## Inspiration
+## The problem
 
 Picture an enterprise procurement agent asked to buy a **$249 Shure SM7B microphone** under a **$300 budget**. While
 reading a merchant storefront, it ingests text a human never sees:
@@ -81,74 +96,122 @@ Automated traffic is already **51% of web traffic**
 yet only **11% of enterprise CFOs** are even piloting AI agents
 ([PYMNTS, *The Agentic Trust Gap*](https://www.pymnts.com/study_posts/the-agentic-trust-gap-enterprise-cfos-push-pause-on-agentic-ai/)).
 
-Agent payment toolkits today trust the model with the credentials: one bad instruction becomes an irreversible
-capture. Classic fraud tooling asks *"is this a bot?"*, but in agentic commerce the human *wants* the bot to buy. The
-missing primitive is **Know-Your-Agent (KYA)**:
-
-1. **Cryptographic authority:** did a human sign this exact mandate (`max_amount_cents`, `allowed_categories`, `max_spread_bps`, `sla_hours`)?
-2. **Untrusted-DOM immunity:** was the agent's context poisoned by hidden instructions on the page?
-3. **Fair-price integrity:** is the merchant charging more than the verified market median allows?
-4. **Reversible settlement:** can funds be held until delivery is proven, and released back if it isn't?
+Agent payment toolkits trust the model with the credentials, so one bad instruction becomes an irreversible capture.
+The missing primitive is **Know-Your-Agent (KYA)**: did a human sign this exact mandate, was the agent's context
+poisoned, is the price fair, and can the money be held until delivery is proven?
 
 ---
 
-## What it does
+## What TALOS does
 
-TALOS is a zero-trust agentic commerce firewall plus a **two-phase-commit (2PC) PayPal escrow referee**. Its one rule:
-**never give a language model direct `CAPTURE` authority over money.**
+One rule: **never give a language model direct `CAPTURE` authority over money.**
 
-### 1. Rust security data plane (`services/firewall-rs`)
-
-- **KYA mandates:** issues and verifies **Ed25519** (`ed25519-dalek`) spending mandates and emits an **RFC 9421**
-  HTTP message-signature input binding the request to the mandate.
-- **DOM prompt-injection sanitizer:** a streaming `lol_html` rewriter removes hidden nodes (`display:none`,
-  `opacity:0`, zero-size text, HTML comments, zero-width and Unicode tag characters), and an `aho-corasick` automaton
-  matches financial-override patterns in what was hidden. A risk score gates the verdict. Measured at about
-  **1.2 ms** per page warm on a laptop.
-- **MCP server:** a JSON-RPC MCP endpoint (`/mcp`, `/mcp/sse`, `--mcp-stdio`) exposing `talos_issue_mandate`,
-  `talos_verify_mandate`, `talos_sanitize_dom` and `talos_execute_protected_checkout`.
-- **PayPal webhook check:** CRC32 over PayPal's webhook transmission fields before any event is trusted.
+| Layer | What it checks | Speed |
+| :--- | :--- | :--- |
+| **1. Spending allowance** | Ed25519-signed mandate: budget cap, allowed categories, max price spread, delivery SLA | under 1 ms |
+| **2. Webpage trap sanitizer** | Hidden nodes, comments and invisible Unicode stripped from merchant HTML before the agent reads it; override patterns block the checkout | about 1.2 ms |
+| **3. Fair-price radar** | Merchant ask vs Channel3 median: $480 vs $249 is +9,277 bps, above the 1,500 bps cap, so checkout reroutes to the verified seller | live API |
+| **4. Reversible escrow** | PayPal `AUTHORIZE` hold; `CAPTURE` only on confirmed delivery, `VOID` on a missed SLA, human step-up above the cap | PayPal Sandbox |
 
 $$
-\text{Allow} = \mathbb{I}\!\left(\text{Verify}_{\text{Ed25519}}(M, \sigma) = 1\right) \times \mathbb{I}\!\left(\text{risk}\!\left(\text{lol\_html}(\text{DOM})\right) < \tau\right) \times \mathbb{I}\!\left(\Delta_{\text{bps}} \le S_{\max}\right)
+\Delta_{\text{bps}} = \left\lfloor \frac{480 - 249}{249} \times 10^4 \right\rfloor = 9{,}277 > 1{,}500 \implies \text{REROUTE}
+\qquad
+\mathcal{S}(t) = \begin{cases} \texttt{CAPTURE} & \text{delivered} \land t \le T_{\text{SLA}} \\ \texttt{VOID} & t > T_{\text{SLA}} \\ \texttt{STEP\_UP} & P > C_{\text{mandate}} \end{cases}
 $$
 
-### 2. Go 2PC escrow control plane (`services/orchestrator-go`, `sdk/paypal-go-apimatic`)
+---
 
-- **Channel3 fair-price oracle:** compares the merchant ask against the **Channel3** median. A $480 ask against a
-  $249 median is blocked and checkout is rerouted to the verified seller:
+## How we use PayPal
 
-$$
-\Delta_{\text{bps}} = \left\lfloor \frac{P_{\text{merchant}} - P_{\text{Channel3}}}{P_{\text{Channel3}}} \times 10^4 \right\rfloor = \left\lfloor \frac{480 - 249}{249} \times 10^4 \right\rfloor = 9{,}277 > 1{,}500 \implies \text{REROUTE}
-$$
+PayPal is the settlement layer that makes agent payments reversible. Every call runs against
+`api-m.sandbox.paypal.com`, verified live in our E2E suite and on the Render deployment.
 
-- **APIMatic-generated PayPal SDK:** a typed Go client for **Orders v2**, **Payments v2** (capture and void),
-  **Shipment Tracking v1** and **Customer Disputes v1**, every write carrying a `PayPal-Request-Id`.
-- **Escrow state machine:** 12 explicit states, a per-escrow lock, 24-hour Valkey `SETNX` idempotency keys, and a
-  SHA-256 hash-chained audit trail, verified with `go test -race`.
-- **Carrier SLA referee:**
+| PayPal product | How TALOS uses it | Code |
+| :--- | :--- | :--- |
+| **Orders v2** (`intent: AUTHORIZE`) | Places a reversible hold instead of an immediate capture, so the agent never moves money directly | [`sdk/paypal-go-apimatic/orders_v2.go`](sdk/paypal-go-apimatic/orders_v2.go) |
+| **Payments v2** (authorizations `capture` and `void`) | Captures only after delivery is confirmed; voids instantly when the 48 h SLA is breached | [`sdk/paypal-go-apimatic/payments_v2.go`](sdk/paypal-go-apimatic/payments_v2.go) |
+| **Shipment Tracking v1** | Carrier delivery status is the trigger for capture | [`sdk/paypal-go-apimatic/tracking_v1.go`](sdk/paypal-go-apimatic/tracking_v1.go) |
+| **Customer Disputes v1** | Packages evidence (signed mandate, price spread, carrier record) for disputes | [`sdk/paypal-go-apimatic/disputes_v1.go`](sdk/paypal-go-apimatic/disputes_v1.go) |
+| **PayPal checkout components** (`@paypal/react-paypal-js`) | Human co-sign for carts above the signed cap | [`web/src/components/PayPalStepUpModal.tsx`](web/src/components/PayPalStepUpModal.tsx) |
+| **PayPal Agent Toolkit** (`@paypal/agent-toolkit`) and **Server SDK** | MCP bridge exposing PayPal orders, tracking and disputes tools to agents | [`web/src/app/api/mcp/paypal-bridge/route.ts`](web/src/app/api/mcp/paypal-bridge/route.ts) |
+| **Webhooks** | CRC32 check over PayPal's transmission fields before any event is trusted | [`services/firewall-rs/src/webhook_verify.rs`](services/firewall-rs/src/webhook_verify.rs) |
 
-$$
-\mathcal{S}(t) = \begin{cases} \texttt{CAPTURE}(\text{auth}) & \text{if tracking} = \texttt{DELIVERED} \land t \le T_{\text{SLA}} \\ \texttt{VOID}(\text{auth}) & \text{if } t > T_{\text{SLA}} \\ \texttt{STEP\_UP}(\text{order}) & \text{if } P_{\text{order}} > C_{\text{mandate}} \end{cases}
-$$
+Every write carries a `PayPal-Request-Id`, backed by a 24-hour Valkey `SETNX` key, so retries and duplicate webhooks
+cannot double-capture. With `TALOS_SANDBOX_FALLBACK_ENABLED=true`, deterministic payloads keep each flow working when
+the sandbox is unavailable.
 
-- **Sandbox replay fallback:** with `TALOS_SANDBOX_FALLBACK_ENABLED=true`, deterministic payloads keep every flow
-  working if a sandbox API is unavailable. With real keys the same calls go live to `api-m.sandbox.paypal.com`.
+---
 
-### 3. Next.js 15 console (`web/`)
+## How we use AI
 
-- **Live agent simulator** (`/simulator`): an AI agent shops a storefront on the left while an X-Ray pane shows each
-  check on the right: allowance, DOM scan, price radar, PayPal escrow, delivery referee. Toggle hazards and try to
-  break it.
-- **CFO escrow ledger** (`/blotter`): **AG Grid Enterprise v33** streaming escrow state over WebSocket, a forensic
-  detail panel (raw vs sanitized DOM, Channel3 spread, PayPal actions), and a plain-English copilot bar that pivots the
-  grid into **AG Charts**.
-- **Delivery SLA timeline** (`/sla`): a React timeline modeled on Bryntum Scheduler (resources, 48 h SLA bars,
-  29-day authorization windows, finish-to-start dependencies). Dragging a shipment past its deadline fires a PayPal
-  `VOID`. The Bryntum MCP server is registered in [`.mcp.json`](.mcp.json); the licensed Scheduler Pro package is not
-  bundled.
-- **Human step-up** (`/step-up`): carts above the cap pause in `STEP_UP_REQUIRED` and render a PayPal checkout
-  co-sign through `@paypal/react-paypal-js`.
+TALOS is security infrastructure **for** AI agents. We deliberately keep language models out of the decision that
+moves money, and give agents safe tools instead.
+
+| Where | What it does |
+| :--- | :--- |
+| **TALOS MCP server for AI agents** | Any MCP-capable agent (Claude, Cursor, custom agents) connects over `/mcp`, `/mcp/sse` or `--mcp-stdio` and gets four tools: `talos_issue_mandate`, `talos_verify_mandate`, `talos_sanitize_dom`, `talos_execute_protected_checkout`. The agent shops; TALOS decides whether money may move. ([`services/firewall-rs/src/mcp_server.rs`](services/firewall-rs/src/mcp_server.rs), [`.mcp.json`](.mcp.json)) |
+| **Prompt-injection defense** | The sanitizer removes text hidden from humans before it reaches the model's context, then pattern-matches it for financial overrides with an Aho-Corasick automaton. A risk score gates the verdict. Recall on our red-team corpus: 8/8 attacks blocked, 0/4 false positives. |
+| **PayPal Agent Toolkit bridge** | Wraps PayPal's official agent toolkit so agents call orders, tracking and disputes through a guarded MCP route. |
+| **AI-grounded development** | The APIMatic Context MCP and Bryntum MCP servers in [`.mcp.json`](.mcp.json) ground AI coding assistants in the real PayPal SDK and Bryntum APIs. We built TALOS with AI coding assistants, and generated the demo voiceover with Gemini TTS. |
+| **Live agent simulator** | An animated AI shopping agent runs the scam, honest and late-delivery scenarios so judges can watch each defence fire. |
+
+The ledger copilot turns plain-English requests ("show blocked attacks", "chart saved vs settled") into grid views and
+AG Charts with a rule-based intent parser, not an LLM. A DeBERTa-v3 prompt-injection classifier through ONNX Runtime
+is the next step for the risk score (see [What's next](#whats-next)).
+
+---
+
+## Sponsor integrations and tools
+
+| Sponsor / tool | How TALOS uses it | Where |
+| :--- | :--- | :--- |
+| **APIMatic** | Generated the typed Go PayPal SDK (Orders, Payments, Tracking, Disputes) from PayPal's OpenAPI specs; the Context MCP grounds AI assistants in it | [`sdk/paypal-go-apimatic`](sdk/paypal-go-apimatic), [`.mcp.json`](.mcp.json) |
+| **Postman** | 16-request Collection v2.1 plus a sandbox environment covering every REST route, MCP tool and the PayPal lifecycle | [`postman/`](postman) |
+| **Render** | Live 5-resource Blueprint: Rust firewall, Go orchestrator, Next.js console, Valkey and PostgreSQL 16 on free plans | [`render.yaml`](render.yaml), [live demo](https://talos-console-web.onrender.com) |
+| **AG Grid Enterprise v33 + AG Charts** | Real-time escrow ledger over WebSocket, forensic detail panel, plain-English copilot views and charts | [`web/src/components/AgStudioBlotter.tsx`](web/src/components/AgStudioBlotter.tsx) |
+| **Bryntum** | Delivery SLA timeline built on Bryntum Scheduler's resource and dependency model (dragging past 48 h fires a PayPal `VOID`), plus the Bryntum MCP server; the licensed Scheduler Pro package is not bundled | [`web/src/components/BryntumSlaBoard.tsx`](web/src/components/BryntumSlaBoard.tsx) |
+| **Channel3** | Live fair-market price median and merchant lookup that blocks gouging and reroutes checkout | [`services/orchestrator-go/internal/channel3/oracle.go`](services/orchestrator-go/internal/channel3/oracle.go) |
+| **KERNEL** | Disposable cloud browsers that load untrusted storefronts before DOM sanitization | [`services/orchestrator-go/internal/kernel/browser.go`](services/orchestrator-go/internal/kernel/browser.go) |
+| **Elastic** | OpenTelemetry traces across the stack with email and bearer-token redaction, plus the `talos-dom-threats-v1` index | [`services/orchestrator-go/internal/telemetry`](services/orchestrator-go/internal/telemetry) |
+
+Core stack: **Rust** (`axum`, `ed25519-dalek`, `lol_html`, `aho-corasick`), **Go 1.24** (`chi`, `errgroup`),
+**Next.js 15 / React 19** (Tailwind, Motion), **Valkey**, **PostgreSQL 16**, GitHub Actions CI with Gitleaks,
+cargo-audit and govulncheck.
+
+---
+
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/project-screenshots/02%20-%20Unified%20FinOps%20Command%20Center%20and%20Live%20Protection%20Telemetry.png" alt="Command Center" /><br /><b>Command Center:</b> protected volume, blocked attacks, savings and active holds.</td>
+    <td width="50%"><img src="docs/project-screenshots/03%20-%20Live%20AI%20Shopping%20Agent%20Simulator%20with%205-Layer%20Real-Time%20X-Ray%20Referee.png" alt="Live agent simulator" /><br /><b>Live agent simulator:</b> the agent shops on the left; the X-Ray shows every check on the right.</td>
+  </tr>
+  <tr>
+    <td><img src="docs/project-screenshots/04%20-%20Act%201%20-%20Sub-4ms%20Rust%20DOM%20Prompt-Injection%20and%2092%25%20Price%20Gouge%20Blocked.png" alt="Act 1" /><br /><b>Act 1:</b> hidden prompt injection stripped and a 92% price gouge blocked.</td>
+    <td><img src="docs/project-screenshots/05%20-%20Cryptographic%20Ed25519%20KYA%20Spending%20Mandate%20Signer%20and%20RFC%209421%20Seal.png" alt="Mandate signer" /><br /><b>Spending allowance:</b> Ed25519 mandate with an RFC 9421 signature input.</td>
+  </tr>
+  <tr>
+    <td><img src="docs/project-screenshots/06%20-%20Act%202%20-%20Verified%20Channel3%20Merchant%20to%20PayPal%20AUTHORIZE%20and%20Auto-CAPTURE.png" alt="Act 2" /><br /><b>Act 2:</b> verified Channel3 merchant, PayPal <code>AUTHORIZE</code>, capture on delivery.</td>
+    <td><img src="docs/project-screenshots/07%20-%20AG%20Grid%20Enterprise%20v33%20Real-Time%202PC%20Escrow%20Settlement%20Ledger.png" alt="Escrow ledger" /><br /><b>CFO escrow ledger:</b> AG Grid Enterprise streaming escrow state.</td>
+  </tr>
+  <tr>
+    <td><img src="docs/project-screenshots/08%20-%20AG%20Studio%20AI%20Financial%20Copilot%20and%20Integrated%20AG%20Charts%20Fraud%20vs%20Settled.png" alt="Copilot chart" /><br /><b>Ledger copilot:</b> plain-English request rendered as an AG Charts view.</td>
+    <td><img src="docs/project-screenshots/09%20-%20Master-Detail%20Forensic%20Inspector%20-%20lol_html%20DOM%20Diff%20and%20PayPal%202PC%20Console.png" alt="Forensic inspector" /><br /><b>Forensic inspector:</b> raw vs sanitized DOM, price spread and PayPal actions.</td>
+  </tr>
+  <tr>
+    <td><img src="docs/project-screenshots/10%20-%20Act%203%20-%20Bryntum%20Scheduler%20Pro%20Two-Way%20Carrier%20SLA%20Breach%20to%20PayPal%20VOID.png" alt="Act 3" /><br /><b>Act 3:</b> a late shipment dragged past its SLA fires a PayPal <code>VOID</code>.</td>
+    <td><img src="docs/project-screenshots/11%20-%20PayPal%20JS%20SDK%20v6%20Human-in-the-Loop%20Biometric%20Step-Up%20Co-Sign%20Guardrail.png" alt="Human step-up" /><br /><b>Human step-up:</b> a $450 cart above the $300 cap waits for a PayPal co-sign.</td>
+  </tr>
+  <tr>
+    <td><img src="docs/project-screenshots/12%20-%20Interactive%205-Stage%20Agentic%20Commerce%20Security%20and%20Escrow%20Product%20Tour.png" alt="Product tour" /><br /><b>Product tour:</b> five interactive stages of the flow.</td>
+    <td><img src="docs/project-screenshots/13%20-%20Four-Pillar%20Zero-Trust%20Security%20Architecture%20and%20Scenario%20Matrix.png" alt="How it works" /><br /><b>How it works:</b> the four checks and the scenario comparison.</td>
+  </tr>
+  <tr>
+    <td><img src="docs/project-screenshots/14%20-%20Optical%203-Stage%20Pipeline%20and%2010-Platform%20Production%20Sponsor%20Architecture.png" alt="Architecture and sponsors" /><br /><b>Architecture and sponsors:</b> the three-stage pipeline and platform integrations.</td>
+    <td><img src="docs/project-screenshots/15%20-%20PayPal%20Sandbox%20Principal%20Authentication%20and%20Enterprise%20Role%20Delegation%20Portal.png" alt="Sign in" /><br /><b>Sign in:</b> one-click demo roles or a mock PayPal Sandbox sign-in.</td>
+  </tr>
+</table>
 
 ---
 
@@ -157,7 +220,7 @@ $$
 ```mermaid
 flowchart LR
   subgraph Agent["AI agent"]
-    A["Shopping agent"]
+    A["Shopping agent (MCP client)"]
   end
   subgraph Firewall["services/firewall-rs (Rust)"]
     M["Ed25519 KYA mandates"]
@@ -198,45 +261,9 @@ flowchart LR
 
 ---
 
-## How we built it
+## Setup
 
-| Subsystem | Stack | Where |
-| :--- | :--- | :--- |
-| **Security and MCP kernel** | Rust: `axum`, `ed25519-dalek`, `lol_html`, `aho-corasick`, `crc32fast`, `sha2`, `tower-http` | [`services/firewall-rs/src`](services/firewall-rs/src): `mandate.rs`, `sanitizer.rs`, `webhook_verify.rs`, `mcp_server.rs`, `otel.rs` |
-| **Typed PayPal SDK** | APIMatic code generation, Context Plugin manifest | [`sdk/paypal-go-apimatic`](sdk/paypal-go-apimatic): `orders_v2.go`, `payments_v2.go`, `tracking_v1.go`, `disputes_v1.go` |
-| **2PC escrow orchestrator** | Go 1.24: `chi/v5`, `errgroup`, standard-library HTTP and WebSocket, Valkey over RESP | [`services/orchestrator-go/internal`](services/orchestrator-go/internal): `escrow/`, `paypal/`, `store/`, `ws/` |
-| **Price and browser oracles** | Channel3 API, KERNEL cloud browsers | `internal/channel3/oracle.go`, `internal/kernel/browser.go` |
-| **Escrow ledger and copilot** | AG Grid Enterprise v33, AG Charts | [`web/src/components/AgStudioBlotter.tsx`](web/src/components/AgStudioBlotter.tsx), `ForensicDetailPanel.tsx` |
-| **SLA timeline** | React timeline on Bryntum Scheduler's model, Bryntum MCP | [`web/src/components/BryntumSlaBoard.tsx`](web/src/components/BryntumSlaBoard.tsx), `hooks/useBryntumTimeline.ts` |
-| **Agent simulator** | Next.js 15, React 19, Motion | [`web/src/components/sim`](web/src/components/sim), [`web/src/lib/sim`](web/src/lib/sim) |
-| **Agent toolkit bridge** | `@paypal/agent-toolkit`, `@paypal/paypal-server-sdk` | [`web/src/app/api/mcp/paypal-bridge/route.ts`](web/src/app/api/mcp/paypal-bridge/route.ts) |
-| **Observability** | Elastic OpenTelemetry (OTLP), `talos-dom-threats-v1` index, email and bearer-token redaction | `services/firewall-rs/src/otel.rs`, `internal/telemetry/elastic_otel.go` |
-| **Contracts and deploy** | OpenAPI, Postman v2.1 (16 requests), Render Blueprint | [`api/openapi.yaml`](api/openapi.yaml), [`postman/`](postman), [`render.yaml`](render.yaml) |
-
----
-
-## Repository layout
-
-```text
-.
-├── api/                    OpenAPI contract for all 16 endpoints
-├── docs/                   Product, design, engineering, ops, security and business docs
-│   └── hackathon/          Research, war-room notes and planning artifacts
-├── postman/                Runnable collection + sandbox environment
-├── scripts/                start-dev, stop-dev, verify-deployment (.ps1 / .sh)
-├── sdk/paypal-go-apimatic/ APIMatic-generated Go PayPal SDK
-├── services/
-│   ├── firewall-rs/        Rust KYA + DOM firewall and MCP server
-│   └── orchestrator-go/    Go 2PC escrow orchestrator
-├── tests/                  Red-team corpus and cross-stack PowerShell E2E suite
-├── web/                    Next.js 15 console (unit tests + Playwright E2E)
-├── docker-compose.yml      Local PostgreSQL 16 + Valkey
-└── render.yaml             Render Blueprint (3 services + Valkey + PostgreSQL 16)
-```
-
----
-
-## Quickstart
+### Run locally
 
 **Prerequisites:** Rust (stable), Go 1.24+, Node 20+, and optionally Docker.
 
@@ -246,7 +273,7 @@ cp .env.example .env          # leave secrets blank to run on the deterministic 
 docker compose up -d          # optional: PostgreSQL 16 + Valkey
 ```
 
-Run the three services (or use `scripts/start-dev.ps1` on Windows):
+Start the three services in separate terminals (or run `scripts/start-dev.ps1` on Windows):
 
 ```bash
 cd services/firewall-rs && cargo run --release          # http://localhost:8081
@@ -255,12 +282,28 @@ cd web && npm install && npm run build && npm run start # http://localhost:3000
 ```
 
 Open `http://localhost:3000` and try `/simulator`, `/command-center`, `/mandates`, `/blotter`, `/sla` and `/step-up`.
-To go live, fill the keys in `.env` following
+
+### Environment keys (optional, for live sponsor calls)
+
+Fill these in `.env` to switch from replay to live APIs. Step-by-step guides are in
 [`docs/09-integrations-and-guides`](docs/09-integrations-and-guides/00-TRACKS_AND_SUBMISSION_STRATEGY.md).
 
-**Deploy:** the [`render.yaml`](render.yaml) Blueprint creates the Rust firewall, Go orchestrator, Next.js console,
-Valkey and PostgreSQL 16. The orchestrator builds from the repository root because its `go.mod` points at the local
-SDK.
+| Variable | Used for |
+| :--- | :--- |
+| `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_WEBHOOK_ID`, `NEXT_PUBLIC_PAYPAL_CLIENT_ID` | PayPal Sandbox orders, payments, tracking, disputes and checkout |
+| `APIMATIC_API_KEY` | APIMatic Context MCP |
+| `CHANNEL3_API_KEY` | Channel3 fair-price lookups |
+| `KERNEL_API_KEY` | KERNEL cloud browsers |
+| `ELASTIC_OTLP_ENDPOINT`, `ELASTIC_API_KEY`, `ELASTICSEARCH_URL` | Elastic traces and threat index |
+| `NEXT_PUBLIC_AG_GRID_LICENSE_KEY` | Optional; AG Grid runs with a trial watermark without it |
+
+### Deploy to Render
+
+Create a Blueprint from this repository (**New > Blueprint** in Render, or
+[this link](https://dashboard.render.com/blueprint/new?repo=https://github.com/sruj08/Talos)). Render reads
+[`render.yaml`](render.yaml), creates all five resources on free plans, and asks for the secrets above. The
+orchestrator builds from the repository root because its `go.mod` points at the local SDK; free web services reach
+each other over their public `onrender.com` URLs.
 
 ---
 
@@ -271,141 +314,92 @@ cd services/firewall-rs && cargo fmt --check && cargo clippy -- -D warnings && c
 cd services/orchestrator-go && go vet ./... && go test -race ./...
 cd web && npx tsc --noEmit && npm test && npx playwright test
 powershell -ExecutionPolicy Bypass -File tests/e2e_phase1_6/run_e2e.ps1
-powershell -ExecutionPolicy Bypass -File scripts/verify-deployment.ps1
 ```
 
 | Suite | Result |
 | :--- | :--- |
 | Rust unit + red-team tests | 16 passing; red-team corpus blocks **8/8** attacks with **0/4** false positives |
-| Go tests (`-race`) | 20 test functions passing across SDK and orchestrator |
-| Web unit and property tests (Vitest + fast-check) | 107 passing, including design-system gates and the simulator engine |
-| Playwright E2E | 5/5 passing (three acts, AG Grid copilot, landing to simulator to SLA) |
+| Go tests (`-race`) | 20 test functions passing across the SDK and orchestrator |
+| Web unit and property tests | 107 passing, including design-system gates and the simulator engine |
+| Playwright E2E | 5/5 passing |
 | Cross-stack PowerShell E2E | **176/176** passing with live sponsor keys |
-| CI (GitHub Actions) | Rust, Go and web gates, secret scanning, cargo-audit, govulncheck, Render validation |
+| Render deployment | All three services healthy; live PayPal Sandbox `AUTHORIZE` and Channel3 lookups confirmed |
 
-**Measured latency** (single requests on a Windows laptop, release builds, not a load test):
-
-| Path | Measured |
-| :--- | :--- |
-| `POST /v1/firewall/sanitize-dom` (Rust) | about 1.2 ms warm |
-| Health checks (Rust, Go) | about 1.1 ms |
-| `POST /api/v1/checkout/evaluate`, blocked attack end to end | about 10 ms |
-| Channel3 live lookup through the orchestrator | about 0.7 s |
-| PayPal Sandbox `AUTHORIZE` through the Go SDK | about 1.9 s steady, 4 s on the first call (OAuth token) |
+Measured latency (single requests, release builds, not a load test): DOM sanitization about **1.2 ms** warm, a
+blocked attack end to end about **10 ms** locally, PayPal Sandbox `AUTHORIZE` about **1.9 s**.
 
 ---
 
 ## Security model
 
-TALOS separates four trust zones: the hostile web, the agent and its browser, the deterministic TALOS kernel, and
-the authoritative PayPal and Channel3 services.
-
 | STRIDE | Threat | Mitigation |
 | :--- | :--- | :--- |
-| **Spoofing** | A rogue client impersonates an agent | Ed25519 mandate signatures with an RFC 9421 signature input bound to the request |
-| **Tampering** | A mandate is edited in transit to raise the cap | Signature verification fails on any change; audit records are SHA-256 hash-chained |
-| **Repudiation** | A party disputes whether an order met price and delivery terms | Dispute evidence bundles the mandate, Channel3 spread and carrier record for Disputes v1 |
-| **Information disclosure** | Telemetry leaks tokens or buyer emails | Bearer tokens and emails are redacted before OpenTelemetry export |
-| **Denial of service / replay** | Retries or duplicate webhooks force a double capture | `PayPal-Request-Id`, 24 h Valkey `SETNX` keys and a per-escrow lock |
-| **Elevation of privilege** | Hidden DOM instructions hijack tool calls (OWASP LLM01) | Hidden nodes are stripped before the model reads the page; matches block the checkout |
+| **Spoofing** | A rogue client impersonates an agent | Ed25519 mandate signatures with an RFC 9421 signature input |
+| **Tampering** | A mandate is edited to raise the cap | Signature verification fails on any change; audit records are SHA-256 hash-chained |
+| **Repudiation** | A party disputes the order terms | Dispute evidence bundles the mandate, price spread and carrier record |
+| **Information disclosure** | Telemetry leaks tokens or emails | Bearer tokens and emails redacted before export |
+| **Replay / double capture** | Retries force a second capture | `PayPal-Request-Id`, 24 h Valkey `SETNX`, per-escrow lock |
+| **Elevation of privilege** | Hidden DOM instructions hijack tool calls (OWASP LLM01) | Hidden content stripped before the model reads the page |
 
----
-
-## Compliance design notes
-
-TALOS never holds funds: money stays inside PayPal's `AUTHORIZE` ledger and TALOS only issues API instructions.
-These notes describe design intent, not a legal opinion or certification.
-
-| Area | How the design helps |
-| :--- | :--- |
-| **Card data (PCI DSS)** | No card numbers touch TALOS; checkout uses PayPal-hosted components and opaque order and authorization IDs |
-| **Authorization evidence (Reg E, PSD2/PSD3 SCA)** | Each agent action is bound to a signed mandate; over-cap carts require a human co-sign |
-| **Data protection (DPDP, GDPR)** | Telemetry redacts personal identifiers; mandates act as explicit, revocable consent records |
-| **Non-custodial role (RBI PA, money transmission)** | TALOS operates as a technology layer on PayPal's licensed rails, not a payment aggregator |
-| **AI oversight (EU AI Act Art. 14)** | Deterministic rules decide money movement; humans approve anything above the signed cap |
-
----
-
-## Business model
-
-A proposal, not validated pricing:
-
-| Tier | For | Price | Includes |
-| :--- | :--- | :--- | :--- |
-| **Developer** | Indie agent builders | Free | Open-source firewall MCP server, mandates, DOM sanitizer, small escrow volume |
-| **Growth** | Mid-market IT and procurement teams | Monthly subscription + basis-point fee above an included volume | Escrow ledger, SLA timeline, Channel3 rerouting, auto capture and void |
-| **Enterprise** | Regulated finance and audit desks | Annual contract | Dispute evidence automation, dedicated browser pool, long-retention audit trail |
-| **Verified merchant** | Channel3-verified sellers | Referral fee | Proof-of-funds holds and capture on confirmed delivery |
-
-The distribution wedge is the open-source MCP firewall, then team deployments for procurement, then a two-sided loop
-where rerouted orders bring verified merchants onto TALOS escrow.
+TALOS never holds funds; money stays in PayPal's `AUTHORIZE` ledger and no card data touches TALOS. These are design
+notes, not a legal opinion or certification.
 
 ---
 
 ## Challenges we ran into
 
-1. **Hidden-but-harmless HTML.** Real stores hide mobile menus and accordions with `display:none`. Blocking anything
-   hidden would break the web, so hidden content is removed from the agent's view and only the hidden text is pattern
-   checked. The red-team corpus includes benign pages for exactly this reason.
+1. **Hidden but harmless HTML.** Stores hide mobile menus with `display:none`, so only hidden *text* is checked; the
+   red-team corpus includes benign pages to keep false positives at zero.
 2. **SDK coverage for reversible payments.** Escrow needs authorization `void` and dispute evidence, so we generated a
-   typed Go SDK from PayPal's OpenAPI specs with APIMatic, with idempotency built into every write.
-3. **Double-capture races.** A delivery webhook and a manual SLA edit can land at the same moment. A per-escrow lock,
-   `SETNX` idempotency keys and explicit terminal states make the second attempt a no-op.
-4. **A monorepo on Render.** Render hides files outside a service's root directory, which broke the orchestrator's
-   local SDK `replace`. The Blueprint now builds that service from the repository root.
-5. **Demo resilience.** Sandboxes rate-limit and go down; the deterministic replay fallback keeps every flow testable
-   offline, and the same calls run live once keys are set.
-
----
+   typed Go SDK with APIMatic, with idempotency on every write.
+3. **Double-capture races.** A delivery webhook and a manual SLA edit can land together; locks, idempotency keys and
+   terminal states make the second attempt a no-op.
+4. **A monorepo on Render's free tier.** Render hides files outside a service's root directory, and free web services
+   cannot receive private-network traffic; the Blueprint builds from the repo root and wires services by public URL.
 
 ## Accomplishments
 
-| Milestone | Result | Evidence |
-| :--- | :--- | :--- |
-| DOM sanitization latency | About 1.2 ms warm per page | `POST /v1/firewall/sanitize-dom` |
-| Red-team recall and false positives | 8/8 attacks blocked, 0/4 false positives | [`tests/redteam/prompt_injection_suite.json`](tests/redteam/prompt_injection_suite.json) |
-| Price-gouge detection | $480 ask blocked at +9,277 bps, rerouted to $249 | `internal/channel3` tests |
-| Live sponsor integration | PayPal Sandbox OAuth and authorize, Channel3, KERNEL and Bryntum MCP verified live | [`tests/e2e_phase1_6`](tests/e2e_phase1_6) |
-| Test coverage | 16 Rust, 20 Go, 107 web unit, 5 Playwright, 176 cross-stack checks | CI and local runs |
-
----
+- A working, deployed defence: injection stripped in about 1.2 ms, gouging rerouted, money held until delivery.
+- Live PayPal Sandbox, Channel3, KERNEL and Bryntum MCP calls verified end to end (176/176 checks).
+- A visual product judges can use: live agent simulator, escrow ledger, SLA timeline and step-up desk.
 
 ## What we learned
 
-1. **Guardrails belong in the data plane, not the prompt.** Asking a model to ignore malicious HTML is weaker than
-   never letting that HTML reach the model.
-2. **PayPal `AUTHORIZE` plus Shipment Tracking already behaves like escrow.** Combined with a price oracle and a
-   delivery deadline, it gives reversible agent payments on existing rails.
-3. **Finance teams want controls, not logs.** Binding the ledger and the timeline directly to capture and void turns
-   monitoring into governance.
-
----
+Guardrails belong in the data plane, not the prompt. PayPal `AUTHORIZE` plus Shipment Tracking already behaves like
+escrow, and finance teams want controls bound to capture and void, not just logs.
 
 ## What's next
 
 - Load the DeBERTa-v3 prompt-injection model through ONNX Runtime to replace the heuristic risk score.
-- Persist escrow state in PostgreSQL 16 using the schema in [`services/orchestrator-go/migrations`](services/orchestrator-go/migrations) (state is in memory today).
+- Persist escrow state in PostgreSQL 16 using [`services/orchestrator-go/migrations`](services/orchestrator-go/migrations) (state is in memory today).
 - Swap the SLA timeline for licensed Bryntum Scheduler Pro.
 - Add a reproducible load-test harness and publish p50/p95/p99 numbers.
-- Bind mandate signing to platform passkeys (WebAuthn) and add OCR checks for text hidden in images.
 
 ---
 
-## Documentation
+## Repository layout
 
-| Folder | Contents |
-| :--- | :--- |
-| [`docs/00-overview`](docs/00-overview) | Project brief, vision, pitch |
-| [`docs/01-product`](docs/01-product) | PRD, personas, journeys, roadmap |
-| [`docs/02-design`](docs/02-design) | Design system, UI spec, PayPal design reference |
-| [`docs/03-engineering`](docs/03-engineering) | Architecture, API spec, data model, testing |
-| [`docs/04-ai`](docs/04-ai) | Models, prompts, evals, responsible AI |
-| [`docs/05-ops`](docs/05-ops) | CI/CD, deployment, observability, runbook |
-| [`docs/06-security-compliance`](docs/06-security-compliance) | Threat model, privacy, compliance |
-| [`docs/07-business`](docs/07-business) | Business model, GTM, market research |
-| [`docs/08-project`](docs/08-project) | Backlog, glossary, execution playbook |
-| [`docs/09-integrations-and-guides`](docs/09-integrations-and-guides) | Step-by-step sponsor setup guides |
-| [`docs/hackathon`](docs/hackathon) | Hackathon research and planning notes |
+```text
+.
+├── api/                    OpenAPI contract for all 16 endpoints
+├── docs/                   Product, design, engineering, ops, security and business docs
+│   ├── hackathon/          Research and planning notes
+│   └── project-screenshots/ Screenshots used in this README
+├── postman/                Runnable collection + sandbox environment
+├── scripts/                start-dev, stop-dev, verify-deployment
+├── sdk/paypal-go-apimatic/ APIMatic-generated Go PayPal SDK
+├── services/
+│   ├── firewall-rs/        Rust KYA + DOM firewall and MCP server
+│   └── orchestrator-go/    Go 2PC escrow orchestrator
+├── tests/                  Red-team corpus and cross-stack E2E suite
+├── web/                    Next.js 15 console (unit tests + Playwright)
+├── docker-compose.yml      Local PostgreSQL 16 + Valkey
+└── render.yaml             Render Blueprint
+```
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md) and [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
-Released under the [MIT License](LICENSE).
+Full documentation lives in [`docs/`](docs/00-overview/PROJECT_BRIEF.md). See [`CONTRIBUTING.md`](CONTRIBUTING.md),
+[`SECURITY.md`](SECURITY.md) and [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
+
+## License
+
+Released under the [MIT License](LICENSE), an OSI-approved open-source license.
