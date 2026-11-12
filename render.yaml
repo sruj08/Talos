@@ -95,7 +95,8 @@ services:
     rootDir: web
     plan: free
     region: oregon
-    buildCommand: npm install && npm run build
+    # NODE_ENV=production makes npm skip devDependencies; the build needs TypeScript and Tailwind.
+    buildCommand: npm install --include=dev && npm run build
     startCommand: npm run start
     healthCheckPath: /api/healthz
     envVars:
