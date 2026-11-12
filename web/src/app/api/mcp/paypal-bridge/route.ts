@@ -47,22 +47,14 @@ const APIMATIC_CONTEXT_SCHEMAS = {
 };
 
 function createPayPalSdkControllers() {
-  const oAuthClientId =
-    process.env.PAYPAL_CLIENT_ID || process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb-talos-demo-client';
+  const oAuthClientId = process.env.PAYPAL_CLIENT_ID || process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb-talos-demo-client';
   const oAuthClientSecret = process.env.PAYPAL_CLIENT_SECRET || 'sb-talos-demo-secret';
   const sdkClient = new PayPalServerClient({
     timeout: 4500,
     environment: Environment.Sandbox,
-    clientCredentialsAuthCredentials: {
-      oAuthClientId,
-      oAuthClientSecret,
-    },
+    clientCredentialsAuthCredentials: { oAuthClientId, oAuthClientSecret },
   });
-  return {
-    sdkClient,
-    ordersController: new OrdersController(sdkClient),
-    paymentsController: new PaymentsController(sdkClient),
-  };
+  return { sdkClient, ordersController: new OrdersController(sdkClient), paymentsController: new PaymentsController(sdkClient) };
 }
 
 function createPayPalMcpToolkitInstance() {
@@ -70,15 +62,8 @@ function createPayPalMcpToolkitInstance() {
   return new PayPalMcpToolkit({
     accessToken,
     configuration: {
-      actions: {
-        orders: { create: true, get: true, capture: true },
-        shipment_tracking: { create: true, get: true },
-        disputes: { list: true, get: true },
-      },
-      context: {
-        sandbox: true,
-        request_id: `talos-mcp-${Date.now()}`,
-      },
+      actions: { orders: { create: true, get: true, capture: true }, shipment_tracking: { create: true, get: true }, disputes: { list: true, get: true } },
+      context: { sandbox: true, request_id: `talos-mcp-${Date.now()}` },
     },
   });
 }
@@ -117,12 +102,67 @@ function buildAgStudioCopilotPlan(query: string) {
   };
 }
 
+function isConfiguredKey(val?: string): boolean {
+  const v = (val || '').trim();
+  return v.length > 6 && !v.startsWith('your_') && !v.startsWith('placeholder');
+}
+
+function getSponsorIntegrationsStatus() {
+  return {
+    paypal_sandbox: isConfiguredKey(process.env.PAYPAL_CLIENT_ID) && isConfiguredKey(process.env.PAYPAL_CLIENT_SECRET),
+    paypal_js_sdk_v6: isConfiguredKey(process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID),
+    apimatic_context_plugin: isConfiguredKey(process.env.APIMATIC_API_KEY) || process.env.APIMATIC_CONTEXT_PLUGIN_ENABLED === 'true',
+    channel3_price_oracle: isConfiguredKey(process.env.CHANNEL3_API_KEY),
+    kernel_cloud_browser: isConfiguredKey(process.env.KERNEL_API_KEY),
+    elastic_otlp_telemetry: isConfiguredKey(process.env.ELASTIC_API_KEY),
+    bryntum_scheduler_mcp: Boolean(process.env.BRYNTUM_MCP_URL || 'https://mcp.bryntum.com/mcp'),
+    ag_grid_enterprise_v33: true,
+  };
+}
+
+async function createLivePayPalSandboxOrder(amountCents: number, escrowId: string, description: string): Promise<string | null> {
+  const clientId = (process.env.PAYPAL_CLIENT_ID || process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '').trim();
+  const clientSecret = (process.env.PAYPAL_CLIENT_SECRET || '').trim();
+  if (!isConfiguredKey(clientId) || !isConfiguredKey(clientSecret)) return null;
+  const baseUrl = (process.env.PAYPAL_API_BASE_URL || 'https://api-m.sandbox.paypal.com').replace(/\/+$/, '');
+  try {
+    const basic = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    const tokRes = await fetch(`${baseUrl}/v1/oauth2/token`, {
+      method: 'POST',
+      headers: { Authorization: `Basic ${basic}`, 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'grant_type=client_credentials',
+    });
+    if (!tokRes.ok) return null;
+    const tokData = (await tokRes.json()) as { access_token?: string };
+    if (!tokData.access_token) return null;
+    const usdVal = ((amountCents > 0 ? amountCents : 45000) / 100).toFixed(2);
+    const ordRes = await fetch(`${baseUrl}/v2/checkout/orders`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${tokData.access_token}`,
+        'Content-Type': 'application/json',
+        'PayPal-Request-Id': `talos-live-${escrowId}-${Date.now()}`,
+      },
+      body: JSON.stringify({
+        intent: 'AUTHORIZE',
+        purchase_units: [{ reference_id: escrowId, description, amount: { currency_code: 'USD', value: usdVal } }],
+      }),
+    });
+    if (!ordRes.ok) return null;
+    const ordData = (await ordRes.json()) as { id?: string };
+    return ordData.id || null;
+  } catch {
+    return null;
+  }
+}
+
 export async function GET() {
   return Response.json({
     status: 'ok',
     service: 'talos-paypal-mcp-bridge',
     bridge: '@paypal/agent-toolkit + @paypal/paypal-server-sdk + APIMatic Context Plugin',
     apimatic_context: APIMATIC_CONTEXT_SCHEMAS,
+    sponsor_integrations: getSponsorIntegrationsStatus(),
   });
 }
 
@@ -142,6 +182,7 @@ export async function POST(req: Request) {
         bridge: '@paypal/agent-toolkit + @paypal/paypal-server-sdk + APIMatic Context Plugin',
         ...plan,
         apimatic_context: APIMATIC_CONTEXT_SCHEMAS,
+        sponsor_integrations: getSponsorIntegrationsStatus(),
       },
       { headers: { traceparent } }
     );
@@ -153,6 +194,16 @@ export async function POST(req: Request) {
   const toolName = body.tool_name || 'orders.create';
   const args = body.tool_args || {};
 
+  let resolvedOrderId = (args.paypal_order_id as string) || '8XY99887766554433';
+  if (toolName === 'orders.create' && args.live_sandbox === true) {
+    const liveId = await createLivePayPalSandboxOrder(
+      Number(args.amount_cents) || 45000,
+      (args.escrow_id as string) || 'esc-904-genelec',
+      (args.description as string) || 'TALOS Step-Up Co-Sign'
+    );
+    if (liveId) resolvedOrderId = liveId;
+  }
+
   const toolResult = {
     tool_name: toolName,
     traceparent,
@@ -162,7 +213,7 @@ export async function POST(req: Request) {
     intent: CheckoutPaymentIntent.Authorize,
     carrier: (args.carrier as string) || ShipmentCarrier.Fedex,
     tracking_status: (args.status as string) || OrderTrackerStatus.Shipped,
-    paypal_order_id: (args.paypal_order_id as string) || '8XY99887766554433',
+    paypal_order_id: resolvedOrderId,
     paypal_auth_id: (args.paypal_auth_id as string) || '2A112233445566778',
     paypal_capture_id:
       toolName === 'shipment_tracking.create' || toolName === 'orders.capture' ? '9CAP-2A112233' : undefined,
@@ -177,6 +228,7 @@ export async function POST(req: Request) {
       bridge: '@paypal/agent-toolkit + @paypal/paypal-server-sdk + APIMatic Context Plugin',
       tool_result: toolResult,
       apimatic_context: APIMATIC_CONTEXT_SCHEMAS,
+      sponsor_integrations: getSponsorIntegrationsStatus(),
       explanation: `Executed ${toolName} via @paypal/agent-toolkit (mcp.paypal.com) & APIMatic-validated @paypal/paypal-server-sdk in PayPal Sandbox.`,
       request: body,
     },

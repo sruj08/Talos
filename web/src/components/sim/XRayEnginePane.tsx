@@ -1,11 +1,12 @@
 'use client';
 
 import React from 'react';
-import { CheckCircle2, CircleDashed, Eye, Gauge, KeyRound, Landmark, Loader2, PauseCircle, ScanSearch, Truck, XCircle } from 'lucide-react';
+import { CheckCircle2, CircleDashed, Gauge, KeyRound, Landmark, Loader2, PauseCircle, ScanSearch, Truck, XCircle } from 'lucide-react';
 import { SCENARIO_PRESETS } from '../../hooks/usePoisonedStoreSim';
 import { CATALOG, inflatedAskUsd } from '../../lib/sim/storefront-catalog';
 import type { AgentRun, LayerStatus, LayerUpdate, XRayLayerId } from '../../lib/sim/run-types';
 import { AllowancePassport, CarrierSla, DomScanSnippet, EscrowVault, PriceRadar } from './XRayVisuals';
+import { TalosLogoMark } from '../brand/TalosLogoMark';
 
 const LAYERS: Array<{ id: XRayLayerId; title: string; budget: string; icon: typeof KeyRound }> = [
   { id: 'ALLOWANCE', title: 'Allowance passport', budget: '<1ms', icon: KeyRound },
@@ -28,12 +29,12 @@ const STATUS_LABEL: Record<LayerStatus, string> = {
 };
 
 function StatusIcon({ status }: { status: LayerStatus }) {
-  const cls = 'h-4 w-4 shrink-0';
-  if (status === 'scanning') return <Loader2 className={`${cls} text-ink-paypal motion-safe:animate-spin`} strokeWidth={1.75} aria-hidden="true" />;
-  if (status === 'blocked' || status === 'bypassed') return <XCircle className={`${cls} text-ink-crimson`} strokeWidth={1.75} aria-hidden="true" />;
-  if (status === 'paused' || status === 'held') return <PauseCircle className={`${cls} text-ink-amber`} strokeWidth={1.75} aria-hidden="true" />;
+  const cls = 'h-3.5 w-3.5 shrink-0';
+  if (status === 'scanning') return <Loader2 className={`${cls} text-ink motion-safe:animate-spin`} strokeWidth={1.75} aria-hidden="true" />;
+  if (status === 'blocked' || status === 'bypassed') return <XCircle className={`${cls} text-ink-secondary`} strokeWidth={1.75} aria-hidden="true" />;
+  if (status === 'paused' || status === 'held') return <PauseCircle className={`${cls} text-ink-secondary`} strokeWidth={1.75} aria-hidden="true" />;
   if (status === 'idle') return <CircleDashed className={`${cls} text-ink-muted`} strokeWidth={1.75} aria-hidden="true" />;
-  return <CheckCircle2 className={`${cls} text-ink-emerald`} strokeWidth={1.75} aria-hidden="true" />;
+  return <CheckCircle2 className={`${cls} text-ink`} strokeWidth={1.75} aria-hidden="true" />;
 }
 
 export function XRayEnginePane({ run, index }: { run: AgentRun; index: number }) {
@@ -54,7 +55,7 @@ export function XRayEnginePane({ run, index }: { run: AgentRun; index: number })
     <section className="surface-xray rounded-[16px] p-4 sm:p-5 space-y-3 h-full" data-testid="xray-engine-pane" aria-label="Behind the scenes X-Ray engine">
       <div className="flex items-center justify-between gap-3">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-ink">
-          <Eye className="h-4 w-4 text-ink-paypal" strokeWidth={1.75} aria-hidden="true" />
+          <TalosLogoMark size={20} />
           Behind the scenes
         </h3>
         <span className={`tx-chip ${run.mode === 'PROTECTED' ? 'tx-chip--emerald' : 'tx-chip--crimson'}`}>

@@ -57,13 +57,47 @@ export function usePayPalStepUp({
   );
 
   const createPayPalSandboxOrder = useCallback(async (): Promise<string> => {
+    const reqId = `stepup-${stepUp.escrowId}-${Date.now()}`;
+    try {
+      const bridgeRes = await fetch('/api/mcp/paypal-bridge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mode: 'PAYPAL_AGENT_TOOLKIT',
+          tool_name: 'orders.create',
+          tool_args: {
+            live_sandbox: true,
+            escrow_id: stepUp.escrowId,
+            amount_cents: stepUp.amountCents,
+            description: `TALOS Step-Up Co-Sign — ${stepUp.skuSummary}`,
+          },
+        }),
+      });
+      if (bridgeRes.ok) {
+        const bridgeData = await bridgeRes.json();
+        const liveOrderId = bridgeData?.tool_result?.paypal_order_id;
+        if (liveOrderId && liveOrderId !== '8XY99887766554433') {
+          void fetch(resolveOrchestratorUrl(`/api/v1/escrow/${stepUp.escrowId}/authorize`), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'PayPal-Request-Id': reqId },
+            body: JSON.stringify({
+              payer_sandbox_email: 'buyer-talos@personal.example.com',
+              payee_sandbox_email: 'merchant-talos@business.example.com',
+              amount_cents: stepUp.amountCents,
+              currency: 'USD',
+              description: `TALOS Step-Up Co-Sign — ${stepUp.skuSummary}`,
+            }),
+          }).catch(() => null);
+          return liveOrderId;
+        }
+      }
+    } catch {
+      // Fallback to Go orchestrator
+    }
     try {
       const res = await fetch(resolveOrchestratorUrl(`/api/v1/escrow/${stepUp.escrowId}/authorize`), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'PayPal-Request-Id': `stepup-${stepUp.escrowId}`,
-        },
+        headers: { 'Content-Type': 'application/json', 'PayPal-Request-Id': reqId },
         body: JSON.stringify({
           payer_sandbox_email: 'buyer-talos@personal.example.com',
           payee_sandbox_email: 'merchant-talos@business.example.com',

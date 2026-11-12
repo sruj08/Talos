@@ -19,7 +19,7 @@ export default function StepUpChapterPage() {
       subtitle="Carts above the signed cap wait here, safely, until a person co-signs with PayPal."
     >
       <LastRunBanner focus="approval" />
-      <div id="chapter-step-up" className="max-w-[880px]">
+      <div id="chapter-step-up" className="w-full">
         <PayPalStepUpModal />
       </div>
     </AppShell>

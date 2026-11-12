@@ -11,10 +11,10 @@ export function LastRunBanner({ focus }: { focus: 'ledger' | 'sla' | 'approval' 
 
   if (!lastRun) {
     return (
-      <div className="tx-well px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-sm" data-testid="last-run-banner" data-has-run="false">
+      <div className="tx-well px-3.5 py-2 flex flex-wrap items-center justify-between gap-2 text-xs" data-testid="last-run-banner" data-has-run="false">
         <span className="text-ink-secondary">No simulator run yet. Run one and it will appear here.</span>
-        <Link href="/simulator" className="inline-flex items-center gap-1.5 font-medium text-ink-paypal min-h-[36px]">
-          <MonitorPlay className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+        <Link href="/simulator" className="inline-flex items-center gap-1.5 font-semibold text-ink min-h-[28px] px-2.5 py-1 rounded-md bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--border-strong)]">
+          <MonitorPlay className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
           Open simulator
         </Link>
       </div>

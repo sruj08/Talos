@@ -31,22 +31,20 @@ export function PoisonedStoreSim() {
       aria-label="Watch the AI Shop (3 Real-World Scenarios)"
     >
       <div className="flex flex-col gap-5">
-        <div className="flex flex-wrap items-start justify-between gap-4" data-testid="judge-scenario-toolbar">
-          <div className="flex items-center gap-4">
-            <span className="w-12 h-12 rounded-lg icon-medallion-crimson inline-flex items-center justify-center shrink-0">
-              <ShieldAlert className="w-6 h-6" strokeWidth={1.75} aria-hidden="true" />
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4" data-testid="judge-scenario-toolbar">
+          <div className="flex items-start gap-3.5 flex-1 min-w-0">
+            <span className="w-10 h-10 rounded-md icon-medallion-crimson inline-flex items-center justify-center shrink-0 mt-0.5">
+              <ShieldAlert className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
             </span>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-ink-crimson font-bold">Scene 02 · Live Store Simulation</span>
-              </div>
-              <h2 className="paypal-title-sm text-ink">Watch the AI Shop (3 Real-World Scenarios)</h2>
-              <p data-subhead="true" className="paypal-caption text-ink-secondary">
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-[11px] text-ink-muted font-semibold">Scene 02 · Live Store Simulation</span>
+              <h2 className="text-base font-semibold text-ink leading-snug">Watch the AI Shop (3 Real-World Scenarios)</h2>
+              <p data-subhead="true" className="text-xs text-ink-secondary leading-relaxed">
                 Compare Normal AI vs. TALOS across three live store checkouts
               </p>
             </div>
           </div>
-          <span className="inline-flex items-center gap-2 text-xs text-ink-secondary tabular-nums whitespace-nowrap px-3.5 py-1.5 rounded-pill sovereign-subcard">
+          <span className="tx-chip tx-chip--paypal tabular-nums whitespace-nowrap !min-h-[28px] px-2.5 shrink-0">
             <span className="w-1.5 h-1.5 rounded-xs dot-emerald" aria-hidden="true" />
             <span>Saves $231 · 2.84ms Shield</span>
           </span>
@@ -100,7 +98,7 @@ export function PoisonedStoreSim() {
             disabled={running} data-running={running}
             onClick={() => void runAct1PoisonedAttack()}
             data-testid="btn-scenario-act1"
-            className={`p-4 text-left text-xs rounded-lg transition-all active:scale-[0.98] ${
+            className={`p-4 text-left text-xs rounded-lg transition-[transform,background-color,border-color,color] active:scale-[0.98] ${
               activeAct === 'ACT_1' ? 'tone-crimson font-bold shadow-sm' : 'sovereign-subcard text-ink-secondary hover:text-ink'
             }`}
           >
@@ -126,7 +124,7 @@ export function PoisonedStoreSim() {
             disabled={running} data-running={running}
             onClick={() => void runAct2HappyPathCapture()}
             data-testid="btn-scenario-act2"
-            className={`p-4 text-left text-xs rounded-lg transition-all active:scale-[0.98] ${
+            className={`p-4 text-left text-xs rounded-lg transition-[transform,background-color,border-color,color] active:scale-[0.98] ${
               activeAct === 'ACT_2' ? 'tone-emerald font-bold shadow-sm' : 'sovereign-subcard text-ink-secondary hover:text-ink'
             }`}
           >
@@ -152,7 +150,7 @@ export function PoisonedStoreSim() {
             disabled={running} data-running={running}
             onClick={() => void runAct3SlaBreachAndStepUp()}
             data-testid="btn-scenario-act3"
-            className={`p-4 text-left text-xs rounded-lg transition-all active:scale-[0.98] ${
+            className={`p-4 text-left text-xs rounded-lg transition-[transform,background-color,border-color,color] active:scale-[0.98] ${
               activeAct === 'ACT_3' ? 'tone-amber font-bold shadow-sm' : 'sovereign-subcard text-ink-secondary hover:text-ink'
             }`}
           >

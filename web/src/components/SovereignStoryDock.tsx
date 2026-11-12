@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { StoryChapterId, useTalosClearing } from '../context/TalosClearingContext';
+import { TalosLogoMark } from './brand/TalosLogoMark';
 
 export const STORY_CHAPTERS: Array<{
   id: StoryChapterId;
@@ -26,7 +27,8 @@ export function SovereignStoryChapterDock() {
   return (
     <footer className="paypal-footer mt-12 flex justify-center px-6" data-testid="story-chapter-dock">
       <div className="mx-auto max-w-[1360px] w-full flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          <TalosLogoMark size={28} />
           <span className="paypal-label text-ink">TALOS + PayPal</span>
           <span className="text-ink-muted">·</span>
           <span className="paypal-caption text-ink-secondary">Buyer-Protected AI Shopping &amp; Reversible Delivery Escrow</span>

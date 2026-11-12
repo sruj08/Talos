@@ -1,13 +1,13 @@
 /* SAP Analysis × PayPal enterprise shell — quiet chrome, flat bands, one acting blue */
 :root,
 html[data-theme='light'] {
-  --text-secondary: #475e75;
-  --text-muted: #687173;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
   --tone-paypal-fg: #003087;
-  --tone-emerald-fg: #0A7A3D;
-  --tone-amber-fg: #B45309;
-  --tone-crimson-fg: #D9360B;
-  --bg-deep: #FAF8F5;
+  --tone-emerald-fg: #005EA6;
+  --tone-amber-fg: #334155;
+  --tone-crimson-fg: #1E293B;
+  --bg-deep: #F8F9FA;
   --surface-secondary: #F5F6F7;
   --border-hairline: #DADDE1;
   --border-hover: #B7BDC2;
@@ -36,10 +36,10 @@ html[data-theme='dark'] {
   --muted: #94A3B8;
   --text-secondary: #94A3B8;
   --text-muted: #64748B;
-  --tone-paypal-fg: #38BDF8;
-  --tone-emerald-fg: #34D399;
-  --tone-amber-fg: #FBBF24;
-  --tone-crimson-fg: #F87171;
+  --tone-paypal-fg: #F8FAFC;
+  --tone-emerald-fg: #E2E8F0;
+  --tone-amber-fg: #CBD5E1;
+  --tone-crimson-fg: #94A3B8;
   --bg-deep: #07080D;
   --surface-secondary: #0F1420;
   --border-hairline: rgba(255, 255, 255, 0.12);

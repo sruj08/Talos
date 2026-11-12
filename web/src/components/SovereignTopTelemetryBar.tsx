@@ -5,6 +5,7 @@ import NumberFlow from '@number-flow/react';
 import { Lock, Scale, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { useTalosClearing } from '../context/TalosClearingContext';
 import { GuidedDemoBanner } from './GuidedDemoBanner';
+import { TalosLogoMark } from './brand/TalosLogoMark';
 
 export function SovereignTopTelemetryBar() {
   const { rows, kpiMetrics } = useTalosClearing();
@@ -23,9 +24,7 @@ export function SovereignTopTelemetryBar() {
       <div className="mx-auto max-w-[1360px] px-4 sm:px-6 py-6 space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <span className="w-12 h-12 icon-medallion-paypal" aria-hidden="true">
-              <ShieldCheck className="w-6 h-6" strokeWidth={1.6} />
-            </span>
+            <TalosLogoMark size={44} />
             <div>
               <h1 className="paypal-headline-lg text-ink">TALOS Command Center</h1>
               <p className="paypal-body-sm text-ink-secondary">
@@ -47,7 +46,7 @@ export function SovereignTopTelemetryBar() {
               CAPTURED / VOIDED
             </span>
             <div className="w-20 h-1.5 rounded-pill overflow-hidden bar-track ml-1" aria-hidden="true">
-              <div className="h-full dot-paypal transition-all duration-300" style={{ width: `${pipelineProgressPct}%` }} />
+              <div className="h-full dot-paypal transition-[width] duration-300" style={{ width: `${pipelineProgressPct}%` }} />
             </div>
           </div>
         </div>

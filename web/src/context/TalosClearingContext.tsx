@@ -81,7 +81,7 @@ export function TalosClearingProvider({ children }: { children: React.ReactNode 
   const [activeDemoStep, setActiveDemoStep] = useState<DemoStepNumber>(1);
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTabId>('ALL');
   const [fxTier, setFxTier] = useState<FxTier>('high');
-  const [theme, setTheme] = useState<InstitutionalTheme>('dark');
+  const [theme, setTheme] = useState<InstitutionalTheme>('light');
   const [authSession, setAuthSession] = useState<AuthSession>(EMPTY_AUTH_SESSION);
 
   useEffect(() => {
@@ -97,6 +97,7 @@ export function TalosClearingProvider({ children }: { children: React.ReactNode 
     setFxTier(resolvedFx);
     document.documentElement.setAttribute('data-fx', resolvedFx);
     document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
   const toggleTheme = useCallback(() => {
@@ -184,7 +185,7 @@ export function useTalosClearing(): TalosClearingContextValue {
   const [demoViewMode, setDemoViewMode] = useState<DemoViewMode>('COMMAND_CENTER');
   const [activeDemoStep, setActiveDemoStep] = useState<DemoStepNumber>(1);
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTabId>('ALL');
-  const [theme, setTheme] = useState<InstitutionalTheme>('dark');
+  const [theme, setTheme] = useState<InstitutionalTheme>('light');
   const [authSession, setAuthSession] = useState<AuthSession>(EMPTY_AUTH_SESSION);
 
   if (ctx) return ctx;

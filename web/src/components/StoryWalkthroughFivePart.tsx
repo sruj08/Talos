@@ -130,7 +130,7 @@ export function StoryWalkthroughFivePart({ onSimulateStage }: StoryWalkthroughFi
               aria-selected={isSelected}
               data-testid={stage.id}
               onClick={() => setActiveStageNumber(stage.stageNumber)}
-              className={`p-5 rounded-lg text-left flex flex-col justify-between gap-3 transition-all ${
+              className={`p-5 rounded-lg text-left flex flex-col justify-between gap-3 transition-[transform,background-color,border-color,color] ${
                 isSelected ? `${stage.toneClass} font-bold shadow-sm` : 'paypal-feature-card text-ink-secondary'
               }`}
             >

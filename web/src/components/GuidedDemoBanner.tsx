@@ -192,7 +192,7 @@ export function GuidedDemoBanner() {
                 key={spec.step}
                 data-testid={`guided-step-${spec.step}`}
                 data-completed={isDone}
-                className={`p-4 rounded-lg flex flex-col justify-between gap-3.5 text-xs transition-all ${
+                className={`p-4 rounded-lg flex flex-col justify-between gap-3.5 text-xs transition-[transform,background-color,border-color,color] ${
                   isActive ? 'tone-paypal' : 'sovereign-subcard'
                 }`}
               >

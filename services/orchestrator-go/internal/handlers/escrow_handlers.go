@@ -118,7 +118,7 @@ func (s *Server) HandleAuthorizeEscrow(w http.ResponseWriter, r *http.Request) {
 		if aErr != nil {
 			return nil, aErr
 		}
-		if _, exists := s.Machine.GetRecord(escrowID); !exists {
+		if existing, exists := s.Machine.GetRecord(escrowID); !exists || existing.State == escrow.StatePayPalAuthorized || existing.State == escrow.StatePayPalVoided {
 			s.Machine.UpsertRecord(escrow.Record{
 				EscrowID: escrowID, AmountCents: body.AmountCents, Currency: body.Currency,
 				State: escrow.StateInitiated, PayPalRequestID: reqID,
@@ -148,7 +148,7 @@ func (s *Server) HandleStepUpApprove(w http.ResponseWriter, r *http.Request) {
 		PayPalAuthID  string `json:"paypal_auth_id"`
 	}
 	_ = json.NewDecoder(r.Body).Decode(&body)
-	if _, exists := s.Machine.GetRecord(escrowID); !exists {
+	if existing, exists := s.Machine.GetRecord(escrowID); !exists || existing.State == escrow.StatePayPalAuthorized || existing.State == escrow.StatePayPalVoided {
 		s.Machine.UpsertRecord(escrow.Record{EscrowID: escrowID, AmountCents: 45000, Currency: "USD", State: escrow.StateStepUpRequired, StepUpRequired: true})
 	}
 	rec, err := s.Machine.Transition(escrowID, escrow.StatePayPalAuthorized, func(r *escrow.Record) {

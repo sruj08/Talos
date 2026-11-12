@@ -10,6 +10,12 @@ const PRODUCT_ICON: Record<ProductSku, typeof Mic> = {
   genelec: Speaker,
 };
 
+const PRODUCT_IMAGE: Record<ProductSku, string> = {
+  sm7b: '/assets/talos-sm7b-studio.png',
+  scarlett: '/assets/talos-shield-cinema-plate.png',
+  genelec: '/assets/talos-shield-cinema-plate.png',
+};
+
 interface StorefrontProductCardProps {
   sku: ProductSku;
   priceUsd: number;
@@ -29,8 +35,28 @@ export function StorefrontProductCard({ sku, priceUsd, cursorKey, focus, inCart,
   return (
     <article className="flex flex-col gap-3" data-testid={`storefront-product-${sku}`}>
       <div className={`sim-product-art flex items-center justify-center ${ring(`product-${cursorKey}`)}`} data-cursor-target={`product-${cursorKey}`}>
-        <Icon className="h-14 w-14 text-ink-muted" strokeWidth={1.25} aria-hidden="true" />
-        <span className="absolute left-2 top-2 tx-chip !bg-[var(--surface)]">{p.stockLabel}</span>
+        {sku === 'sm7b' ? (
+          <video
+            src="/assets/talos-sm7b-loop.mp4"
+            poster="/assets/talos-sm7b-studio.png"
+            autoPlay
+            loop
+            muted
+            playsInline
+            suppressHydrationWarning
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <img
+            src={PRODUCT_IMAGE[sku]}
+            alt={p.title}
+            className="w-full h-full object-cover"
+          />
+        )}
+        <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1.5 rounded-[4px] bg-[#07090F] px-2 py-1 text-xs font-medium text-white border border-[rgba(255,255,255,0.16)]">
+          <Icon className="h-3.5 w-3.5 text-[#38BDF8]" strokeWidth={1.75} aria-hidden="true" />
+          <span>{p.stockLabel}</span>
+        </span>
       </div>
       <div className="space-y-1">
         <h4 className="text-sm font-semibold text-ink leading-snug">{p.title}</h4>
@@ -41,7 +67,7 @@ export function StorefrontProductCard({ sku, priceUsd, cursorKey, focus, inCart,
       </div>
       <div className="flex items-end justify-between gap-2">
         <div className={`flex items-baseline gap-2 px-1 ${ring(`price-${cursorKey}`)}`} data-cursor-target={`price-${cursorKey}`}>
-          <span className={`text-xl font-semibold tx-num ${gouged ? 'text-ink-crimson' : 'text-ink'}`}>{formatUsd(priceUsd)}</span>
+          <span className={`text-2xl tx-num-display ${gouged ? 'text-ink-crimson' : 'text-ink'}`}>{formatUsd(priceUsd)}</span>
           {gouged ? <span className="text-xs text-ink-muted tx-num">median {formatUsd(p.medianUsd)}</span> : null}
         </div>
         {overCap ? <span className="tx-chip tx-chip--amber">Over cap</span> : null}

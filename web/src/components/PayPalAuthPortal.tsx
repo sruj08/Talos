@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Fingerprint, KeyRound, ShieldCheck, Wallet } from 'lucide-react';
+import { ArrowRight, KeyRound, ShieldCheck, Wallet } from 'lucide-react';
 import { useTalosClearing } from '../context/TalosClearingContext';
+import { TalosLogoMark } from './brand/TalosLogoMark';
 import {
   AGENT_RUNTIMES,
   AgentRuntimeId,
@@ -102,9 +103,7 @@ export function PayPalAuthPortal({ mode }: PayPalAuthPortalProps) {
       <section className="lg:col-span-5">
         <div className="paypal-checkout-module space-y-5" data-testid="paypal-oauth-panel">
           <div className="flex items-center gap-3">
-            <span className="w-12 h-12 icon-medallion-paypal" aria-hidden="true">
-              <Fingerprint className="w-6 h-6" strokeWidth={1.6} />
-            </span>
+            <TalosLogoMark size={44} />
             <div>
               <h2 className="paypal-title-sm text-ink">PayPal Sandbox OAuth2 + Passkey</h2>
               <p className="text-xs text-ink-secondary tabular-nums">

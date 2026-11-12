@@ -1,3 +1,11 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="web/public/assets/talos-logo-dark.webp">
+    <source media="(prefers-color-scheme: light)" srcset="web/public/assets/talos-logo-light.webp">
+    <img alt="TALOS Logo" src="web/public/assets/talos-logo-dark.webp" width="128" height="128">
+  </picture>
+</p>
+
 # TALOS — Cryptographic KYA Mandate Firewall & 2-Phase PayPal Escrow Engine for Autonomous AI Agents
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)

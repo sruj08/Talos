@@ -37,7 +37,6 @@ export function ShoppingCartPanel({ lines, capUsd, mode }: ShoppingCartPanelProp
             lines.map((l) => (
               <motion.li
                 key={`${l.sku}-${l.storeId}`}
-                layout={!reduce}
                 initial={reduce ? false : { opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}

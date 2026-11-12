@@ -96,9 +96,9 @@ const config: Config = {
         unslop: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
       fontFamily: {
-        display: ['"PayPal Pro"', '"PayPal Open"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
-        sans: ['"PayPal Pro"', '"PayPal Open"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
-        mono: ['SFMono-Regular', 'Consolas', '"Liberation Mono"', 'Menlo', 'monospace'],
+        display: ['var(--font-space)', 'var(--font-jakarta)', '"PayPal Pro"', '"PayPal Open"', 'sans-serif'],
+        sans: ['var(--font-jakarta)', '"PayPal Pro"', '"PayPal Open"', 'sans-serif'],
+        mono: ['var(--font-jetbrains)', 'SFMono-Regular', 'Consolas', 'monospace'],
       },
     },
   },
@@ -106,4 +106,3 @@ const config: Config = {
 };
 
 export default config;
-

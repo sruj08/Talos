@@ -161,6 +161,18 @@ export function useAgStudioBlotter(initialRows?: EscrowBlotterRow[]) {
     'AG Studio AI Financial Copilot Ready — Grouped by firewall_verdict or select a preset layout.'
   );
   const [showChartSummary, setShowChartSummary] = useState<boolean>(false);
+  const [activeToolPanel, setActiveToolPanel] = useState<'columns' | 'filters' | null>(null);
+
+  const toggleToolPanel = useCallback((panel: 'columns' | 'filters') => {
+    setActiveToolPanel((prev) => {
+      const next = prev === panel ? null : panel;
+      const api = gridApiRef.current;
+      api?.setSideBarVisible?.(next !== null);
+      if (next) api?.openToolPanel?.(next);
+      else api?.closeToolPanel?.();
+      return next;
+    });
+  }, []);
 
   const visibleRows = useMemo(() => {
     let list = applyPresetFilterToRows(baseRows, activePreset);
@@ -217,6 +229,8 @@ export function useAgStudioBlotter(initialRows?: EscrowBlotterRow[]) {
     setCopilotQuery,
     copilotStatus,
     showChartSummary,
+    activeToolPanel,
+    toggleToolPanel,
     colDefs: BLOTTER_COL_DEFS,
     theme: clearing.theme,
     onGridReady,

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Moon, Sun } from 'lucide-react';
 import { useTalosClearing } from '../context/TalosClearingContext';
 import { STORY_CHAPTERS, SovereignStoryChapterDock } from './SovereignStoryDock';
+import { TalosLogoMark } from './brand/TalosLogoMark';
 
 export { STORY_CHAPTERS, SovereignStoryChapterDock };
 export { SovereignTopTelemetryBar } from './SovereignTopTelemetryBar';
@@ -34,9 +35,10 @@ export function SovereignTopNavBar() {
           <Link
             href="/"
             onClick={() => setActiveChapter('OVERVIEW')}
-            className="text-base font-semibold text-ink tracking-tight whitespace-nowrap shrink-0"
+            className="inline-flex items-center gap-2.5 text-base font-semibold text-ink tracking-tight whitespace-nowrap shrink-0"
           >
-            TALOS
+            <TalosLogoMark size={34} />
+            <span>TALOS</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1 overflow-x-auto" aria-label="Storyline stages" data-testid="top-chapter-nav">

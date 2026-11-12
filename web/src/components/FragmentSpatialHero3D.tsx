@@ -75,8 +75,8 @@ export function FragmentSpatialHero3D(
     const xRatio = (e.clientX - rect.left) / rect.width - 0.5;
     const yRatio = (e.clientY - rect.top) / rect.height - 0.5;
     setTilt({
-      rx: Number((-yRatio * 7).toFixed(2)),
-      ry: Number((xRatio * 9).toFixed(2)),
+      rx: Number((-yRatio * 6).toFixed(2)),
+      ry: Number((xRatio * 8).toFixed(2)),
     });
   };
 
@@ -95,8 +95,8 @@ export function FragmentSpatialHero3D(
       className="flex flex-col gap-4"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <span className="sovereign-pill">Interactive 3D clearinghouse stage</span>
-        <span className="tabular-nums text-xs font-medium text-ink-emerald">
+        <span className="sovereign-pill">Optical 3D clearinghouse stage</span>
+        <span className="tabular-nums font-mono text-xs font-semibold text-ink-emerald">
           {simPlaying ? '60s Live Simulation Active' : activeCue.metric}
         </span>
       </div>
@@ -108,39 +108,45 @@ export function FragmentSpatialHero3D(
           transformStyle: 'preserve-3d',
         }}
       >
-        <div className="hero-artifact-img relative mx-auto max-w-full overflow-hidden">
-          <img
-            src="/assets/talos-fragment-shield-3d.svg"
-            alt="TALOS 3D Spatial Shield intercepting $480 scam trap and locking $249 in PayPal Escrow"
-            className="w-full h-auto object-cover"
+        <div className="hero-artifact-img relative mx-auto max-w-full overflow-hidden rounded-[12px] border border-[rgba(255,255,255,0.12)]">
+          <video
+            src="/assets/talos-clearing-cinema.mp4"
+            poster="/assets/talos-shield-cinema-plate.png"
+            autoPlay
+            loop
+            muted
+            playsInline
+            suppressHydrationWarning
+            aria-label="TALOS 3D Optical Shield intercepting $480 scam trap and locking $249 in PayPal Escrow"
+            className="w-full h-auto object-cover block"
           />
         </div>
 
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div data-testid="spatial-shard-hostile-trap" className="tone-crimson p-3" style={{ transform: 'translateZ(16px)' }}>
-            <div className="flex items-center gap-2 text-xs font-medium text-ink-crimson">
+            <div className="flex items-center gap-2 text-xs font-semibold text-ink-crimson">
               <ShieldAlert className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               <span>Scam Trap Blocked</span>
             </div>
-            <p className="mt-2 tabular-nums text-sm font-medium text-ink">$480.00 Rejected</p>
+            <p className="mt-2 tabular-nums text-sm font-semibold text-ink">$480.00 Rejected</p>
             <p className="mt-1 text-xs text-ink-secondary">Normal AI loses $480 to hidden web text</p>
           </div>
 
           <div data-testid="spatial-shard-talos-shield" className="tone-paypal p-3" style={{ transform: 'translateZ(30px)' }}>
-            <div className="flex items-center gap-2 text-xs font-medium text-ink-paypal">
+            <div className="flex items-center gap-2 text-xs font-semibold text-ink-paypal">
               <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               <span>TALOS 3D Shield</span>
             </div>
-            <p className="mt-2 tabular-nums text-sm font-medium text-ink">2.84ms Clean Scan</p>
-            <p className="mt-1 text-xs text-ink-secondary">Enforces $300 allowance & fair market price</p>
+            <p className="mt-2 tabular-nums text-sm font-semibold text-ink">2.84ms Clean Scan</p>
+            <p className="mt-1 text-xs text-ink-secondary">Enforces $300 allowance &amp; fair market price</p>
           </div>
 
           <div data-testid="spatial-shard-paypal-vault" className="tone-emerald p-3" style={{ transform: 'translateZ(44px)' }}>
-            <div className="flex items-center gap-2 text-xs font-medium text-ink-emerald">
+            <div className="flex items-center gap-2 text-xs font-semibold text-ink-emerald">
               <Lock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               <span>PayPal Escrow Vault</span>
             </div>
-            <p className="mt-2 tabular-nums text-sm font-medium text-ink">$249.00 Held (+$231 Saved)</p>
+            <p className="mt-2 tabular-nums text-sm font-semibold text-ink">$249.00 Held (+$231 Saved)</p>
             <p className="mt-1 text-xs text-ink-secondary">Paid to seller only after FedEx delivery</p>
           </div>
         </div>
