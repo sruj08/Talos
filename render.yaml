@@ -9,7 +9,7 @@ services:
     name: talos-firewall-rs
     runtime: rust
     rootDir: services/firewall-rs
-    plan: starter
+    plan: free
     region: oregon
     buildCommand: cargo build --release
     startCommand: ./target/release/talos-firewall-rs
@@ -36,7 +36,7 @@ services:
     runtime: go
     # Built from the repo root (no rootDir): go.mod replaces the APIMatic SDK with
     # ../../sdk/paypal-go-apimatic, and Render hides files outside a service's rootDir.
-    plan: starter
+    plan: free
     region: oregon
     buildFilter:
       paths:
@@ -59,16 +59,10 @@ services:
           type: keyvalue
           name: talos-valkey
           property: connectionString
+      # Free web services cannot receive private-network traffic, so service-to-service calls use public URLs.
+      # If Render assigns a suffixed hostname, update RUST_FIREWALL_URL here and in talos-console-web.
       - key: RUST_FIREWALL_URL
-        fromService:
-          type: web
-          name: talos-firewall-rs
-          envVarKey: RENDER_EXTERNAL_URL
-      - key: FIREWALL_RS_INTERNAL_URL
-        fromService:
-          type: web
-          name: talos-firewall-rs
-          property: hostport
+        value: https://talos-firewall-rs.onrender.com
       - key: PAYPAL_ENVIRONMENT
         value: sandbox
       - key: PAYPAL_ENV
@@ -99,7 +93,7 @@ services:
     name: talos-console-web
     runtime: node
     rootDir: web
-    plan: starter
+    plan: free
     region: oregon
     buildCommand: npm install && npm run build
     startCommand: npm run start
@@ -109,16 +103,14 @@ services:
         value: production
       - key: PORT
         value: "3000"
+      # Public URLs (free web services cannot receive private-network traffic). The proxy rewrites and the
+      # NEXT_PUBLIC_* value are baked in at build time: redeploy this service after changing them.
+      - key: ORCHESTRATOR_GO_URL
+        value: https://talos-orchestrator-go.onrender.com
+      - key: RUST_FIREWALL_URL
+        value: https://talos-firewall-rs.onrender.com
       - key: NEXT_PUBLIC_ORCHESTRATOR_URL
-        fromService:
-          type: web
-          name: talos-orchestrator-go
-          envVarKey: RENDER_EXTERNAL_URL
-      - key: NEXT_PUBLIC_FIREWALL_URL
-        fromService:
-          type: web
-          name: talos-firewall-rs
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://talos-orchestrator-go.onrender.com
       - key: NEXT_PUBLIC_PAYPAL_CLIENT_ID
         sync: false
       - key: NEXT_PUBLIC_AG_GRID_LICENSE_KEY
@@ -135,7 +127,7 @@ services:
   # 4. Managed Valkey / Redis for PayPal-Request-Id Idempotency Locks & WebSocket Pub/Sub
   - type: keyvalue
     name: talos-valkey
-    plan: starter
+    plan: free
     region: oregon
     maxmemoryPolicy: allkeys-lru
     ipAllowList: []
@@ -145,6 +137,6 @@ databases:
   - name: talos-postgres
     databaseName: talos
     user: talos
-    plan: starter
+    plan: free
     region: oregon
     postgresMajorVersion: "16"

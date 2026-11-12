@@ -184,6 +184,8 @@ export function resolveOrchestratorWsUrl(): string {
     const wsBase = withScheme.replace(/\/+$/, '').replace(/^https:/i, 'wss:').replace(/^http:/i, 'ws:');
     return `${wsBase}/ws/events`;
   }
+  // Deployed without a public orchestrator URL: skip the socket and run on the replay stream instead of erroring.
+  if (typeof window !== 'undefined' && !/^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.hostname)) return '';
   return 'ws://localhost:8080/ws/events';
 }
 

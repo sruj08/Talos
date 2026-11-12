@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
-const firewallBaseUrl = (
+// Render's private-network `hostport` values arrive as `host:port` with no scheme; rewrites need a full URL.
+const withScheme = (raw) => (/^https?:\/\//i.test(raw) ? raw : `http://${raw}`);
+
+const firewallBaseUrl = withScheme(
   process.env.RUST_FIREWALL_URL ||
   process.env.FIREWALL_RS_INTERNAL_URL ||
   'http://127.0.0.1:8081'
@@ -7,7 +10,7 @@ const firewallBaseUrl = (
   .replace('://localhost:', '://127.0.0.1:')
   .replace(/\/+$/, '');
 
-const orchestratorBaseUrl = (
+const orchestratorBaseUrl = withScheme(
   process.env.ORCHESTRATOR_GO_URL ||
   process.env.NEXT_PUBLIC_ORCHESTRATOR_URL ||
   'http://127.0.0.1:8080'
