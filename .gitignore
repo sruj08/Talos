@@ -37,3 +37,7 @@ Thumbs.db
 
 # Compiled Go orchestrator binary (Render build output path)
 services/orchestrator-go/bin/
+
+# Local-only: demo film project (not published) and editor tooling
+video/
+.serena/

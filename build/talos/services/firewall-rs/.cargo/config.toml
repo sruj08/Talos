@@ -1,4 +1,0 @@
-# TALOS Zero-Trust Firewall Cargo Configuration
-# Configured for x86_64-pc-windows-gnu on Windows hosts without MSVC link.exe.
-[target.x86_64-pc-windows-gnu]
-rustflags = []

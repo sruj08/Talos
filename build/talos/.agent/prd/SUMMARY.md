@@ -1,5 +1,0 @@
-# TALOS — Concise Summary for Ralph Loop
-TALOS is a polyglot (`Rust 1.85 + Golang 1.24 + Next.js 15`) Zero-Trust Agentic Commerce Firewall & Reversible PayPal Escrow Referee built for the PayPal AI Hackathon.
-- **Rust (`services/firewall-rs`)**: `rmcp` MCP Server + `ed25519-dalek` KYA Mandate Signer/Verifier + `lol_html` & `DeBERTa-v3` ONNX DOM Prompt-Injection Sanitizer (`<4ms`).
-- **Golang (`services/orchestrator-go`)**: Go 1.24 + `chi` + APIMatic-generated PayPal Go SDK (`sdk/paypal-go-apimatic`) + `errgroup` parallel fan-out to Channel3 (`trychannel3.com`) & KERNEL (`onkernel.com`) + PayPal Sandbox `Orders v2 AUTHORIZE -> Shipment Tracking v1 -> Authorizations CAPTURE / VOID` + Customer Disputes v1 `/provide-evidence` + WebSocket hub.
-- **Frontend (`web/`)**: Next.js 15 Command Center with **AG Grid Enterprise / AG Studio** live blotter + Master-Detail forensics, **Bryntum Scheduler Pro** 2-way SLA timeline bound to PayPal `VOID`, and **PayPal JS SDK v6** human step-up modal.

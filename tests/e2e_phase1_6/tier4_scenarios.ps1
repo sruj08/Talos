@@ -119,8 +119,8 @@ function Invoke-TalosTier4Scenarios {
         return ($ag -match 'ForensicDetailPanel' -and $fp -match 'ForensicDetailPanel' -and $rt -match 'AG_STUDIO_COPILOT' -and $rt -match 'BLOCKED_THREATS' -and $rt -match 'VOIDED_SLA')
     }
 
-    # Scenario 8A: Repository Standards & Compliance Gate (LICENSE, TASK-01..TASK-12 passes: true in root & mirror, <250L scripts, git rev-parse HEAD unchanged)
-    Test-TalosCase -Tier 'Tier4' -Id 'T4-S9' -Feature 'Scenario8A-Compliance' -Description 'Scenario 8A E2E: LICENSE present, TASK-01..TASK-12 passes:true in root & mirror, all e2e scripts <250L, git rev-parse HEAD unchanged' -Check {
+    # Scenario 8A: Repository Standards & Compliance Gate (LICENSE, TASK-01..TASK-12 passes: true, <250L scripts, git rev-parse HEAD unchanged)
+    Test-TalosCase -Tier 'Tier4' -Id 'T4-S9' -Feature 'Scenario8A-Compliance' -Description 'Scenario 8A E2E: LICENSE present, TASK-01..TASK-12 passes:true, all e2e scripts <250L, git rev-parse HEAD unchanged' -Check {
         Push-Location $Global:TalosRepoRoot
         try {
             $curHead = (git rev-parse HEAD 2>$null).Trim()
@@ -129,7 +129,7 @@ function Invoke-TalosTier4Scenarios {
         foreach ($f in $e2eFiles) {
             if ((Get-Content $f.FullName).Count -ge 250) { return $false }
         }
-        foreach ($rel in @('.agent\tasks.json', 'build\talos\.agent\tasks.json')) {
+        foreach ($rel in @('.agent\tasks.json')) {
             $tj = Get-Content (Join-Path $Global:TalosRepoRoot $rel) -Raw | ConvertFrom-Json
             for ($i = 1; $i -le 12; $i++) {
                 $tid = ('TASK-{0:D2}' -f $i)
