@@ -31,6 +31,7 @@
 
 <p align="center">
   <a href="https://talos-console-web.onrender.com"><b>Live demo</b></a> ·
+  <a href="https://www.youtube.com/watch?v=H3r-pHu26BQ"><b>Demo video</b></a> ·
   <a href="#setup">Setup</a> ·
   <a href="#how-we-use-paypal">How we use PayPal</a> ·
   <a href="#how-we-use-ai">How we use AI</a> ·
@@ -58,6 +59,7 @@
 | :--- | :--- |
 | Public repository | [`github.com/sruj08/Talos`](https://github.com/sruj08/Talos) |
 | Approved OSI license | [MIT License](LICENSE) |
+| Demo video | [Watch on YouTube](https://www.youtube.com/watch?v=H3r-pHu26BQ) |
 | Setup instructions | [Setup](#setup): local run, environment keys, and the Render deploy |
 | How we use PayPal | [How we use PayPal](#how-we-use-paypal) |
 | How we use AI | [How we use AI](#how-we-use-ai) |
